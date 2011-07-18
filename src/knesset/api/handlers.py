@@ -205,7 +205,7 @@ class BillHandler(BaseHandler, HandlerExtensions):
               'committee_meetings',
               'proposing_mks',
               'tags',
-              'proposals'
+              'proposals',
              )
 
     exclude = ('member')
@@ -277,20 +277,21 @@ class BillHandler(BaseHandler, HandlerExtensions):
         gov_proposal = {}
 
         try:
-            gov_proposal = {'source_url': bill.gov_proposal.source_url, 'date': bill.gov_proposal.date}
+            gov_proposal = {'id': bill.gov_proposal.id, 'source_url': bill.gov_proposal.source_url, 'date': bill.gov_proposal.date, 'explanation': bill.gov_proposal.get_explanation()}
         except GovProposal.DoesNotExist:
             pass
 
         knesset_proposal = {}
 
         try:
-            knesset_proposal = {'source_url': bill.knesset_proposal.source_url, 'date': bill.knesset_proposal.date}
+            knesset_proposal = {'id': bill.knesset_proposal.id, 'source_url': bill.knesset_proposal.source_url, 'date': bill.knesset_proposal.date, 'explanation': bill.knesset_proposal.get_explanation()}
         except KnessetProposal.DoesNotExist:
             pass
 
         return {'gov_proposal': gov_proposal,
                 'knesset_proposal': knesset_proposal,
-                'private_proposals': [{'source_url': prop.source_url, 'date': prop.date} for prop in bill.proposals.all()]}
+                'private_proposals': [{'id': prop.id, 'source_url': prop.source_url, 'date': prop.date, 'explanation': prop.get_explanation()} for prop in bill.proposals.all()]}
+
 
 
 class PartyHandler(BaseHandler):

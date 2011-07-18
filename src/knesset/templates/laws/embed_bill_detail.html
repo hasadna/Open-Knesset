@@ -5,10 +5,21 @@
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" >
 	<meta http-equiv="Content-Language" content="{{ LANGUAGE_CODE }}">
 	<script type="text/javascript" src="{{MEDIA_URL}}js/jquery.min.js"></script>
-	<script type="text/javascript" src="{{MEDIA_URL}}js/jquery-ui-1.8.4.custom.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/base/jquery-ui.css" type="text/css"/>
 	<link rel="stylesheet" href="{{MEDIA_URL}}css/embed_bill.css" type="text/css"/>
+
 	
 	<script type="text/javascript">
+	  var log;
+	  
+	  if (window.console && typeof console.log === "function"){
+	  // use apply to preserve context and invocations with multiple arguments
+	  log = function () { console.log.apply(console, arguments); };
+	  } else {
+	  log = function(){ return; }
+	  }
+
 /*
 states:
 	1. initiated ("was-proposed")
@@ -66,10 +77,39 @@ stream example:
 		
 		var phasesArr = ['was-proposed', 'was-pre-voted', 'was-discussed-1', 'was-first-voted', 'was-discussed-2', 'was-approval-voted'];
 		
-        function showExplanation() {
-            // TODO: show a popup with the explanation from `Proposal.get_explanation`
+
+	    //shows a popup with the explanation from 'Proposal.get_explanation'
+            function showExplanation() {
+
+	    try {
+
+	    $.get('/api/bill/' + {{ bill.id }}, function(data){
+	    var dlg = $('<div class="label"></div>');
+	    renderProp = function(prop){
+	    
+	    if (prop.explanation) {
+	    
+	    dlg.append($('<p>\u05de\u05ea\u05d5\u05da\u0020 <a href="' + prop.source_url+ '" class="oknesset-resource">' + '\u05d4\u05e0\u05d5\u05e1\u05d7\u0020\u05d4\u05de\u05dc\u05d0 (' + prop.date + ') :</a></p>'))
+	    
+	    dlg.append($('<div>' + prop.explanation + '</div><p>---</p>'));
+	    
+	    }
+	    };
+	    
+	    data.proposals.private_proposals.forEach(renderProp);
+ 	    renderProp(data.proposals.knesset_proposal);
+	    renderProp(data.proposals.gov_proposal);
+	    
+	    dlg.dialog({modal: true, title: '\u05d3\u05d1\u05e8\u05d9\u0020\u05d4\u05e1\u05d1\u05e8', position: ['right', 'top'], resizable: false, width: $('#steps').width()});
+	    }); 
+            
             return "";
+	    }
+	    catch (err) {
+	    log(err);
+	    }
         }
+	    
 		
 		function showLog() {
 			var log = $('<div id="log" style="direction:ltr; position:absolute; margin-left: 10px; left: 0; top:0; width: 400px; height:100%; text-align: left;"></div>').appendTo($('body'));
@@ -126,6 +166,7 @@ stream example:
 		}
 		
 		$(function() {
+	    $('#title h1').click(showExplanation);
 			//showLog();
 			$("head").append($("<title>{{bill.law.title}}: {{bill.title}}</title>"));
 			var finalStatus, stagePassed, phase = -1, committees = [], proposedDate, finalDate;
@@ -193,7 +234,8 @@ stream example:
 						$('ul#steps li#initiated .date').html(dateHtml);
 						proposedDate = day + "/" + month + "/" + year;
      					stagePassed = true;
-                        $('#initiated .stage-click').click(showExplanation);
+
+                        $('#initiated').click(showExplanation);
 						break;
 					case 'was-discussed-1':
 						// there cannot be a failure in a committee discussion, only success

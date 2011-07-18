@@ -50,6 +50,7 @@ a{
 		    height: 1.35em;
 		    margin-top: 0;
 		    overflow: hidden;
+		    cursor: pointer;
 		}
 		.header-hover h1{
 			height: auto;
@@ -442,3 +443,37 @@ a{
 		float: left;
 		padding: 1px 5px;
 	}
+
+.ui-dialog{
+    background: #EEEFF5; 
+    border: 1px dotted #cccccc;
+    opacity: 0.92;
+}
+
+.ui-widget-header{
+    background: none;
+    border: none;
+    height: 13px;
+}
+
+.ui-dialog-titlebar {
+  background-color: #D8DFEA !important;
+  opactity: 0.6;
+  direction: rtl;
+
+}
+
+.ui-dialog-title {
+  float: right !important;
+  font-size: 12px
+}
+
+.ui-dialog-content {
+  float: right !important;
+  overflow: auto !important;
+}
+
+.ui-dialog-content a {
+    color: blue !important;
+}
+
