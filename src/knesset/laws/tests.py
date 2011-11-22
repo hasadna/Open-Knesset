@@ -62,7 +62,7 @@ class BillViewsTest(TestCase):
         self.assertEqual(map(just_id, object_list), [self.bill_1.id])
         res = self.client.get(reverse('bill-list'), {'stage': '2'})
         object_list = res.context['object_list']
-        self.assertEqual(map(just_id, object_list), [self.bill_2.id, self.bill_3.id])
+        self.assertEqual(set(map(just_id, object_list)), set([self.bill_2.id, self.bill_3.id]))
 
     def test_bill_list_with_member(self):
         "Test the view of bills proposed by specific MK"
