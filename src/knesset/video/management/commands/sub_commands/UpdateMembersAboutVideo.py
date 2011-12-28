@@ -59,13 +59,13 @@ class UpdateMembersAboutVideo(SubCommand):
             'title','embed_url_autoplay','thumbnail480x360',
             'id','description','link','published'
         ]):
-            title=video['title']
+            titledesc=video['title']+video['description']
             if (
-                u'כרטיס ביקור' in title
-                and u'ערוץ הכנסת' in title
+                u'כרטיס ביקור' in titledesc
+                and u'ערוץ הכנסת' in titledesc
             ):
                 for name in member.names:
-                    if name in title:
+                    if name in titledesc:
                         ans=True
                         break
         return ans

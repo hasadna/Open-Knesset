@@ -94,6 +94,7 @@ class testUpdateMembersAboutVideo(TestCase):
             Member_test(['tester testee','testee tester']),
             Member_test(['im the hak']),
             Member_test(['xxx',heName2]),
+            Member_test(['zzz']),
         ]
         getYoutubeVideosReturn={
             (kartisBikur+'tester testee'):[
@@ -125,6 +126,7 @@ class testUpdateMembersAboutVideo(TestCase):
             ],
             (kartisBikur+'xxx'):[getSourceVideo(id=6, title='')],
             (kartisBikur+heName2):[getSourceVideo(id=7, title='')],
+            (kartisBikur+'zzz'):[getSourceVideo(id=8,title='zzz',description=kartisBikur)],
         }
         getVideosReturn={
             (True,members[0],2,'youtube'):[],
@@ -136,6 +138,7 @@ class testUpdateMembersAboutVideo(TestCase):
                 Video_test(group='related'),
                 Video_test(group='related'),
             ],
+            (True,members[3],8,'youtube'):[]
         }
         obj=UpdateMembersAboutVideo_test(members,self,getYoutubeVideosReturn,getVideosReturn)
         self.assertEqual(obj.saveVideoLog,[
@@ -146,6 +149,10 @@ class testUpdateMembersAboutVideo(TestCase):
             getDbVideo(
                 title=kartisBikur+'im the hak', source_id=5, content_object=members[1],
                 published=datetime.datetime(2011,10,01)
+            ),
+            getDbVideo(
+                title='zzz', description=kartisBikur, source_id=8, content_object=members[3],
+                published=datetime.datetime(2011,12,1)
             )
         ])
         self.assertEqual(obj.hideRelatedVideoLog,[
@@ -154,4 +161,5 @@ class testUpdateMembersAboutVideo(TestCase):
         self.assertEqual(obj.hideAboutVideosLog,[
             members[0],
             members[1],
+            members[3],
         ])
