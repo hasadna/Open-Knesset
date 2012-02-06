@@ -6,7 +6,12 @@ class TimeoutException:
     pass
     
 class SubCommandErrorException:
-    pass
+    
+    def __init__(self,msg):
+        self._msg=msg
+        
+    def __str__(self):
+        return str(self._msg)
 
 class Logger:
     def __init__(self,verbosity=1,out=sys.stdout):
@@ -73,7 +78,7 @@ class SubCommand:
     def _error(self,msg,no_exception=False):
         self._log('error',msg)
         if not no_exception:
-            raise SubCommandErrorException()
+            raise SubCommandErrorException(msg)
     
     def _log(self,msgtype,msg):
         self.command.logger.log(msgtype,msg)

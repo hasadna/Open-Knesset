@@ -3,7 +3,7 @@ Installation:
 
 For Ubuntu, make sure the following packages are installed:
 
-    sudo apt-get install python python-dev python-imaging python-setuptools python-vobject
+    sudo apt-get install python python-dev python-imaging python-setuptools python-vobject python-gdata
 
 - `python bootstrap.py`
 

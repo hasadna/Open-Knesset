@@ -176,6 +176,14 @@ GOOGLE_MAPS_API_KEYS = {'dev': 'ABQIAAAAWCfW8hHVwzZc12qTG0qLEhQCULP4XOMyhPd8d_Nr
                         'prod': 'ABQIAAAAWCfW8hHVwzZc12qTG0qLEhR8lgcBs8YFes75W3FA_wpyzLVCpRTF-eaJoRuCHAJ2qzVu-Arahwp8QA'}
 GOOGLE_MAPS_API_KEY = GOOGLE_MAPS_API_KEYS['dev'] # override this in prod server
 
+# you need to generate a token and put it in local_settings.py
+# to generate a token run: bin/django update_videos --get-youtube-token
+YOUTUBE_AUTHSUB_TOKEN=''
+
+# you need to get a developer key and put it in local_settings.py
+# to get a developer key goto: http://code.google.com/apis/youtube/dashboard
+YOUTUBE_DEVELOPER_KEY=''
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',

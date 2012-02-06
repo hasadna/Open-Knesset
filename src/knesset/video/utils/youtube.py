@@ -1,6 +1,9 @@
-import urllib, json, dateutil.parser
+import urllib, json, dateutil.parser, urllib2, os, traceback
 from knesset.video.utils import build_url
 from knesset.video.utils.parse_dict import parse_dict
+from gdata.youtube.service import YouTubeService as gdata_YouTubeService
+import gdata.media
+#from gdata.youtube.service import YouTubeError as gdata_YouTubeError
 
 class GetYoutubeVideos:
 
@@ -82,3 +85,94 @@ class GetYoutubeVideos:
                 ymediaThumbnail=ymediaThumbnails[1]
                 video['thumbnail90x120']=parse_dict(ymediaThumbnail,'url')
         return video
+
+class UploadYoutubeVideo():
+    
+    isOk=False
+    errMsg=''
+    errDesc=''
+    # http://gdata.youtube.com/schemas/2007/categories.cat
+    ALLOWED_CATEGORIES=[
+        "Film","Autos",'Music','Animals','Sports','Sports','Shortmov','Videoblog',
+        'Games','Comedy','People','News','Entertainment','Education','Howto','Nonprofit',
+        'Tech','Movies_Anime_animation','Movies','Movies_Comedy','Movies_Documentary',
+        'Movies_Action_adventure','Movies_Classics','Movies_Foreign','Movies_Horror',
+        'Movies_Drama','Movies_Family','Movies_Shorts','Shows','Movies_Sci_fi_fantasy',
+        'Movies_Thriller','Trailers',
+    ]
+    
+    # title - string (required)
+    # category - string (required) - from the list of self.ALLOWED_CATEGORIES
+    # filename - string (required) - path of file to download
+    # ytService - object (required) - YouTubeService authenticated object
+    # description - string (optional)
+    # keywords - string (optional) - comma separated list of keywords
+    # location - tuple (optional) - coordinates e.g. (37.0,-122.0)
+    # developerTags - list (optional) - list of developer tags
+    # isPrivate - boolean (optional)
+    def __init__(
+        self, title, category, filename, ytService,
+        description=None, keywords=None, location=None, developerTags=None,
+        isPrivate=False
+    ):
+        if category not in self.ALLOWED_CATEGORIES:
+            self.errMsg='invalid category'
+            self.errDesc='you must specify a cateogry from the following list: '+str(self.ALLOWED_CATEGORIES)
+        elif len(title)<5:
+            self.errMsg='invalid title'
+            self.errDesc='you must specify a title'
+        elif len(filename)<5 or not os.path.exists(filename):
+            self.errMsg='invalid filename'
+            self.errDesc='you must specify a filename to upload'
+        else:
+            if description is not None:
+                description=gdata.media.Description(description_type='plain',text=description)
+            if keywords is not None:
+                keywords=gdata.media.Keywords(text=keywords)
+            if location is not None:
+                where=gdata.geo.Where()
+                where.set_location(location)
+            else:
+                where=None
+            if isPrivate:
+                private=gdata.media.Private()
+            else:
+                private=None
+            mediaGroup=gdata.media.Group(
+                title=gdata.media.Title(text=title),
+                description=description,
+                keywords=keywords,
+                category=[
+                    gdata.media.Category(
+                        text=category,
+                        scheme='http://gdata.youtube.com/schemas/2007/categories.cat',
+                        label=category
+                    )
+                ],
+                player=None,
+                private=private
+            )
+            videoEntry=gdata.youtube.YouTubeVideoEntry(
+                media=mediaGroup,
+                geo=where
+            )
+            if developerTags is not None:
+                videoEntry.addDeveloperTags(developerTags)
+            try:
+                self.newEntry=ytService.InsertVideoEntry(videoEntry, filename)
+                self.isOk=True
+            except Exception, e:
+                self.errMsg='exception in InsertVideoEntry'
+                self.errDesc=str(e)+' '+traceback.format_exc()
+
+class YouTubeService(gdata_YouTubeService):
+    
+    def __init__(self,developer_key,authsub_token):
+        gdata_YouTubeService.__init__(
+            self,
+            developer_key=developer_key
+        )
+        self.SetAuthSubToken(authsub_token)
+
+
+

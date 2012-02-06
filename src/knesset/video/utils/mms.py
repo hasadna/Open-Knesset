@@ -7,7 +7,7 @@ class _options():
         self.bandwidth=1e6
         self.url=url
         self.filename=filename
-        self.quiet=False
+        self.quiet=True
         self.resume=True
         self.clobber=False
 
@@ -16,16 +16,20 @@ def get_size(url):
     return stream.length()
     
 def download(url,filename,time_limit):
+    isDone=False
     try:
         mimms.download(_options(url,filename,time_limit))
+        isDone=True
     except mimms.Timeout: pass
-    except KeyboardInterrupt: pass
-    return True
+    except KeyboardInterrupt: pass 
+    return isDone
     
 def resume_download(url,filename,time_limit):
+    isDone=False
     try:
         mimms.download(_options(url,filename,time_limit))
-    except mimms.Timeout:
-        pass
-    return True
+        isDone=True
+    except mimms.Timeout: pass
+    except KeyboardInterrupt: pass
+    return isDone
 

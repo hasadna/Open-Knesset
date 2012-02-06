@@ -4,7 +4,8 @@ from knesset.video.management.commands.sub_commands.tests.UpdateMembersAboutVide
 from knesset.video.management.commands.sub_commands.tests.UpdateMembersRelatedVideos import testUpdateMembersRelatedVideos
 from knesset.video.management.commands.sub_commands.tests.UpdateCommitteesVideos import testUpdateCommitteesVideos
 from knesset.video.management.commands.sub_commands.tests.AddVideo import testAddVideo
-#from knesset.video.management.commands.sub_commands.tests.DownloadCommitteesVideos import testDownloadCommitteesVideos
+from knesset.video.management.commands.sub_commands.tests.DownloadCommitteesVideos import testDownloadCommitteesVideos
+from knesset.video.management.commands.sub_commands.tests.UploadCommitteesVideos import testUploadCommitteesVideos
 from django.test import TestCase
 from knesset.video.management.commands.sub_commands import (
     SubCommand, SubCommandErrorException, Timer,
