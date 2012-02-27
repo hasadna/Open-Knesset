@@ -1,0 +1,41 @@
+{% load i18n %}
+{% load video %}
+<div id='videolistitem{{video.id}}' class='videolist_item'>
+    <div class="date-item">
+    	{{ video.published|date:"d/m" }}
+    	<span>{{video.published|date:"Y"}}</span>
+    	{{video.published|date:"H:i"}}
+    </div>
+	<div class='videolist_player'>
+		{% video_playlist_player video %}
+	</div>
+	<div class='videolist_details'>
+		{% trans "type" %}: {{video.source_type}}, {% trans "group" %}: {{video.group}}<br/>
+		{%trans "related object" %}: {{video.content_object}}
+        {% if video.hide %}, <b>{% trans "hidden" %}</b>{% endif %}
+        <br/>
+		{% if video.source_type != 'youtube' and video.reviewed %}
+			<b>{% trans "video already reviewed" %}<br/>{% trans "this type of video cannot be hidden" %}</b>
+		{% else %}
+			{% if video.source_type != 'youtube' %}
+				<b>{% trans "hide from the list?" %}</b>
+			{% else %}
+				{% if video.reviewed %}
+					<b>{% trans "video already reviewed, keep displaying on the website?" %}</b>
+				{% else %}
+					<b>{% trans "approve for display on the website?" %}</b>
+				{% endif %}
+			{% endif %}
+			&#160;&#160;&#160;
+			{% trans "yes" %}:
+			<a href='javascript:videolist.approve(true,{{video.id}});'><img src='/static/icons/dialog_yes_50x50.png' alt='{% trans "approve" %}'/></a>
+			&#160;&#160;&#160;
+			{% if video.source_type = 'youtube' %}
+				{% trans "no" %}: 
+				<a href='javascript:videolist.approve(false,{{video.id}});'><img src='/static/icons/dialog_no_50x50.png' alt='{% trans "don't approve" %}'/></a>
+			{% else %}
+				({% trans "this type of video cannot be hidden" %})
+			{% endif %}
+		{% endif %}
+	</div>
+</div>

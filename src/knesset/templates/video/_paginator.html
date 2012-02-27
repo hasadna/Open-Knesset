@@ -1,0 +1,29 @@
+{% load i18n %}
+{% comment %}
+    {% if page_obj.has_previous %}
+        <a id="prev" href="?{% for i in request.GET.items %}{% ifnotequal i.0 'page' %}{{ i.0 }}={{ i.1 }}&{% endifnotequal %}{% endfor %}page={{ page_obj.previous_page_number }}">{% trans 'previous page' %}</a>    
+    {% endif %}
+    &nbsp;
+    {% if page_obj.has_next %}
+        <a id="more" href="?{% for i in request.GET.items %}{% ifnotequal i.0 'page' %}{{ i.0 }}={{ i.1 }}&{% endifnotequal %}{% endfor %}page={{ page_obj.next_page_number }}">{% trans 'next page' %}</a>
+    {% endif %}
+    {{ paginator.num_pages }}
+    {{ paginator.page_range }}
+{% endcomment %}
+<div class="pagination">{% trans 'Pages' %}:
+{% if first_pages %}
+    {% for page in first_pages %}
+        <a href="{{ page.1 }}">{{ page.0 }}</a>  
+    {% endfor %}
+    ...
+{% endif %}
+{% for page in show_pages %}
+    <a{% if page.2 %} class="current"{% endif %} href="{{ page.1 }}">{{ page.0 }}</a>  
+{% endfor %} 
+{% if last_pages %}
+    ...
+    {% for page in last_pages %}
+        <a href="{{ page.1 }}">{{ page.0 }}</a>  
+    {% endfor %}
+{% endif %}
+</div>

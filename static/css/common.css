@@ -1062,6 +1062,7 @@ div.general_discipline_control {
     padding:0;
 }
 .video_playlist_player .video_image {
+	width:120px;font-weight:bold;text-align:center;
     float:right;padding-left:5px;
 }
 .video_playlist_player img {

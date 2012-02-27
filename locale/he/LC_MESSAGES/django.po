@@ -3144,6 +3144,81 @@ msgstr "ענינים שתויגו על ידי "
 msgid "%(count)s Items tagged by "
 msgstr "%(count)s ענינים שתויגו על ידי "
 
+#: templates/video/video_list.html
+msgid "Videos"
+msgstr "וידאו"
+
+#: templates/video/video_list.html
+msgid "You don't have the appropriate permissions to access this page"
+msgstr "אין לך הרשאות מתאימות לצפייה בדף זה"
+
+#: templates/video/video_list.html
+msgid "All Videos"
+msgstr "כל סרטי הוידאו"
+
+msgid "You have pending actions, continuing will cancel them."
+msgstr "יש פעולות שממתינות לביצוע, יציאה מהדף תבטל אותן."
+
+#: templates/video/video_list.html
+msgid "no actions to commit"
+msgstr "אין פעולות לביצוע"
+
+#: templates/video/video_list.html
+msgid "error updating the videos"
+msgstr "אירעה שגיאה בעדכון קטעי הוידאו"
+
+#: templates/video/video_list.html
+msgid "updating, please wait..."
+msgstr "מעדכן, נא להמתין..."
+
+#: templates/video/video_list.html
+msgid "pending actions"
+msgstr "פעולות שממתינות לביצוע"
+
+#: templates/video/video_list.html
+msgid "updated (num) videos"
+msgstr "עודכנו (num) קטעי וידאו"
+
+#: templates/video/_video_list_item.html
+msgid "type"
+msgstr "סוג"
+
+#: templates/video/_video_list_item.html
+msgid "related object"
+msgstr "אובייקט מקושר"
+
+#: templates/video/_video_list_item.html
+msgid "video already reviewed"
+msgstr "הוידאו עבר ביקורת"
+
+#: templates/video/_video_list_item.html
+msgid "this type of video cannot be hidden"
+msgstr "לא ניתן להסתיר סוג וידאו זה"
+
+#: templates/video/_video_list_item.html
+msgid "hide from the list?"
+msgstr "הסתר מהרשימה?"
+
+#: templates/video/_video_list_item.html
+msgid "video already reviewed, keep displaying on the website?"
+msgstr "הוידאו עבר ביקורת, להמשיך להציג באתר?"
+
+#: templates/video/_video_list_item.html
+msgid "approve for display on the website?"
+msgstr "אשר להצגה באתר?"
+
+#: templates/video/_video_list_item.html
+#msgid "yes"
+#msgstr "כן"
+
+#: templates/video/_video_list_item.html
+#msgid "no"
+#msgstr "לא"
+
+#: templates/video/_video_list_item.html
+msgid "hidden"
+msgstr "מוסתר"
+
 #: user/forms.py:10
 #: user/forms.py:28
 msgid "Username"
@@ -4819,11 +4894,11 @@ msgstr "שבועי"
 #~ msgid "IP Address"
 #~ msgstr "כתובת IP"
 
-#~ msgid "yes"
-#~ msgstr "כן"
+msgid "yes"
+msgstr "כן"
 
-#~ msgid "no"
-#~ msgstr "לא"
+msgid "no"
+msgstr "לא"
 
 #~ msgid "Thanks for commenting"
 #~ msgstr "תודה על התגובה"

@@ -1,0 +1,157 @@
+{% extends "site_base.html" %}
+{% load video_list_extra %}
+{% load lookup %}
+{% load i18n %}
+{% load i18n i18ninclude %}
+{% load user %}
+{% load common_text_handling %}
+{% load video %}
+{% block extratitle %}{% trans "Videos" %}{% endblock %}
+{% block keywords %}{{% trans "Videos" %}{% endblock %}
+{% block description %}{% trans "Videos" %} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
+
+{% block extrahead %}
+	{% video_init %}
+	<style>
+		.videolist_item {
+			height:90px;
+		}
+		.videolist_item .videolist_player {
+			float:right;
+			padding-left:15px;
+			margin-left:15px;
+			border-left:1px dashed black;
+		}
+		.videolist_item .videolist_details img {
+			 vertical-align:middle;
+		}
+		.videolist_item .date-item {
+			width:30px;
+		}
+	</style>
+	<script type='text/javascript'>
+		(function(){
+			/** view **/
+			var _numPendingActions=0;
+			var _hideVideo=function(id){
+				$('#videolistitem'+id).parents('.item').remove();
+			};
+			var _incrementStatusDivs=function(){
+				_numPendingActions++;
+				if (_numPendingActions==1) {
+					$('.videolist_status').html(''
+						+'<div style="text-align:center;font-weight:bold;">'
+							+'{% trans "pending actions"|escapejs %}: '
+							+'<span class="videolist_actions_pending">1</span>'
+							+'<br/>'
+							+'<a href="javascript:window.videolist.commit();">COMMIT</a>'
+						+'</div>'
+					);
+				} else {
+					$('.videolist_actions_pending').html(_numPendingActions);
+				};
+			};
+			var _showLoadingScreen=function() {
+				$('#list-wrap').html(''
+					+'<h2 style="text-align:center;">'
+						+'{% trans "updating, please wait..."|escapejs %}'
+					+'</h2>'
+				);
+			};
+			
+			/** controller **/
+			var _committing=false;
+			var _actions=[];			
+			var _addToActionsQueue=function(action){
+				_incrementStatusDivs();
+				_actions.push(action);
+			};
+			var _hasActionsPending=function(){
+				return _actions.length>0;
+			};
+			var _refreshPage=function() {
+				window.location.href='/video/';
+			};
+			var _runApproveAjax=function(hideVideoIds,showVideoIds,onFinish){
+				$.post('/video/approve_ajax/',{
+					hideVideoIds:hideVideoIds.join(','), 
+					showVideoIds:showVideoIds.join(',')
+				},function(data){
+					if (data.status) {
+						var msg='{% trans "updated (num) videos"|escapejs %}';
+						msg=msg.replace('(num)',data.updatedVideoIds.length);
+					} else {
+						var msg='{% trans "error updating the videos"|escapejs %}';
+					};
+					onFinish(data.status,msg);
+				});
+			};
+			window.videolist={
+				approve:function(status,id){
+					_hideVideo(id);
+					_addToActionsQueue({
+						type:'hide',
+						hide:!status,
+						id:id
+					});
+				},
+				commit:function(){
+					_committing=true;
+					var hideVideoIds=[];
+					var showVideoIds=[];
+					for(var i=0;i<_actions.length;i++){
+						var action=_actions[i];
+						if (action.type=='hide') {
+							if (action.hide) {
+								hideVideoIds.push(action.id);
+							} else {
+								showVideoIds.push(action.id);
+							};
+						};
+					};
+					if (hideVideoIds.length>0 || showVideoIds.length>0) {
+						_showLoadingScreen();
+						_runApproveAjax(hideVideoIds,showVideoIds,function(status,msg){	
+							alert(msg);
+							if (status) {
+								_refreshPage();
+							};
+						});
+					} else {
+						alert('{% trans "no actions to commit"|escapejs %}');
+						_refreshPage();
+					};
+				}
+			};
+			window.onbeforeunload = function (e) {
+				if (!_committing && _hasActionsPending()) {
+					var msg='{% trans "You have pending actions, continuing will cancel them."|escapejs %}';
+					e = e || window.event;
+					if (e) e.returnValue = msg;
+					return msg;
+				};
+			};
+		})();
+	</script>
+{% endblock %}
+
+{% block divcontent %}
+    <div id="list-wrap">
+        <h2> {% trans "All Videos" %} </h2>
+        {% if user.is_staff %}
+        	<div class='videolist_status'></div>
+	        <div class="item-list">
+	            {% for o in object_list %}
+	                <div class="item {% cycle "alt" "normal" %}">
+	                	{% video_list_item o %}
+	                </div>
+	            {% endfor %}
+	        </div>
+	        <div class='videolist_status'>
+	        	{% pagination page_obj paginator request %}
+	        </div>
+	    {% else %}
+	    	<h3>{% trans "You don't have the appropriate permissions to access this page" %}</h3>
+        {% endif %}
+    </div>
+{% endblock %}

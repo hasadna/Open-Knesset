@@ -9,24 +9,28 @@
         parent.hide();
     };
     var videoPlaylistPlayerPlay=function(that){
-        $('.video_playlist_player_embed').remove();
-        $('.video_playlist_player').show();
-        var parent=$(that).parents('.video_playlist_player');
+    	var parent=$(that).parents('.video_playlist_player');
         var embed_link=parent.attr('embed_link').replace('https://','http://');
         var view_link=parent.attr('view_link');
-        var title=parent.find('.video_title').text();
-        var prev=parent.prev('.video_playlist_player_embed');
-        var player='<div class="video_playlist_player_embed">'
-            +'<iframe src="'+embed_link+'" width=400" height="300" frameborder="0"></iframe>'
-            +'<div><a class="video_viewlink" href="'+view_link+'" target="_blank">'+title+'</a></div>'
-        +'</div>';
-        player=$(player);
-        player.find('.video_viewlink').click(function(){
-            $('.video_playlist_player_embed').remove();
-            $('.video_playlist_player').show();
-        });
-        parent.before(player);
-        parent.hide();
+        if (embed_link.length>0) {
+	        $('.video_playlist_player_embed').remove();
+	        $('.video_playlist_player').show();
+	        var title=parent.find('.video_title').text();
+	        var prev=parent.prev('.video_playlist_player_embed');
+	        var player='<div class="video_playlist_player_embed">'
+	            +'<iframe src="'+embed_link+'" width=400" height="300" frameborder="0"></iframe>'
+	            +'<div><a class="video_viewlink" href="'+view_link+'" target="_blank">'+title+'</a></div>'
+	        +'</div>';
+	        player=$(player);
+	        player.find('.video_viewlink').click(function(){
+	            $('.video_playlist_player_embed').remove();
+	            $('.video_playlist_player').show();
+	        });
+	        parent.before(player);
+	        parent.hide();
+        } else if (view_link.length>0) {
+        	window.open(view_link);
+        };
     };
     $('.video_player .video_playbtn').click(function(){
         videoPlayerPlay(this);

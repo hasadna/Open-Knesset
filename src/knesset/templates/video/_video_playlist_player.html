@@ -1,7 +1,12 @@
+{% load i18n %}
 <div class='video_playlist_player' embed_link='{{embed_link}}' view_link='{{link}}'>
     <div class='video_image'>
-        <div><img src='{{image_link}}'/></div>
-        <div class='video_playbtn'></div>
+		{% if source_type = 'youtube' %}
+	        <div><img src='{{image_link}}'/></div>
+	        <div class='video_playbtn'></div>
+	    {% else %}
+	    	{% trans "video cannot be embeded" %}
+	    {% endif %}
     </div>
     <div class='video_description'>
         <a class='video_playlink video_title' href='javascript:;'>

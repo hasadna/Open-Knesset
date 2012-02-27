@@ -19,3 +19,4 @@ class Video(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_pk = models.TextField()
     content_object = generic.GenericForeignKey(ct_field="content_type", fk_field="object_pk")
+    reviewed = models.BooleanField(default=False)
