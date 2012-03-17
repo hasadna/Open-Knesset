@@ -5,13 +5,12 @@ from knesset.video.management.commands.sub_commands import SubCommand
 from django.contrib.contenttypes.models import ContentType
 from knesset.committees.models import Committee
 from knesset.video.models import Video
-import knesset.video.utils.mms as utils_mms
 from knesset.video.utils import get_videos_queryset
 
 class DownloadCommitteesVideos(SubCommand):
 	
 	def __init__(self,command,mms=None,mb_quota=None):
-		if mms is None: mms=utils_mms
+		if mms is None: import knesset.video.utils.mms as mms
 		SubCommand.__init__(self,command)
 		self._verifyDataDir()
 		videos=self._getVideosToDownload()
