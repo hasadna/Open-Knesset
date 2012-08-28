@@ -31,16 +31,15 @@ class SimpleTest(TestCase):
         follow (self.jacob, self.mk_1)
         action.send(self.mk_1, verb='farted on', target=self.agenda_1)
         email, email_html = cmd.get_email_for_user(self.jacob)
-        self.assertEqual(email, [u'\n\nfollowed MKs\n\n', 
-                                 u'Member mk 1\n\nmk 1 farted on agenda 1\n\n'])
+        text = "\n".join(email)
+        self.assertIn(u'mk 1 farted on agenda 1', text) 
         follow (self.jacob, self.agenda_1)
         action.send(self.mk_1, verb='voted for', target=self.agenda_1)
         action.send(self.agenda_1, verb='supports', target=self.mk_1)
         email, email_html = cmd.get_email_for_user(self.jacob)
-        self.assertEqual(email, [u'\n\nfollowed MKs\n\n', 
-                                 u'Member mk 1\n\nmk 1 voted for agenda 1\n\n', 
-                                 u'Agendas', 
-                                 u'Agenda agenda 1\n\nagenda 1 supports mk 1\n\n'])
+        text = "\n".join(email)
+        self.assertIn(u'mk 1 voted for agenda 1', text) 
+        self.assertIn(u'supports mk 1', text)
         email, email_html = cmd.get_email_for_user(self.jacob)
         self.assertEqual(email, [])
         

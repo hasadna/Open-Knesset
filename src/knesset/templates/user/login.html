@@ -2,6 +2,9 @@
 {% load i18n %}
 
 {% block extratitle %}{% trans 'login' %}{% endblock %}
+{% block extracss %} 
+<link href="{{ MEDIA_URL }}css/auth-buttons.css" type="text/css" rel="stylesheet" media="all" />
+{% endblock %}
 {% block content %}
 {% if user.is_authenticated %}
 
@@ -20,7 +23,14 @@
     <a href="{% url register %}?next={{next}}">{% trans "New user? Register" %}</a><br>
     <a href="{% url password_reset %}?next={{next}}">{% trans "Forgot password?" %}</a><br>    
 
-    
+</div>
+<div id="social-login">
+	<a class="btn-auth btn-twitter" href="{% url socialauth_begin 'twitter' %}">{% trans "Enter using" %} <b>Twitter</b></a>
+    <a class="btn-auth btn-google" href="{% url socialauth_begin 'google' %}">{% trans "Enter using" %} <b>Gmail</b></a>
+    <br />
+    <br />
+    <a class="btn-auth btn-facebook" href="{% url socialauth_begin 'facebook' %}">{% trans "Enter using" %} <b>Facebook</b></a>
+    <a class="btn-auth btn-github" href="{% url socialauth_begin 'github' %}">{% trans "Enter using" %} <b>GitHub</b></a>
 </div>
 {% endif %}
 {% endblock %}

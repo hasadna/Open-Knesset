@@ -8,7 +8,7 @@
             </td></tr>
             <tr><th>{{ agendavote.get_score_header }}:</th><td>{{ agendavote.get_score_display }}</td></tr>
             <tr><th>{% trans "Importance" %}:</th><td>{{ agendavote.get_importance_display }}</td></tr>
-            <tr><th>{% trans "Reasoning" %}:</th><td>{{ agendavote.reasoning }}</td></tr>
+            <tr><th>{% trans "Reasoning" %}:</th><td>{{ agendavote.reasoning|urlizetrunc:"30" }}</td></tr>
         {% endfor %}
         </table>
     {% else %}
@@ -23,14 +23,27 @@
         <form method="post" action=".">{% csrf_token %}<input type="hidden" name="user_input_type" value="agenda"></input>
         <label for="id_agenda">{% trans 'Agenda' %}</label>
         <select name="agenda" id="id_agenda">
+            <option value="">{% trans 'Please select' %}</option>
         {% for a in suggest_agendas %}
             <option value="{{a.id}}">{{a}}</option>
         {% endfor %}
         </select>
         <label for="id_name">{% trans 'Reasoning' %}</label>
         <textarea rows="5" cols="30" id="id_name" name="reasoning"></textarea>
-        <br><input type="submit" value="{% trans 'Submit' %}"></input>
+        <br><input id="suggestion_submit" type="submit" value="{% trans 'Submit' %}"></input>
         </form>
+        <script>
+            $(function(){
+                $('select#id_agenda').change(function(){
+                    a = $(this).val();
+                    if (a){
+                        $('#suggestion_submit').removeAttr('disabled');
+                    } else {
+                        $('#suggestion_submit').attr('disabled', 'disabled');
+                    }
+                }).change();
+            })
+        </script>
     {% else %}
         {% if suggest_agendas == False %}
             <span class="please-login"><a href='{% url login %}?next={{url}}'>{% trans 'Login to suggest an agenda' %}</a></span>

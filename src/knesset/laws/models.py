@@ -5,11 +5,12 @@ import logging
 from datetime import date, timedelta
 
 from django.db import models
-from django.db.models.signals import post_save
 from django.contrib.contenttypes import generic
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Count
+from django.core.cache import cache
+from django.conf import settings
 
 from tagging.models import Tag, TaggedItem
 from tagging.forms import TagField
@@ -18,7 +19,7 @@ from actstream.models import action
 
 from knesset.mks.models import Member, Party
 from knesset.tagvotes.models import TagVote
-from knesset.utils import disable_for_loaddata, slugify_name
+from knesset.utils import slugify_name
 
 logger = logging.getLogger("open-knesset.laws.models")
 VOTE_ACTION_TYPE_CHOICES = (
@@ -65,11 +66,6 @@ class PartyVotingStatistics(models.Model):
     def __unicode__(self):
         return "%s" % self.party.name
 
-@disable_for_loaddata
-def handle_party_save(sender, created, instance, **kwargs):
-    if created and instance._state.db=='default':
-        PartyVotingStatistics.objects.get_or_create(party=instance)
-post_save.connect(handle_party_save, sender=Party)
 
 
 
@@ -86,7 +82,13 @@ class MemberVotingStatistics(models.Model):
         if from_date:
             return VoteAction.objects.filter(member=self.member, vote__time__gt=from_date).exclude(type='no-vote').count()
         else:
-            return VoteAction.objects.filter(member=self.member).exclude(type='no-vote').count()
+            vc = cache.get('votes_count_%d' % self.member.id)
+            if not vc:
+                vc = VoteAction.objects.filter(member=self.member).exclude(type='no-vote').count()
+                cache.set('votes_count_%d' % self.member.id,
+                          vc,
+                          settings.LONG_CACHE_TIME)
+            return vc
 
     def average_votes_per_month(self):
         if hasattr(self, '_average_votes_per_month'):
@@ -122,12 +124,6 @@ class MemberVotingStatistics(models.Model):
     def __unicode__(self):
         return "%s" % self.member.name
 
-@disable_for_loaddata
-def handle_mk_save(sender, created, instance, **kwargs):
-    if created and instance._state.db=='default':
-        MemberVotingStatistics.objects.get_or_create(member=instance)
-post_save.connect(handle_mk_save, sender=Member)
-
 class VoteAction(models.Model):
     type   = models.CharField(max_length=10,choices=VOTE_ACTION_TYPE_CHOICES)
     member = models.ForeignKey('mks.Member')
@@ -138,15 +134,6 @@ class VoteAction(models.Model):
     against_own_bill = models.BooleanField(default=False)
     def __unicode__(self):
         return "%s %s %s" % (self.member.name, self.type, self.vote.title)
-
-@disable_for_loaddata
-def record_vote_action(sender, created, instance, **kwargs):
-    if created:
-        action.send(instance.member, verb='voted',
-                    description=instance.get_type_display(),
-                    target = instance.vote,
-                    timestamp=instance.vote.time)
-post_save.connect(record_vote_action, sender=VoteAction)
 
 class VoteManager(models.Manager):
     # TODO: add i18n to the types so we'd have

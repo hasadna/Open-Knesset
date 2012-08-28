@@ -77,6 +77,11 @@
         {% endfor %}
     </ul>
     <a class="more" href="all_meetings/">{% trans 'more...'%}</a>
+    <br />
+    <h3>{% trans 'MMM Documents' %}</h3>
+    <p>{% trans "Number of documents ordered" %}
+    	<span><a href="{% url committee-mmms object.id %}">{{ object.mmm_documents.count }}</a></span>
+    </p>
   </div>
   <div class="secondary-column">
     <h3>{% trans "Suggested Agenda Topics" %}</h3>

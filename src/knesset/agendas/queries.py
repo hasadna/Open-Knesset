@@ -58,7 +58,7 @@ FROM   (SELECT agid                   agendaid,
             AND a.partyid = v.partyid 
 ORDER BY agendaid,score desc"""
 
-def getAllAgendaMkVotes():
+def agendas_mks_grade():
     cursor = connection.cursor()
     cursor.execute(MK_QUERY)
     results = dict(map(lambda (key,group):(key,map(lambda g:(g[1],float(g[2])),list(group))),

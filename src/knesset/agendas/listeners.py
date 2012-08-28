@@ -36,12 +36,13 @@ pre_delete.connect(record_agenda_removal_action, sender=AgendaVote)
 @disable_for_loaddata
 def update_num_followers(sender, instance, **kwargs):
     agenda = instance.actor
-    agenda.num_followers = Follow.objects.filter(
+    if agenda:
+        agenda.num_followers = Follow.objects.filter(
             content_type = ContentType.objects.get(
                     app_label="agendas",
                     model="agenda").id,
             object_id=agenda.id).count()
-    agenda.save()
+        agenda.save()
 
 post_delete.connect(update_num_followers, sender=Follow)
 post_save.connect(update_num_followers, sender=Follow)

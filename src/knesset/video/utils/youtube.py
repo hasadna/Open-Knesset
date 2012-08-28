@@ -40,7 +40,16 @@ class GetYoutubeVideos:
             url=build_url(self.GDATA_YOUTUBE_VIDEOS_URL,params)
             videos_json=urllib.urlopen(url).read()
         if videos_json is not None and len(videos_json)>0:
-            yvideos=json.loads(videos_json)
+            try:
+                yvideos=json.loads(videos_json)
+            except:
+                print "youtube_id_url="
+                print youtube_id_url
+                print "url"
+                print url
+                print "videos_json="
+                print videos_json
+                raise
             yentries=parse_dict(yvideos,{'feed':'entry'})
             if yentries is None:
                 yentry=parse_dict(yvideos,'entry')

@@ -162,6 +162,23 @@ def vote_tag(request, tag):
 
 
 
+def votes_to_bar_widths(v_count, v_for, v_against):
+    """ a helper function to compute presentation widths for user votes bars.
+        v_count - the total votes count
+        v_for - votes for
+        v_against - votes against
+        returns: a tuple (width of for bar, width of against bar) in percent
+
+    """
+    m = 12 # minimal width for small bar
+    T = 96 # total width for the 2 bars
+    if v_count: # use votes/count, with margin m
+        width_for = min(max(int(float(v_for) / v_count * T), m), 100-m)
+    else: # 0 votes, use 50:50 width
+        width_for = round(T/2)
+    width_against = T-width_for
+    return (width_for, width_against)
+
 class BillDetailView (DetailView):
     allowed_methods = ['get', 'post']
     model = Bill
@@ -179,10 +196,13 @@ class BillDetailView (DetailView):
         if bill.popular_name:
             context["keywords"] = bill.popular_name
         if self.request.user.is_authenticated():
-            p = self.request.user.get_profile()
-            context['watched'] = bill in p.bills
+            userprofile = self.request.user.get_profile()
+            context['watched'] = bill in userprofile.bills
         else:
             context['watched'] = False
+            userprofile = None
+
+        # compute data for user votes on this bill
         context['proposers'] = bill.proposers.select_related('current_party')
         votes = voting.models.Vote.objects.get_object_votes(bill)
         if 1 not in votes: votes[1] = 0
@@ -192,18 +212,44 @@ class BillDetailView (DetailView):
                  'against': votes[-1],
                  'total': votes[1] - votes[-1],
                  'count': count}
-        if count:
-            # use votes/count, with min 10 and max 90
-            score['for_percent'] = min(max(int(float(votes[1]) / count * 99),
-                                           9),
-                                       89)
-            score['against_percent'] = min(max(int(float(votes[-1]) / count * 99),
-                                               9),
-                                           89)
-        else: # 0 votes, use 50:50 width
-            score['for_percent'] = 49
-            score['against_percent'] = 49
+        (score['for_percent'], score['against_percent']) = votes_to_bar_widths(
+            count, score['for'], score['against'])
+
+        # Count only votes by users that are members of parties
+        party_member_votes = voting.models.Vote.objects.get_for_object(
+                    bill).filter(user__profiles__party__isnull=False,
+                                 is_archived=False)
+        votes_for = party_member_votes.filter(direction=1).count()
+        votes_against = party_member_votes.filter(direction=-1).count()
+        count = votes_for + votes_against
+        party_voting_score = {'for': votes_for, 'against': votes_against,
+                              'total': votes_for - votes_against,
+                              'count': count}
+        (party_voting_score['for_percent'], party_voting_score['against_percent']) = votes_to_bar_widths(
+            count, party_voting_score['for'], party_voting_score['against'])
+
+        # Count only votes by users that are members of the party of the viewing
+        # user
+        if userprofile and userprofile.party:
+            user_party_member_votes = voting.models.Vote.objects.get_for_object(
+                        bill).filter(user__profiles__party=userprofile.party,
+                                     is_archived=False)
+            votes_for = user_party_member_votes.filter(direction=1).count()
+            votes_against = user_party_member_votes.filter(direction=-1).count()
+            count = votes_for + votes_against
+            user_party_voting_score = {'for': votes_for, 'against': votes_against,
+                                       'total': votes_for - votes_against,
+                                       'count': count}
+            (user_party_voting_score['for_percent'],
+             user_party_voting_score['against_percent']) = votes_to_bar_widths(
+                count, user_party_voting_score['for'], user_party_voting_score['against'])
+        else:
+            user_party_voting_score = None
+
+
         context['voting_score'] = score
+        context['party_voting_score'] = party_voting_score
+        context['user_party_voting_score'] = user_party_voting_score
         context['tags'] = list(bill.tags)
         return context
 
@@ -389,13 +435,19 @@ class VoteDetailView(DetailView):
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         object_id = kwargs['pk']
-        if not object_id:
+        try:
+            object_id = int(kwargs['pk'])
+        except:
             return HttpResponseBadRequest()
         user_input_type = request.POST.get('user_input_type',None)
         vote = get_object_or_404(Vote, pk=object_id)
         mk_names = Member.objects.values_list('name',flat=True)
         if user_input_type == 'agenda':
-            agenda = Agenda.objects.get(pk=request.POST.get('agenda'))
+            try:
+                agenda_id = int(request.POST.get('agenda'))
+            except:
+                return HttpResponseBadRequest()
+            agenda = Agenda.objects.get(pk=agenda_id)
             reasoning = request.POST.get('reasoning','')
             usv = UserSuggestedVote.objects.filter(user = request.user,
                                 agenda = agenda,

@@ -16,6 +16,10 @@ from annotatetext.models import Annotation
 from knesset.events.models import Event
 from knesset.links.models import Link
 
+import urllib2
+from BeautifulSoup import BeautifulSoup
+
+
 COMMITTEE_PROTOCOL_PAGINATE_BY = 400
 
 logger = logging.getLogger("open-knesset.committees.models")
@@ -55,13 +59,22 @@ class Committee(models.Model):
                     params = [ self.id ]).distinct()
 
     def members_by_presence(self):
+        n = self.meetings.count()
+        if n==0: # this committee had not meetings, can really compute presence
+                 # scores. just return all relevant mks.
+            members = (self.members.all()|
+                       self.chairpersons.all()|
+                       self.replacements.all()).distinct()
+            for m in members:
+                m.meetings_count = 0
+            return members
+        # otherwise compute presence
         members = []
         for m in (self.members.all()|
                   self.chairpersons.all()|
                   self.replacements.all()).distinct():
             m.meetings_count = \
-                100 * m.committee_meetings.filter(committee=self).count() \
-                / self.meetings.count()
+                100 * m.committee_meetings.filter(committee=self).count() / n
             members.append(m)
         members.sort(key=lambda x:x.meetings_count, reverse=True)
         return members
@@ -72,6 +85,36 @@ class Committee(models.Model):
     def future_meetings(self):
         cur_date = datetime.now()
         return self.events.filter(when__gt = cur_date)
+
+    def get_knesset_id(self):
+        """
+            return the id of the committee on the knesset website,
+            update this if any committee id is changed in the db.
+            the knesset committee id list is fixed and includes all committes ever.
+        """
+
+        trans = { #key is our id, val is knesset id
+            1:'1', #כנסת
+            2:'3', #כלכלה 
+            3:'27', #עליה
+            4:'5', #הפנים
+            5:'6', #החוקה
+            6:'8', #החינוך
+            7:'10', #ביקורת המדינה
+            8:'13', #מדע
+            9:'2', #כספים
+            10:'28', #עבודה
+            11:'11', #מעמד האישה
+            12:'15', #עובדים זרים
+            13:'33', #משנה סחר בנשים
+            14:'19', #פניות הציבור
+            15:'25', #זכויות הילד
+            16:'12', #סמים
+            17:'266', #עובדים ערבים
+            18:'321', #משותפת סביבה ובריאות
+        }
+
+        return trans[self.pk]
 
 not_header = re.compile(r'(^אני )|((אלה|אלו|יבוא|מאלה|ייאמר|אומר|אומרת|נאמר|כך|הבאים|הבאות):$)|(\(.\))|(\(\d+\))|(\d\.)'.decode('utf8'))
 def legitimate_header(line):
@@ -174,6 +217,30 @@ class CommitteeMeeting(models.Model):
         # don't forget the last section
         ProtocolPart(meeting=self, order=i,
             header=header, body='\n'.join(section)).save()
+
+    def get_bg_material(self):
+        """
+            returns any background material for the committee meeting, or [] if none
+        """
+        time = re.findall(r'(\d\d:\d\d)',self.date_string)[0]
+        date = self.date.strftime('%d/%m/%Y')
+        cid = self.committee.get_knesset_id()
+        url = 'http://www.knesset.gov.il/agenda/heb/material.asp?c=%s&t=%s&d=%s' % (cid,time,date)
+        data = urllib2.urlopen(url)
+        bg_links = []
+        if data.url == url: #if no bg material exists we get redirected to a diffrent page
+            bgdata = BeautifulSoup(data.read()).findAll('a')
+
+            for i in bgdata:
+                bg_links.append( {'url': 'http://www.knesset.gov.il'+i['href'], 'title': i.string}) 
+
+        return bg_links
+
+    @property
+    def bg_material(self):
+        return Link.objects.filter(object_pk=self.id, 
+                    content_type=ContentType.objects.get_for_model(CommitteeMeeting).id)
+
 
 class ProtocolPartManager(models.Manager):
     def list(self):

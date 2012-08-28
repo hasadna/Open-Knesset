@@ -41,7 +41,11 @@
     {% if user.is_authenticated %}
         {% trans 'Suggest an MK' %}<form method="post" action=".">{% csrf_token %}<input type="hidden" name="user_input_type" value="mk"></input><input type="text" name="mk_name"></input><input type="submit" value="{% trans 'Submit' %}"></input></form>
     {% endif %}
-
+    {% if object.bg_material %}
+    <h2>{% trans 'Background Material' %}</h2>
+            {% for b in object.bg_material %} <a class="hashnav item dontwrap" href="{{ b.url}}" />{{ b.title }}</a> &nbsp; {% endfor %}
+    {% endif %}
+                                 
     <h2>{% trans 'Bills' %}</h2> {% for b in object.bills_first.all %}<a class="hashnav item dontwrap" href="{% url bill-detail b.id %}" />{{ b }}</a> &nbsp; {% endfor %}
                                  {% for b in object.bills_second.all %}<a class="hashnav item dontwrap" href="{% url bill-detail b.id %}" />{{ b }}</a> &nbsp; {% endfor %}
     <br>

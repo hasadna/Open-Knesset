@@ -343,6 +343,14 @@
                                 </tr>
 
                             </table>
+                            <br />
+                            <h3>{% trans "MMM Documents" %}</h3>
+                            <table>
+                            	<tr>
+                                    <td style="width:140px;">{% trans "Number of MMM documents ordered" %}</td>
+                                    <td style="width:200px;"><a href="{% url member-mmms object.id %}">{{ object.mmm_documents.count }}</a></td>
+                                </tr>
+                            </table>
                         </div>
                         <br/>
 

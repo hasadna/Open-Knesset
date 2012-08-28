@@ -10,10 +10,29 @@ from knesset.agendas.models import Agenda
 from knesset.committees.models import Committee
 from knesset.events.models import Event
 from django.utils import simplejson as json
+from django.core import cache
+
+class TestAPIV2(TestCase):
+    """
+    General tests for the API V2, not specific to any app (app-specific tests
+    are located in the app directories).
+    """
+
+    def setUp(self):
+        pass
+
+    def test_empty_cache_bug(self):
+        """ Tastypie has a bug when the cache returns None. this test verifies
+        that our fork of Tastypie doesn't have it. This test should be run with
+        DummyCache settings"""
+        res = self.client.get('/api/v2/vote/?format=json')
+        self.assertEqual(res.status_code, 200)
+
 
 class ApiViewsTest(TestCase):
 
     def setUp(self):
+        cache.cache.clear()
         #self.vote_1 = Vote.objects.create(time=datetime.now(),title='vote 1')
         self.party_1 = Party.objects.create(name='party 1')
         self.vote_1 = Vote.objects.create(title="vote 1", time=datetime.datetime.now())
@@ -91,7 +110,7 @@ class ApiViewsTest(TestCase):
         self.assertEqual(res.status_code, 200)
         res_json = json.loads(res.content)
         self.assertEqual(len(res_json['for_votes']), self.num_mks)
-    
+
     def test_api_vote_not_found(self):
         res = self.client.get(reverse('vote-handler', args=[123456]))
         self.assertEqual(res.status_code, 404)

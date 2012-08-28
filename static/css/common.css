@@ -54,8 +54,6 @@ a:hover { text-decoration:underline;}
                           color:white; background: #dfe4e7; }
 #nav-global li.selected>a { color:#0d204a; }
 
-#homepage #nav-homepage a, #overview #nav-overview a, #download #nav-download a, #documentation #nav-documentation a, #weblog #nav-weblog a, #community #nav-community a, #blogroll #nav-blogroll a, #code #nav-code a { color:white; background:#092e20 url(../img/site/nav_bg.gif) bottom repeat-x; }
-
 /* navigation */
 #subnav { padding-top: 0.5em; line-height: 1.7em;}
 #subnav h4 { display: inline; }
@@ -123,6 +121,7 @@ a:hover { text-decoration:underline;}
 .subcol-primary, .subcol-secondary { width:40%; float:left; padding-bottom:1.2em; }
 .subcol-primary { margin-right:1%; }
 .content-footer {clear: both; border:0px;margin:2em auto 0.5em;}
+
 /* CONTENT */
 
 h1,h2,h3 { font-family:"Trebuchet MS",sans-serif; font-weight:normal; color: #0d204a; }
@@ -183,15 +182,6 @@ pre, .literal-block { font-size:medium; background:#E0FFB8; border:1px solid #94
 dt .literal, table .literal { background:none; }
 textarea.codedump { font-size:10px; color:#234f32; width:100%; background:#E0FFB8; border:1px solid #94da3a; border-width:1px 0; padding: .3em .4em; }
 
-/* NOTES & ADMONITIONS */
-
-.note, .admonition, .caution { padding:.8em 1em .8em; margin: 1em 0; border:1px solid #94da3a; }
-.admonition-title { font-weight:bold; margin-top:0 !important; margin-bottom:0 !important;}
-.admonition .last { margin-bottom:0 !important; }
-.admonition, .admonition-note, .caution { padding-left:65px; background:url(../img/doc/icons/docicons-note.gif) .8em .8em no-repeat;}
-div.admonition-philosophy { padding-left:65px; background:url(../img/doc/icons/docicons-philosophy.gif) .8em .8em no-repeat;}
-div.admonition-behind-the-scenes { padding-left:65px; background:url(../img/doc/icons/docicons-behindscenes.gif) .8em .8em no-repeat;}
-
 /* DOCS */
 
 #documentation h2, #documentation h3, #documentation h4 { margin-top:1.4em; }
@@ -210,21 +200,6 @@ div.versionadded span.title, div.versionchanged span.title { font-weight: bold; 
 #documentation a.reference { text-decoration: none; }
 #documentation a.reference tt.literal { border-bottom: 1px #234f32 dotted; }
 #documentation a.reference em { font-style: normal; }
-
-/* BILLBOARDS */
-
-/* #billboard { background:#94da3a url(../img/site/bbdsm_bg.gif) repeat-x; border-bottom:6px solid #092e20; } */
-#billboard h2 { margin:0; }
-#generic #billboard { display:none; }
-#homepage #billboard { background-image: url(../img/site/bbd_bg.gif); }
-#homepage #billboard h2 { margin:0; text-indent:-5000px; height:80px; width:633px; background:url(../img/site/bbd_homepage.gif) no-repeat; }
-#overview #billboard h2 { margin:0; text-indent:-5000px; height:60px; width:203px; background:url(../img/site/bbd_overview.gif) no-repeat; }
-#download #billboard h2 { margin:0; text-indent:-5000px; height:60px; width:203px; background:url(../img/site/bbd_download.gif) no-repeat; }
-#documentation #billboard h2 a { display:block; margin:0; text-indent:-5000px; height:60px; width:226px; background:url(../img/site/bbd_documentation.gif) no-repeat; }
-#weblog #billboard h2 a { display:block; margin:0; text-indent:-5000px; height:60px; width:226px; background:url(../img/site/bbd_weblog.gif) no-repeat; }
-#community #billboard h2 { display:block; margin:0; text-indent:-5000px; height:60px; width:226px; background:url(../img/site/bbd_community.gif) no-repeat; }
-#blogroll #billboard h2 { display:block; margin:0; text-indent:-5000px; height:60px; width:168px; background:url(../img/site/bbd_blogroll.gif) no-repeat; }
-#code #billboard h2 a { display:block; margin:0; text-indent:-5000px; height:60px; width:184px; background:url(../img/site/bbd_code.gif) no-repeat; }
 
 /* FOOTER */
 
@@ -1116,3 +1091,18 @@ div.general_discipline_control {
 #helptextcontainer {width:100%;position:absolute;}
 
 #embeddiv { width: 25em; float: left; margin-left: 0em; clear:left;}
+
+
+.content-footer form{
+    float:left;
+    margin-top:-4px;
+    padding-right: 10px;
+}
+
+.content-footer form input{
+    border:none;
+    text-decoration: underline;
+}
+.content-footer form input:hover{
+    cursor: pointer;
+}

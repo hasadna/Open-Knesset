@@ -209,6 +209,16 @@
             <div id="public-opinion">
                 <span class="stand for" style="width:{{voting_score.for_percent}}%">{{ voting_score.for }}</span><span class="stand against" style="width:{{voting_score.against_percent}}%">{{ voting_score.against }}</span>
                 <br>
+                {% if party_voting_score %}
+                <h4>{% trans 'Public Opinion - party members' %}</h4>
+                <span class="stand for" style="width:{{party_voting_score.for_percent}}%">{{ party_voting_score.for }}</span><span class="stand against" style="width:{{party_voting_score.against_percent}}%">{{ party_voting_score.against }}</span>
+                <br>
+                {% endif %}
+                {% if user_party_voting_score %}
+                <h4>{% trans 'Public Opinion - your party members' %}</h4>
+                <span class="stand for" style="width:{{user_party_voting_score.for_percent}}%">{{ user_party_voting_score.for }}</span><span class="stand against" style="width:{{user_party_voting_score.against_percent}}%">{{ user_party_voting_score.against }}</span>
+                <br>
+                {% endif %}
                 {% if user.is_authenticated %}
                     {% vote_by_user user on object as vote_dict %}
                     {% if vote_dict and vote_dict.direction %}

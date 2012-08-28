@@ -77,6 +77,23 @@ MIDDLEWARE_CLASSES = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.twitter.TwitterBackend',
+    'social_auth.backends.facebook.FacebookBackend',
+    'social_auth.backends.google.GoogleOAuth2Backend',
+    'social_auth.backends.google.GoogleBackend',
+    'social_auth.backends.contrib.github.GithubBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_CREATE_USERS = True
+SOCIAL_AUTH_FORCE_RANDOM_USERNAME = False
+SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
+# These keys will work for 127.0.0.1:8000
+# and are overriden in the production server.
+TWITTER_CONSUMER_KEY = 'KFZkQgImAyECXDS6tQTvOw'
+TWITTER_CONSUMER_SECRET = 's6ir2FMqw4fqXQbX4QCE6Ka1lRjycXxJuG6k8tYc'
+
 ROOT_URLCONF = 'knesset.urls'
 
 TEMPLATE_DIRS = (
@@ -115,10 +132,12 @@ INSTALLED_APPS = (
     'gunicorn',
     'djangoratings',
     'voting',
-    'compressor',
+    'social_auth',
+    'devserver',
     'knesset',
     'knesset.auxiliary',                  # knesset apps
     'knesset.mks',
+    'knesset.mmm',
     'knesset.laws',
     'knesset.committees',
     'knesset.simple',
@@ -143,6 +162,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 "django.core.context_processors.media",
 "django.core.context_processors.request",
 "knesset.context.processor",
+"social_auth.context_processors.social_auth_by_name_backends",
+"social_auth.context_processors.social_auth_backends",
 )
 INTERNAL_IPS = ('127.0.0.1',)
 # Add the following line to your local_settings.py files to disable django-debug-toolar:
@@ -170,7 +191,7 @@ logger = logging.getLogger("open-knesset")
 logger.setLevel(logging.DEBUG)  # override this in prod server to logging.ERROR
 h = logging.FileHandler(LOG_FILENAME)
 h.setLevel(logging.DEBUG)
-formatter = logging.Formatter("%(asctime)s\t%(name)s\t%(levelname)s\t%(message)s")
+formatter = logging.Formatter("%(asctime)s\t%(name)s:%(lineno)d\t%(levelname)s\t%(message)s")
 h.setFormatter(formatter)
 logger.addHandler(h)
 
@@ -218,6 +239,10 @@ NOSE_ARGS = ['--with-xunit']
 SERIALIZATION_MODULES = {
     'oknesset' : 'auxiliary.serializers'
 }
+
+API_LIMIT_PER_PAGE = 1000
+
+SOUTH_TESTS_MIGRATE = False
 
 # if you add a local_settings.py file, it will override settings here
 # but please, don't commit it to git.

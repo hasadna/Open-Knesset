@@ -1,0 +1,26 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load pagination_tags %}
+
+{% block extratitle %}{% blocktrans %}M.M.M Documents ordered by {{ member.name }}{% endblocktrans %}{% endblock %}
+{% block keywords %}{% trans "M.M.M Documents" %}{% endblock %}
+{% block description %}
+{% blocktrans %}M.M.M Documents ordered by {{ member.name }}{% endblocktrans %} - 
+{% trans 'Open Knesset - Opening the Knesset to the public' %}
+{% endblock %}
+
+{% block divcontent %}
+	<h1>{% trans "M.M.M Documents ordered by" %} <a href="{% url member-detail member.id %}">{{ member.name }}</a></h1>
+
+	<div class="item-list">
+		{% autopaginate mmm_docs 15 %}
+		{% for d in mmm_docs %}
+			<div class="item">
+				<a href="{{ d.url }}">{{ d.title }}</a>
+			</div>
+			{% empty %}
+            {% trans "No results found" %}
+        {% endfor %}
+        {% paginate %}
+	</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+syntax: regexp
+^[\.]
+^bin/
+^eggs
+^parts
+^develop
+\.pyc
+syntax: glob
+dev.db

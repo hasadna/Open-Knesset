@@ -72,7 +72,7 @@ class IndexPagesSitemap(Sitemap):
     priority = 1.0
     def items(self): return ['/', '/vote/', '/member/', '/party/',
                              '/committee/', '/about/', '/bills/',
-                             '/agenda/', 'tags/']
+                             '/agenda/', '/tags/']
     def location(self, obj): return obj
 
 sitemaps = {

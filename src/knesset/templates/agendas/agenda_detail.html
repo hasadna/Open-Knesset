@@ -64,12 +64,13 @@
 			{% with members|lookup:selected_mk_id as selected_mk %}
                         <tr>
 			{% with parties|lookup:selected_mk.current_party_id as selected_mk_party %}
-			{% with agenda_mk_values|lookup:selected_mk.id as selected_mk_score %}
+			{% with agenda_mk_values|lookup:selected_mk.id as mk_values %}
                             <td><a class="hashnav item dontwrap party-{{selected_mk_party.id}}" title="{{selected_mk_party.name}}" id="detail-{{ selected_mk.id }}" href="{% url mk-agenda-detail object.id selected_mk.id %}">{{ selected_mk }}</a></td>
-                            <td class="numeric">{{selected_mk_score|floatformat:"0"}}%</td>
+                            <td class="numeric">{{mk_values.score|floatformat:"0"}}%</td>
                             <td>
-                                <div id="selected_mk_{{ selected_mk.id }}_percentile" class="percentile {% if selected_mk_score < 0 %}percentile_against{% endif %}"></div>
-                                <script>set_percentile('selected_mk_{{ selected_mk.id }}',({{ selected_mk_score }}+100)/2);</script>
+                                <div id="selected_mk_{{ selected_mk.id}}_percentile" class="percentile 
+                                    {% if mk_values.score < 0 %}percentile_against{% endif %}"></div>
+                                <script>set_percentile('selected_mk_{{selected_mk.id}}',({{mk_values.score}}+100)/2);</script>
                             </td>
 			{% endwith %}
 			{% endwith %}
@@ -84,12 +85,13 @@
 			{% with members|lookup:selected_mk_id as selected_mk %}
                         <tr>
 			{% with parties|lookup:selected_mk.current_party_id as selected_mk_party %}
-			{% with agenda_mk_values|lookup:selected_mk.id as selected_mk_score %}
+			{% with agenda_mk_values|lookup:selected_mk.id as mk_values %}
                             <td><a class="hashnav item dontwrap party-{{selected_mk_party.id}}" title="{{selected_mk_party.name}}" id="detail-{{ selected_mk.id }}" href="{% url mk-agenda-detail object.id selected_mk.id %}">{{ selected_mk }}</a></td>
-                            <td class="numeric">{{selected_mk_score|floatformat:"0"}}%</td>
+                            <td class="numeric">{{mk_values.score|floatformat:"0"}}%</td>
                             <td>
-                                <div id="selected_mk_{{ selected_mk.id }}_percentile" class="percentile {% if selected_mk_score < 0 %}percentile_against{% endif %}"></div>
-                                <script>set_percentile('selected_mk_{{ selected_mk.id }}',({{ selected_mk_score }}+100)/2);</script>
+                                <div id="selected_mk_{{selected_mk.id}}_percentile" class="percentile 
+                                    {% if mk_values.score < 0 %}percentile_against{% endif %}"></div>
+                                <script>set_percentile('selected_mk_{{selected_mk.id}}',({{mk_values.score}}+100)/2);</script>
                             </td>
 			{% endwith %}
 			{% endwith %}
@@ -103,12 +105,13 @@
 			{% with members|lookup:selected_mk_id as selected_mk %}
                         <tr>
 			{% with parties|lookup:selected_mk.current_party_id as selected_mk_party %}
-			{% with agenda_mk_values|lookup:selected_mk.id as selected_mk_score %}
+			{% with agenda_mk_values|lookup:selected_mk.id as mk_values %}
                             <td><a class="hashnav item dontwrap party-{{selected_mk_party.id}}" title="{{selected_mk_party.name}}" id="detail-{{ selected_mk.id }}" href="{% url mk-agenda-detail object.id selected_mk.id %}">{{ selected_mk }}</a></td>
-                            <td class="numeric">{{selected_mk_score|floatformat:"0"}}%</td>
+                            <td class="numeric">{{mk_values.score|floatformat:"0"}}%</td>
                             <td>
-                                <div id="selected_mk_{{ selected_mk.id }}_percentile" class="percentile {% if selected_mk_score < 0 %}percentile_against{% endif %}"></div>
-                                <script>set_percentile('selected_mk_{{ selected_mk.id }}',({{ selected_mk_score }}+100)/2);</script>
+                                <div id="selected_mk_{{selected_mk.id}}_percentile" class="percentile 
+                                    {% if mk_values.score < 0 %}percentile_against{% endif %}"></div>
+                                <script>set_percentile('selected_mk_{{selected_mk.id}}',({{mk_values.score}}+100)/2);</script>
                             </td>
 			{% endwith %}
 			{% endwith %}
@@ -165,7 +168,7 @@
                         <div class="item {% cycle "alt" "normal" %}">
                             {% vote_list_item agendavote.vote watched_members %}
                             <span class="reasoning">
-                                {{ agendavote.reasoning }}
+                                {{ agendavote.reasoning|urlizetrunc:"30" }}
                             </span>
                         </div>
                     </td>

@@ -1,6 +1,5 @@
 {% load i18n %}
 {% load search %}
-{% load compress %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -21,11 +20,9 @@
         <meta name="keywords" content="{% trans 'Open Knesset' %} {% block keywords %}{% endblock %}" >
         <meta name="description" content="{% block description %}{% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}">
         <meta name="google-site-verification" content="TAmHbnTgm9dvrNMB41Ke-lZesXPgTd5xSW5lBTzq020" />
-        {% compress css %}
         <link href="{{MEDIA_URL}}css/{% block cssid %}common{% endblock %}.css?v=16" rel="stylesheet" type="text/css" media="screen" />
         <link href="{{MEDIA_URL}}css/jquery.jgrowl.css" rel="stylesheet" type="text/css" media="screen" />
         {% block extracss %} {% endblock %}
-        {% endcompress %}
         <link rel="shortcut icon" href="{{MEDIA_URL}}/img/favicon.png" />
         <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/jquery.min.js"></script>
@@ -33,21 +30,7 @@
         <script type="text/javascript" src="{{MEDIA_URL}}js/raphael-min.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/okhelptexts.js"></script>
         {% block extrajs %}{% endblock %}
-        {% if not debug %}
-        <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-        </script>
-        <script type="text/javascript">
-            try {
-            var pageTracker = _gat._getTracker("UA-15521464-1");
-            pageTracker._setDomainName(".oknesset.org");
-            pageTracker._trackPageview();
-            } catch(err) {}
-        </script>
-        {% endif %}
-
-        <script>
+       <script>
             $('html').ajaxSend(function(event, xhr, settings) {
                 function getCookie(name) {
                     var cookieValue = null;
@@ -83,10 +66,27 @@
 
         {% endif %}
       {% block extrahead %}{% endblock %}
-    </head>
+      {% if not debug %}
+      <script type="text/javascript">
+      
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-15521464-1']);
+        _gaq.push(['_setDomainName','.oknesset.org']);
+        _gaq.push(['_trackPageview']);
+      
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      
+      </script>
+      {% endif %}
+
+     </head>
 
     <body>
-<!--[if lte IE 6]><script src="static/js/ie6/warning.js"></script><script>window.onload=function(){e("static/js/ie6/")}</script><![endif]-->
+<!--[if lte IE 6]><script src="/static/js/ie6/warning.js"></script><script>window.onload=function(){e("/static/js/ie6/")}</script><![endif]-->
     {% if debug %}
     <div id="debug-warning">{% trans 'This is a development server, all data in it should be considered fictional. users are kindly requested to go to '%}<a href="http://oknesset.org/">http://oknesset.org/</a></div>
     {% endif %}
@@ -124,7 +124,6 @@
 
         </div>
         <!-- END Header -->
-        <div id="billboard"></div>
         <div id="columnwrap">
             {% block columnwrap %}
                 <div id="cse" class="main" style="display:none;"></div>
@@ -134,6 +133,12 @@
                     {% block social %}
                     <div class="content-footer">
                         {% if not debug %}
+                        <form method="post" action="https://www.paypal.com/cgi-bin/webscr">
+                             | <input type="hidden" value="_s-xclick" name="cmd">
+                            <input type="hidden" value="K7X4FWYPBR7H4" name="hosted_button_id">
+                            <input type="submit" name="submit" value="תרמו לנו!">
+                            <img width="1" height="1" border="0" src="https://www.paypalobjects.com/WEBSCR-640-20110306-1/he_IL/i/scr/pixel.gif" alt="">
+                        </form> 
                             <!-- AddToAny BEGIN -->
                             <div class="a2a_kit a2a_default_style">
                             <a class="a2a_dd" href="http://www.addtoany.com/share_save">שיתוף</a>

@@ -332,6 +332,18 @@ class Member(models.Model):
             names.append(altname.name)
         return names
 
+    def get_agendas_values(self):
+        from agendas.models import Agenda
+
+        out = {}
+        for agenda_id, mks in Agenda.objects.get_mks_values().items():
+            try:
+                out[agenda_id] = dict(mks)[self.id]
+            except KeyError:
+                pass
+        return out
+
+
 class WeeklyPresence(models.Model):
     member      = models.ForeignKey('Member')
     date        = models.DateField(blank=True, null=True) # contains the date of the begining of the relevant week (actually monday)

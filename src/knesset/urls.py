@@ -2,6 +2,8 @@ from django.conf import settings
 from django.conf.urls.defaults import *
 from django.contrib import admin
 from django.views.generic.simple import redirect_to, direct_to_template
+from django.views.decorators.cache import cache_page
+from django.contrib.sitemaps import views as sitemaps_views
 
 from planet import views as planet_views
 from hitcount.views import update_hit_count_ajax
@@ -10,7 +12,7 @@ from backlinks.pingback.server import default_server
 from voting.views import vote_on_object
 
 from knesset import feeds
-from knesset.sitemap import sitemaps
+from knesset.sitemap import sitemaps as sitemaps_dict
 from knesset.mks.urls import mksurlpatterns
 from knesset.laws.urls import lawsurlpatterns
 from knesset.committees.urls import committeesurlpatterns
@@ -23,6 +25,8 @@ from knesset.auxiliary.views import (main, post_annotation, post_details,
     TagList, TagDetail)
 
 from knesset.feeds import MainActionsFeed
+
+from settings import LONG_CACHE_TIME
 
 admin.autodiscover()
 
@@ -43,6 +47,7 @@ urlpatterns = patterns('',
     (r'^agenda/', include('knesset.agendas.urls')),
     (r'^users/', include('knesset.user.urls')),
     (r'^badges/', include('knesset.badges.urls')),
+    url(r'', include('social_auth.urls')),
     url(r'^help/$', help_page, name="help"),
      (r'^admin/', include(admin.site.urls)),
      (r'^comments/$', CommentsView.as_view()),
@@ -56,7 +61,15 @@ urlpatterns = patterns('',
      (r'^feeds/comments/$', feeds.Comments()),
      (r'^feeds/votes/$', feeds.Votes()),
      (r'^feeds/bills/$', feeds.Bills()),
-     (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
+     #(r'^sitemap\.xml$', redirect_to, {'url': '/static/sitemap.xml'}),
+     url(r'^sitemap\.xml$',
+         cache_page(LONG_CACHE_TIME)(sitemaps_views.index),
+         {'sitemaps': sitemaps_dict, 'sitemap_url_name': 'sitemaps'},
+         name='sitemap'),
+     url(r'^sitemap-(?P<section>.+)\.xml$',
+         cache_page(LONG_CACHE_TIME)(sitemaps_views.sitemap),
+         {'sitemaps': sitemaps_dict},
+         name='sitemaps'),
      (r'^planet/', include('planet.urls')),
      url(r'^ajax/hit/$', update_hit_count_ajax, name='hitcount_update_ajax'),
      (r'^annotate/write/$', post_annotation, {}, 'annotatetext-post_annotation'),
@@ -76,6 +89,7 @@ urlpatterns = patterns('',
             allow_xmlhttprequest=True),
         name='vote-on-bill'),
     (r'^video/', include('knesset.video.urls')),
+    (r'^mmm-documents/', include('mmm.urls')),
 )
 urlpatterns += mksurlpatterns + lawsurlpatterns + committeesurlpatterns
 if settings.LOCAL_DEV:
