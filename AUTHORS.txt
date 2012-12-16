@@ -3,6 +3,7 @@ Alon Levy
 Amir More
 Amir Yalon
 Amit Zur
+Ana Trachtman
 Ayal Gelles
 Benny Daon
 Boris Dinkevich
@@ -21,3 +22,4 @@ Ori Band
 Shahar Tal
 Yo'av Moshe
 Yoni Levy
+Yoval Porat

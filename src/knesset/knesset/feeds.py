@@ -2,6 +2,7 @@ from django.utils.translation import ugettext as _
 from django.contrib.syndication.views import Feed
 from django.contrib.comments.models import Comment
 from django.shortcuts import get_object_or_404
+from annotatetext.models import Annotation
 from laws.models import Vote, Bill
 from knesset.utils import main_actions
 
@@ -77,3 +78,26 @@ class MainActionsFeed(Feed):
         if hasattr(target, 'url'):
             return getattr(target, 'url')
         return '/'
+
+class Annotations(Feed):
+    title = "%s | %s %s" %(_("Open Knesset"), _("Annotations"), _("feed"))
+    link = "/committees/"
+    description = "Annotations on Committees Protocols"
+
+    def items(self):
+        return Annotation.objects.order_by('-timestamp')[:20]
+
+    def item_title(self, item):
+        return "%s: %s" % (unicode(item.flag_value), item.comment)
+
+    def item_description(self, item):
+        return '"...%s..."' % item.selection
+
+    def item_link(self, item):
+        return item.get_absolute_url()
+
+    def item_pubdate(self, item):
+        return item.timestamp
+
+    
+    
