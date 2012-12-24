@@ -99,5 +99,8 @@ class Annotations(Feed):
     def item_pubdate(self, item):
         return item.timestamp
 
+    def item_author_name(self, item):
+        return item.user.get_full_name()
+
     
     
