@@ -48,8 +48,8 @@ class MemberActivityFeed(Feed):
 
     def item_link(self, item):
         target = item.target
-        if not target:
-            print item
+        # if not target:
+        #     print item
         try:
             return getattr(target, 'url')
         except:

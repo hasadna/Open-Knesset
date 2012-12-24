@@ -63,7 +63,7 @@ def member_stand(v, m):
         try:
             return {'stand':stand, 'class':cls, 'name':m.name}
         except Exception, e:
-            print e
+            logging.debug(e,exc_info=True)
             return
 
 @register.inclusion_tag('laws/_paginator.html')

@@ -113,7 +113,6 @@ class AgendaDetailView (DetailView):
             context['mks_bottom'] = map(itemgetter(0),mks_values[-5:])
 
         allAgendaPartyVotes = agenda.get_all_party_values()
-        print allAgendaPartyVotes
         context['agenda_party_values']=dict(map(lambda x:(x[0],x[1]),allAgendaPartyVotes.setdefault(agenda.id,[])))
         context['agendaTopParties']=map(itemgetter(0),sorted(allAgendaPartyVotes[agenda.id],key=itemgetter(1),reverse=True)[:20])
 
