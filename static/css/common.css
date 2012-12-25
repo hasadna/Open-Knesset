@@ -518,8 +518,9 @@ p.username {max-width:55px; }
 
 #content-main .protocol { background-color:#EEE; padding:0.5em; height: 100%; }
 
-#main-about, #main-hasadna, #main-help {float: left; text-align:center; margin:1em 0 1em 3%; padding:1em;width:28%}
+#main-about, #main-hasadna, #main-help {clear:left; float: left; text-align:center; margin:1em 0 1em 3%; padding:1em;width:250px}
 #main-about { text-align:justify;}
+#main-about h3 {margin:0;padding:3px;}
 #main-news { width:500px; margin:1em 3% 1em 1em;float:right;
     text-align: center; background: url('/static/img/embed_hover.png') repeat-x; }
 #main-help { line-height:150%; text-align:center; }
