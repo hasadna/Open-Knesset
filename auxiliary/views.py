@@ -310,12 +310,16 @@ class CsvView(BaseListView):
             writer.writerow([unicode(item).encode('utf8') for item in row])
         return response
 
-    @staticmethod
-    def get_display_attr(obj, attr):
+    def get_display_attr(self, obj, attr):
         """Return the display string for an attr, calling it if necessary."""
-        display_attr = getattr(obj, attr)
-        if hasattr(display_attr, '__call__'):
-            display_attr = display_attr()
+        display_attr =  getattr(self, attr, None)
+        if display_attr is not None:
+            if callable(display_attr):
+                display_attr = display_attr(obj,attr)
+        else:
+            display_attr = getattr(obj, attr)
+            if callable(display_attr):
+                display_attr = display_attr()
         if display_attr is None:
             return ""
         return display_attr
