@@ -9,6 +9,7 @@ from links.api import LinkResource
 from laws.api import BillResource, LawResource, VoteResource
 from agendas.api import AgendaResource, AgendaTodoResource
 from committees.api import CommitteeResource, CommitteeMeetingResource, ProtocolPartResource
+from post.api import PostResource
 
 v2_api = Api(api_name='v2')
 
@@ -26,3 +27,4 @@ v2_api.register(AgendaTodoResource())
 v2_api.register(CommitteeResource())
 v2_api.register(CommitteeMeetingResource())
 v2_api.register(ProtocolPartResource())
+v2_api.register(PostResource())
