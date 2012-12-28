@@ -22,7 +22,9 @@
     </script>
 {% endblock %}
 {% block subnav %}
-    <a class="button" href="{% url agenda-detail object.agenda.id %}">{% trans "Agenda" %} {{ object.agenda }}</a>
+    <h3><a class="button" href="{% url agenda-detail object.agenda.id %}">{% trans "Agenda" %} {{ object.agenda }}</a></h3>
+		{{ object.agenda.description|urlize|linebreaks }}
+		
 {% endblock %}
 {% block divcontent %}
     <h1>{{ object }}</h1>
