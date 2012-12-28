@@ -174,6 +174,57 @@ def votes_to_bar_widths(v_count, v_for, v_against):
     width_against = T-width_for
     return (width_for, width_against)
 
+class BillCsvView(CsvView):
+    model = Bill
+    filename = 'bills.csv'
+    list_display = (('full_title', _('Full Title')),
+                    ('popular_name', _('Popular Name')),
+                    ('get_stage_display', _('Stage')),
+                    ('stage_date', _('Stage Date')),
+                    ('pre_votes', _('Pre-Votes')),
+                    ('first_committee_meetings', _('First Committee Meetings')),
+                    ('first_vote', _('First Vote')),
+                    ('second_committee_meetings', _('Second Committee Meetings')),
+                    ('approval_vote', _('Approval Vote')),
+                    ('proposers', _('Proposers')),
+                    ('joiners', _('Joiners')))
+    
+    def community_meeting_gen(self, obj, attr):
+        '''
+        A helper function to compute presentation of community meetings url list, space separated
+        : param obj: The object instance
+        : param attr: The object attribute
+        
+        : return : A string with the urls comma-separated
+        '''
+        host = self.request.build_absolute_uri("/")
+        return " ".join(host + row.get_absolute_url() for row in getattr(obj, attr).all())
+    
+    def members_gen(self, obj, attr):
+        '''
+        A helper function to compute presentation of members, comma separated
+        : param obj: The object instance
+        : param attr: The object attribute
+        
+        : return : A string with the urls comma-separated
+        '''
+        return ", ".join(row.name for row in getattr(obj, attr).all())
+    
+    def proposers(self, obj, attr):
+        return self.members_gen(obj ,attr)
+
+    def joiners(self, obj, attr):
+        return self.members_gen(obj, attr)
+
+    def first_committee_meetings(self, obj, attr):
+        return self.community_meeting_gen(obj, attr)
+    
+    def second_committee_meetings(self, obj, attr):
+        return self.community_meeting_gen(obj, attr)
+    
+    def pre_votes(self, obj, attr):
+        return self.community_meeting_gen(obj, attr)
+    
 class BillDetailView (DetailView):
     allowed_methods = ['get', 'post']
     model = Bill
