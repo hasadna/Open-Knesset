@@ -524,7 +524,7 @@ p.username {max-width:55px; }
 #main-news { width:500px; margin:1em 3% 1em 1em;float:right;
     text-align: center; background: url('/static/img/embed_hover.png') repeat-x; }
 #main-help { line-height:150%; text-align:center; }
-#main-hasadna { text-align: right; }
+#main-hasadna { text-align: right; clear: left;}
 #main-hasadna a { padding: 0; }
 #main-media a { text-align: center; }
 #main-about + h2 { margin-top:40px }
