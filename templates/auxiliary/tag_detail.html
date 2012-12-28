@@ -11,6 +11,16 @@
     </ul>
 {% endblock %}
 {{% block divcontent %}
+    {% if members %}
+    	<div><h2>{% blocktrans %}Active members for {{ tag }}{% endblocktrans %}</h2>
+        	<div class="tags cloud">
+        	   {% for mk in members %}
+        	       <a href="{% url member-detail pk=mk.pk %}" class="level{{ mk.font_size }}">{{ mk }}</a>
+               {% endfor %}
+            </div>
+    	</div>
+    {% endif %}
+
     <div class="item-list three-columns">
     {% with bills|length as count %}
         <h2>{% blocktrans %}{{ count }} Bills{% endblocktrans %}</h2>
