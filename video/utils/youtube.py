@@ -41,6 +41,7 @@ class GetYoutubeVideos:
             videos_json=urllib.urlopen(url).read()
         if videos_json is not None and len(videos_json)>0:
             try:
+                videos_json=videos_json[videos_json.find('{'):videos_json.rfind('}')+1]
                 yvideos=json.loads(videos_json)
             except:
                 print "youtube_id_url="
