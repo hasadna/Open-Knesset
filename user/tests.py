@@ -2,7 +2,7 @@ import datetime
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from actstream import action, follow
+from actstream import action, follow, unfollow
 from mks.models import Member
 from laws.models import Bill
 from committees.models import Committee
@@ -158,6 +158,30 @@ class TestFollowing(TestCase):
                                      'verb': 'unfollow'})
         self.assertEquals(len(p.bills), 0)
         self.client.logout()
+        
+    def test_is_following(self):
+        """Test the is-following query"""
+        
+        p = self.jacob.get_profile()
+        loggedin = self.client.login(username='jacob', password='JKM')
+        self.assertTrue(loggedin)
+        
+        follow(self.jacob, self.bill_1)
+        response = self.client.post(reverse('user-is-following'),
+                                    {'id': self.bill_1.id,
+                                     'what': 'bill'})
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.content, 'true')
+        
+        unfollow(self.jacob, self.bill_1)
+        response = self.client.post(reverse('user-is-following'),
+                                    {'id': self.bill_1.id,
+                                     'what': 'bill'})
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.content, 'false')
+        
+        self.client.logout()
+        
 
     def tearDown(self):
         self.jacob.delete()

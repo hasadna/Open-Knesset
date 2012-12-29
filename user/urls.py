@@ -12,6 +12,7 @@ urlpatterns = patterns('user.views',
     url(r'^create/$', 'create_user', name ='register'),
     url(r'^edit-profile/$', 'edit_profile', name='edit-profile'),
     url(r'^follow/$', 'user_follow_unfollow', name='user-follow-unfollow'),
+    url(r'^follow-query/$', 'user_is_following', name='user-is-following')
     )
 
 # auth views

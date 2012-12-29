@@ -1,11 +1,28 @@
-function register_watch(object_id, object_type, watch_text, unwatch_text, watched_object, follow_url) {
-     if (watched_object) {
-        document.is_watched = true;
-        $('#watch').html(unwatch_text);
-     } else {
-        document.is_watched = false;
-        $('#watch').html(watch_text);
-     }
+function register_watch(object_id, object_type, watch_text, unwatch_text, follow_url, is_following_url) {
+    jQuery.ajax({
+        type: 'POST',
+        url: is_following_url,
+        data: {'id': object_id,
+               'what': object_type},
+        context: $('#watch'),
+        success: function (data) {
+            if (data == 'true') {
+                document.is_watched = true;
+            } else {
+                document.is_watched = false;
+            }
+            
+            if (document.is_watched) {
+               $('#watch').html(unwatch_text);
+            } else {
+               $('#watch').html(watch_text);
+            }
+        },
+        error:  function(request, textStatus, error) {
+            document.is_watched = false;
+        }
+    });
+     
     $('#watch').click( function () {
         if (document.is_watched) {
             jQuery.ajax({

@@ -12,7 +12,7 @@
     <meta name="thumbnail" content="{{ object.img_url }}" />
     <script type="text/javascript">
         $(document).ready(function() {
-            register_watch({{object.id}}, 'member', "{% trans 'Watch' %}", "{% trans 'Unwatch' %}", {{watched_member|lower}}, "{% url user-follow-unfollow %}");
+            register_watch({{object.id}}, 'member', "{% trans 'Watch' %}", "{% trans 'Unwatch' %}", "{% url user-follow-unfollow %}", "{% url user-is-following %}");
         });
     </script>
 {% if object.backlinks_enabled %}{% url pingback-server as pingback_url %}{% pingback_link pingback_url %}{% endif %}

@@ -13,6 +13,7 @@ from django.contrib import messages
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.utils.translation import ugettext as _
+from django.core.exceptions import ObjectDoesNotExist
 
 
 from annotatetext.models import Annotation
@@ -170,3 +171,35 @@ def user_follow_unfollow(request):
             content_type=content_type, object_id=target_id).delete()
 
     return HttpResponse('OK')
+
+def user_is_following(request):
+    """Recieves POST parameters:
+        what - string representing target object type ('member', 'agenda', ...)
+        id - id of target object
+        """
+    if not request.user.is_authenticated():
+        return HttpResponse('false')
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+    target_id = request.POST.get('id', None)
+    if not target_id:
+        return HttpResponseBadRequest('need an id of an object to watch')
+    what = request.POST.get('what', None)
+    what_types = { # these are the object types we allow following
+        'member': Member,
+        'meeting': CommitteeMeeting,
+        'agenda': Agenda,
+        'bill': Bill,
+        'topic': Topic,
+    }
+    if what not in what_types:
+        return HttpResponseBadRequest(
+            'what parameter has to be one of: %s' % ','.join(what_types.keys()))
+            
+    content_type = ContentType.objects.get_for_model(what_types[what])
+    try:
+        Follow.objects.get(user=request.user,
+            content_type=content_type, object_id=target_id)
+        return HttpResponse('true')
+    except ObjectDoesNotExist:
+        return HttpResponse('false')
