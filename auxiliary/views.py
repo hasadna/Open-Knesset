@@ -265,6 +265,10 @@ class TagDetail(DetailView):
         Create tag could for tag <tag>. Returns only the <limit> most tagged members
         """
 
+        try:
+            mk_limit = int(self.request.GET.get('limit',limit))
+        except ValueError:
+            mk_limit = limit
         mk_taggeds = [b.proposers.all() for b in TaggedItem.objects.get_by_model(Bill, tag)]
         mk_taggeds += [v.votes.all() for v in TaggedItem.objects.get_by_model(Vote, tag)]
         mk_taggeds += [cm.mks_attended.all() for cm in TaggedItem.objects.get_by_model(CommitteeMeeting, tag)]
@@ -273,7 +277,7 @@ class TagDetail(DetailView):
             for p in tagged:
                 d[p] = d.get(p,0)+1
         # now d is a dict: MK -> number of tagged in Bill, Vote and CommitteeMeeting in this tag
-        mks = dict(sorted(d.items(),lambda x,y:cmp(y[1],x[1]))[:limit])
+        mks = dict(sorted(d.items(),lambda x,y:cmp(y[1],x[1]))[:mk_limit])
         # Now only the most tagged are in the dict (up to the limit param)
         for mk in mks:
             mk.count = d[mk]

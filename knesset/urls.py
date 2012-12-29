@@ -80,7 +80,7 @@ urlpatterns = patterns('',
     url(r'^tags/(?P<app>\w+)/(?P<object_type>\w+)/(?P<object_id>\d+)/remove-tag/$', remove_tag_from_object),
     url(r'^tags/(?P<app>\w+)/(?P<object_type>\w+)/(?P<object_id>\d+)/create-tag/$', create_tag_and_add_to_item, name='create-tag'),
     url(r'^tags/$', TagList.as_view(), name='tags-list'),
-    url(r'^tags/(?P<slug>.*)$', TagDetail.as_view(), name='tag-detail'),
+    url(r'^tags/(?P<slug>.*)/$', TagDetail.as_view(), name='tag-detail'),
     url(r'^uservote/bill/(?P<object_id>\d+)/(?P<direction>\-?\d+)/?$',
         vote_on_object, dict(
             model=Bill, template_object_name='bill',
