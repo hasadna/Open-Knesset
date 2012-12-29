@@ -80,7 +80,8 @@ MS Windows
 - Open command windows and::
 
     cd c:\Python27\Scripts
-    easy_install pip virtualenv
+    easy_install pip
+    pip install virtualenv
 
 - Download and install the installers matching your architecture for PIL_
   and lxml_ (version 2.3.x).
@@ -98,6 +99,7 @@ MS Windows
     Scripts\activate
 
   Note the changed prompt with includes the virtualenv's name.
+- If you haven't already forked the repository (top right of page), do so. 
 - Clone the repository. In the `oknesset` directory and run
   ``git clone git@github.com:your-name/Open-Knesset.git``
 - Install requirements: ``pip install -r Open-Knesset\requirements.txt`` and

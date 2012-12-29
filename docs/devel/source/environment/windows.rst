@@ -75,7 +75,8 @@ pip and virtualenv
 We'll install them with distribute. Open a command window, and::
 
     cd c:\Python27\Scripts
-    easy_install pip virtualenv
+    easy_install pip
+    pip install virtualenv
 
 PIL and lxml
 ~~~~~~~~~~~~~~
