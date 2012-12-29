@@ -312,6 +312,7 @@ class MemberDetailView(DetailView):
                 'bills_tags':bills_tags,
                 'agendas':agendas,
                 'presence':presence,
+                'current_knesset_start_date': date(2009, 2, 24),
                 'factional_discipline':factional_discipline,
                 'votes_against_own_bills':votes_against_own_bills,
                 'general_discipline':general_discipline,

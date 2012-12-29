@@ -122,6 +122,24 @@
                                                 <td>{{ object.residence_economy }}</td>
                                             </tr>
                                             {% endif %}
+                                            {% if object.start_date != current_knesset_start_date %}
+                                            <tr>
+                                                <td>{% trans "entrance to knesset" %}</td>
+                                                <td>{{ object.start_date }}</td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if object.end_date != None %}
+                                            <tr>
+                                                <td>{% trans "retirement from knesset" %}</td>
+                                                <td>{{ object.end_date }}</td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if object.start_date != current_knesset_start_date or object.end_date != None %}
+                                            <tr>
+                                                <td>{% trans "time in knesset" %}</td>
+                                                <td>{{ object.start_date|timesince:object.end_date }}</td>
+                                            </tr>
+                                            {% endif %}
                                         </table>
                                     </td>
                                 </tr>
