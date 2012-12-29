@@ -3,13 +3,38 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from datetime import date
 from tagging.models import Tag
-from models import Vote, Bill, KnessetProposal
+from models import Vote, Bill, KnessetProposal, BillBudgetEstimation
 from vote_choices import (ORDER_CHOICES, TAGGED_CHOICES, TYPE_CHOICES,
         BILL_TAGGED_CHOICES, BILL_STAGE_CHOICES, BILL_AGRR_STAGES)
 
 STAGE_CHOICES = (
     ('all', _('All')),
 )
+
+class BudgetEstimateForm(forms.Form):
+    """Form for submitting the budget estimation of a given bill, for a few
+    types of budget."""
+
+    be_one_time_gov = forms.IntegerField(label=_('One-time costs to government'), required=False)
+    be_yearly_gov = forms.IntegerField(label=_('Yearly costs to government'), required=False)
+    be_one_time_ext = forms.IntegerField(label=_('One-time costs to external bodies'), required=False)
+    be_yearly_ext = forms.IntegerField(label=_('Yearly costs to external bodies'), required=False)
+    be_summary = forms.CharField(label=_('Summary of the estimation'),widget=forms.Textarea,required=False)
+
+    def __init__(self, bill, user, *args, **kwargs):
+        super(BudgetEstimateForm, self).__init__(*args, **kwargs)
+
+        if bill is not None and user is not None:
+            try:
+                be = BillBudgetEstimation.objects.get(bill=bill,estimator__username=str(user))
+                self.fields['be_one_time_gov'].initial = be.one_time_gov
+                self.fields['be_yearly_gov'].initial = be.yearly_gov
+                self.fields['be_one_time_ext'].initial = be.one_time_ext
+                self.fields['be_yearly_ext'].initial = be.yearly_ext
+                self.fields['be_summary'].initial = be.summary
+            except BillBudgetEstimation.DoesNotExist:
+                pass
+        #self.fields['tagged'].choices = new_choices
 
 class VoteSelectForm(forms.Form):
     """Votes filtering form"""

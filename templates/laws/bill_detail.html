@@ -290,6 +290,42 @@
                 <a href='{% url login %}?next={{request.get_full_path}}'>{% trans 'Please login to edit tags' %}</a>
             {% endif %}
             </div><!-- tagging -->
+            <div class="secondary">
+                <h3>{% trans "Budget Estimations" %}</h3>
+                <div id="budget_ests">
+                    {% if budget_ests %}
+                        {% for b in budget_ests %}
+                            {{ b.as_p }}
+                            <br/>
+                        {% endfor %}
+                        </table>
+                    {% else %}
+                        <span id="no-budgets-yet">{% trans "No budget estimations yet" %}</span>
+                    {% endif %}
+                </div>
+            {% if user.is_authenticated %}
+                <div id="add_budget_ests">
+                    {% if user_has_be %}
+                    <span>{% trans "Update Budget Estimations (all in thousands of NIS)" %}</span>
+                    {% else %}
+                    <span>{% trans "Add Budget Estimations (all in thousands of NIS)" %}</span>
+                    {% endif %}
+                    <!--<div id="create_budget_est" style='display:none'>-->
+                        <!--{% if perms.tagging.add_tag %}-->
+                            <form action="." method="post" id="create_budget_est_form">{% csrf_token %}
+                            <input type="hidden" name="user_input_type" value="budget_est"></input>
+                            {{ budget_ests_form.as_p }}
+                            <input type="submit" value="{% trans "Send" %}" id="be_submit">
+                            </form>
+                        <!--{% else %}-->
+                            <!--{% trans 'Please' %} <a class="bold-link" href="{% url edit-profile %}">{% trans 'validate your email' %}</a>{% trans ' to create new tags' %}-->
+                        <!--{% endif %}-->
+                    <!--</div>-->
+                </div>
+            {% else %}
+                <a href='{% url login %}?next={{request.get_full_path}}'>{% trans 'Please login to edit tags' %}</a>
+            {% endif %}
+            </div><!-- budgets -->
 
             {% include 'comments/object_comment_list.html' %}
 
