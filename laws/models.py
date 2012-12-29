@@ -728,17 +728,25 @@ class Bill(models.Model):
             action.send(self, verb='was-voted-on-gov', target=g,
                         timestamp=g.date, description=str(g.stand))
 
+def get_n_debated_bills(n=None):
+    """Returns n random bills that have an active debate in the site.
+    if n is None, it returns all of them."""
+    
+    bill_votes = [x['object_id'] for x in voting.models.Vote.objects.get_popular(Bill)]
+    if not bill_votes:
+        return None
+        
+    if n is not None:
+        bill_votes = random.sample(bill_votes, n)
+    return Bill.objects.filter(pk__in=bill_votes)
+    
 def get_debated_bills():
     """
     Returns 3 random bills that have an active debate in the site
     """
     debated_bills = cache.get('debated_bills')
     if not debated_bills:
-        bill_votes = [x['object_id'] for x in voting.models.Vote.objects.get_popular(Bill)]
-        if bill_votes:
-            debated_bills = Bill.objects.filter(pk__in=random.sample(bill_votes, 3))
-        else:
-            debated_bills = None
+        debated_bills = get_n_debated_bills(3)
         cache.set('debated_bills', debated_bills, settings.LONG_CACHE_TIME)
     return debated_bills
 

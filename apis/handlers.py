@@ -15,6 +15,7 @@ from links.models import Link
 from tagging.models import Tag, TaggedItem
 from events.models import Event
 from django.forms import model_to_dict
+import voting
 
 DEFAULT_PAGE_LEN = 20
 class HandlerExtensions():
@@ -268,13 +269,44 @@ class BillHandler(BaseHandler, HandlerExtensions):
         page_len = int(request.GET.get('page_len', DEFAULT_PAGE_LEN))
         page_num= int(request.GET.get('page_num', 0))
 
-        if type:
-            qs = qs.filter(title__contains=type)
         if days_back:
-            qs = qs.filter(stage_date__gte=datetime.date.today()-datetime.timedelta(days=int(days_back)))
-        if order:
-            qs = qs.sort(by=order)
-        return qs[page_len*page_num:page_len*(page_num +1)]
+            qs = qs.filter(stage_date__gte=datetime.date.today()-datetime.timedelta(days=int(days_back)))            
+        if 'popular' not in kwargs:
+            # we use type for something
+            if type:
+                qs = qs.filter(title__contains=type)
+            # and specifying an order is relevant
+            if order:
+                qs = qs.sort(by=order)
+                
+            return qs[page_len*page_num:page_len*(page_num +1)]
+        else:
+            # we use type to specify if we want positive/negative popular bills, or None for "dont care"
+            if type not in [None, 'positive', 'negative']:
+                type = None
+               
+            # create the ordered list of bills according to the request
+            if type is None:
+                # get the sorted list of popular bills (those with many votes)
+                bill_ids = [x['object_id'] for x in voting.models.Vote.objects.get_popular(Bill)]
+            else:
+                # get the list of bills with annotations of their score (avg vote) and totalvotes
+                bill_ids = voting.models.Vote.objects.get_top(Bill, min_tv=2)
+                
+                # filter only positively/negatively rated bills
+                if type == 'positive':
+                    bill_ids = bill_ids.filter(score__gt=0.5)
+                else:
+                    bill_ids = bill_ids.filter(score__lt=-0.5)
+                    
+                # sort the bills according to their popularity
+                bill_ids = bill_ids.order_by('-totalvotes')
+                bill_ids = [x['object_id'] for x in bill_ids]
+                            
+            # create the list of bills we want to return
+            bill_ids = bill_ids[page_len*page_num:page_len*(page_num +1)]
+            sorted_qs = [qs.get(pk=x) for x in bill_ids]
+            return sorted_qs
 
     @classmethod
     def stage_text(self, bill):
