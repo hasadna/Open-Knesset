@@ -45,8 +45,20 @@
         <div class="clear"></div>
         <ul class="summaries">
         {% for mk in members %}
+            {%  if mk.is_current %}
             <li> {% include "committees/_member_summary.html" %} </li>
+            {% endif %}
         {% endfor %}
+        </ul>
+        <div class="clear"></div>
+        <h3>{% trans 'חברי הוועדה לשעבר' %}</h3>
+        <div class="clear"></div>
+        <ul class="summaries">
+            {% for mk in members %}
+                {%  if not mk.is_current %}
+                    <li> {% include "committees/_member_summary.html" %} </li>
+                {% endif %}
+            {% endfor %}
         </ul>
     {% endif %}
     <div class="clear"></div>
