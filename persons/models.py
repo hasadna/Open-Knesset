@@ -3,6 +3,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.forms.fields import IntegerField
 
+GENDER_CHOICES = (
+    (u'M', _('Male')),
+    (u'F', _('Female')),
+)
+
 class Title(models.Model):
     name = models.CharField(max_length=64)
 
@@ -25,6 +30,7 @@ class Person(models.Model):
     name = models.CharField(max_length=64)
     mk = models.ForeignKey('mks.Member', blank=True, null=True, related_name='person')
     titles = models.ManyToManyField(Title, blank=True, null=True, related_name='persons')
+    # TODO: change to an ImageField
     img_url = models.URLField(blank=True, verify_exists=False)
     phone = models.CharField(blank=True, null=True, max_length=20)
     fax = models.CharField(blank=True, null=True, max_length=20)

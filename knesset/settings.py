@@ -166,6 +166,7 @@ INSTALLED_APPS = (
     'video',
     'okhelptexts',
     'tastypie',
+    'polyorg',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

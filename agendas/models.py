@@ -289,6 +289,37 @@ class Agenda(models.Model):
         else:
             return 0.0
 
+    def candidate_list_score(self, candidate_list):
+        # Since we're already calculating python side, no need to do 2 queries
+        # with joins, select for and against, and calcualte the things
+        qs = AgendaVote.objects.filter(
+            agenda=self, vote__voteaction__member__in=candidate_list.member_ids,
+            vote__voteaction__type__in=['against', 'for']).extra(
+                select={'weighted_score': 'agendas_agendavote.score*agendas_agendavote.importance'}
+            ).values_list('weighted_score', 'vote__voteaction__type')
+
+        for_score = 0
+        against_score = 0
+
+        for score, action_type in qs:
+            if action_type == 'against':
+                against_score += score
+            else:
+                for_score += score
+
+        #max_score = sum([abs(x) for x in self.agendavotes.values_list('score', flat=True)]) * party.members.count()
+        # To save the queries, make sure to pass prefetch/select related
+        # Removed the values call, so that we can utilize the prefetched stuf
+        # This reduces the number of queries when called for example from
+        # AgendaResource.dehydrate
+        max_score = sum(abs(x.score * x.importance) for x in
+                        self.agendavotes.all()) * len(candidate_list.member_ids)
+
+        if max_score > 0:
+            return (for_score - against_score) / max_score * 100
+        else:
+            return 0.0
+
     def related_mk_votes(self,member):
         # Find all votes that
         #   1) This agenda is ascribed to

@@ -54,3 +54,13 @@ class LinkedFile(models.Model):
     sha1 = models.CharField(max_length=1000, null=True)
     last_updated = models.DateTimeField(auto_now=True, null=True)
     link_file = models.FileField(storage=link_file_storage, upload_to='link_files')
+
+class ModelWithLinks():
+    ''' This is a mixin to be used by classes that have alot of links '''
+    def add_link(self, url, title, link_type=None):
+        if not link_type:
+            link_type = get_default_linktype()
+        Links.objects.create(content_object=self, url=url, title=title,
+                             link_type=link_type)
+    def get_links(self):
+        return Links.objects.filter(active=True, content_object=self)

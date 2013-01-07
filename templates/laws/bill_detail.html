@@ -170,6 +170,12 @@
                     $("#embeddiv").toggle();
                     return false;
                     });
+                {% if perms.laws.change_bill %}    
+                $("#editname").click(function () {
+                    $("#editnamediv").toggle();
+                    return false;
+                    });
+                {% endif %}
             });
     </script>
 {% endblock %}
@@ -181,6 +187,9 @@
 {% block divcontent %}
     <div class="two_cols">
         <ul class="actions">
+        	{% if perms.laws.change_bill %}
+        	<li><a id="editname" href="#">{% trans "edit name" %}</a></li>
+        	{% endif %}
             <li><a target="_blank" href="http://hamishmar.org.il/?page_id=431">{% trans 'Explanation about the legislation process' %}</a></li>
             <li><a id="embed" href="#">{% trans "embed" %}</a></li>
             <li><span id="watch" class="awesome-button medium"></span></li>
@@ -195,6 +204,20 @@
 
         </div>       
         <h1>{% bill_full_name object %}</h1>
+        {% if perms.laws.change_bill %}
+        <div id="editnamediv" style="display:none;">
+        	<form method="post" action=".">
+        		{% csrf_token %}
+        		<input type="hidden" name="user_input_type" value="change_bill_name"></input>
+        		<label for="bill_name">{% trans 'name' %}:</label>
+	        	<input type="text" name="bill_name" id="bill_name" value="{{ object.full_title }}" style="font-size: 2em; width: 75%"/><br/>
+	        	<label for="bill_name">{% trans 'popular name' %}:</label>
+	        	<input type="text" name="popular_name" id="popular_name" value="{{ object.popular_name }}" style="font-size: 2em; width: 75%"/>
+	        	
+	        	<input type="submit" value="{% trans 'save' %}" />
+        	</form>
+        </div>
+        {% endif %}
         {% trans 'stage' %}: {% trans object.get_stage_display %}<br>
         {% trans 'stage date' %}: {{ object.stage_date }}<br>
         {% for proposer in proposers %} {% mk_card proposer %} {% endfor %}<br>

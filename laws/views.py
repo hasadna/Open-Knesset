@@ -359,9 +359,16 @@ class BillDetailView (DetailView):
             #budget_est.one_time_ext = int(bote) if bote != "" else None
             #budget_est.yearly_ext = int(bye) if bye != "" else None
             #budget_est.summary = bs if bs != "" else None
+        elif user_input_type == 'change_bill_name':
+            if request.user.has_perm('laws.change_bill') and 'bill_name' in request.POST.keys():
+                new_title = request.POST.get('bill_name')
+                new_popular_name = request.POST.get('popular_name')
+                Bill.objects.filter(pk=object_id).update(title=new_title, full_title=new_title, 
+                                                         popular_name=new_popular_name)
         else:
             return HttpResponseBadRequest()
-
+        
+        
         return HttpResponseRedirect(".")
 
 _('added-vote-to-bill')

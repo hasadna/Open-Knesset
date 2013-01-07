@@ -66,7 +66,8 @@
       </div>
 
       <ul class="nav nav-pills">
-        <li id="nav-parties" {% block nav-parties %} {% endblock %} ><a href="{% url parties-members %}">{% trans "Members and Parties" %}</a></li>
+          <li id="nav-elections" {% block nav-elections %} {% endblock %} > <a href="{% url candidate-list-list %}">{% trans 'Election' %}</a> </li>
+        <li id="nav-parties" {% block nav-parties %} {% endblock %} ><a href="{% url party-list %}">{% trans "Members and Parties" %}</a></li>
         <li id="laws" {% block nav-laws %} {% endblock %} > <a href="{% url bill-list %}">{% trans "Legislation" %}</a> </li>
         <li id="nav-committees" {% block nav-committees %} {% endblock %} > <a href="{% url committee-list %}">{% trans 'Committees' %}</a> </li>
         <li><a href="#">מליאה</a></li>
