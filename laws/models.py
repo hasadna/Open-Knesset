@@ -8,7 +8,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.core.cache import cache
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -451,6 +451,8 @@ class BillManager(models.Manager):
         stage = kwargs.get('stage', None)
         member = kwargs.get('member', None)
         booklet = kwargs.get('booklet', None)
+        changed_after = kwargs.get('changed_after', None)
+        changed_before = kwargs.get('changed_before', None)
 
         filter_kwargs = {}
         if stage and stage != 'all':
@@ -475,8 +477,13 @@ class BillManager(models.Manager):
             if kps:
                 qs = qs.filter(knesset_proposal__in=kps)
 
-        return qs
+        if changed_after:
+            qs = qs.filter(stage_date__gte=changed_after)
 
+        if changed_before:
+            qs = qs.filter(stage_date__lte=changed_before)
+
+        return qs
 
 class Bill(models.Model):
     title = models.CharField(max_length=1000)

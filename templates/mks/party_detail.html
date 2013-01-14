@@ -51,11 +51,8 @@
                     </header>
                     <div class="social-links">
                         <h5>{% blocktrans with name=object.name %}{{name}} around the net{% endblocktrans %}:</h5>
-                        <ul class="text-center">
-                            <li><a href="#" class="icon sprite-website" rel="tooltip" title="האתר של העבודה">אתר</a></li>
-                            <li><a href="#" class="icon sprite-wiki" rel="tooltip" title="העבודה בויקיפדיה">ויקיפדיה</a></li>
-                            <li><a href="#" class="icon sprite-facebook" rel="tooltip" title="העבודה בפייסבוק">פייסבוק</a></li>
-                            <li><a href="#" class="icon sprite-twitter" rel="tooltip" title="העבודה בטוויטר">טוויטר</a></li>
+                        <ul>
+                            {% object_links object %}
                         </ul>
                     </div>
                 </div>
@@ -133,10 +130,6 @@
             </div>
         </div>
 
-        <div class="details">
-            <h3>{% trans "Links" %}</h3>
-            {% object_links object %}
-        </div> <br/>
 
     </div>
     <script>

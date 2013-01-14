@@ -1,6 +1,7 @@
 {% extends "site_base.html" %}
 {% load i18n i18ninclude laws_tags common_visual_elements %}
 {% block extratitle %}{{ title }}{% endblock %}
+{% block extrahead %} <link rel="alternate" type="application/rss+xml" title="RSS" href="{% url feeds-votes %}"/> {% endblock %}
 {% block keywords %}{{ title }}{% endblock %}
 {% block description %}{{ title }} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
 {% block nav-votes %}class="selected"{% endblock %}
@@ -23,8 +24,8 @@
         </div>
         <ul class="actions">
             <li>
-                <span id="export-csv" class="awesome-button medium">
-                    <a href="./csv/?{{ query_string }}">{% trans 'Export data to Excel' %}</a>
+                <span id="export-csv" class="awesome-button medium">                    
+                    <a href="{% if query_string or not csv_file %}./csv/?{{ query_string }}{% else %}{{MEDIA_URL}}{{csv_file}}{% endif %}">{% trans 'Export data to Excel' %}</a>
                 </span>
             </li>
         </ul>

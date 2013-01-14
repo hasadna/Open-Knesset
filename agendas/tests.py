@@ -131,7 +131,6 @@ I have a deadline''')
         translation.deactivate()
 
     def testAgendaDetail(self):
-
         # Access public agenda while not logged in
         res = self.client.get('%s?all_mks' % reverse('agenda-detail',
                                       kwargs={'pk': self.agenda_1.id}))
@@ -143,6 +142,11 @@ I have a deadline''')
         self.assertEqual(res.context['object'].public_owner_name, self.agenda_1.public_owner_name)
         self.assertEqual(list(res.context['object'].editors.all()), [self.user_1])
         self.assertEqual(len(res.context['all_mks_ids']), 2)
+
+    def testAgendaUnauthorized(self):
+        # Access non-public agenda without authorization
+        res = self.client.get(reverse('agenda-detail',kwargs={'pk': self.agenda_3.id}))
+        self.assertEqual(res.status_code, 403)
 
     def testAgendaVoteDetail(self):
         res = self.client.get(reverse('agenda-vote-detail', args=[1]))

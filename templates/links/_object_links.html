@@ -1,9 +1,8 @@
 {% load i18n %}
 {% if links %}
-    <ul class="links">
     {% for link in links %}
         {% if link.active %}
-        <li><a href="{{ link.url|safe }}" target="_blank">
+        <li>
             {% if link.link_type %}
                 &nbsp;
                 {% if link.link_type.image %}
@@ -12,11 +11,10 @@
                     ({% trans link.link_type.title %})
                 {% endif %}
             {% endif %}
-            {{ link.title }}
+           <a href="{{ link.url|safe }}" target="_blank">{{ link.title }}
         </a></li>
         {% endif %}
     {% endfor %}
-    </ul>
 {% else %}
     {% trans 'none' %}
 {% endif %}

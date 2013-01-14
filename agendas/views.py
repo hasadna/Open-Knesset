@@ -87,8 +87,8 @@ class AgendaDetailView(DetailView):
 
     def get_object(self):
         obj = super(AgendaDetailView, self).get_object()
-        ids = [a.id for a in Agenda.objects.get_relevant_for_user(user=self.request.user)]
-        if obj.id in ids:
+        has_id = Agenda.objects.get_relevant_for_user(user=self.request.user).filter(pk=obj.id).count() > 0
+        if has_id:
             return obj
         else:
             raise self.ForbiddenAgenda

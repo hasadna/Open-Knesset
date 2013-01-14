@@ -121,10 +121,7 @@
             <div class="social-links">
               <h5>{% blocktrans with name=member.firstname %}{{name}} around the net{% endblocktrans %}:</h5>
               <ul class="text-center">
-                <li><a href="#" class="icon sprite-website" rel="tooltip" title="האתר של זבולון">אתר</a></li>
-                <li><a href="#" class="icon sprite-wiki" rel="tooltip" title="זבולון בויקיפדיה">ויקיפדיה</a></li>
-                <li><a href="#" class="icon sprite-facebook" rel="tooltip" title="זבולון בפייסבוק">פייסבוק</a></li>
-                <li><a href="#" class="icon sprite-twitter" rel="tooltip" title="זבולון בטוויטר">טוויטר</a></li>
+                {% object_links member %}
               </ul>
             </div>
           </div>
@@ -554,11 +551,6 @@
                     </td>
 
                     <td style="width:45%;vertical-align:top;">
-
-                        <div>
-                            <h3>{% trans "Links" %}</h3>
-                                {% object_links object %}
-                        </div> <br/>
 
                         {% if about_video_embed_link != '' and about_video_image_link != '' %}
                         <div>

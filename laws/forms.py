@@ -65,6 +65,11 @@ class BillSelectForm(forms.Form):
             required=False, initial='all')
     tagged = forms.ChoiceField(label=_('Tags'), choices=BILL_TAGGED_CHOICES,
             required=False, initial='all')
+    changed_after = forms.DateField(label=_('Stage Changed After:'), required=False,
+            input_formats=["%d/%m/%Y", "%d/%m/%y"])
+    changed_before = forms.DateField(label=_('Stage Chaged Before:'), required=False,
+            input_formats=["%d/%m/%Y", "%d/%m/%y"])
+
 
     # TODO: add more filter options:
     # order = forms.ChoiceField(label=_('Order by'), choices=ORDER_CHOICES,
