@@ -1,0 +1,6 @@
+{% for doc in object_list  %}
+                    <li>
+                        <p class="item-title"><a href="{{ doc.url }}">{{ doc.title }}</a></p>
+                        <p class="item-context">{{ doc.publication_date|timesince }}</p>
+                    </li>
+{% endfor %}

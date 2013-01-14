@@ -1,18 +1,17 @@
 {% load i18n %}
-{% if action.actor.get_absolute_url %}<a class="action-actor" href="{{ action.actor.get_absolute_url }}">{{ action.actor }}</a>
-{% else %}<span class="action-actor">{{ action.actor }}</span>{% endif %}
-{% if action.actor.is_female %}
-<span class="action-verb">הציעה</span>
-{% else %}
-<span class="action-verb">הציע</span>
-{% endif %}
-:
+    <li>
+      <p class="item-action">
+      {{action.actor.is_female|yesno:_("PROPOSED (FEMALE),PROPOSED (MALE)")}}
+      {% trans "Bill" %}
+      </p>
+      <p class="item-title">
 {% with action.target.bill as bill %}
     {% if bill %}
-        <a href="{{ bill.get_absolute_url }}">
-            {{ bill }}
-        </a>
+        <a href="{{ bill.get_absolute_url }}">{{ bill }}</a>
     {% else %}
         {{ action.target }}
     {% endif %}
 {% endwith %}
+    </p>
+    <p class="item-context">{{ action.timestamp|timesince }}</p>
+    </li>

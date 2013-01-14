@@ -10,20 +10,22 @@
     {{ paginator.num_pages }}
     {{ paginator.page_range }}
 {% endcomment %}
-<div class="pagination">{% trans 'Pages' %}:
+<div class="pagination">
+    <ul>
 {% if first_pages %}
     {% for page in first_pages %}
-        <a href="{{ page.1 }}">{{ page.0 }}</a>  
+        <li><a href="{{ page.1 }}">{{ page.0 }}</a></li>
     {% endfor %}
-    ...
+    <li class="disabled"><span>...</span></li>
 {% endif %}
 {% for page in show_pages %}
-    <a{% if page.2 %} class="current"{% endif %} href="{{ page.1 }}">{{ page.0 }}</a>  
+        <li{% if page.2 %} class="active"{% endif %}><a href="{{ page.1 }}">{{ page.0 }}</a></li>
 {% endfor %} 
 {% if last_pages %}
-    ...
+    <li class="disabled"><span>...</span></li>
     {% for page in last_pages %}
-        <a href="{{ page.1 }}">{{ page.0 }}</a>  
+      <li><a href="{{ page.1 }}">{{ page.0 }}</a></li>
     {% endfor %}
 {% endif %}
+    </ul>
 </div>

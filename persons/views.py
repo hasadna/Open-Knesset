@@ -1,11 +1,13 @@
 from django.utils.translation import ugettext as _
 from django.http import Http404
-from hashnav import ListView, DetailView
+from django.views.generic import ListView
+from hashnav.detail import DetailView
 from persons.models import Person
 from committees.models import CommitteeMeeting
 
 class PersonListView(ListView):
 
+    model = Person
     def get_context(self):
         context = super(PersonListView, self).get_context()
         if not self.items:
@@ -17,6 +19,8 @@ class PersonListView(ListView):
         return Person.objects.filter(protocol_parts__isnull=False).distinct()
         
 class PersonDetailView(DetailView):
+
+    model = Person
     def get_context(self, *args, **kwargs):
         context = super(PersonDetailView, self).get_context(*args, **kwargs)
         person = context['object']

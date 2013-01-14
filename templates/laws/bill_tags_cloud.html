@@ -3,14 +3,14 @@
 {% block extratitle %}{{ title }}{% endblock %}
 {% block keywords %}{{ title }}{% endblock %}
 {% block description %}{{ title }} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
-{% block nav-laws %}class="selected"{% endblock %}
+{% block nav-laws %}class="active"{% endblock %}
 
 {% block content %}
 <h1>{{ title }}</h1>
 <div class="tags cloud">
     {% autopaginate tags_cloud 200 %}
     {% for tag in tags_cloud %}
-        <a href="{% url bill-tag tag=tag %}{% if member %}?member={{member.id}}{% endif %}" class="level{{ tag.font_size }}">{{ tag }}</a>
+        <a href="{% url bill-tag tag=tag %}{% if member %}?member={{member.id}}{% endif %}" class="label level{{ tag.font_size }}">{{ tag }}</a>
     {% endfor %}
     {% paginate %}
 </div>

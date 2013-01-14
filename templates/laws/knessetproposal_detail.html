@@ -3,7 +3,7 @@
 {% block extratitle %}{{ title }}{% endblock %}
 {% block keywords %}{{ title }}{% endblock %}
 {% block description %}{{ title }} - {% endblock %}
-{% block nav-laws %}class="selected"{% endblock %}
+{% block nav-laws %}class="active"{% endblock %}
 {% block divcontent %}
 <h2>{{ object.law }}: {{ object.title }}</h2>
     {% if object.originals.all %}

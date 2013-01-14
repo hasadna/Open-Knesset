@@ -4,18 +4,13 @@
 {% block extratitle %}{{ title }}{% endblock %}
 {% block keywords %}{{ title }}{% endblock %}
 {% block description %}{{ title }} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
-{% block nav-laws %}class="selected"{% endblock %}
-{% block help-section %}
-	{% i18ninclude "laws/bill_list_help.html" LANGUAGE_CODE %}
+{% block nav-laws %}class="active"{% endblock %}
+
+{% block breadcrumbs %}
+            <li class="active">{% trans "Legislation" %}</li>
 {% endblock %}
+
 {% block subnav %}
-        <div>
-            <form action="." method="get" class="filter-form">
-            {{ form.as_p }}
-            <input type="submit" value="{% trans "Filter" %}" class="submit awesome-button">
-            </form>
-        </div>
-        <a target="_blank" href="http://hamishmar.org.il/?page_id=431">{% trans 'Explanation about the legislation process' %}</a><br>
         <ul class="actions">
             <li>
                 <span id="export-csv" class="awesome-button medium">
@@ -25,25 +20,49 @@
         </ul>	
 {% endblock %}
 {% block divcontent %}
-    {% if member and not stage %}
-        <h1>{% blocktrans %}Bills by <a href="{{ member_url }}">{{ member }}</a>{% endblocktrans %}</h1>
-    {% endif %}
-    {% if member and stage %}
-        <h1>{% blocktrans %}Bills {{ stage }} by <a href="{{ member_url }}">{{ member }}</a>{% endblocktrans %}</h1>
-    {% endif %}
-    {% if stage and not member %}
-        <h1>{{ title }}</h1>
-    {% endif %}
-    <div class="item-list">
-        {% for o in object_list %}
-            <div class="item {% cycle "normal" "alt" %}">
-                {% bill_list_item o %}
-            </div>
-        {% empty %}
-            {% trans "No results found" %}
-        {% endfor %}
+    <div id="legislation-information-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+            <h3 id="contactModalLabel">{% trans "Legislation" %}</h3>
+        </div>
+        <div class="modal-body">
+            <p><a target="_blank" href="http://hamishmar.org.il/?page_id=431">{% trans 'Explanation about the legislation process' %}</a></p>
+	        {% i18ninclude "laws/bill_list_help.html" LANGUAGE_CODE %}
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
+        </div>
     </div>
-    {% if paginator %}
-        {% pagination page_obj paginator request %}
-    {% endif %}
+    <div class="row">
+        <div class="cards span9">
+            <section class="card card-list card-list-latest">
+                <header>
+                    <h2>{{title}}</h2>
+                    <a class="btn btn-mini btn-question" href="#legislation-information-modal" data-toggle="modal">?</a>
+                </header>
+                <ul>
+                    {% for bill in object_list  %}
+                    {% include "laws/bill_list_item.html" %}
+                    {% endfor %}
+                </ul>
+            </section>
+            {% if paginator %}
+                {% pagination page_obj paginator request %}
+            {% endif %}
+        </div>
+        <div class="span3">
+	 		<aside class="sidebar sidebar-agendas">
+                <header>
+                    <h2>{% trans "Filter" %}</h2>
+	 			    <a class="btn btn-mini btn-question" href="#">?</a>
+                </header>
+                <div>
+                    <form action="." method="get" class="filter-form">
+                    {{ form.as_p }}
+                    <input type="submit" value="{% trans "Filter" %}" class="submit awesome-button">
+                    </form>
+                </div>
+            </aside>
+        </div>
+    </div>
 {% endblock %}

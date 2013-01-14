@@ -1157,3 +1157,97 @@ display: none;
 .content-footer form input:hover{
     cursor: pointer;
 }
+
+.isotope-item {
+    z-index: 2;
+}
+
+.isotope-hidden.isotope-item {
+    pointer-events: none;
+    z-index: 1;
+}
+
+/**** Isotope CSS3 transitions ****/
+
+.isotope,
+.isotope .isotope-item {
+    -webkit-transition-duration: 0.8s;
+    -moz-transition-duration: 0.8s;
+    -ms-transition-duration: 0.8s;
+    -o-transition-duration: 0.8s;
+    transition-duration: 0.8s;
+}
+
+.isotope {
+    -webkit-transition-property: height, width;
+    -moz-transition-property: height, width;
+    -ms-transition-property: height, width;
+    -o-transition-property: height, width;
+    transition-property: height, width;
+}
+
+.isotope .isotope-item {
+    -webkit-transition-property: right, top, -webkit-transform, opacity;
+    -moz-transition-property:    right, top, -moz-transform, opacity;
+    -ms-transition-property:     right, top, -ms-transform, opacity;
+    -o-transition-property:      right, top, -o-transform, opacity;
+    transition-property:         right, top, transform, opacity;
+}
+
+/**** disabling Isotope CSS3 transitions ****/
+
+.isotope.no-transition,
+.isotope.no-transition .isotope-item,
+.isotope .isotope-item.no-transition {
+    -webkit-transition-duration: 0s;
+    -moz-transition-duration: 0s;
+    -ms-transition-duration: 0s;
+    -o-transition-duration: 0s;
+    transition-duration: 0s;
+}
+
+.ballot {
+    width: 170px;
+    height: 220px;
+    margin: 5px;
+    float: right;
+    overflow: hidden;
+    position: relative;
+    background-color: white;
+    color: #222;
+    border: 2px solid;
+}
+.ballot h1, .ballot h2 { text-align:center;}
+.ballot h1 {font-size: 4em;}
+.ballot h2 {position: absolute; bottom:0.2em; padding: 0 0.4em;}
+.person {
+    margin: 5px;
+    padding:5px;
+    float: right;
+    overflow: hidden;
+    position: relative;
+    background: white;
+    color: #222;
+    border: 1px solid;
+    -webkit-border-top-right-radius: 1.2em;
+    -moz-border-radius-topright: 1.2em;
+    border-top-right-radius: 1.2em;
+}
+.person h3 { position:absolute; top:0; left:0; margin:0;}
+.person img {height:110px;}
+.wikipedia { max-width: 600px;}
+.wikipedia dl {display:none;}
+
+.more-item {display:none;}
+.more-button, .less-button {clear:both; display:none; float:left;}
+
+.leader {
+    background: #add8e6
+}
+
+.element-meta {
+    height: 220px;
+    background: #b0c4de
+}
+.candidate-list-agendas { width:385; }
+#id_search_page_q { background-image: none !important  }

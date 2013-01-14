@@ -1,9 +1,11 @@
 {% load i18n bills_tags %}
 {% if bill %}
-<div class="date-item">{{ bill.stage_date|date:"d/m"}}<span>{{bill.stage_date|date:"Y"}}</span></div>
-<a id="detail-{{ bill.id }}" href="{% url bill-detail bill.id %}">{% bill_full_name bill %}</a>
-<div class="item-metadata">
-    <span class="stage stage_{{bill.stage|slugify}}">{% trans bill.get_stage_display %}</span>
-    {% item_tags bill.tags %}
-</div>
+    <li>
+        <p class="item-action">{% trans bill.get_stage_display %}</p>
+        <p class="item-title">
+            <a href="{% url bill-detail bill.id %}">{% bill_full_name bill %}</a>
+        </p>
+        <p class="item-context">{{ bill.stage_date|timesince }}</p>
+        <p class="item-context">{% item_tags bill.tags %}</p>
+    </li>
 {% endif %}

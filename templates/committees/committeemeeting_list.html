@@ -3,7 +3,7 @@
 {% block extratitle %}{{ title }}{% endblock %}
 {% block keywords %}{{ title }}{% endblock %}
 {% block description %}{{ title }} - {% endblock %}
-{% block nav-committees %}class="selected"{% endblock %}
+{% block nav-committees %}class="active"{% endblock %}
 {% block divcontent %}
     <div class="datelookup">{% trans 'Lookup by date' %}
     <input type="text" id="datelookup_input" value="{{ object_list.0.date }}"/>

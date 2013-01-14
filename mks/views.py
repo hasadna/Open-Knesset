@@ -5,17 +5,17 @@ from django.conf import settings
 from django.db.models import Sum, Q
 from django.utils.translation import ugettext as _
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from django.core.cache import cache
 from django.utils import simplejson as json
-from tagging.models import Tag
-from tagging.utils import calculate_cloud
+from django.contrib.contenttypes.models import ContentType
+from django.shortcuts import get_object_or_404
 from backlinks.pingback.server import default_server
 from actstream import actor_stream
+from actstream.models import Follow
 
 from hashnav.detail import DetailView
 from models import Member, Party
-from forms import VerbsForm
 from utils import percentile
 from laws.models import MemberVotingStatistics, Bill, VoteAction
 from agendas.models import Agenda
@@ -25,6 +25,7 @@ from video.utils import get_videos_queryset
 from datetime import date, timedelta
 
 import logging
+from auxiliary.views import GetMoreView
 
 
 logger = logging.getLogger("open-knesset.mks")
@@ -177,6 +178,7 @@ class MemberCsvView(CsvView):
 class MemberDetailView(DetailView):
 
     queryset = Member.objects.select_related('current_party', 'voting_statistics')
+    MEMBER_INITIAL_DATA = 2
 
     def calc_percentile(self,member,outdict,inprop,outvalprop,outpercentileprop):
         # store in instance var if needed, no need to access cache for each
@@ -211,47 +213,34 @@ class MemberDetailView(DetailView):
                               stattype,
                               '%s_percentile' % stattype)
 
-
-    def get_context_data (self, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super(MemberDetailView, self).get_context_data(**kwargs)
         member = context['object']
-        verbs = None
-        if 'verbs' in self.request.GET:
-            verbs_form = VerbsForm(self.request.GET)
-            if verbs_form.is_valid():
-                verbs = verbs_form.cleaned_data['verbs']
-        if verbs==None:
-            verbs = ('proposed', 'posted')
-            verbs_form = VerbsForm({'verbs': verbs})
+
         if self.request.user.is_authenticated():
             p = self.request.user.get_profile()
             watched = member in p.members
             cached_context = None
         else:
             watched = False
-            cached_context = cache.get('mk_%d_%s' % (member.id,
-                                                     '_'.join(verbs)))
+            cached_context = cache.get('mk_%d' % member.id)
 
         if cached_context is None:
             presence = {}
             self.calc_percentile(member, presence,
                                  'average_weekly_presence_hours',
                                  'average_weekly_presence_hours',
-                                 'average_weekly_presence_hours_percentile' )
+                                 'average_weekly_presence_hours_percentile')
             self.calc_percentile(member, presence,
                                  'average_monthly_committee_presence',
                                  'average_monthly_committee_presence',
-                                 'average_monthly_committee_presence_percentile' )
+                                 'average_monthly_committee_presence_percentile')
 
             bills_statistics = {}
             self.calc_bill_stats(member,bills_statistics,'proposed')
             self.calc_bill_stats(member,bills_statistics,'pre')
             self.calc_bill_stats(member,bills_statistics,'first')
             self.calc_bill_stats(member,bills_statistics,'approved')
-
-            bills_tags = Tag.objects.usage_for_queryset(member.bills.all(),counts=True)
-            #bills_tags.sort(key=lambda x:x.count,reverse=True)
-            bills_tags = calculate_cloud(bills_tags)
 
             if self.request.user.is_authenticated():
                 agendas = Agenda.objects.get_selected_for_instance(member, user=self.request.user, top=3, bottom=3)
@@ -260,6 +249,7 @@ class MemberDetailView(DetailView):
             agendas = agendas['top'] + agendas['bottom']
             for agenda in agendas:
                 agenda.watched=False
+                agenda.totals = agenda.get_mks_totals(member)
             if self.request.user.is_authenticated():
                 watched_agendas = self.request.user.get_profile().agendas
                 for watched_agenda in watched_agendas:
@@ -301,30 +291,50 @@ class MemberDetailView(DetailView):
                 | Q(sticky=True)
             ).order_by('sticky').order_by('-published')[:5]
 
-            actions = actor_stream(member).filter(
-                verb__in=verbs)
+            actions = actor_stream(member)
+
             for a in actions:
                 a.actor = member
-            cached_context = {'watched_member': watched,
-                'actions':actions,
-                'verbs_form': verbs_form,
-                'bills_statistics':bills_statistics,
-                'bills_tags':bills_tags,
-                'agendas':agendas,
-                'presence':presence,
+
+            legislation_actions = actor_stream(member).filter(
+                verb__in=('proposed', 'joined'))
+
+            committee_actions = actor_stream(member).filter(verb='attended')
+
+            mmm_documents = member.mmm_documents.order_by('-publication_date')
+
+            content_type = ContentType.objects.get_for_model(Member)
+            num_followers = Follow.objects.filter(object_id=member.pk, content_type=content_type).count()
+
+            cached_context = {
+                'watched_member': watched,
+                'num_followers': num_followers,
+                'actions_more': actions.count() > self.MEMBER_INITIAL_DATA,
+                'actions': actions[:self.MEMBER_INITIAL_DATA],
+                'legislation_actions_more': legislation_actions.count() > self.MEMBER_INITIAL_DATA,
+                'legislation_actions': legislation_actions[:self.MEMBER_INITIAL_DATA],
+                'committee_actions_more': committee_actions.count() > self.MEMBER_INITIAL_DATA,
+                'committee_actions': committee_actions[:self.MEMBER_INITIAL_DATA],
+                'mmm_documents_more': mmm_documents.count() > self.MEMBER_INITIAL_DATA,
+                'mmm_documents': mmm_documents[:self.MEMBER_INITIAL_DATA],
+                'bills_statistics': bills_statistics,
+                'agendas': agendas,
+                'presence': presence,
                 'current_knesset_start_date': date(2009, 2, 24),
-                'factional_discipline':factional_discipline,
-                'votes_against_own_bills':votes_against_own_bills,
-                'general_discipline':general_discipline,
-                'about_video_embed_link':about_video_embed_link,
-                'about_video_image_link':about_video_image_link,
-                'related_videos':related_videos,
-                'num_related_videos':related_videos.count()
-               }
+                'factional_discipline': factional_discipline,
+                'votes_against_own_bills': votes_against_own_bills,
+                'general_discipline': general_discipline,
+                'about_video_embed_link': about_video_embed_link,
+                'about_video_image_link': about_video_image_link,
+                'related_videos': related_videos,
+                'num_related_videos': related_videos.count(),
+                'INITIAL_DATA': self.MEMBER_INITIAL_DATA,
+            }
+
             if not self.request.user.is_authenticated():
-                cache.set('mk_%d_%s' % (member.id, '_'.join(verbs)),
-                                        cached_context,
-                                        settings.LONG_CACHE_TIME)
+                cache.set('mk_%d' % member.id, cached_context,
+                          settings.LONG_CACHE_TIME)
+
         context.update(cached_context)
         return context
 
@@ -638,3 +648,59 @@ def mk_is_backlinkable(url, entry):
     return False
 
 mk_detail = default_server.register_view(MemberDetailView.as_view(), get_mk_entry, mk_is_backlinkable)
+
+
+class MemeberMoreActionsView(GetMoreView):
+    """Get partially rendered member actions content for AJAX calls to 'More'"""
+
+    paginate_by = 10
+    template_name = 'mks/action_partials.html'
+
+    def get_queryset(self):
+        member = get_object_or_404(Member, pk=self.kwargs['pk'])
+        actions = actor_stream(member)
+        return actions
+
+
+class MemeberMoreLegislationView(MemeberMoreActionsView):
+    """Get partially rendered member legislation actions content for AJAX calls to 'More'"""
+
+    def get_queryset(self):
+        actions = super(MemeberMoreLegislationView, self).get_queryset()
+        return actions.filter(verb__in=('proposed', 'joined'))
+
+
+class MemeberMoreCommitteeView(MemeberMoreActionsView):
+    """Get partially rendered member committee actions content for AJAX calls to 'More'"""
+
+    def get_queryset(self):
+        actions = super(MemeberMoreCommitteeView, self).get_queryset()
+        return actions.filter(verb='attended')
+
+
+class MemeberMoreMMMView(MemeberMoreActionsView):
+    """Get partially rendered member mmm documents content for AJAX calls to 'More'"""
+
+    template_name = "mks/mmm_partials.html"
+    paginate_by = 10
+
+    def get_queryset(self):
+        member = get_object_or_404(Member, pk=self.kwargs['pk'])
+        return member.mmm_documents.order_by('-publication_date')
+
+
+class PartiesMembersView(TemplateView):
+    """Index page for parties and members."""
+
+    template_name = 'mks/parties_members.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super(PartiesMembersView, self).get_context_data(**kwargs)
+
+        ctx['coalition'] = Party.objects.filter(is_coalition=True).annotate(
+            extra=Sum('number_of_seats')).order_by('-extra')
+        ctx['opposition'] = Party.objects.filter(is_coalition=False).annotate(
+            extra=Sum('number_of_seats')).order_by('-extra')
+        ctx['past_members'] = Member.objects.filter(is_current=False)
+
+        return ctx

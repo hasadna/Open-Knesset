@@ -4,7 +4,10 @@
 {% load common_visual_elements %}
 {% block extratitle %}{{ title }}{% endblock %}
 {% block description %}{{ title }} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
-{% block nav-parties %}class="selected"{% endblock %}
+{% block nav-parties %}class="active"{% endblock %}
+{% block breadcrumbs %}
+            <li class="active">{% trans "Members and Parties" %}</li>
+ {% endblock %}
 {% block help-section %}
 	 {% i18ninclude "mks/party_list_help.html" LANGUAGE_CODE %}
 {% endblock %}
@@ -14,6 +17,9 @@
         {% endfor %}
 {% endblock %}
 {% block divcontent %}
+        <div class="alert alert-info">
+	        {% i18ninclude "mks/party_list_help.html" LANGUAGE_CODE %}
+        </div>
     {% include "mks/export_csv_link.html" %}
     <div class="list-wrap">
         <h2>{% trans 'Coalition' %}</h2>

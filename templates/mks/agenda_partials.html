@@ -1,0 +1,13 @@
+{% load i18n %}
+{% for agenda in object_list %}
+<li class="agenda-mini">
+    <header>
+        {% if agenda.image %}<img src="{{agenda.image.url}}" alt="{{agenda.name}}" width="30" height="30">{% endif %}
+        <h3><span>{{agenda.name}}</span> {% trans "edited by" %} <a href="#">{{agenda.public_owner_name}}</a></h3>
+    </header>
+    <div class="agenda-pie"{% for stat in agenda.totals %} data-{{stat.type}}="{{stat.total}}"{% endfor %}>
+        <!-- <span class="agenda-percent"><span class="agenda-percent-num">56<span>%</span></span>התאמה</span> -->
+    </div>
+</li>
+{% endfor %}
+

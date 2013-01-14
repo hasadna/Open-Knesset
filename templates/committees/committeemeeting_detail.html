@@ -16,7 +16,7 @@
     <script type="text/javascript" src="{% static "js/jquery.autocomplete.js" %}"></script>
     <script type="text/javascript" src="{% static "js/committeemeeting_detail.js" %}"> </script>
 {% endblock %}
-{% block nav-committees %}class="selected"{% endblock %}
+{% block nav-committees %}class="active"{% endblock %}
 {% block messages %}
 <span id="message_permission">
     <a href="{% url edit-profile %}">{% trans "Please validate your email to annotate" %}</a>

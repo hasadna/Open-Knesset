@@ -3,43 +3,157 @@
 {% block extratitle %}{{ object.name }}{% endblock %}
 {% block keywords %}{{ object.name }}{% endblock %}
 {% block extrajs %}
-<script type="text/javascript" src="{% static "js/tooltip.js" %}"></script>
 <script>
     function set_percent(id,value) {
         $("#percent_"+id).css('background-position',((100-value))+"px 0px");
         $("#percent_"+id).html(value+"%");
     }
 </script>
+    <script src="{% static "js/jquery.raty.min.js" %}"></script>
+    <script>
+        $.fn.raty.defaults.readOnly = true;
+        $.fn.raty.defaults.number = 7;
+        $.fn.raty.defaults.path = '{% static "img" %}';
+        $.fn.raty.defaults.width = 150;
+
+        function setRating() { // will reuse it for ok-more callback
+            $('[data-provider="rating"]').raty({
+                score: function() {
+                    return $(this).data('rating');
+                }
+            }).removeAttr('data-provider');
+        }
+
+        $(document).ready(function() {
+            setRating();
+            $('a[rel=popover]').popover({
+                offset: 10,
+                trigger: 'manual',
+                animate: false,
+                html: true,
+                placement: 'bottom',
+                template: '<div class="popover" onmouseover="$(this).mouseleave(function() {$(this).hide(); });"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>',
+                content: function() {
+                    return $(this).siblings('.tip').html();
+                }
+
+            }).mouseenter(function(e) {
+                $('a[data-original-title]').not(this).popover('hide');
+                $(this).popover('show');
+            });
+        });
+    </script>
 {% endblock %}
 {% block description %}{{ object.name }} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
-{% block nav-committees %}class="selected"{% endblock %}
-{% block header %}
-    <ul id="breadcrumbs"> 
-        <li class="first"><a href="{% url committee-list %}">{% trans "Committees" %}</a></li>
-        <li>{{object}}</li>
-    </ul>
-{% endblock %}
-{% block subnav %}
-    <ul class="actions">
-    <li>
-{% if user.is_authenticated %}
-    {% if perms.committees.add_topic %}
-        <a class="awesome-button medium" href="{% url edit-committee-topic object.id %}">{% trans "Suggest Topic" %}</a>
-    {% else %}
-        {% trans 'to suggest a topic' %}, {% trans 'Please' %} 
-        <a class="bold-link" href="{% url edit-profile %}">{% trans 'validate your email' %}</a> 
-    {% endif %}
-{% else %}
-        <a href='{% url login %}?next={{request.get_full_path}}'>{% trans 'Please login to suggest a topic' %}</a>
-{% endif %}
-    </li>
-    </ul>
+{% block nav-committees %}class="active"{% endblock %}
+{% block breadcrumbs %}
+        <li><a href="{% url committee-list %}">{% trans "Committees" %}</a> <span class="divider">/</span></li>
+        <li class="active">{{object}}</li>
 {% endblock %}
 
 {% block divcontent %}
-  <h2>{{object.name}}</h2>
+    <section class="card card-main">
+        <div class="row">
+            <div class="span8 card-details">
+                <div class="spacer fill">
+                    <h1>{{object.name}}</h1>
+                    <p>{{object.description|linebreaksbr}}</p>
+                </div>
+            </div>
+            <div class="span4 social-details">
+                <div class="spacer fill">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="row">
+        <div class="cards span8">
+            <section class="card card-list">
+                <header><h2>{% trans 'Future Meetings' %}</h2></header>
+                <ul>
+                {% for o in future_meetings_list %}
+                    {% include "events/_event_li.html" %}
+                {% empty %}
+                    <li>{% trans "None" %}</li>
+                {% endfor %}
+                </ul>
+            </section>
+            <section class="card card-list">
+                <header><h2>{% trans 'Meetings for which a protocol was not yet published' %}</h2></header>
+                <ul>
+                {% for o in protocol_not_yet_published_list %}
+                    {% include "events/_event_li.html" %}
+                {% empty %}
+                    <li>{% trans "None" %}</li>
+                {% endfor %}
+                </ul>
+            </section>
+            <section class="card card-list card-list-latest">
+                <header><h2>{% trans 'Last Meetings' %}</h2></header>
+                <ul>
+                {% for o in meetings_list %}
+                    {% include "committees/_meeting_li.html" %}
+                {% empty %}
+                    <li>{% trans "None" %}</li>
+                {% endfor %}
+                    <li><a href="all_meetings/">{% trans 'more...'%}</a></li>
+                </ul>
+            </section>
+            <section class="card card-list">
+                <header><h2>{% trans 'MMM Documents' %}</h2></header>
+                <ul id="recent-mmm">
+                {% include "mks/mmm_partials.html" with object_list=object.mmm_documents.all %}
+                </ul>
+            </section>
+        </div> <!-- span8 -->
+
+        <div class="span4">
+            <aside class="sidebar sidebar-comments">
+                <h2>{% trans "Suggested Agenda Topics" %}</h2>
+                <ul id="committee-topics">
+                    <li class="agenda-mini">
+                    {% if user.is_authenticated %}
+                        {% if perms.committees.add_topic %}
+                            <a class="btn" href="{% url edit-committee-topic object.id %}">{% trans "Suggest Topic" %}</a>
+                        {% else %}
+                            {% trans 'to suggest a topic' %}, {% trans 'Please' %} 
+                            <a class="bold-link" href="{% url edit-profile %}">{% trans 'validate your email' %}</a> 
+                        {% endif %}
+                    {% else %}
+                            <a href='{% url login %}?next={{request.get_full_path}}'>{% trans 'Please login to suggest a topic' %}</a>
+                    {% endif %}
+                    </li>
+                {% include "committees/_topics_summary.html" with object_list=topics%}
+                </ul>
+            </aside>
+
+            <aside class="sidebar sidebar-comments">
+                <h2>{% trans "Latest Annotations" %}</h2>
+                    <ul class="annotations">
+                    {% for a in annotations|slice:":5" %}
+                        <li class="agenda-mini">
+                            <a rel="popover" href="{{a.get_absolute_url }}" title="{{a.flag_value}}">
+                                "...{{a.selection}}..." ({{a.content_object.header}})
+                                <div class="tip" style="display:none">
+                                    <div class="user_id">
+                                        <a href="{% url public-profile a.user.username %}">{% avatar a.user 45 %}
+                                        {{ a.user }}</a>
+                                    </div>
+                                    {{a.comment|linebreaks}}
+                                </div>
+                            </a>
+                        </li>
+                    {% empty %}
+                        <li>{% trans "No annotations yet..." %}</li>
+                    {% endfor %}
+                    </ul>
+            </aside>
+
+        </div> <!-- span4 -->
+    </div>
+
   <div class="main-column">
-    <p style="padding-bottom:1em;">{{object.description|linebreaksbr}}</p>
     {% if members %}
         <h3>{% trans 'Committee Members' %}</h3>
         <div class="clear"></div>
@@ -61,65 +175,5 @@
             {% endfor %}
         </ul>
     {% endif %}
-    <div class="clear"></div>
-    <h3>{% trans 'Future Meetings' %}</h3>
-    <ul class="item-list">
-        {% for o in future_meetings_list %}
-            {% include "events/_event_li.html" %}
-        {% empty %}
-            {% trans "None" %}
-        {% endfor %}
-    </ul>
-    <h3>{% trans 'Meetings for which a protocol was not yet published' %}</h3>
-    <ul class="item-list">
-        {% for o in protocol_not_yet_published_list %}
-            {% include "events/_event_li.html" %}
-        {% empty %}
-            {% trans "None" %}
-        {% endfor %}
-    </ul>
-    <h3>{% trans 'Last Meetings' %}</h3>
-    <ul class="item-list">
-        {% for o in meetings_list %}
-            {% include "committees/_meeting_li.html" %}
-        {% empty %}
-            {% trans "None" %}
-        {% endfor %}
-    </ul>
-    <a class="more" href="all_meetings/">{% trans 'more...'%}</a>
-    <br />
-    <h3>{% trans 'MMM Documents' %}</h3>
-    <p>{% trans "Number of documents ordered" %}
-    	<span><a href="{% url committee-mmms object.id %}">{{ object.mmm_documents.count }}</a></span>
-    </p>
   </div>
-  <div class="secondary-column">
-    <h3>{% trans "Suggested Agenda Topics" %}</h3>
-    {% include "committees/_topics_summary.html" %}
-    <h3>{% trans "Latest Annotations" %}</h3>
-    <ul class="annotations">
-    {% for a in annotations|slice:":5" %}
-        <li {% if forloop.last %}class="last"{% endif %}>
-            <a href="{{a.get_absolute_url }}" title="{{a.flag_value}} - {{a.comment|escape}}">
-            "...{{a.selection}}..." ({{a.content_object.header}})</a></li>
-        <div class="tip">
-            <div class="user_id">
-                <a href="{% url public-profile a.user.username %}">{% avatar a.user 45 %}
-                {{ a.user }}</a>
-            </div>
-            <a href="{{a.get_absolute_url }}">{{a.flag_value}} - {{a.comment|linebreaks}}</a>
-        </div>
-    {% empty %}
-        <li>{% trans "No annotations yet..." %}
-    {% endfor %}
-    </ul>
-  </div>
-{% endblock %}
-{% block footer %}
-    <script>
-    $(document).ready(function () {
-        $(".annotations li").tooltip({ position: "center right",
-                delay: 100, opacity: 0.8, offset: [-100, -80]});
-    })
-    </script>
 {% endblock %}

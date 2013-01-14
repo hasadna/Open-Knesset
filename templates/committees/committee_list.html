@@ -1,33 +1,89 @@
 {% extends "site_base.html" %}
-{% load i18n i18ninclude mks_tags %}
+{% load i18n i18ninclude mks_tags %}{% load static from staticfiles %}
 {% block extratitle %}{% trans "Committees" %}{% endblock %}
 {% block keywords %}{{% trans "Committees" %}{% endblock %}
 {% block description %}{% trans "Committees" %} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
-{% block nav-committees %}class="selected"{% endblock %}
-{% block help-section %}
-     {% i18ninclude "committees/committee_list_help.html" LANGUAGE_CODE %}
+
+{% block extrajs %}
+    <script src="{% static "js/jquery.raty.min.js" %}"></script>
+    <script>
+        $.fn.raty.defaults.readOnly = true;
+        $.fn.raty.defaults.number = 7;
+        $.fn.raty.defaults.path = '{% static "img" %}';
+        $.fn.raty.defaults.width = 150;
+
+        function setRating() { // will reuse it for ok-more callback
+            $('[data-provider="rating"]').raty({
+                score: function() {
+                    return $(this).data('rating');
+                }
+            }).removeAttr('data-provider');
+        }
+
+        $(document).ready(setRating);
+    </script>
 {% endblock %}
+
+{% block nav-committees %}class="active"{% endblock %}
+
+{% block breadcrumbs %}
+            <li class="active">{% trans "Committees" %}</li>
+{% endblock %}
+
 {% block divcontent %}
-  <h2>{% trans "Committees" %}<span style="font-size:70%;">
-<a href="help/">({% trans "what does committees do?"%})</a></span></h2>
-  <div class="main-column">
-        <div class="item-list">
-        {% for o in committees %}
-              <a style="display: block;" class="item normal" id="detail-{{ o.id }}" href="{% url committee-detail o.id %}" >
-                  <h4>{{ o.name }}</h4>
-                  <p>{{ o.description|linebreaksbr }}</p>
-              </a>
-        {% endfor %}
+
+    <div id="committee-information-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="committeeModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+            <h3 id="committeeModalLabel">{% trans "Committees" %}</h3>
         </div>
-  </div>
-  <div class="secondary-column">
-      <h3>{% trans "Suggested Agenda Topics" %}</h3>
-      {% include "committees/_topics_summary.html" %}
-      <h3>{% trans "Tags" %}</h3>
-        <div class="tags cloud">
-            {% for tag in tags_cloud %}
-                <a href="{% url committeemeeting-tag tag=tag %}" class="level{{ tag.font_size }}">{{ tag }}</a>
-            {% endfor %}
+        <div class="modal-body">
+            <p><a href="help/">({% trans "what does committees do?"%})</a></p>
+	        {% i18ninclude "committees/committee_list_help.html" LANGUAGE_CODE %}
         </div>
-  </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="cards span8">
+            <section class="card card-list">
+                <header>
+                    <h2>{% trans "Committees" %}</h2>
+                    <a class="btn btn-mini btn-question" href="#committee-information-modal" data-toggle="modal">?</a>
+                </header>
+                <ul>
+                    {% for o in committees %}
+                    <li>
+                        <p class="item-title">
+                        <a id="detail-{{ o.id }}" href="{% url committee-detail o.id %}">{{o.name}}</a></p>
+
+                        <p class="item-context">
+                            <a href="{% url committee-detail o.id %}" > {{ o.description|linebreaksbr }}</a>
+                        </p>
+                        {% endfor %}
+                    </li>
+                </ul>
+            </section>
+        </div> <!-- span8 -->
+
+        <div class="span4">
+            <aside class="sidebar sidebar-comments">
+                <h2>{% trans "Suggested Agenda Topics" %}</h2>
+                <ul id="committee-topics">
+                {% include "committees/_topics_summary.html" with object_list=topics%}
+                </ul>
+                {% if topics_more %}
+                    <button class="btn btn-more" data-provide="okmore"
+                        data-loading-text="{% trans "Loading" %} ..."
+                        autocomplete="off" data-target="#committee-topics" 
+                        data-url="{% url committee-topics-more %}"
+                        data-initial="{{INITIAL_TOPICS}}"
+                        data-callback="setRating"
+                        >{% trans "More" %} {% trans "Suggested Agenda Topics" %}</button>
+                {% endif %}
+            </aside>
+        </div>
+    </div>
 {% endblock %}

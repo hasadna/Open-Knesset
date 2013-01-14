@@ -26,24 +26,37 @@ from links.models import Link
 from models import Committee, CommitteeMeeting, Topic, COMMITTEE_PROTOCOL_PAGINATE_BY
 import models
 from forms import EditTopicForm, LinksFormset
+from auxiliary.views import GetMoreView
 
 logger = logging.getLogger("open-knesset.committees.views")
 
-committees_list = ListView(queryset = Committee.objects.all(), paginate_by=20)
+committees_list = ListView(queryset=Committee.objects.all(), paginate_by=20)
+
 
 class CommitteeListView(generic.ListView):
     context_object_name = 'committees'
     model = Committee
     paginate_by = 20
+    INITIAL_TOPICS = 10
 
     def get_context_data(self, **kwargs):
         context = super(CommitteeListView, self).get_context_data(**kwargs)
-        context["topics"] = Topic.objects.summary()[:10]
-        context["rating_range"] = range(7)
+        context["topics"] = Topic.objects.summary()[:self.INITIAL_TOPICS]
+        context["topics_more"] = Topic.objects.summary().count() > self.INITIAL_TOPICS
         context['tags_cloud'] = Tag.objects.cloud_for_model(CommitteeMeeting)
+        context["INITIAL_TOPICS"] = self.INITIAL_TOPICS
 
         return context
 
+
+class TopicsMoreView(GetMoreView):
+    """Get partially rendered member actions content for AJAX calls to 'More'"""
+
+    paginate_by = 20
+    template_name = 'committees/_topics_summary.html'
+
+    def get_queryset(self):
+        return Topic.objects.summary()
 
 
 class CommitteeDetailView(DetailView):

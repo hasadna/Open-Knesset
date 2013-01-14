@@ -192,7 +192,7 @@ class Member(models.Model):
 
     def average_votes_per_month(self):
         return self.voting_statistics.average_votes_per_month()
-        
+
     def is_female(self):
         return self.gender=='F'
 
@@ -317,6 +317,32 @@ class Member(models.Model):
         else:
             return ugettext('Past Member (male)')
 
+    @property
+    def roles(self):
+        """Roles list (splitted by comma)"""
+
+        return [x.strip() for x in self.get_role.split(',')]
+
+    @property
+    def is_minister(self):
+        """Check if one of the roles starts with minister"""
+
+        # TODO Once we have roles table change this
+        minister = ugettext('Minister')
+        return any(x.startswith(minister) for x in self.roles)
+
+    @property
+    def coalition_status(self):
+        """Current Coalition/Opposition member, or past member. Good for usage
+        with Django's yesno filters
+
+        :returns: True - Coalition, False - Opposition, None: Past member
+        """
+        if not self.is_current:
+            return None
+
+        return self.current_party.is_coalition
+
     def recalc_bill_statistics(self):
         self.bills_stats_proposed = self.bills.count()
         self.bills_stats_pre      = self.bills.filter(stage__in=['2','3','4','5','6']).count()
@@ -348,6 +374,21 @@ class Member(models.Model):
             except KeyError:
                 pass
         return out
+
+    @property
+    def firstname(self):
+        """return the first name of the member"""
+        return self.name.split()[0]
+
+    @property
+    def highres_img_url(self):
+        "Get higher res image for the member"
+
+        # TODO a hack for now, change later for url field
+        if not self.img_url:
+            return self.img_url
+
+        return self.img_url.replace('-s.jpg', '.jpg')
 
 
 class WeeklyPresence(models.Model):

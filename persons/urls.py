@@ -4,10 +4,10 @@ from hashnav import ListView, DetailView
 from models import Person
 from views import PersonListView,PersonDetailView
 
-person_list = ListView(queryset = Person.objects.filter(protocol_parts__isnull=False).distinct(),paginate_by=50)
-person_detail = PersonDetailView(queryset = Person.objects.all())
+person_list = PersonListView.as_view()
+person_detail = PersonDetailView.as_view()
 
-urlpatterns = patterns ('',
-    url(r'^$', person_list, name='person-list'),
-    url(r'^(?P<object_id>\d+)/$', person_detail, name='person-detail'),
+personsurlpatterns = patterns ('',
+    url(r'^person/$', person_list, name='person-list'),
+    url(r'^person/(?P<pk>\d+)/$', person_detail, name='person-detail'),
 )

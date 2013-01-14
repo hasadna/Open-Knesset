@@ -7,7 +7,8 @@ from actstream.models import Action
 from knesset.utils import cannonize, disable_for_loaddata
 from mks.models import Member, Party
 from laws.models import PrivateProposal, VoteAction, MemberVotingStatistics,\
-    PartyVotingStatistics
+    PartyVotingStatistics, CandidateListVotingStatistics
+from polyorg.models import CandidateList
 
 def record_bill_proposal(**kwargs):
     if kwargs['action'] != "post_add":
@@ -37,6 +38,12 @@ def record_vote_action(sender, created, instance, **kwargs):
                     timestamp=instance.vote.time)
 post_save.connect(record_vote_action, sender=VoteAction, 
     dispatch_uid='vote_action_record_member' )
+
+@disable_for_loaddata
+def handle_candiate_list_save(sender, created, instance, **kwargs):
+    if instance._state.db=='default':
+        CandidateListVotingStatistics.objects.get_or_create(candidates_list=instance)
+post_save.connect(handle_candiate_list_save, sender=CandidateList)
 
 @disable_for_loaddata
 def handle_party_save(sender, created, instance, **kwargs):

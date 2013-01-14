@@ -1,0 +1,45 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% block extratitle %}{% trans "Members and Parties" %}{% endblock %}
+{% block description %}{% trans "Members and Parties" %} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
+{% block nav-parties %}class="active"{% endblock %}
+{% block breadcrumbs %}
+            <li class="active">{% trans "Members and Parties" %}</li>
+{% endblock %}
+
+{% block divcontent %}
+    <div class="row">
+      <div class="cards span5">
+        <section class="card card-list card-list-latest">
+            <header><h1>{% trans "Coalition" %}</h1></header>
+            <ul>
+            {% for party in coalition %}
+                <li>
+                    <h2><a href="{{party.get_absolute_url}}">{{party.name}}</a></h2>
+                    {% include "mks/member_photos.html" with members=party.current_members %}
+                </li>
+            {% endfor %}
+            </ul>
+        </section>
+      </div>
+      <div class="cards span5">
+        <section class="card card-list card-list-latest">
+            <header><h1>{% trans "Opposition" %}</h1></header>
+            <ul>
+            {% for party in opposition %}
+                <li>
+                    <h2><a href="{{party.get_absolute_url}}">{{party.name}}<a></h2>
+                    {% include "mks/member_photos.html" with members=party.current_members %}
+                </li>
+            {% endfor %}
+            </ul>
+        </section>
+      </div>
+      <div class="span2">
+          <aside class="sidebar sidebar-agendas">
+              <h2>{% trans "Past MKs" %}</h2>
+                {% include "mks/member_photos.html" with members=past_members %}
+          </aside>
+      </div>
+    </div>
+{% endblock %}

@@ -3,26 +3,45 @@
 {% block extratitle %}{{ title }}{% endblock %}
 {% block keywords %}{{ title }}{% endblock %}
 {% block description %}{{ title }} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
-{% block nav-laws %}class="selected"{% endblock %}
+{% block nav-laws %}class="active"{% endblock %}
+
+{% block breadcrumbs %}
+            <li><a href="{% url bill-list %}">{% trans "Legislation" %}</a> <span class="divider">/</span></li>
+            <li><a href="{% url bill-tags-cloud %}">{% trans "Tags" %}</a> <span class="divider">/</span></li>
+            <li class="active">{{ tag }}</li>
+{% endblock %}
+
 {% block divcontent %}
-    {% with object_list|length as count %}
-        {% if member %}
-            <h1>{% blocktrans %}{{ count }} Bills tagged <a href="{{ tag_url }}">{{ tag }}</a> by <a href="{{ member_url }}">{{ member }}</a>{% endblocktrans %}</h1>
-        {% else %}
-            <h1>{% blocktrans %}{{ count }} Bills tagged <a href="{{ tag_url }}">{{ tag }}</a>{% endblocktrans %}</h1>
-        {% endif %}
-    {% endwith %}
-    <a href="{% url bill-tags-cloud %}{% if member %}?member={{member.id}}{% endif %}">{% trans 'Choose another tag' %}</a><br>
-	<div class="item-list">
-        {% for o in object_list %}
-            <div class="item {% cycle "normal" "alt" %}">
-                {% bill_list_item o %}
-            </div>
-        {% empty %}
-            {% trans "No results found" %}
-        {% endfor %}
-	</div>
-	<div><h2>{% blocktrans %}MKs that proposed bill related to {{ tag }}{% endblocktrans %}</h2>
+    <div class="row">
+        <div class="cards span8">
+            <section class="card card-list">
+            {% with object_list|length as count %}
+                <header>
+                <h1>
+                {% if member %}
+                    {% blocktrans %}{{ count }} Bills tagged <a href="{{ tag_url }}">{{ tag }}</a> by <a href="{{ member_url }}">{{ member }}</a>{% endblocktrans %}
+                {% else %}
+                    {% blocktrans %}{{ count }} Bills tagged <a href="{{ tag_url }}">{{ tag }}</a>{% endblocktrans %}
+                {% endif %}
+                </h1>
+                </header>
+            {% endwith %}
+                <ul>
+                    {% for o in object_list %}
+                    {% bill_list_item o %}
+                    {% empty %}
+                    <li>{% trans "No results found" %}</li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </div>
+        <div class="span4">
+            <aside class="sidebar">
+                <header><h2>{% blocktrans %}MKs that proposed bill related to {{ tag }}{% endblocktrans %}</h2></header>
+                {% include "mks/member_photos.html" with members=members %}
+            </aside>
+        </div>
+    </div>
 	<div class="tags cloud">
 	{% for mk in members %}
 	<a href="{% url bill-tag tag=tag %}?member={{mk.id}}" class="level{{ mk.font_size }}">{{ mk }}</a>

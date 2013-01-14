@@ -11,6 +11,7 @@ meetings_list = MeetingsListView(queryset=CommitteeMeeting.objects.all(), pagina
 
 committeesurlpatterns = patterns ('',
     url(r'^committee/$', CommitteeListView.as_view(), name='committee-list'),
+    url(r'^committee/more-topics/$', TopicsMoreView.as_view(), name='committee-topics-more'),
     url(r'^committee/(?P<pk>\d+)/$', CommitteeDetailView.as_view(), name='committee-detail'),
     url(r'^committee/(?P<committee_id>\d+)/all_meetings/$', meetings_list, name='committee-all-meetings'),
     url(r'^committee/(?P<committee_id>\d+)/date/(?P<date>[\d\-]+)/$', meeting_list_by_date, name='committee-meetings-by-date'),

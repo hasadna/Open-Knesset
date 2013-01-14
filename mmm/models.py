@@ -63,7 +63,7 @@ class DocumentManager(models.Manager):
 class Document(models.Model):
     url = models.URLField(unique=True)
     title = models.CharField(max_length=2000)
-    publication_date = models.DateField(blank=True, null=True)
+    publication_date = models.DateField(blank=True, null=True, db_index=True)
     # requesting committee
     req_committee = models.ManyToManyField(Committee,
                                             related_name='mmm_documents',

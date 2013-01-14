@@ -189,28 +189,28 @@ class BillCsvView(CsvView):
                     ('approval_vote', _('Approval Vote')),
                     ('proposers', _('Proposers')),
                     ('joiners', _('Joiners')))
-    
+
     def community_meeting_gen(self, obj, attr):
         '''
         A helper function to compute presentation of community meetings url list, space separated
         : param obj: The object instance
         : param attr: The object attribute
-        
+
         : return : A string with the urls comma-separated
         '''
         host = self.request.build_absolute_uri("/")
         return " ".join(host + row.get_absolute_url() for row in getattr(obj, attr).all())
-    
+
     def members_gen(self, obj, attr):
         '''
         A helper function to compute presentation of members, comma separated
         : param obj: The object instance
         : param attr: The object attribute
-        
+
         : return : A string with the urls comma-separated
         '''
         return ", ".join(row.name for row in getattr(obj, attr).all())
-    
+
     def proposers(self, obj, attr):
         return self.members_gen(obj ,attr)
 
@@ -219,13 +219,13 @@ class BillCsvView(CsvView):
 
     def first_committee_meetings(self, obj, attr):
         return self.community_meeting_gen(obj, attr)
-    
+
     def second_committee_meetings(self, obj, attr):
         return self.community_meeting_gen(obj, attr)
-    
+
     def pre_votes(self, obj, attr):
         return self.community_meeting_gen(obj, attr)
-    
+
 class BillDetailView (DetailView):
     allowed_methods = ['get', 'post']
     model = Bill
@@ -405,18 +405,9 @@ def bill_unbind_vote(request, object_id, vote_id):
         return render_to_response("laws/bill_unbind_vote.html", context)
 
 
-class BillListView (ListView):
 
-    friend_pages = [
-            ('stage','all',_('All stages')),
-    ]
-    friend_pages.extend([('stage',x[0],_(x[1])) for x in BILL_STAGE_CHOICES])
-
-    bill_stages_names = { 'proposed':_('(Bills) proposed'),
-                          'pre':_('(Bills) passed pre-vote'),
-                          'first':_('(Bills) passed first vote'),
-                          'approved':_('(Bills) approved'),
-                        }
+class BillListMixin(object):
+    """Mixin for using both bill index index and "more" views"""
 
     def get_queryset(self):
 
@@ -443,6 +434,21 @@ class BillListView (ListView):
         form = BillSelectForm(self.request.GET) if self.request.GET \
                 else BillSelectForm()
         return form
+
+
+class BillListView (BillListMixin, ListView):
+
+    friend_pages = [
+        ('stage','all',_('All stages')),
+    ]
+    friend_pages.extend([('stage',x[0],_(x[1])) for x in BILL_STAGE_CHOICES])
+
+    bill_stages_names = {
+        'proposed':_('(Bills) proposed'),
+        'pre':_('(Bills) passed pre-vote'),
+        'first':_('(Bills) passed first vote'),
+        'approved':_('(Bills) approved'),
+    }
 
     def get_context(self):
         context = super(BillListView, self).get_context()
@@ -473,6 +479,12 @@ class BillListView (ListView):
         context['friend_pages'] = r
         context['form'] = self._get_filter_form()
         return context
+
+
+class BillMoreView(BillListMixin):
+    "TODO: Implement me once bills is converted from pagination to get more"
+    pass
+
 
 class VoteListView(ListView):
 

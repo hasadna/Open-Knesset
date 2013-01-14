@@ -1,14 +1,16 @@
 {% load i18n %}
-{% if action.actor.get_absolute_url %}<a class="action-actor" href="{{ action.actor.get_absolute_url }}">{{ action.actor }}</a>
-{% else %}<span class="action-actor">{{ action.actor }}</span>{% endif %}
-{% if action.actor.is_female %}
-<span class="action-verb">נכחה</span>
-{% else %}
-<span class="action-verb">נכח</span>
-{% endif %}
-:
+    <li>
+      <p class="item-action">
+          {{action.actor.is_female|yesno:_("Attended (Femail),Attended (Male)")}}
+      </p>
+      <p class="item-title">
 {% with action.target as meeting %}
-    <a href="{{ meeting.get_absolute_url }}" title="{% trans 'read meeting protocol' %}">
-        {{ meeting.committee.name}} - {{ meeting.topics|safe }}
-    </a>
+    {% if meeting %}
+        <a href="{{ meeting.get_absolute_url }}">{{ meeting }}</a>
+    {% else %}
+        {{ action.target }}
+    {% endif %}
 {% endwith %}
+    </p>
+    <p class="item-context">{{ action.timestamp|timesince }}</p>
+    </li>

@@ -1,31 +1,209 @@
-<!DOCTYPE html>{% load i18n search %}{% load static from staticfiles %}
+<!DOCTYPE html>{% load i18n search avatar_tags %}{% load static from staticfiles %}
 <html lang="{{ LANGUAGE_CODE }}" dir="{{ LANGUAGE_BIDI|yesno:"rtl,ltr" }}" class="{{ LANGUAGE_BIDI|yesno:"rtl,ltr" }}">
-    <head>
-        <meta charset="utf-8" >
-        <meta http-equiv="Content-Language" content="{{ LANGUAGE_CODE }}">
-        <title>{% block extratitle %}{% endblock %} | {% trans 'Open Knesset' %}</title>
-        <meta NAME="ROBOTS" content="{% if debug %}NOINDEX, NOFOLLOW{% else %}ALL{% endif %}">
-        <meta http-equiv="imagetoolbar" content="no"/>
-        <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE" />
-        <meta name="MSSmartTagsPreventParsing" content="true" >
-        <meta name="Authors" content="OpenKnesset">
-        <meta name="License" content="CC-by-sa-3.0 Attribution-NonCommercial-ShareAlike 3.0">
-        <meta name="keywords" content="{% trans 'Open Knesset' %} {% block keywords %}{% endblock %}" >
-        <meta name="description" content="{% block description %}{% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}">
-        <meta name="google-site-verification" content="TAmHbnTgm9dvrNMB41Ke-lZesXPgTd5xSW5lBTzq020" />
-        <meta property="og:image" content="/static/img/oknesset-logo-small.png"/>
-        <link href="{% static "css/common.css" %}?v=20" rel="stylesheet" type="text/css" media="screen" />
-        <link href="{% static "css/jquery.jgrowl.css" %}" rel="stylesheet" type="text/css" media="screen" />
-        {% block extracss %} {% endblock %}
-        <link rel="shortcut icon" href="{% static "img/favicon.png" %}" />
-        <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
-        <script type="text/javascript" src="{% static "js/jquery.min.js" %}"></script>
-        <script type="text/javascript" src="{% static "js/jquery.jgrowl.js" %}"></script>
-        <script type="text/javascript" src="{% static "js/raphael-min.js" %}"></script>
-        <script type="text/javascript" src="{% static "js/okhelptexts.js" %}"></script>
-        <script type="text/javascript" src="{% static "js/togglehelpextended.js" %}"></script>
-        {% block extrajs %}{% endblock %}
-       <script>
+<head>
+    <meta charset="utf-8" >
+    <meta http-equiv="Content-Language" content="{{ LANGUAGE_CODE }}">
+    <title>{% block extratitle %}{% endblock %} | {% trans 'Open Knesset' %}</title>
+    <meta NAME="ROBOTS" content="{% if debug %}NOINDEX, NOFOLLOW{% else %}ALL{% endif %}">
+    <meta http-equiv="imagetoolbar" content="no"/>
+    <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE" />
+    <meta name="MSSmartTagsPreventParsing" content="true" >
+    <meta name="Authors" content="OpenKnesset">
+    <meta name="License" content="CC-by-sa-3.0 Attribution-NonCommercial-ShareAlike 3.0">
+    <meta name="keywords" content="{% trans 'Open Knesset' %} {% block keywords %}{% endblock %}" >
+    <meta name="description" content="{% block description %}{% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}">
+    <meta name="google-site-verification" content="TAmHbnTgm9dvrNMB41Ke-lZesXPgTd5xSW5lBTzq020" />
+    <meta property="og:image" content="/static/img/oknesset-logo-small.png"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="{% static "css/app.css" %}?v=1" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/responsive.css" %}"/>
+
+<!--    
+    <link href="{% static "css/common.css" %}?v=21" rel="stylesheet" type="text/css" media="screen" />
+    <link href="{% static "css/jquery.jgrowl.css" %}" rel="stylesheet" type="text/css" media="screen" />
+-->
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    {% block extracss %} {% endblock %}
+    <link rel="shortcut icon" href="{% static "img/favicon.png" %}" />
+    {% block extrahead %}{% endblock %}
+</head>
+<body>
+    <header id="app-header" class="container">
+{% if debug %}
+      <div class="row"><div class="span12"><div class="alert alert-error">{% trans 'This is a development server, all data in it should be considered fictional.  users are kindly requested to go to '%}<a href="http://oknesset.org/">http://oknesset.org/</a></div></div></div>
+{% endif %}
+      <div class="row">
+        <div id="logo" class="span4">
+          <a href="/">
+            <img src="{% static "img/oknesset-logo.png" %}" alt="oknesset-logo" />
+            <span>כנסת פתוחה</span>
+          </a>
+        </div>
+        <div id="search" class="span5">
+            {% search_form "search_page" %}
+        </div>
+
+        <div id="login" class="span3 dropdown">
+          {% if user.is_authenticated %}
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            <b class="caret"></b>
+            <span class="user-pic">
+                {% avatar user 36%}
+            </span>
+          </a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li><a href="{% url edit-profile %}">{% trans 'Edit Profile' %}</a></li>
+            <li><a href="{% url logout %}?next={{request.get_full_path}}">{% trans 'Logout' %}</a></li>
+          </ul>
+          {% else %}
+              <a href='{% url login %}?next={{request.get_full_path}}'>{% trans 'login' %}</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <ul class="nav nav-pills">
+          <li id="nav-elections" {% block nav-elections %} {% endblock %} > <a href="{% url candidate-list-list %}">{% trans 'Election' %}</a> </li>
+        <li id="nav-parties" {% block nav-parties %} {% endblock %} ><a href="{% url party-list %}">{% trans "Members and Parties" %}</a></li>
+        <li id="laws" {% block nav-laws %} {% endblock %} > <a href="{% url bill-list %}">{% trans "Legislation" %}</a> </li>
+        <li id="nav-committees" {% block nav-committees %} {% endblock %} > <a href="{% url committee-list %}">{% trans 'Committees' %}</a> </li>
+        <li><a href="#">מליאה</a></li>
+        <li id="nav-agendas" {% block nav-agendas %} {% endblock %} > <a href="{% url agenda-list %}">{% trans 'Agendas' %}</a> </li>
+      </ul>
+    </header>
+    <div id="helptextcontainer"></div>
+    <section class="container">
+{% if not hide_crumbs %}
+        <ul class="breadcrumb">
+            <li><a class="home-icon" href="{% url main %}">{% trans "Homepage" %}</a> <span class="divider">/</span></li>
+            {% block breadcrumbs %}{% endblock %}
+        </ul>
+{% endif %}
+        <div id="cse" class="main" style="display:none;"></div>
+        <div id="content-main" class="main">
+            {% block content-main %}{% endblock %}
+            <div class="clear"></div>
+            {% block social %}
+            <div class="content-footer">
+                {% if not debug %}
+                    <!-- AddToAny BEGIN -->
+                    <div class="a2a_kit a2a_default_style">
+                    <a class="a2a_dd" href="http://www.addtoany.com/share_save">שיתוף</a>
+                    <span class="a2a_divider"></span>
+                    <a class="a2a_button_email"></a>
+                    <a class="a2a_button_facebook"></a>
+                    <a class="a2a_button_twitter"></a>
+                    <a class="a2a_button_google_plus"></a>
+                    <a class="a2a_button_delicious"></a>
+                    <a class="a2a_button_digg"></a>
+                    </div>
+                    <script type="text/javascript">
+                    var a2a_config = a2a_config || {};
+                    a2a_config.locale = "he";
+                    </script>
+                    <script type="text/javascript" src="http://static.addtoany.com/menu/page.js"></script>
+                    <!-- AddToAny END -->
+                {% endif %}
+            </div>
+            {% endblock %}
+        </div>
+        <!-- END #content-main -->
+    </section>
+    <!-- END #content -->
+    <footer id="app-footer" class="container">
+        <div class="row">
+            <nav class="span8">
+                <ul class="nav nav-pills">
+                    <li><a class="home-icon" href="{% url main %}">{% trans "Homepage" %}</a></li>
+                    <li><a href="{% url party-list %}">{% trans "Members and Parties" %}</a></li>
+                    <li><a href="{% url bill-list %}">{% trans "Legislation" %}</a> </li>
+                    <li><a href="{% url committee-list %}">{% trans 'Committees' %}</a> </li>
+                    <li><a href="#">מליאה</a></li>
+                    <li><a href="{% url agenda-list %}">{% trans 'Agendas' %}</a> </li>
+                </ul>
+            </nav>
+            <div class="span4">
+                Search goes here
+            </div>
+        </div>
+        <div class="row about">
+            <div class="span4">
+                <div class="about-oknesset">
+                <h3>{% trans "Open Knesset is a project aimed to expose Knesset's actions to the public" %}</h3>
+                <p>
+                {% blocktrans %}All the information comes from the Knesset's site.
+                This site is maintained by volunteers and is not supported by
+                any political party ...{% endblocktrans %}
+                <a href="{% url about %}">{% trans "Read more" %}</a>
+                </p>
+                </div>
+                <div class="follow-oknesset">
+                    <h3>{% trans "Follow Open Knesset" %}:</h3>
+                    Social buttons go here
+                </div>
+            </div>
+            <div class="span4 offset4 hasadna">
+                <h3>
+                    <img src="{% static "img/sadna30x30.png" %}" alt="{% trans "The Public Knowledge Workshop" %}">
+                    <span>{% trans "Project of" %}</span>{% trans "The Public Knowledge Workshop" %}
+                </h3>
+                <ul>
+                    <li><a
+                        href="http://www.hasadna.org.il/projects/%D7%94%D7%AA%D7%A7%D7%A6%D7%99%D7%91-%D7%94%D7%A4%D7%AA%D7%95%D7%97/" target="_blank">{% trans "Open Budget" %}</a></li>
+                    <li><a href="http://www.hasadna.org.il/projects/%D7%A4%D7%95%D7%AA%D7%97%D7%99%D7%9D-%D7%90%D7%AA-%D7%95%D7%A2%D7%93%D7%AA-%D7%94%D7%9B%D7%A1%D7%A4%D7%99%D7%9D/" target="_blank">{% trans "Opening the finance committee" %}</a></li>
+                    <li><a href="http://www.hasadna.org.il/projects/%D7%9E%D7%A2%D7%A7%D7%91-%D7%98%D7%A8%D7%9B%D7%98%D7%A0%D7%91%D7%A8%D7%92/" target="_blank">{% trans "Traking Trachtenberg" %}</a></li>
+                    <li><a href="http://www.hasadna.org.il/projects/%D7%A8%D7%A9%D7%95%D7%99%D7%95%D7%AA-%D7%9E%D7%A7%D7%95%D7%9E%D7%99%D7%95%D7%AA-%D7%A4%D7%AA%D7%95%D7%97%D7%95%D7%AA/" target="_blank">{% trans "Open Local Authorities" %}</a></li>
+                </ul>
+                <form method="post" action="https://www.paypal.com/cgi-bin/webscr">
+                    <input type="hidden" value="_s-xclick" name="cmd">
+                    <input type="hidden" value="K7X4FWYPBR7H4" name="hosted_button_id">
+                    <input type="submit" name="submit" value="{% trans "Donate to Hasadna" %}" class="btn  btn-big btn-large btn-primary">
+                    <img width="1" height="1" border="0" src="https://www.paypalobjects.com/WEBSCR-640-20110306-1/he_IL/i/scr/pixel.gif" alt="">
+                </form> 
+            </div>
+        </div>
+        <div class="row">
+            <div class="span11">
+                {% trans "Some rights reserved. Using data from the site requires credit" %}
+                <a href="{% url about %}">{% trans "Details in the link" %}</a>
+            </div>
+            <div class="span1">
+                <a target="_blank" href="https://market.android.com/details?id=org.oknesset"><img src="/static/img/android_app.png" alt="אייפון" height="32" width="25"></a>
+                <a target="_blank" href="http://itunes.apple.com/us/app/id475096101"><img src="/static/img/iphone_app.png" alt="אייפון" height="32" width="21"></a>
+            </div>
+        </div>
+    </footer>
+    <!-- END #footer -->
+<!-- JS Placed at the end of the document so the pages load faster -->
+    <script src="{% static "js/jquery-1.8.3.min.js" %}"></script>
+    <script src="{% static "js/bootstrap-transition.js" %}"></script>
+    <script src="{% static "js/bootstrap-alert.js" %}"></script>
+    <script src="{% static "js/bootstrap-modal.js" %}"></script>
+    <script src="{% static "js/bootstrap-dropdown.js" %}"></script>
+    <script src="{% static "js/bootstrap-scrollspy.js" %}"></script>
+    <script src="{% static "js/bootstrap-tab.js" %}"></script>
+    <script src="{% static "js/bootstrap-tooltip.js" %}"></script>
+    <script src="{% static "js/bootstrap-popover.js" %}"></script>
+    <script src="{% static "js/bootstrap-button.js" %}"></script>
+    <script src="{% static "js/bootstrap-collapse.js" %}"></script>
+    <script src="{% static "js/bootstrap-carousel.js" %}"></script>
+    <script src="{% static "js/bootstrap-typeahead.js" %}"></script>
+
+    <script src="{% url django.views.i18n.javascript_catalog %}"></script>
+    <script src="{% static "js/jquery.jgrowl.js" %}"></script>
+    <script src="{% static "js/raphael-min.js" %}"></script>
+    <script src="{% static "js/okhelptexts.js" %}"></script>
+    <script src="{% static "js/togglehelpextended.js" %}"></script>
+
+    <script src="{% static "js/ok-toggle.js" %}"></script>
+    <script src="{% static "js/ok-more.js" %}"></script>
+<!-- end JS -->
+    <script>
+        $(function() { 
+            // send csrf with AJAX
             $('html').ajaxSend(function(event, xhr, settings) {
                 function getCookie(name) {
                     var cookieValue = null;
@@ -47,14 +225,11 @@
                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
                 }
             });
-        </script>
-        <script>
+
+            // set jGrowl position
             $.jGrowl.defaults.position="top-left";
-        </script>
-      {% block extrahead %}{% endblock %}
-      {% if not debug %}
-      <script type="text/javascript">
-      
+        });
+    {% if not debug %}
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-15521464-1']);
         _gaq.push(['_setDomainName','.oknesset.org']);
@@ -65,96 +240,9 @@
           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
-      
-      </script>
-      {% endif %}
-
-     </head>
-
-    <body>
-<!--[if lte IE 6]><script src="/static/js/ie6/warning.js"></script><script>window.onload=function(){e("/static/js/ie6/")}</script><![endif]-->
-    {% if debug %}
-    <div id="debug-warning">{% trans 'This is a development server, all data in it should be considered fictional. users are kindly requested to go to '%}<a href="http://oknesset.org/">http://oknesset.org/</a></div>
     {% endif %}
-    <div id="helptextcontainer"></div>
-    <div id="container">
-        <h1 id="main-logo" ><a href="{% url main %}"><img src ="/static/img/oknesset-logo-small.png"   alt="{% trans "Open Knesset" %}"/></a></h1>
-        <div class="app-link"><a target="_blank" href="https://market.android.com/details?id=org.oknesset"><img src="/static/img/android_app.png" alt="אייפון" height="51" width="41px"></a></div>
-        <div class="app-link"><a target="_blank" href="http://itunes.apple.com/us/app/id475096101"><img src="/static/img/iphone_app.png" alt="אייפון" height="51" width="34px"></a></div>
-{% if not has_search %}
-            <div id="search">{% search_form "search_page" %}</div>
-        {% endif %}
-        <div id="accounts">
-            {% if user.is_authenticated %}
-                <a href="{{user.get_profile.get_absolute_url}}">{% trans 'Logged in as ' %} {{ user }}</a> |
-                <a href="{% url edit-profile %}">{% trans 'Edit Profile' %}</a> |
-                <a href="{% url logout %}?next={{request.get_full_path}}">{% trans 'Logout' %}</a>
-            {% else %}
-                <a href='{% url login %}?next={{request.get_full_path}}'>{% trans 'login' %}</a>
-            {% endif %}
-        </div>
-        <div id="header">
-            <ul id="nav-global">
-
-                <li id="nav-main" {% block nav-main-page %} {% endblock %} > <a href="{% url main%}">{% trans 'Main' %}</a> </li>
-                <li id="laws" {% block nav-laws %} {% endblock %} > <a href="{% url bill-list %}">{% trans 'Bills' %}</a> </li>
-                <li id="nav-past-votes" {% block nav-votes %} {% endblock %} > <a href="{% url vote-list %}">{% trans 'Past Votes' %}</a> </li>
-                <li id="nav-members" {% block nav-members %} {% endblock %} > <a href="{% url member-list %}">{% trans 'Members' %}</a> </li>
-                <li id="nav-parties" {% block nav-parties %} {% endblock %} > <a href="{% url party-list %}">{% trans 'Parties' %}</a> </li>
-                <li id="nav-committees" {% block nav-committees %} {% endblock %} > <a href="{% url committee-list %}">{% trans 'Committees' %}</a> </li>
-                <li id="nav-agendas" {% block nav-agendas %} {% endblock %} > <a href="{% url agenda-list %}">{% trans 'Agendas' %}</a> </li>
-                <li id="nav-tags" {% block nav-tags %} {% endblock %} > <a href="{% url tags-list %}">{% trans 'Tags' %}</a> </li>
-                <li id="nav-planet" {% block nav-planet %} {% endblock %} > <a href="{% url planet_index %}">{% trans 'Posts' %}</a> </li>
-                <li id="nav-about" {% block nav-about %} {% endblock %} > <a href="{% url about %}">{% trans 'About' %}</a> </li>
-            </ul>
-
-        </div>
-        <!-- END Header -->
-        <div id="columnwrap">
-            {% block columnwrap %}
-                <div id="cse" class="main" style="display:none;"></div>
-                <div id="content-main" class="main">
-                    {% block content-main %}{% endblock %}
-                    <div class="clear"></div>
-                    {% block social %}
-                    <div class="content-footer">
-                        {% if not debug %}
-                        <form method="post" action="https://www.paypal.com/cgi-bin/webscr">
-                             | <input type="hidden" value="_s-xclick" name="cmd">
-                            <input type="hidden" value="K7X4FWYPBR7H4" name="hosted_button_id">
-                            <input type="submit" name="submit" value="תרמו לנו!">
-                            <img width="1" height="1" border="0" src="https://www.paypalobjects.com/WEBSCR-640-20110306-1/he_IL/i/scr/pixel.gif" alt="">
-                        </form> 
-                            <!-- AddToAny BEGIN -->
-                            <div class="a2a_kit a2a_default_style">
-                            <a class="a2a_dd" href="http://www.addtoany.com/share_save">שיתוף</a>
-                            <span class="a2a_divider"></span>
-                            <a class="a2a_button_email"></a>
-                            <a class="a2a_button_facebook"></a>
-                            <a class="a2a_button_twitter"></a>
-                            <a class="a2a_button_google_plus"></a>
-                            <a class="a2a_button_delicious"></a>
-                            <a class="a2a_button_digg"></a>
-                            </div>
-                            <script type="text/javascript">
-                            var a2a_config = a2a_config || {};
-                            a2a_config.locale = "he";
-                            </script>
-                            <script type="text/javascript" src="http://static.addtoany.com/menu/page.js"></script>
-                            <!-- AddToAny END -->
-                        {% endif %}
-                    </div>
-                    {% endblock %}
-                </div>
-                <!-- END #content-main -->
-            {% endblock %}
-        </div>
-        <!-- END #content -->
-        <div id="footer">
-            <p><a href="{% url about %}">{% trans 'Some rights reserved.' %}</a></p>
-        </div>
-        <!-- END #footer -->
-    </div>
+    </script>
+    {% block extrajs %}{% endblock %}
     {% block footer %}
     {% endblock %}
     </body>

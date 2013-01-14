@@ -1,20 +1,20 @@
 {% load i18n %}
-{% if action.actor.get_absolute_url %}<a class="action-actor" href="{{ action.actor.get_absolute_url }}">{{ action.actor }}</a>
-{% else %}<span class="action-actor">{{ action.actor }}</span>{% endif %}
-{% if action.description == 'No Vote' %}
-    {% if action.actor.is_female %}
-        נכחה ולא הצביעה
-    {% else %}
-        {% trans "present and didn't vote" %}
-    {% endif %}
-{% else %}
-    {% if action.actor.is_female %}
-    <span class="action-verb">הצביעה&nbsp;{% trans action.description %}</span> 
-    {% else %}
-    <span class="action-verb">הצביע&nbsp;{% trans action.description %}</span> 
-    {% endif %}
-{% endif %}
-:
+    <li>
+      <p class="item-action">
+      {% if action.description == 'No Vote' %}
+          {{  action.actor.is_female|yesno:_("Present and didn't vote (Female),Present and didn't vote (Male)") }}
+      {% else %}
+          {{ action.actor.is_female|yesno:_("Voted (Female),Voted (Male)") }} {% trans action.description %}
+      {% endif %}
+      </p>
+      <p class="item-title">
 {% with action.target as vote %}
-    <a  class="action-target" href="{{ vote.get_absolute_url }}">{{ vote.title }}</a>
+    {% if vote %}
+        <a href="{{ vote.get_absolute_url }}">{{ vote.title }}</a>
+    {% else %}
+        {{ action.target }}
+    {% endif %}
+    </p>
 {% endwith %}
+      <p class="item-context">{{ action.timestamp|timesince }}</p>
+    </li>

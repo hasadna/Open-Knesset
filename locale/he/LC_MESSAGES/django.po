@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-03 10:09+0200\n"
-"PO-Revision-Date: 2012-12-29 20:35+0200\n"
+"POT-Creation-Date: 2013-01-07 15:56+0200\n"
+"PO-Revision-Date: 2013-01-07 15:57+0200\n"
 "Last-Translator: Ofri Raviv <ofri.raviv@gmail.com>\n"
 "Language-Team: Django-i18n <django-i18n@googlegroups.com>\n"
 "Language: \n"
@@ -132,23 +132,22 @@ msgstr "חשיבות רבה מאוד"
 msgid "Agenda"
 msgstr "אג'נדה"
 
-#: agendas/models.py:222 agendas/urls.py:7 templates/base.html:105
-#: templates/agendas/agenda_list.html:7 templates/agendas/agenda_list.html:8
-#: templates/agendas/agenda_list.html:9 templates/mks/member_detail.html:396
-#: templates/mks/party_detail.html:48
+#: agendas/models.py:222 agendas/urls.py:7 templates/base.html:73
+#: templates/base.html.py:124 templates/agendas/agenda_list.html:7
+#: templates/agendas/agenda_list.html:8 templates/agendas/agenda_list.html:9
+#: templates/mks/party_detail.html:86
 msgid "Agendas"
 msgstr "אג'נדות"
 
-#: agendas/models.py:226 templates/mks/member_detail.html:403
+#: agendas/models.py:226 templates/mks/agenda_partials.html:6
 msgid "edited by"
 msgstr "בעריכת"
 
 #: agendas/views.py:92 agendas/views.py:152 agendas/views.py:170
 #: agendas/views.py:188 agendas/views.py:209
-#: templates/committees/committee_detail.html:70
-#: templates/committees/committee_detail.html:78
-#: templates/committees/committee_detail.html:86
-#: templates/mks/member_detail.html:274
+#: templates/committees/committee_detail.html:58
+#: templates/committees/committee_detail.html:66
+#: templates/committees/committee_detail.html:74
 msgid "None"
 msgstr "אין"
 
@@ -209,7 +208,7 @@ msgid "Help"
 msgstr "עזרה"
 
 #: auxiliary/views.py:84 templates/help_page.he.html:4
-#: templates/main.he.html:5
+#: templates/main.he.html:4
 msgid "Home"
 msgstr "דף הבית"
 
@@ -279,7 +278,7 @@ msgstr "בערעור"
 msgid "deleted"
 msgstr "נמחקה"
 
-#: committees/models.py:340 templates/base.html:104
+#: committees/models.py:340 templates/base.html:71 templates/base.html.py:122
 #: templates/committees/committee_detail.html:18
 #: templates/committees/committee_list.html:3
 #: templates/committees/committee_list.html:4
@@ -288,6 +287,7 @@ msgstr "נמחקה"
 #: templates/committees/flatpages.html:3 templates/committees/flatpages.html:4
 #: templates/committees/flatpages.html:5
 #: templates/committees/topic_detail.html:15
+#: templates/mks/member_detail.html:218
 msgid "Committees"
 msgstr "ועדות"
 
@@ -366,7 +366,7 @@ msgstr "התראות כנסת פתוחה:"
 
 #: knesset/feeds.py:10 knesset/feeds.py:24 knesset/feeds.py:33
 #: knesset/feeds.py:83 laws/feeds.py:9 laws/feeds.py:27 templates/500.html:8
-#: templates/base.html:6 templates/base.html.py:13 templates/base.html:81
+#: templates/base.html:6 templates/base.html.py:13
 msgid "Open Knesset"
 msgstr "כנסת פתוחה"
 
@@ -472,10 +472,9 @@ msgstr ""
 msgid "Vote types"
 msgstr "סוגי הצבעות"
 
-#: laws/forms.py:44 laws/forms.py:66 templates/base.html:106
-#: templates/auxiliary/tag_detail.html:9 templates/auxiliary/tag_list.html:4
-#: templates/auxiliary/tag_list.html:5 templates/auxiliary/tag_list.html:6
-#: templates/auxiliary/tag_list.html:13
+#: laws/forms.py:44 laws/forms.py:66 templates/auxiliary/tag_detail.html:9
+#: templates/auxiliary/tag_list.html:4 templates/auxiliary/tag_list.html:5
+#: templates/auxiliary/tag_list.html:6 templates/auxiliary/tag_list.html:13
 #: templates/committees/committee_list.html:26
 #: templates/committees/committeemeeting_detail.html:57
 #: templates/committees/committeemeeting_detail.html:87
@@ -543,18 +542,16 @@ msgstr "הצבעה"
 #: laws/models.py:211 laws/urls.py:10 laws/urls.py:13
 #: templates/include/member_detail.html:47 templates/laws/law_detail.html:19
 #: templates/laws/law_detail.html.py:32 templates/laws/law_detail.html:45
-#: templates/mks/member_detail.html:170
 msgid "Votes"
 msgstr "הצבעות"
 
-#: laws/models.py:503 templates/laws/bill_unbind_vote.html:8
-#: templates/laws/vote_detail.html:131
+#: laws/models.py:503 templates/activity/proposed/action.html:5
+#: templates/laws/bill_unbind_vote.html:8 templates/laws/vote_detail.html:131
 msgid "Bill"
 msgstr "הצעת חוק"
 
-#: laws/models.py:504 laws/urls.py:11 templates/base.html:100
+#: laws/models.py:504 laws/urls.py:11
 #: templates/committees/committeemeeting_detail.html:42
-#: templates/mks/member_detail.html:318
 msgid "Bills"
 msgstr "הצעות חוק"
 
@@ -793,8 +790,7 @@ msgstr "מידת המחלוקת"
 msgid "Against Party"
 msgstr "הצבעות נגד המפלגה"
 
-#: laws/vote_choices.py:23 templates/mks/member_detail.html:173
-#: templates/mks/party_detail.html:17
+#: laws/vote_choices.py:23 templates/mks/party_detail.html:55
 msgid "Number of votes"
 msgstr "מספר הצבעות"
 
@@ -802,7 +798,7 @@ msgstr "מספר הצבעות"
 msgid "Unknown"
 msgstr "לא ידוע"
 
-#: laws/vote_choices.py:28 mks/forms.py:6
+#: laws/vote_choices.py:28
 msgid "Proposed"
 msgstr "הצעה"
 
@@ -844,8 +840,7 @@ msgstr "הצעות שלא תויגו"
 
 #: laws/templatetags/laws_tags.py:22 laws/templatetags/laws_tags.py:25
 #: laws/templatetags/laws_tags.py:35 laws/templatetags/laws_tags.py:38
-#: laws/templatetags/laws_tags.py:47 templates/mks/member_detail.html:194
-#: templates/mks/member_detail.html:234 templates/mks/member_detail.html:304
+#: laws/templatetags/laws_tags.py:47
 msgid "Not enough data"
 msgstr "אין מספיק נתונים"
 
@@ -903,26 +898,6 @@ msgstr "פעילות עבור חבר/ת הכנסת %s"
 msgid "Actions of %s, including votes, attended committees and posted articles"
 msgstr "פעילות עבור %s כולל הצבעות, פירסומים ונוכחות בוועדות"
 
-#: mks/forms.py:7
-msgid "Joined"
-msgstr "הצטרף/ה"
-
-#: mks/forms.py:8
-msgid "Posted"
-msgstr "פִרסם/ה"
-
-#: mks/forms.py:9
-msgid "Attended"
-msgstr "נכח/ה"
-
-#: mks/forms.py:10 templates/agendas/mk_agenda_detail.html:35
-msgid "Voted"
-msgstr "הצביע/ה"
-
-#: mks/forms.py:12
-msgid "Displaying Actions"
-msgstr "מציג  פעולות"
-
 #: mks/models.py:14 persons/models.py:20
 msgid "Male"
 msgstr "זכר"
@@ -935,17 +910,18 @@ msgstr "נקבה"
 msgid "Party"
 msgstr "מפלגה"
 
-#: mks/models.py:76 mks/views.py:362 mks/views.py:376 mks/views.py:391
-#: mks/views.py:406 templates/base.html:103
-#: templates/agendas/agenda_detail.html:128
+#: mks/models.py:76 mks/views.py:372 mks/views.py:386 mks/views.py:401
+#: mks/views.py:416 templates/agendas/agenda_detail.html:128
 msgid "Parties"
 msgstr "סיעות"
 
-#: mks/models.py:124 templates/mks/party_list.html:19
+#: mks/models.py:124 templates/mks/parties_members.html:14
+#: templates/mks/party_list.html:25
 msgid "Coalition"
 msgstr "קואליציה"
 
-#: mks/models.py:124 templates/mks/party_list.html:34
+#: mks/models.py:124 templates/mks/parties_members.html:27
+#: templates/mks/party_list.html:40
 msgid "Opposition"
 msgstr "אופוזיציה"
 
@@ -961,13 +937,13 @@ msgstr "אזור מגורים (למשל, \"נגב\")"
 msgid "Member"
 msgstr "ח\"כ"
 
-#: mks/models.py:184 mks/views.py:71 mks/views.py:81 mks/views.py:92
-#: mks/views.py:103 mks/views.py:114 mks/views.py:129 mks/views.py:141
-#: mks/views.py:153 mks/views.py:156 templates/base.html:102
-#: templates/agendas/agenda_detail.html:55 templates/mks/member_graph.html:3
-#: templates/mks/member_graph.html.py:4 templates/mks/member_graph.html:5
-#: templates/mks/member_list.html:3 templates/mks/member_list.html.py:4
-#: templates/mks/member_list.html:5 templates/mks/member_list_with_bars.html:6
+#: mks/models.py:184 mks/views.py:72 mks/views.py:82 mks/views.py:93
+#: mks/views.py:104 mks/views.py:115 mks/views.py:130 mks/views.py:142
+#: mks/views.py:154 mks/views.py:157 templates/agendas/agenda_detail.html:55
+#: templates/mks/member_graph.html:3 templates/mks/member_graph.html.py:4
+#: templates/mks/member_graph.html:5 templates/mks/member_list.html:3
+#: templates/mks/member_list.html.py:4 templates/mks/member_list.html:5
+#: templates/mks/member_list_with_bars.html:6
 msgid "Members"
 msgstr "ח\"כים"
 
@@ -995,159 +971,163 @@ msgstr "חברת כנסת לשעבר"
 msgid "Past Member (male)"
 msgstr "חבר כנסת לשעבר"
 
-#: mks/views.py:60
+#: mks/models.py:331
+msgid "Minister"
+msgstr "שר"
+
+#: mks/views.py:61
 msgid "By ABC"
 msgstr "לפי א\"ב"
 
-#: mks/views.py:61 mks/views.py:81
+#: mks/views.py:62 mks/views.py:82
 msgid "By number of bills proposed"
 msgstr "לפי מספר הצעות חוק שהוצעו"
 
-#: mks/views.py:62 mks/views.py:92
+#: mks/views.py:63 mks/views.py:93
 msgid "By number of bills pre-approved"
 msgstr "לפי מספר הצעות חוק שעברו טרומית"
 
-#: mks/views.py:63 mks/views.py:103
+#: mks/views.py:64 mks/views.py:104
 msgid "By number of bills first-approved"
 msgstr "לפי מספר הצעות חוק שעברו קריאה ראשונה"
 
-#: mks/views.py:64 mks/views.py:114
+#: mks/views.py:65 mks/views.py:115
 msgid "By number of bills approved"
 msgstr "לפי מספר הצעות חוק שאושרו סופית"
 
-#: mks/views.py:65 mks/views.py:129
+#: mks/views.py:66 mks/views.py:130
 msgid "By number of votes per month"
 msgstr "לפי מספר הצבעות ממוצע בחודש"
 
-#: mks/views.py:66 mks/views.py:141 mks/views.py:351
+#: mks/views.py:67 mks/views.py:142 mks/views.py:361
 msgid "By average weekly hours of presence"
 msgstr "לפי ממוצע שעות שבועיות"
 
-#: mks/views.py:67 mks/views.py:153 mks/views.py:352
+#: mks/views.py:68 mks/views.py:154 mks/views.py:362
 msgid "By average monthly committee meetings"
 msgstr "לפי מספר ישיבות וועדות בחודש"
 
-#: mks/views.py:68 mks/views.py:156
+#: mks/views.py:69 mks/views.py:157
 msgid "Graphical view"
 msgstr "תצוגה גרפית"
 
-#: mks/views.py:166 mks/views.py:566
+#: mks/views.py:167 mks/views.py:576
 msgid "Name"
 msgstr "שם"
 
-#: mks/views.py:167
+#: mks/views.py:168
 msgid "Bills Proposed"
 msgstr "הצעות חוק שהוצעו"
 
-#: mks/views.py:168
+#: mks/views.py:169
 msgid "Bills Pre-Approved"
 msgstr "הצעות חוק שאושרו טרומית"
 
-#: mks/views.py:169
+#: mks/views.py:170
 msgid "Bills First-Approved"
 msgstr "הצעות חוק שאושרו בקריאה ראשונה"
 
-#: mks/views.py:170
+#: mks/views.py:171
 msgid "Bills Approved"
 msgstr "הצעות חוק שאושרו סופית"
 
-#: mks/views.py:171
+#: mks/views.py:172
 msgid "Average Votes per Month"
 msgstr "ממוצע הצבעות בחודש"
 
-#: mks/views.py:172
+#: mks/views.py:173
 msgid "Average Weekly Presence"
 msgstr "שעות שבועיות בממוצע"
 
-#: mks/views.py:174
+#: mks/views.py:175
 msgid "Committee Meetings per Month"
 msgstr "ישיבות ועדה בחודש"
 
-#: mks/views.py:341
+#: mks/views.py:351
 msgid "By Number of seats"
 msgstr "מספר ח\"כים"
 
-#: mks/views.py:342
+#: mks/views.py:352
 msgid "By votes per seat"
 msgstr "הצבעות לח\"כ"
 
-#: mks/views.py:343
+#: mks/views.py:353
 msgid "By factional discipline"
 msgstr "משמעת סיעתית"
 
-#: mks/views.py:344
+#: mks/views.py:354
 msgid "By coalition/opposition discipline"
 msgstr "משמעת קואליציה/אופוזיציה"
 
-#: mks/views.py:345
+#: mks/views.py:355
 msgid "By residence centrality"
 msgstr "לפי מדד מרכזיות מקום מגורים"
 
-#: mks/views.py:346
+#: mks/views.py:356
 msgid "By residence economy"
 msgstr "לפי מדד סוציואקונומי של מקום מגורים"
 
-#: mks/views.py:347
+#: mks/views.py:357
 msgid "By bills proposed"
 msgstr "לפי לפי מספר הצעות חוק שהוצעו"
 
-#: mks/views.py:348
+#: mks/views.py:358
 msgid "By bills passed pre vote"
 msgstr "לפי הצעות חוק שעברו טרומית"
 
-#: mks/views.py:349
+#: mks/views.py:359
 msgid "By bills passed first vote"
 msgstr "לפי הצעות חוק שעברו קריאה ראשונה"
 
-#: mks/views.py:350
+#: mks/views.py:360
 msgid "By bills approved"
 msgstr "לפי הצעות חוק שאושרו סופית"
 
-#: mks/views.py:429
+#: mks/views.py:439
 msgid "Parties by residence centrality"
 msgstr "מפלגות לפי מדד מרכזיות של מקום מגורים"
 
-#: mks/views.py:452
+#: mks/views.py:462
 msgid "Parties by residence economy"
 msgstr "מפלגות לפי מדד סוציואקונומי של מקום מגורים"
 
-#: mks/views.py:467
+#: mks/views.py:477
 msgid "Parties by number of bills proposed per seat"
 msgstr "מפלגות לפי מספר הצעות חוק שהוצעו לכל ח\"כ"
 
-#: mks/views.py:482
+#: mks/views.py:492
 msgid "Parties by number of bills passed pre vote per seat"
 msgstr "מפלגות לפי מספר הצעות חוק שעברו קריאה טרומית לכל ח\"כ"
 
-#: mks/views.py:497
+#: mks/views.py:507
 msgid "Parties by number of bills passed first vote per seat"
 msgstr "מפלגות לפי מספר הצעות חוק שעברו קריאה ראשונה לכל ח\"כ"
 
-#: mks/views.py:512
+#: mks/views.py:522
 msgid "Parties by number of bills passed approved per seat"
 msgstr "מפלגות לפי מספר הצעות חוק שאושרו טרומית לכל ח\"כ"
 
-#: mks/views.py:535
+#: mks/views.py:545
 msgid "Parties by average weekly hours of presence"
 msgstr "מפלגות לפי ממוצע שעות שבועיות"
 
-#: mks/views.py:558
+#: mks/views.py:568
 msgid "Parties by monthly committee meetings"
 msgstr "מפלגות לפי ממוצע ישיבות וועדות בחודש"
 
-#: mks/views.py:567
+#: mks/views.py:577
 msgid "Number of Members"
 msgstr "מספר חברים"
 
-#: mks/views.py:568
+#: mks/views.py:578
 msgid "Number of Seats"
 msgstr "מספר מנדטים"
 
-#: mks/views.py:569
+#: mks/views.py:579
 msgid "Affiliation"
 msgstr "שיוך"
 
-#: mks/views.py:620
+#: mks/views.py:630
 #, python-format
 msgid "No %(object_type)s found matching \"%(name)s\"."
 msgstr "לא נמצאו %(object_type)s התואמים ל- \"%(name)s\"."
@@ -1251,12 +1231,11 @@ msgid "The project's mailing list is"
 msgstr "קבוצת הדיון נמצאת "
 
 #: templates/about.html:3 templates/about.html.py:4 templates/about.html:6
-#: templates/base.html:108
 msgid "About"
 msgstr "אודות"
 
 #: templates/about.html:4 templates/base.html:14 templates/help_page.he.html:3
-#: templates/main.he.html:4 templates/agendas/agenda_add.html:5
+#: templates/main.he.html:3 templates/agendas/agenda_add.html:5
 #: templates/agendas/agenda_bill_detail.html:5
 #: templates/agendas/agenda_detail.html:6
 #: templates/agendas/agenda_detail_edit.html:5
@@ -1270,63 +1249,114 @@ msgstr "אודות"
 #: templates/committees/committeemeeting_detail.html:7
 #: templates/committees/committeemeeting_list_by_tag.html:5
 #: templates/committees/flatpages.html:5 templates/laws/bill_detail.html:179
-#: templates/laws/bill_list.html:6 templates/laws/bill_list_by_tag.html:5
+#: templates/laws/bill_list.html:5 templates/laws/bill_list_by_tag.html:5
 #: templates/laws/bill_tags_cloud.html:5 templates/laws/vote_detail.html:7
-#: templates/laws/vote_list.html:6 templates/laws/vote_list_by_tag.html:5
+#: templates/laws/vote_list.html:5 templates/laws/vote_list_by_tag.html:5
 #: templates/laws/vote_tags_cloud.html:5 templates/mks/member_list.html:5
 #: templates/mks/member_list_with_bars.html:7
-#: templates/mks/party_detail.html:8 templates/mks/party_list.html:6
-#: templates/mmm/committee_mmm_docs.html:9
+#: templates/mks/parties_members.html:4 templates/mks/party_detail.html:8
+#: templates/mks/party_list.html:6 templates/mmm/committee_mmm_docs.html:9
 #: templates/mmm/member_mmm_docs.html:9 templates/planet/posts/list.html:5
 #: templates/planet/tags/cloud.html:5 templates/planet/tags/detail.html:6
 #: templates/video/video_list.html:5
 msgid "Open Knesset - Opening the Knesset to the public"
 msgstr "כנסת פתוחה - פותחים את הכנסת לציבור"
 
-#: templates/base.html:77
+#: templates/base.html:37
 msgid ""
-"This is a development server, all data in it should be considered fictional. "
-"users are kindly requested to go to "
+"This is a development server, all data in it should be considered "
+"fictional.  users are kindly requested to go to "
 msgstr ""
 "זהו שרת פיתוח. יש להתייחס לכל הכתוב כאן כאל מידע דמיוני. משתמשים מתבקשים "
 "לעבור ל"
 
-#: templates/base.html:89
-msgid "Logged in as "
-msgstr "מחובר כ "
-
-#: templates/base.html:90
+#: templates/base.html:59
 msgid "Edit Profile"
 msgstr "עריכת פרופיל"
 
-#: templates/base.html:91 templates/user/login.html:12
+#: templates/base.html:60 templates/user/login.html:12
 msgid "Logout"
 msgstr "יציאה מהחשבון"
 
-#: templates/base.html:93 templates/site_base.html:7
+#: templates/base.html:63 templates/site_base.html:7
 #: templates/user/login.html:4 templates/user/login.html.py:20
 msgid "login"
 msgstr "כניסה לחשבון"
 
-#: templates/base.html:99
-msgid "Main"
-msgstr "ראשי"
+#: templates/base.html:69 templates/base.html.py:120
+#: templates/mks/member_detail.html:67 templates/mks/parties_members.html:3
+#: templates/mks/parties_members.html:4 templates/mks/parties_members.html:7
+#: templates/mks/party_detail.html:12 templates/mks/party_list.html:9
+msgid "Members and Parties"
+msgstr "חכים וסיעות"
 
-#: templates/base.html:101
-msgid "Past Votes"
-msgstr "הצבעות"
+#: templates/base.html:70 templates/base.html.py:121
+#: templates/mks/member_detail.html:199
+msgid "Legislation"
+msgstr "חקיקה"
 
-#: templates/base.html:107 templates/planet/base.html:12
-#: templates/planet/posts/list.html:4 templates/planet/tags/detail.html:4
-#: templates/planet/tags/detail.html:5
-msgid "Posts"
-msgstr "מאמרים"
+#: templates/base.html:80 templates/base.html.py:119
+msgid "Homepage"
+msgstr "דף הבית"
+
+#: templates/base.html:134
+msgid ""
+"Open Knesset is a project aimed to expose Knesset's actions to the public"
+msgstr "כנסת פתוחה הוא פרוייקט שמטרתו לחשוף את פעילות הכנסת לציבור"
+
+#: templates/base.html:136
+msgid ""
+"All the information comes from the Knesset's site.\n"
+"                This site is maintained by volunteers and is not supported "
+"by\n"
+"                any political party ..."
+msgstr ""
+"כל המידע מגיע מאתר הכנסת. האתר מתוחזק על ידי מתנדבים ואינו נתמך ע\"י אף גוף "
+"מפלגתי ..."
+
+#: templates/base.html:139
+msgid "Read more"
+msgstr "קרא עוד"
+
+#: templates/base.html:143
+msgid "Follow Open Knesset"
+msgstr "עקבו אחר כנסת פתוחה"
+
+#: templates/base.html:149 templates/base.html.py:150
+msgid "The Public Knowledge Workshop"
+msgstr "הסדנא לידע ציבורי"
+
+#: templates/base.html:150
+msgid "Project of"
+msgstr "פרוייקט של"
 
 #: templates/base.html:154
-msgid "Some rights reserved."
-msgstr ""
-"חלק מהזכויות שמורות. פרטים בקישור. שימוש בנתונים מהאתר כפוף למתן קרדיט "
-"וקישור לאתר."
+msgid "Open Budget"
+msgstr "התקציב הפתוח"
+
+#: templates/base.html:155
+msgid "Opening the finance committee"
+msgstr "פותחים את ועדת הכספים"
+
+#: templates/base.html:156
+msgid "Traking Trachtenberg"
+msgstr "מעקב: דו\"ח טרכטנברג"
+
+#: templates/base.html:157
+msgid "Open Local Authorities"
+msgstr "רשויות מקומיות פתוחות - בקרוב"
+
+#: templates/base.html:162
+msgid "Donate to Hasadna"
+msgstr "תרמו לסדנא"
+
+#: templates/base.html:169
+msgid "Some rights reserved. Using data from the site requires credit"
+msgstr "חלק מהזכויות שמורות. שימוש בנתונים מהאתר בכפוף לקרדיט"
+
+#: templates/base.html:170
+msgid "Details in the link"
+msgstr "פרטים בקישור"
 
 #: templates/help_base.html:5
 msgid "See more  ..."
@@ -1336,7 +1366,7 @@ msgstr "עוד..."
 msgid "See less  ..."
 msgstr "פחות..."
 
-#: templates/help_page.he.html:3 templates/main.he.html:4
+#: templates/help_page.he.html:3 templates/main.he.html:3
 msgid ""
 "Non partisan, non commercial site that brings you relevant, detailed and "
 "accurate information about the knesset"
@@ -1489,7 +1519,10 @@ msgstr ""
 "\n"
 "%(user)s האיר <a href=\"http://%(domain)s%(url)s\">%(comment)s</a><br>\n"
 
-#: templates/activity/attended/action.html:11
+#: templates/activity/attended/action.html:4
+msgid "Attended (Femail),Attended (Male)"
+msgstr "נכחה,נכח"
+
 #: templates/activity/attended/action_email.html:8
 msgid "read meeting protocol"
 msgstr "קריאת את פרוטוקול הישיבה"
@@ -1504,12 +1537,23 @@ msgstr ""
 "\n"
 "%(user)s העיר <a href=\"http://%(domain)s%(url)s\">%(comment)s</a><br>\n"
 
-#: templates/activity/posted/action.html:11
+#: templates/activity/joined/action.html:4
+msgid "JOINED (FEMALE),JOINED (MALE)"
+msgstr "הצטרפה,הצטרף"
+
+#: templates/activity/joined/action.html:5
+msgid "to bill"
+msgstr "אל הצעת חוק"
+
 #: templates/activity/posted/action_email.html:9
 #: templates/planet/posts/details.html:4
 #: templates/planet/posts/full_details.html:12
 msgid "read post"
 msgstr "קריאת  מאמר"
+
+#: templates/activity/proposed/action.html:4
+msgid "PROPOSED (FEMALE),PROPOSED (MALE)"
+msgstr "הציעה,הציע"
 
 #: templates/activity/tag-voted/action.html:5
 msgid "voted up on tag"
@@ -1524,7 +1568,14 @@ msgstr "הצביע נגד תגית"
 msgid "of"
 msgstr "של"
 
-#: templates/activity/voted/action.html:8
+#: templates/activity/voted/action.html:5
+msgid "Present and didn't vote (Female),Present and didn't vote (Male)"
+msgstr "נכחה ולא הצביע,נכח ולא הצביע"
+
+#: templates/activity/voted/action.html:7
+msgid "Voted (Female),Voted (Male)"
+msgstr "הצביעה,הצביע"
+
 #: templates/activity/voted/action_email.html:6
 #: templates/activity/voted/action_email.txt:2
 msgid "present and didn't vote"
@@ -1705,13 +1756,13 @@ msgstr "שמירה"
 
 #: templates/agendas/agenda_detail.html:13
 #: templates/committees/topic_detail.html:8
-#: templates/laws/bill_detail.html:132 templates/mks/member_detail.html:11
+#: templates/laws/bill_detail.html:132 templates/mks/member_detail.html:27
 msgid "Watch"
 msgstr "מעקב"
 
 #: templates/agendas/agenda_detail.html:13
 #: templates/committees/topic_detail.html:8
-#: templates/laws/bill_detail.html:132 templates/mks/member_detail.html:11
+#: templates/laws/bill_detail.html:132 templates/mks/member_detail.html:27
 msgid "Unwatch"
 msgstr "הפסק מעקב"
 
@@ -1776,9 +1827,9 @@ msgstr "תגובות"
 #: templates/agendas/mk_agenda_detail.html:41
 #: templates/auxiliary/tag_detail.html:33
 #: templates/committees/committeemeeting_list_by_tag.html:17
-#: templates/laws/bill_list.html:43 templates/laws/bill_list_by_tag.html:22
+#: templates/laws/bill_list.html:42 templates/laws/bill_list_by_tag.html:22
 #: templates/laws/knessetproposal_list.html:25 templates/laws/law_list.html:14
-#: templates/laws/vote_list.html:42 templates/laws/vote_list_by_tag.html:22
+#: templates/laws/vote_list.html:41 templates/laws/vote_list_by_tag.html:22
 #: templates/mmm/committee_mmm_docs.html:22
 #: templates/mmm/member_mmm_docs.html:22
 msgid "No results found"
@@ -1898,6 +1949,10 @@ msgstr "מדד ההתאמה לאג'נדה"
 msgid "Score details"
 msgstr "פירוט ההצבעות"
 
+#: templates/agendas/mk_agenda_detail.html:35
+msgid "Voted"
+msgstr "הצביע/ה"
+
 #: templates/auxiliary/tag_detail.html:15
 #, python-format
 msgid "Active members for %(tag)s"
@@ -1948,18 +2003,18 @@ msgstr "העלה תמונה חדשה"
 msgid "Badges"
 msgstr "אותות"
 
+#: templates/comments/comment_list.html:3
 #: templates/comments/comment_list.html:4
-#: templates/comments/comment_list.html:5
-#: templates/comments/comment_list.html:7
+#: templates/comments/comment_list.html:6
 msgid "Recent comments"
 msgstr "תגובות אחרונות"
 
-#: templates/comments/comment_list.html:13
+#: templates/comments/comment_list.html:12
 #, python-format
 msgid "%(username)s on %(title)s"
 msgstr "%(username)s על %(title)s"
 
-#: templates/comments/comment_list.html:17
+#: templates/comments/comment_list.html:16
 #, python-format
 msgid "%(date)s at %(time)s"
 msgstr "%(date)s ב- %(time)s"
@@ -2050,7 +2105,7 @@ msgid "No topics suggested yet"
 msgstr "טרם הוצעו הצעות לסדר"
 
 #: templates/committees/_topics_summary.html:40
-#: templates/committees/committee_detail.html:89
+#: templates/committees/committee_detail.html:77
 #: templates/user/public_profile.html:63 templates/user/public_profile.html:81
 msgid "more..."
 msgstr "עוד..."
@@ -2071,43 +2126,37 @@ msgstr "יש להזדהות כדי לפרסם הצעה לסדר"
 msgid "Committee Members"
 msgstr "חברי הוועדה"
 
-#: templates/committees/committee_detail.html:54
-#, fuzzy
-msgid "Previous Committee Members"
-msgstr "חברי הוועדה לשעבר"
-
-#: templates/committees/committee_detail.html:65
+#: templates/committees/committee_detail.html:53
 msgid "Future Meetings"
 msgstr "ישיבות קרובות"
 
-#: templates/committees/committee_detail.html:73
+#: templates/committees/committee_detail.html:61
 msgid "Meetings for which a protocol was not yet published"
 msgstr "ישיבות מהן טרם פורסם פרוטוקול"
 
-#: templates/committees/committee_detail.html:81
+#: templates/committees/committee_detail.html:69
 msgid "Last Meetings"
 msgstr "ישיבות אחרונות"
 
-#: templates/committees/committee_detail.html:91
-#: templates/mks/member_detail.html:355
+#: templates/committees/committee_detail.html:79
 msgid "MMM Documents"
 msgstr "מסמך ממ\"מ"
 
-#: templates/committees/committee_detail.html:92
+#: templates/committees/committee_detail.html:80
 msgid "Number of documents ordered"
 msgstr "מספר מסמכים שהוזמנו"
 
-#: templates/committees/committee_detail.html:97
+#: templates/committees/committee_detail.html:85
 #: templates/committees/committee_list.html:24
 #: templates/committees/topic_list.html:8
 msgid "Suggested Agenda Topics"
 msgstr "הצעות לסדר יום"
 
-#: templates/committees/committee_detail.html:99
+#: templates/committees/committee_detail.html:87
 msgid "Latest Annotations"
 msgstr "הארות אחרונות"
 
-#: templates/committees/committee_detail.html:113
+#: templates/committees/committee_detail.html:101
 #: templates/user/annotated_items.html:20
 #: templates/user/public_profile.html:59
 msgid "No annotations yet..."
@@ -2289,7 +2338,7 @@ msgstr "הדירוג שלך"
 
 #: templates/committees/topic_detail.html:60
 #: templates/laws/bill_detail.html:244 templates/laws/vote_detail.html:19
-#: templates/mks/member_detail.html:371 templates/mks/party_detail.html:67
+#: templates/mks/party_detail.html:105
 msgid "Links"
 msgstr "קישורים"
 
@@ -2318,16 +2367,17 @@ msgstr "יום"
 msgid "party"
 msgstr "מפלגה"
 
-#: templates/include/member_detail.html:9 templates/mks/member_detail.html:89
+#: templates/include/member_detail.html:9 templates/mks/member_detail.html:104
 msgid "age"
 msgstr "גיל"
 
-#: templates/include/member_detail.html:14 templates/mks/member_detail.html:95
+#: templates/include/member_detail.html:14
+#: templates/mks/member_detail.html:108
 msgid "year of aliyah"
 msgstr "שנת עליה"
 
 #: templates/include/member_detail.html:19
-#: templates/mks/member_detail.html:101
+#: templates/mks/member_detail.html:111
 msgid "family status"
 msgstr "מצב משפחתי"
 
@@ -2337,17 +2387,17 @@ msgid "place of birth"
 msgstr "מקום לידה"
 
 #: templates/include/member_detail.html:27
-#: templates/mks/member_detail.html:153
+#: templates/mks/member_detail.html:155
 msgid "phone"
 msgstr "טלפון"
 
 #: templates/include/member_detail.html:31
-#: templates/mks/member_detail.html:158
+#: templates/mks/member_detail.html:157
 msgid "fax"
 msgstr "פקס"
 
 #: templates/include/member_detail.html:35
-#: templates/mks/member_detail.html:163
+#: templates/mks/member_detail.html:159
 msgid "e-mail address"
 msgstr "כתובת דוא\"ל"
 
@@ -2364,8 +2414,8 @@ msgstr "אין"
 #: templates/include/party_list.html:6 templates/include/vote_list.html:20
 #: templates/mks/member_list.html:21
 #: templates/mks/member_list_with_bars.html:40
-#: templates/mks/member_select.html:18 templates/mks/party_detail.html:37
-#: templates/mks/party_list.html:29 templates/mks/party_list.html.py:44
+#: templates/mks/member_select.html:18 templates/mks/party_detail.html:75
+#: templates/mks/party_list.html:35 templates/mks/party_list.html.py:50
 msgid "Data base empty, no objects"
 msgstr "המסד ריק, אין נתונים"
 
@@ -2382,7 +2432,7 @@ msgstr "עמודים"
 msgid "Vote on bill"
 msgstr "הצבעה על הצעת חוק"
 
-#: templates/laws/bill_detail.html:184 templates/laws/bill_list.html:18
+#: templates/laws/bill_detail.html:184 templates/laws/bill_list.html:17
 msgid "Explanation about the legislation process"
 msgstr "הסבר על תהליך החקיקה"
 
@@ -2514,21 +2564,21 @@ msgstr "נוסח הצעת החוק של הוועדה"
 msgid "Bill Approval"
 msgstr "אישור הצעת החוק"
 
-#: templates/laws/bill_list.html:15 templates/laws/vote_list.html:22
+#: templates/laws/bill_list.html:14 templates/laws/vote_list.html:21
 msgid "Filter"
 msgstr "סינון"
 
-#: templates/laws/bill_list.html:22 templates/laws/vote_list.html:28
+#: templates/laws/bill_list.html:21 templates/laws/vote_list.html:27
 #: templates/mks/export_csv_link.html:5
 msgid "Export data to Excel"
 msgstr "יצא נתונים לגליון"
 
-#: templates/laws/bill_list.html:29
+#: templates/laws/bill_list.html:28
 #, python-format
 msgid "Bills by <a href=\"%(member_url)s\">%(member)s</a>"
 msgstr "הצעות חוק ביוזמת <a href=\"%(member_url)s\">%(member)s</a>"
 
-#: templates/laws/bill_list.html:32
+#: templates/laws/bill_list.html:31
 #, python-format
 msgid "Bills %(stage)s by <a href=\"%(member_url)s\">%(member)s</a>"
 msgstr "הצעות חוק  ביוזמת <a href=\"%(member_url)s\">%(member)s</a> ש%(stage)s"
@@ -2761,7 +2811,7 @@ msgstr[1] ""
 msgid "No watched members. click me to select members to watch"
 msgstr "אין ח\"כים במעקב. אפשר להוסיף על ידי לחיצה כאן"
 
-#: templates/mks/member_detail.html:48
+#: templates/mks/member_detail.html:63
 #, python-format
 msgid ""
 " Up to date information about %(name)s in the knesset: votes, bills, "
@@ -2773,193 +2823,85 @@ msgstr ""
 "ועוד. מידע על %(name)s לעיתונאים, חוקרים, סטודנטים ואזרחים באתר כנסת פתוחה - "
 "פותחים את הכנסת לציבור"
 
-#: templates/mks/member_detail.html:76
-msgid "Personal Information"
-msgstr "מידע אישי"
+#: templates/mks/member_detail.html:87
+msgid "IN_COALITION,IN_OPPOSITION,PAST_MEMBER"
+msgstr "בקואליציה,באופוזיציה,חכ בעבר"
 
-#: templates/mks/member_detail.html:80
-msgid "date of birth"
-msgstr "תאריך לידה"
+#: templates/mks/member_detail.html:97 templates/mks/member_detail.html:192
+#: templates/mks/member_detail.html:211 templates/mks/member_detail.html:230
+#: templates/mks/member_detail.html:249
+msgid "More"
+msgstr "עוד"
 
-#: templates/mks/member_detail.html:84
+#: templates/mks/member_detail.html:97
+msgid "Less"
+msgstr "פחות"
+
+#: templates/mks/member_detail.html:102
 msgid "date of death"
 msgstr "תאריך פטירה"
 
-#: templates/mks/member_detail.html:111
+#: templates/mks/member_detail.html:112
 msgid "place of residence"
 msgstr "מקום מגורים"
 
-#: templates/mks/member_detail.html:115
-msgid "residence centrality"
-msgstr "מדד מרכזיות של מקום מגורים"
-
-#: templates/mks/member_detail.html:119
-msgid "residence economy"
-msgstr "מדד סוציואקונומי של מקום מגורים"
-
-#: templates/mks/member_detail.html:125
-msgid "entrance to knesset"
-msgstr "תחילת כהונה"
-
-#: templates/mks/member_detail.html:131
-msgid "retirement from knesset"
-msgstr "תום כהונה"
-
-#: templates/mks/member_detail.html:137
-msgid "time in knesset"
-msgstr "זמן בכנסת"
-
-#: templates/mks/member_detail.html:150
-msgid "Contact Information"
-msgstr "יצירת קשר"
-
-#: templates/mks/member_detail.html:177 templates/mks/member_detail.html:214
-#: templates/mks/member_detail.html:258
-msgid "Last 30 days"
-msgstr "ב 30 הימים האחרונים"
-
-#: templates/mks/member_detail.html:184 templates/mks/party_detail.html:25
-msgid "Factional discipline"
-msgstr "משמעת סיעתית"
-
-#: templates/mks/member_detail.html:200
-msgid "factional discipline explained"
-msgstr "הצבעות בניגוד למרבית חברי הסיעה"
-
-#: templates/mks/member_detail.html:222 templates/mks/party_detail.html:29
-msgid "Coalition discipline"
-msgstr "משמעת קואליציה"
-
-#: templates/mks/member_detail.html:224 templates/mks/party_detail.html:29
-msgid "Opposition discipline"
-msgstr "משמעת אופוזיציה"
-
-#: templates/mks/member_detail.html:240
-msgid "general discipline explained coalition"
-msgstr "הצבעות בניגוד למרבית חברי הקואליציה"
-
-#: templates/mks/member_detail.html:242
-msgid "general discipline explained opposition"
-msgstr "הצבעות בניגוד למרבית חברי האופוזיציה"
-
-#: templates/mks/member_detail.html:265
-msgid "Votes against own bills"
-msgstr "הצבעות נגד הצעות חוק של עצמו"
-
-#: templates/mks/member_detail.html:293
-msgid "Attendance"
-msgstr "נוכחות"
-
-#: templates/mks/member_detail.html:296
-msgid "Knesset presence"
-msgstr "נוכחות במשכן"
-
-#: templates/mks/member_detail.html:298
-msgid "Average weekly hours"
-msgstr "שעות שבועיות בממוצע"
-
-#: templates/mks/member_detail.html:309
-msgid "Committee presence"
-msgstr "נוכחות בוועדות"
-
-#: templates/mks/member_detail.html:310
-msgid "Average number of committee meetings per month"
-msgstr "ישיבות וועדות בחודש"
-
-#: templates/mks/member_detail.html:321
-msgid "Number of bills proposed"
-msgstr "מספר הצעות חוק שהוצעו"
-
-#: templates/mks/member_detail.html:329
-msgid "Bills passed pre-vote"
-msgstr "הצעות חוק שעברו קריאה טרומית"
-
-#: templates/mks/member_detail.html:337
-msgid "Bills passed first vote"
-msgstr "הצעות חוק שעברו קריאה ראשונה"
-
-#: templates/mks/member_detail.html:345
-msgid "Bills approved"
-msgstr "הצעות חוק שאושרו סופית"
-
-#: templates/mks/member_detail.html:358
-msgid "Number of MMM documents ordered"
-msgstr "מספר מסמכי ממ\"מ שהוזמנו"
-
-#: templates/mks/member_detail.html:377
+#: templates/mks/member_detail.html:116
 msgid "MK video (knesset channel)"
 msgstr "כרטיס ביקור מערוץ הכנסת"
 
-#: templates/mks/member_detail.html:384
-msgid "Latest videos"
-msgstr "קטעי וידאו אחרונים"
+#: templates/mks/member_detail.html:122 templates/mks/party_detail.html:27
+msgid "%(name)s around the net"
+msgstr "%(name)s ברשת"
 
-#: templates/mks/member_detail.html:390
-msgid "Proposed bills topics"
-msgstr "נושאי הצעות חוק"
+#: templates/mks/member_detail.html:136
+msgid "Followers"
+msgstr "עוקבים"
 
-#: templates/mks/member_detail.html:429
-msgid "Refresh"
-msgstr "רענון"
+#: templates/mks/member_detail.html:138 templates/mks/member_detail.html:152
+msgid "Contact Information"
+msgstr "צרו קשר"
 
-#: templates/mks/member_detail.html:436
-msgid "before"
-msgstr "לפני"
+#: templates/mks/member_detail.html:144
+msgid "Personal Information"
+msgstr "פרטים אישיים"
 
-#: templates/mks/member_detail.html:443 templates/persons/person_list.html:12
-#: templates/user/profile_list.html:12
-msgid "Sorry, no data is available, try selecting more actions and refresh"
-msgstr "מצטערים, אין נתונים. אפשר לנסות לבחור יותר פעולות ולרענן."
+#: templates/mks/member_detail.html:144
+msgid "Collapse"
+msgstr "צמצם"
 
-#: templates/mks/member_detail.html:459
-#, python-format
-msgid ""
-"\n"
-"                    This entry has been pinged.\n"
-"                    "
-msgid_plural ""
-"\n"
-"                    This entry has been pinged %(counter)s times.\n"
-"                "
-msgstr[0] ""
-"\n"
-"                    יש קישור נכנס לעמוד זה.\n"
-"                    "
-msgstr[1] ""
-"\n"
-"                    יש %(counter)s קישורים נכנסים לעמוד זה.\n"
-"                "
+#: templates/mks/member_detail.html:172
+msgid "Close"
+msgstr "סגור"
 
-#: templates/mks/member_detail.html:470
-#, python-format
-msgid ""
-"\n"
-"                                From <a href=\"http://%(url)s\">&ldquo;"
-"%(title)s&ldquo;</a> on the %(received)s: %(excerpt)s\n"
-"                            "
-msgstr ""
-"\n"
-"                                מ- <a href=\"http://%(url)s\">&ldquo;"
-"%(title)s&ldquo;</a>ב %(received)s: %(excerpt)s\n"
-"                            "
+#: templates/mks/member_detail.html:180
+msgid "Recent actions"
+msgstr "פעולות אחרונות"
 
-#: templates/mks/member_detail.html:479
-msgid "This entry has not been pinged."
-msgstr "הערך לא הוזכר במקומות אחרים."
+#: templates/mks/member_detail.html:189 templates/mks/member_detail.html:208
+#: templates/mks/member_detail.html:227 templates/mks/member_detail.html:246
+msgid "Loading"
+msgstr "טוען"
 
-#: templates/mks/member_detail.html:482
-msgid "TrackBack:"
-msgstr "טראקבק:"
+#: templates/mks/member_detail.html:237
+#: templates/mmm/committee_mmm_docs.html:6
+#: templates/mmm/member_mmm_docs.html:6
+msgid "M.M.M Documents"
+msgstr "מסמכי ממ\"מ"
+
+#: templates/mks/member_detail.html:259
+msgid "Notable agendas"
+msgstr "אג'נדות בולטות"
 
 #: templates/mks/member_list.html:15
 #: templates/mks/member_list_with_bars.html:22
-#: templates/mks/member_select.html:12 templates/mks/party_detail.html:33
+#: templates/mks/member_select.html:12 templates/mks/party_detail.html:71
 msgid "Current MKs"
 msgstr "חברי כנסת נוכחיים"
 
 #: templates/mks/member_list.html:23
 #: templates/mks/member_list_with_bars.html:44
-#: templates/mks/member_select.html:20 templates/mks/party_detail.html:41
+#: templates/mks/member_select.html:20 templates/mks/parties_members.html:40
+#: templates/mks/party_detail.html:79
 msgid "Past MKs"
 msgstr "חברי כנסת בעבר"
 
@@ -2976,24 +2918,35 @@ msgstr "חברי כנסת להציג את הצבעותיהם"
 msgid "Click here when you are done"
 msgstr "סיום"
 
-#: templates/mks/party_detail.html:13
+#: templates/mks/party_detail.html:24
+msgid "IN_COALITION,IN_OPPOSITION"
+msgstr "בקואליציה,באופוזיציה"
+
+#: templates/mks/party_detail.html:51
 msgid "Statistics"
 msgstr "סטטיסטיקות"
 
-#: templates/mks/party_detail.html:21
+#: templates/mks/party_detail.html:59
 msgid "Average votes per MK"
 msgstr "ממוצע הצבעות לח\"כ"
+
+#: templates/mks/party_detail.html:63
+msgid "Factional discipline"
+msgstr "משמעת סיעתית"
+
+#: templates/mks/party_detail.html:67
+msgid "Coalition discipline"
+msgstr "משמעת קואליציה"
+
+#: templates/mks/party_detail.html:67
+msgid "Opposition discipline"
+msgstr "משמעת אופוזיציה"
 
 #: templates/mmm/committee_mmm_docs.html:5
 #: templates/mmm/committee_mmm_docs.html:8
 #, python-format
 msgid "M.M.M Documents ordered by %(committee.name)s"
 msgstr "מסמכי ממ\"מ שהוזמנו על ידי %(committee.name)s"
-
-#: templates/mmm/committee_mmm_docs.html:6
-#: templates/mmm/member_mmm_docs.html:6
-msgid "M.M.M Documents"
-msgstr "מסמכי ממ\"מ"
 
 #: templates/mmm/committee_mmm_docs.html:13
 #: templates/mmm/member_mmm_docs.html:13
@@ -3118,6 +3071,15 @@ msgid " in one committee"
 msgid_plural " in %(committees)s committees"
 msgstr[0] " בוועדה אחת"
 msgstr[1] " ב- %(committees)s וועדות"
+
+#: templates/persons/person_list.html:12 templates/user/profile_list.html:12
+msgid "Sorry, no data is available, try selecting more actions and refresh"
+msgstr "מצטערים, אין נתונים. אפשר לנסות לבחור יותר פעולות ולרענן."
+
+#: templates/planet/base.html:12 templates/planet/posts/list.html:4
+#: templates/planet/tags/detail.html:4 templates/planet/tags/detail.html:5
+msgid "Posts"
+msgstr "מאמרים"
 
 #: templates/planet/base.html:15
 msgid "Tag Cloud"
@@ -3256,7 +3218,6 @@ msgid "Tags list"
 msgstr "רשימת תגיות"
 
 #: templates/search/search.html:4 templates/search/search.html.py:36
-#: templates/search/search_form.html:9
 msgid "Search"
 msgstr "חיפוש"
 
@@ -3653,6 +3614,141 @@ msgstr "שבועי"
 msgid "Your profile has been updated."
 msgstr "פרופיל המשתמש עודכן"
 
+#~ msgid "Some rights reserved."
+#~ msgstr ""
+#~ "חלק מהזכויות שמורות. פרטים בקישור. שימוש בנתונים מהאתר כפוף למתן קרדיט "
+#~ "וקישור לאתר."
+
+#~ msgid "Past Votes"
+#~ msgstr "הצבעות"
+
+#~ msgid "Joined"
+#~ msgstr "הצטרף/ה"
+
+#~ msgid "Posted"
+#~ msgstr "פִרסם/ה"
+
+#~ msgid "Attended"
+#~ msgstr "נכח/ה"
+
+#~ msgid "Displaying Actions"
+#~ msgstr "מציג  פעולות"
+
+#~ msgid "date of birth"
+#~ msgstr "תאריך לידה"
+
+#~ msgid "residence centrality"
+#~ msgstr "מדד מרכזיות של מקום מגורים"
+
+#~ msgid "residence economy"
+#~ msgstr "מדד סוציואקונומי של מקום מגורים"
+
+#~ msgid "entrance to knesset"
+#~ msgstr "תחילת כהונה"
+
+#~ msgid "retirement from knesset"
+#~ msgstr "תום כהונה"
+
+#~ msgid "time in knesset"
+#~ msgstr "זמן בכנסת"
+
+#~ msgid "Last 30 days"
+#~ msgstr "ב 30 הימים האחרונים"
+
+#~ msgid "factional discipline explained"
+#~ msgstr "הצבעות בניגוד למרבית חברי הסיעה"
+
+#~ msgid "general discipline explained coalition"
+#~ msgstr "הצבעות בניגוד למרבית חברי הקואליציה"
+
+#~ msgid "general discipline explained opposition"
+#~ msgstr "הצבעות בניגוד למרבית חברי האופוזיציה"
+
+#~ msgid "Votes against own bills"
+#~ msgstr "הצבעות נגד הצעות חוק של עצמו"
+
+#~ msgid "Number of MMM documents ordered"
+#~ msgstr "מספר מסמכי ממ\"מ שהוזמנו"
+
+#~ msgid "Latest videos"
+#~ msgstr "קטעי וידאו אחרונים"
+
+#~ msgid "Proposed bills topics"
+#~ msgstr "נושאי הצעות חוק"
+
+#~ msgid "Refresh"
+#~ msgstr "רענון"
+
+#~ msgid "before"
+#~ msgstr "לפני"
+
+#~ msgid ""
+#~ "\n"
+#~ "                    This entry has been pinged.\n"
+#~ "                    "
+#~ msgid_plural ""
+#~ "\n"
+#~ "                    This entry has been pinged %(counter)s times.\n"
+#~ "                "
+#~ msgstr[0] ""
+#~ "\n"
+#~ "                    יש קישור נכנס לעמוד זה.\n"
+#~ "                    "
+#~ msgstr[1] ""
+#~ "\n"
+#~ "                    יש %(counter)s קישורים נכנסים לעמוד זה.\n"
+#~ "                "
+
+#~ msgid ""
+#~ "\n"
+#~ "                                From <a href=\"http://%(url)s\">&ldquo;"
+#~ "%(title)s&ldquo;</a> on the %(received)s: %(excerpt)s\n"
+#~ "                            "
+#~ msgstr ""
+#~ "\n"
+#~ "                                מ- <a href=\"http://%(url)s\">&ldquo;"
+#~ "%(title)s&ldquo;</a>ב %(received)s: %(excerpt)s\n"
+#~ "                            "
+
+#~ msgid "This entry has not been pinged."
+#~ msgstr "הערך לא הוזכר במקומות אחרים."
+
+#~ msgid "TrackBack:"
+#~ msgstr "טראקבק:"
+
+#~ msgid "Attendance"
+#~ msgstr "נוכחות"
+
+#~ msgid "Knesset presence"
+#~ msgstr "נוכחות במשכן"
+
+#~ msgid "Average weekly hours"
+#~ msgstr "שעות שבועיות בממוצע"
+
+#~ msgid "Committee presence"
+#~ msgstr "נוכחות בוועדות"
+
+#~ msgid "Average number of committee meetings per month"
+#~ msgstr "ישיבות וועדות בחודש"
+
+#~ msgid "Number of bills proposed"
+#~ msgstr "מספר הצעות חוק שהוצעו"
+
+#~ msgid "Bills passed pre-vote"
+#~ msgstr "הצעות חוק שעברו קריאה טרומית"
+
+#~ msgid "Bills passed first vote"
+#~ msgstr "הצעות חוק שעברו קריאה ראשונה"
+
+#~ msgid "Bills approved"
+#~ msgstr "הצעות חוק שאושרו סופית"
+
+#~ msgid "Logged in as "
+#~ msgstr "מחובר כ "
+
+#~ msgid "Main"
+#~ msgstr "ראשי"
+
 #~ msgid "Latest Annotations and comments"
 #~ msgstr "הארות ותגובות אחרונות"
 
@@ -3916,10 +4012,6 @@ msgstr "פרופיל המשתמש עודכן"
 #, fuzzy
 #~ msgid "Show Toolbar"
 #~ msgstr "הצג הכל"
-
-#, fuzzy
-#~ msgid "Close"
-#~ msgstr "צבע"
 
 #, fuzzy
 #~ msgid "Location"
@@ -4238,10 +4330,6 @@ msgstr "פרופיל המשתמש עודכן"
 #, fuzzy
 #~ msgid "See all posts for this feed"
 #~ msgstr "רשימת מאמרים מלאה מפיד זה"
-
-#, fuzzy
-#~ msgid "Read more"
-#~ msgstr "להסיר"
 
 #, fuzzy
 #~ msgid "Read original post"
@@ -4796,9 +4884,6 @@ msgstr "פרופיל המשתמש עודכן"
 
 #~ msgid "Models available in the %(name)s application."
 #~ msgstr "מודלים זמינים ביישום %(name)s."
-
-#~ msgid "Recent Actions"
-#~ msgstr "פעולות אחרונות"
 
 #~ msgid "None available"
 #~ msgstr "לא נמצאו"
@@ -6100,9 +6185,6 @@ msgstr "פרופיל המשתמש עודכן"
 
 #~ msgid "Michoacán"
 #~ msgstr "מיצ'ואקן"
-
-#~ msgid "Morelos"
-#~ msgstr "מורלוס"
 
 #~ msgid "Nayarit"
 #~ msgstr "נייארית"

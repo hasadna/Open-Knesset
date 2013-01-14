@@ -1,18 +1,13 @@
 {% load i18n %}
-<form action="{{ action|escape }}" id="{{ search_form_id|escape }}" class="search">
+<form action="{{ action|escape }}" id="{{ search_form_id|escape }}" class="form-search">
   <div>
-      <input type="hidden" name="cx" value="{{ cx }}" />
+    <input type="hidden" name="cx" value="{{ cx }}" />
     <input type="hidden" name="cof" value="FORID:11" /> 
     <input type="hidden" name="ie" value="UTF-8" />
     <input type="hidden" name="hl" value="{{ lang|escape }}" />
     {{ form.q }}
-    <input type="submit" name="sa" class="submit awesome-button" value="{% trans "Search" %}" />
+    <button type="submit"><i class="icon icon-search"></i></button>
     {{ form.as_q }}
   </div>
 </form>
 <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form={{ search_form_id|escape }}&amp;lang={{ lang|escape }}"></script>
-<script type="text/javascript">
-    $(function(){
-            $('#id_search_page_q').css('background-image',"");
-            });
-</script>

@@ -3,7 +3,7 @@
 {% block extratitle %}{{ title }}{% endblock %}
 {% block keywords %}{{ title }}{% endblock %}
 {% block description %}{{ title }} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
-{% block nav-committees %}class="selected"{% endblock %}
+{% block nav-committees %}class="active"{% endblock %}
 {% block divcontent %}
     {% with object_list|length as count %}
         <h1>{% blocktrans %}{{ count }} Committee meetings tagged <a href="{{ tag_url }}">{{ tag }}</a>{% endblocktrans %}</h1>

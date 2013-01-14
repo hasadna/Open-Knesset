@@ -1,4 +1,18 @@
 {% load i18n %}
+    <li>
+        <p class="item-action">
+          {% if action.actor.is_female %}
+          <span class="action-verb">פרסמה מאמר</span>
+          {% else %}
+          <span class="action-verb">פרסם מאמר</span>
+          {% endif %}
+        </p>
+{% with action.target as post %}
+        <p class="item-title"><a href="{{ post.url }}">{{post.title}}</a></p>
+{% endwith %}
+        <p class="item-context">{{ action.timestamp|timesince }}</p>
+    </li>
+{% comment %}
 {% if action.actor.get_absolute_url %}<a class="action-actor" href="{{ action.actor.get_absolute_url }}">{{ action.actor }}</a>
 {% else %}<span class="action-actor">{{ action.actor }}</span>{% endif %}
 {% if action.actor.is_female %}
@@ -12,3 +26,5 @@
         {{ post.title|striptags|safe }}
     </a>
 {% endwith %}
+    
+{% endcomment %}

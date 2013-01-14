@@ -1,57 +1,27 @@
-{% load i18n avatar_tags %}{% load static from staticfiles %}
-<script type="text/javascript" src="{% static "js/jquery.raty.min.js" %}"></script>
-<div class="item-list">
-{% for t in topics %}
-    <div class="item {% cycle "normal" "alt" %}">
-        <div class="item-header">
-            <div class="avatar-item">
-                <a href="{% url public-profile t.creator.username %}">{% avatar t.creator 48 %}</a>
-            </div>
+{% load i18n avatar_tags %}
+{% for t in object_list %}
+    <li class="agenda-mini">
+        <div style="float:left;">
+            <div id="rating_{{t.id}}" data-rating="{{t.rating.get_rating}}" data-provider="rating"></div>
         </div>
-        <div class="item-credit">
-            <a href="{% url public-profile t.creator.username %}">{{t.creator}}</a>&nbsp; &nbsp;{{t.creator.get_full_name}}
-        </div>
-        <a href="{{ t.get_absolute_url }}">{{ t.title|truncatewords:10 }}</a>
+        <header>
+            <a href="{% url public-profile t.creator.username %}">{% avatar t.creator 48 %}</a>
+            <h3>
+                <a href="{% url public-profile t.creator.username %}">{{t.creator}}</a><span>{{t.creator.get_full_name}}</span>
+            </h3>
+        </header>
         <div>
-            <!-- not sure we want this
-            <div style="float:left">
-                {{ t.get_status_display }}
-            </div>
-            -->
-            <div>
-                <div style="float:left;">
-                    <div id="rating_{{t.id}}" style="float:left;"></div>
-                    <!-- ({{t.rating_votes}}) -->
-                </div>
-            {% if not object %}
-            {% for c in t.committees.all %}
-                <a href="{% url committee-detail c.id %}"><span style="font-size: 70%">{{c}}</span></a>
-            {% endfor%}
-            {% endif %}
-            </div>
-            <div class="clear"></div>
+          <div>
+              <a href="{{ t.get_absolute_url }}">{{ t.title|truncatewords:10 }}</a>
+              <div>
+              {% if not object %}
+              {% for c in t.committees.all %}
+                  <a href="{% url committee-detail c.id %}" class="label">{{c}}</a>
+              {% endfor%}
+              {% endif %}
+              </div>
         </div>
-    </div>
+    </li>
 {% empty %}
-    {% trans 'No topics suggested yet' %}
+    <li>{% trans 'No topics suggested yet' %}</li>
 {% endfor %}
-    {% if topics.count > 5 %}
-        <p style="float:left;">
-            <a class="more" href="./topic/">{% trans 'more...'%}</a>
-        </p>
-    {% endif %}
-</div>
-<script>
-    $(document).ready(function () {
-        {% for t in topics %}
-            $('#rating_{{t.id}}').raty({
-                number: 7,
-                start: {{t.rating.get_rating}},
-                readOnly: true,
-                path: '{% static "img" %}',
-                });
-        {% endfor %}
-    });
-</script>
-
-

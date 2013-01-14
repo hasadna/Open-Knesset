@@ -4,30 +4,30 @@
 
 {% get_comment_list for object as comment_list %}
 {% if comment_list %}
-    <h3>{% trans 'User comments' %}</h3>
-    <div class="item-list">
+    <header><h2>{% trans 'User comments' %}</h2></header>
+    <ul>
     {% for comment in comment_list %}
-        <a name="c{{ comment.id }}"></a>
-        <div class="item {% cycle "normal" "alt" %}">
-            <div class="item-header">
-                <div class="avatar-item">
-                    <a href="{% url public-profile comment.user.username %}" alt="{{comment.user}}">{% avatar comment.user 48 %}</a>
-                </div>
+        <li class="agenda-mini">
+          <a name="c{{ comment.id }}"></a>
+          <header>
+              <a href="{% url public-profile comment.user.username %}" alt="{{comment.user}}">{% avatar comment.user 48 %}</a>
+              <h3>
+                  <a href="{% url public-profile comment.user.username %}">{{comment.user}}</a>&nbsp; &nbsp;{{comment.user.get_full_name}}
+              </h3>
+          </header>
+          <div>
+              <div class="item-credit">
+              </div>
+              <p>{{ comment.comment|escape|urlizetrunc:"40"|linebreaks }}</p>
+               {% if user == comment.user or user.is_staff%}
+               <footer style="center-text"><a href="{% url comments-delete-comment comment.id %}">{% trans 'delete comment' %}</a></footer>
+               {% endif %}
             </div>
-            <div class="item-credit">
-                <a href="{% url public-profile comment.user.username %}">{{comment.user}}</a>&nbsp; &nbsp;{{comment.user.get_full_name}}
-            </div>
-            <p>{{ comment.comment|escape|urlizetrunc:"40"|linebreaks }}</p>
-            <div class="item-footer">
-                {% if user == comment.user or user.is_staff%}
-                    <div style="float:left;"><a href="{% url comments-delete-comment comment.id %}">{% trans 'delete comment' %}</a> </div>
-                {% endif %}
-            </div>
-        </div>
+          </li>
     {% endfor %}
-    </div>
+    </ul>
 {% else %}
-    <h3>{% trans 'No comments yet' %}</h3>
+    <header><h2>{% trans 'No comments yet' %}</h2></header>
 {% endif %}
 
 {% if user.is_authenticated %}

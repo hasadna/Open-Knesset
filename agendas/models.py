@@ -1,6 +1,6 @@
 from itertools import chain
 from django.db import models
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, Count
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.core.cache import cache
@@ -289,6 +289,37 @@ class Agenda(models.Model):
         else:
             return 0.0
 
+    def candidate_list_score(self, candidate_list):
+        # Since we're already calculating python side, no need to do 2 queries
+        # with joins, select for and against, and calcualte the things
+        qs = AgendaVote.objects.filter(
+            agenda=self, vote__voteaction__member__in=candidate_list.member_ids,
+            vote__voteaction__type__in=['against', 'for']).extra(
+                select={'weighted_score': 'agendas_agendavote.score*agendas_agendavote.importance'}
+            ).values_list('weighted_score', 'vote__voteaction__type')
+
+        for_score = 0
+        against_score = 0
+
+        for score, action_type in qs:
+            if action_type == 'against':
+                against_score += score
+            else:
+                for_score += score
+
+        #max_score = sum([abs(x) for x in self.agendavotes.values_list('score', flat=True)]) * party.members.count()
+        # To save the queries, make sure to pass prefetch/select related
+        # Removed the values call, so that we can utilize the prefetched stuf
+        # This reduces the number of queries when called for example from
+        # AgendaResource.dehydrate
+        max_score = sum(abs(x.score * x.importance) for x in
+                        self.agendavotes.all()) * len(candidate_list.member_ids)
+
+        if max_score > 0:
+            return (for_score - against_score) / max_score * 100
+        else:
+            return 0.0
+
     def related_mk_votes(self,member):
         # Find all votes that
         #   1) This agenda is ascribed to
@@ -321,6 +352,14 @@ class Agenda(models.Model):
     def get_mks_values(self):
         mks_grade = Agenda.objects.get_mks_values()
         return mks_grade.get(self.id,[])
+
+    def get_mks_totals(self, member):
+        "Get count for each vote type for a specific member on this agenda"
+
+        # let's split qs to make it more readable
+        qs = VoteAction.objects.filter(member=member, vote__agendavotes__agenda=self)
+        qs = qs.values('type').annotate(total=Count('id'))
+        return qs
 
     def get_party_values(self):
         party_grades = Agenda.objects.get_all_party_values()
