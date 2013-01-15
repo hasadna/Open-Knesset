@@ -321,15 +321,15 @@
                                             {% if not object.date_of_death %}
                                             <tr>
                                                 <td>{% trans "place of residence" %}</td>
-                                                <td>{{ object.place_of_residence }}</td>
+                                                <td>{{ object.place_of_residence|default:_("No Info") }}</td>
                                             </tr>
                                             <tr>
                                                 <td>{% trans "residence centrality" %}</td>
-                                                <td>{{ object.residence_centrality }}</td>
+                                                <td>{{ object.residence_centrality|default_if_none:_("No Info") }}</td>
                                             </tr>
                                             <tr>
                                                 <td>{% trans "residence economy" %}</td>
-                                                <td>{{ object.residence_economy }}</td>
+                                                <td>{{ object.residence_economy|default_if_none:_("No Info") }}</td>
                                             </tr>
                                             {% endif %}
                                             {% if object.start_date != current_knesset_start_date %}
