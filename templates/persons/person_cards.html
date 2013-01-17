@@ -1,4 +1,5 @@
 {% load static from staticfiles %}
+{% load links_tags %}
 {% for person in persons %}
     <div class="person-card">
       <a href="{{person.get_absolute_url}}">
@@ -16,7 +17,11 @@
           <h3><a href="{{person.get_absolute_url}}">{{person.name}}</a></h3>
             <p>{{person.get_role}}</p>
         </div>
-        <div class="person-info-links"></div>
+        <div class="person-info-links">
+           <ul>
+             {% object_icon_links person %}
+           </ul>
+        </div>
         <div class="person-info-photo">
           <img src="{{person.img_url}}">
         </div>

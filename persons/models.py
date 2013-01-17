@@ -4,6 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.forms.fields import IntegerField
 
+from managers import PersonManager
+
 GENDER_CHOICES = (
     (u'M', _('Male')),
     (u'F', _('Female')),
@@ -17,7 +19,7 @@ class Title(models.Model):
 
 class PersonAlias(models.Model):
     name = models.CharField(max_length=64)
-    person = models.ForeignKey('Person')
+    person = models.ForeignKey('Person', related_name='aliases')
 
     def __unicode__(self):
         return "%s -> %s" % (self.name, self.person.name)
@@ -49,6 +51,8 @@ class Person(models.Model):
     residence_centrality = models.IntegerField(blank=True, null=True)
     residence_economy = models.IntegerField(blank=True, null=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
+
+    objects = PersonManager()
 
     def __unicode__(self):
         return self.name

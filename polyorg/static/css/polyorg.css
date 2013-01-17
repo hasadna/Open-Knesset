@@ -108,7 +108,7 @@ section {clear:both; padding:0.5em;}
   display: none;
   z-index: 1;
   position: absolute;
-  top: 80px;
+  top: 40px;
   width: 405px;
   height: 218px;
 }
@@ -133,6 +133,25 @@ section {clear:both; padding:0.5em;}
   height: 47px;
   background: #f6f6f6;
   padding-right: 160px;
+  overflow: hidden;
+}
+.person-info-links ul {
+  margin-top: 8px;
+  margin-right: -10px;
+  list-style-type: none;
+}
+.person-info-links ul li {
+  float:right;
+  padding: 0;
+  border: 0 none;
+}
+.person-info-links ul li a {
+  display: block;
+  overflow: hidden;
+  text-indent: -30000em;
+  width: 32px;
+  height: 32px;
+  opacity: 0.7;
 }
 .person-card:hover .person-info {
   display: block;
