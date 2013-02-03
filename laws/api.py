@@ -13,7 +13,7 @@ from video.utils import get_videos_queryset
 from video.api import VideoResource
 from links.models import Link
 from links.api import LinkResource
-from models import Law, Bill, Vote
+from models import Law, Bill, Vote, VoteAction, PrivateProposal
 
 from simple.management.commands.syncdata_globals import p_explanation
 
@@ -24,6 +24,18 @@ class LawResource(BaseResource):
         queryset = Law.objects.all()
         allowed_methods = ['get']
 
+class VoteActionResource(BaseResource):
+    class Meta(BaseResource.Meta):
+        queryset = VoteAction.objects.all()
+        allowed_methods = ['get']
+        excludes = ['type','id']
+        include_resource_uri = False
+
+    vote_type = fields.CharField('type',null=True)
+    member = fields.ToOneField(MemberResource,
+                              'member',
+                              full=False)
+
 class VoteResource(BaseResource):
     class Meta(BaseResource.Meta):
         queryset = Vote.objects.all()
@@ -33,9 +45,11 @@ class VoteResource(BaseResource):
                          member_for = ALL,
                          member_against = ALL)
 
-    members = fields.ToManyField(MemberResource,
-                    'votes',
-                    full=False)
+    votes = fields.ToManyField(VoteActionResource,
+                    attribute=lambda bundle:VoteAction.objects.filter(
+                                    vote=bundle.obj).select_related('member'),
+                    null=True,
+                    full=True)
 
     def build_filters(self, filters={}):
         orm_filters = super(VoteResource, self).build_filters(filters)
@@ -49,6 +63,11 @@ class VoteResource(BaseResource):
             orm_filters["voteaction__type"] = 'against'
 
         return orm_filters
+
+class PrivateProposalResource(BaseResource):
+    class Meta(BaseResource.Meta):
+        queryset = PrivateProposal.objects.all()
+        allowed_methods = ['get']
 
 class BillResource(BaseResource):
     ''' Bill API '''
@@ -82,6 +101,10 @@ class BillResource(BaseResource):
                     'approval_vote',
                     null=True,
                     full=False)
+    proposals = fields.ToManyField(PrivateProposalResource,
+                                   'proposals',
+                                   null=True,
+                                   full=True)
 
 
     def dehydrate_explanation(self, bundle):
