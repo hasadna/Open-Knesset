@@ -5,60 +5,97 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from mks.models import Member
 from committees.models import Committee
-from fuzzy_match import fuzzy_match
+
+from django.db import transaction
+
 
 logger = logging.getLogger("open-knesset.mmm.models")
 
-def text_lookup(Model, text):
-    """receives a text and a Model and returns a list of Model objects found in the text"""
+# FREEZE_ATTR_NAME="frozen"
 
-    result = []
+# entity type tags
+MK_TYPE = "MK"
+COMM_TYPE = "COMM"
 
-    for m in Model.objects.all():
-        if m.name in text:
-            result.append(m.id)
-        else:
-            if fuzzy_match(m.name, text):
-                logger.warning('No exact match found. Performing fuzzy matching!')
-                result.append(m.id)
-
-    return result
-
-#from json helper function
-def verify(o, d, mks, committees):
-    if not hasattr(d, 'title'):
-        logger.warning(d)
-    if all([d.title == o['title'] ,d.publication_date == o['date'] , d.author_names == o['author']]):
-        if (mks and mks == list(d.req_mks.values_list('pk', flat=True))) or (committees and committees == list(d.req_committee.values_list('pk', flat=True))):
-            logger.info("%s already exists in db" % o['url'])
-            return False
-        else:
-            logger.info("Found differences between imported data and our db. Performing Update!")
-            return True
-    else:
-        logger.warning("Failed DB verification! Encountered multiple conflicts between the object in our db and imported data.")
-        return False
-
+SUPPORTED_SCHEMA_VER = 2
 
 class DocumentManager(models.Manager):
 
-    def from_json(self, j):
-      # checking if the db already has document o instance and if no, creating one
-        for o in j:
-            mks = text_lookup(Member, o['heading'])
-            committees = text_lookup(Committee, o['heading'])
+    @transaction.commit_manually
+    def from_json(self,  json):
+        from itertools import chain
+
+        assert json['meta']['schema_version'][0] == SUPPORTED_SCHEMA_VER # current version
+
+        assert ("matches" in json['objects'] and
+                   "documents" in json['objects'])
+
+        # Should probably stick this somewhere on the about page
+        # as long as update is not nightly. for now - do nothing with it.
+        retrieval_date = json['meta']['retrieval_date']
+
+        #########################################################################
+        # coalesce multiple entity matches by document url into single dict entry
+        docs=dict()
+        for m in chain( json['objects']['matches'], json['objects']['documents']):
+            if m.get('entity_id') and  int(m.get('entity_id')) <= 0:
+                continue
+
+            default = dict(url=m['url'],
+                                  title=m['title'],
+                                  publication_date=m['pub_date'],
+                                  author_names=m['authors'],
+                                  req_mks = [],
+                                  req_committee = [])
+
+            doc = docs.get(m['url'],default)
+
+            entity_id =  int(m.get('entity_id',0))
+            if m.get('entity_type') == MK_TYPE:
+                doc['req_mks'] = list(set(doc['req_mks']+[entity_id]))
+            elif m.get('entity_type') == COMM_TYPE :
+                doc['req_committee'] =   list(set(doc['req_committee']+ [entity_id]))
+            elif m.get('entity_type'):
+                logger.warning("Unrecognized match type: {0}".format(m['entity_type']))
+
+            docs[m['url']] = doc
+
+
+        ################################################################
+        # push all documents to db, update linked entities if they exist
+        logger.info("Pushing mmm documents to db")
+        cnt=0;
+        new_cnt=0;
+        for d in docs.values():
+            cnt+=1
+            # m2m fields, pop and save aside, can't call Document()
+            # with m2m fields directly
+            req_mks = d.pop("req_mks",[])
+            req_committee = d.pop("req_committee",[])
 
             try:
-                d = self.get(url=o['url'])
-            except ObjectDoesNotExist:
-                logger.info("Creating new Document instance: %s" % o['url'])
-                d = self.create(url=o['url'], title=o['title'], publication_date=o['date'], author_names=o['author'])
-                d.req_committee = committees
-                d.req_mks = mks
+                o = self.get(url=d['url'])
 
-            if verify(o, d, mks, committees):
-               d.req_mks = mks
-               d.req_committee = committees
+            except ObjectDoesNotExist:
+                new_cnt +=1
+                o =  Document(**d)
+                o.save()
+
+            # populate entry entirely with fixture data, clobbers old values
+            for k in d.keys():
+                setattr(o,k,d[k])
+
+            o.req_mks = req_mks
+            o.req_committee =  req_committee
+            o.save()
+
+            if cnt % 500 == 0:
+                transaction.commit()
+                logger.debug("Processed {0} documents so far".format(cnt))
+
+        transaction.commit()
+        logger.info("Added a total of {0} new documents".format(new_cnt))
+
 
 class Document(models.Model):
     url = models.URLField(unique=True)
