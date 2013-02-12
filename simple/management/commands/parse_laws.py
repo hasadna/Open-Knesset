@@ -264,8 +264,11 @@ class ParseGovLaws(ParseKnessetLaws):
         prop = GovProposalParser(filename)
 
         # TODO: check if parsing handles more than 1 prop in a booklet
-        return [{'title':prop.get_title(),'date':prop.get_date(), 'bill':prop,
-                 'link_file': link_file}]
+        x = [{'title':prop.get_title(),
+              'date':prop.get_date(),
+              #'bill':prop,
+              'link_file': link_file}]
+        return x
 
     def update_single_bill(self, pdf_link, booklet=None, alt_title=None):
         if booklet is None:
@@ -273,10 +276,12 @@ class ParseGovLaws(ParseKnessetLaws):
             if GovProposal.objects.filter(source_url=pdf_link).count() < 1:
                 logger.error('no existing object with given pdf link and no booklet given. pdf_link = %s' % pdf_link)
                 return
-            bookelet = GovProposal.objects.filter(source_url=pdf_link)[0].booklet_number
+            booklet = GovProposal.objects.filter(source_url=pdf_link)[0].booklet_number
         pdf_data = self.parse_pdf(pdf_link)
         for j in range(len(pdf_data)): # sometime there is more than 1 law in a pdf
-            if not alt_title:
+            if alt_title: # just use the given title
+                title = alt_title
+            else: # get the title from the PDF file itself. doesn't work so well
                 title = pdf_data[j]['title']
             m = re.findall('[^\(\)]*\((.*?)\)[^\(\)]',title)
             try:
@@ -354,14 +359,19 @@ class ParseGovLaws(ParseKnessetLaws):
             logger.debug("check updated %s" % b.get_absolute_url())
 
     def parse_laws_page(self,soup):
+        # Fall back to regex, because these pages are too broken to get the
+        # <td> element we need with BS"""
+        u = unicode(soup)
+        m = re.findall('class="LawText1">(.*?)</',u)
+        # get the link to the PDF file
         name_tag = soup.findAll(lambda tag: tag.name == 'a' and tag.has_key('href') and tag['href'].find(".pdf")>=0)
-        for tag in name_tag:
+        for title,tag in zip(m,name_tag):
             pdf_link = self.pdf_url + tag['href']
             booklet = re.search(r"/(\d+)/",tag['href']).groups(1)[0]
             if int(booklet) <= self.min_booklet:
                 return False
             #title = tag.findNext(attrs={"class":"LawText1"}).findNext(attrs={"class":"LawText1"}).text
-            self.update_single_bill(pdf_link, booklet=booklet)
+            self.update_single_bill(pdf_link, booklet=booklet, alt_title=title)
         return True
 
 

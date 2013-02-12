@@ -290,31 +290,34 @@ class Command(NoArgsCommand):
         logger.debug("last member id found in local files is %d. " % self.last_downloaded_member_id)
         f.close()
 
-    def get_members_data(self):
+    def get_members_data(self, max_mk_id=1000):
         """downloads members data to local files
         """
-        self.update_last_downloaded_member_id()
+        # TODO - find max member id in knesset website and use for max_mk_id
 
-        f  = gzip.open(os.path.join(DATA_ROOT, 'members.tsv.gz'), "ab")
+        f  = gzip.open(os.path.join(DATA_ROOT, 'members.tsv.gz'), "wb")
 
-        fields = ['img_link','טלפון','פקס','אתר נוסף','דואר אלקטרוני','מצב משפחתי','מספר ילדים','תאריך לידה','שנת לידה','מקום לידה','תאריך פטירה','שנת עלייה']
+        fields = ['img_link','טלפון','פקס','אתר נוסף',
+                  'דואר אלקטרוני','מצב משפחתי',
+                  'מספר ילדים','תאריך לידה','שנת לידה',
+                  'מקום לידה','תאריך פטירה','שנת עלייה',
+                  'כנסת 18', 'כנסת 19']
         # note that hebrew strings order is right-to-left
         # so output file order is id, name, img_link, phone, ...
 
         fields = [unicode(field.decode('utf8')) for field in fields]
 
-        for id in range(self.last_downloaded_member_id+1,900): # TODO - find max member id in knesset website and use here
+        for id in range(1,max_mk_id):
             m = mk_parser.MKHtmlParser(id).Dict
             if (m.has_key('name') and m['name'] != None): name = m['name'].replace(u'\xa0',u' ').encode(ENCODING).replace('&nbsp;',' ')
             else: continue
-            f.write("%d\t%s\t" % (  id, name ))
+            f.write("%d\t%s\t" % (id, name))
             for field in fields:
                 value = ''
                 if (m.has_key(field) and m[field]!=None):
                     value = m[field].encode(ENCODING)
                 f.write("%s\t" % (  value ))
             f.write("\n")
-
         f.close()
 
     def download_all(self):
@@ -345,15 +348,31 @@ class Command(NoArgsCommand):
         logger.debug("last id found in local files is %d. " % self.last_downloaded_vote_id)
         f.close()
 
+    def update_mks_is_current(self):
+        """Set is_current=True if and only if mk is currently serving.
+           This is done by looking at the presence page in the knesset website.
+        """
+        URL = 'http://www.knesset.gov.il/presence/heb/PresentList.aspx'
+        x = urllib2.urlopen(URL).read()
+        m = re.search('lbHowManyMKs2(.*)lbHowManyMKs', x, re.DOTALL)
+        mks = re.findall('mk_individual_id_t=(\d+)', m.group())
+        logger.debug('found %d current mks' % len(mks))
+        updated = Member.objects.filter(id__in=mks).update(is_current=True)
+        logger.debug('updated %d mks to is_current=True' % updated)
+        updated = Member.objects.exclude(id__in=mks).update(is_current=False)
+        logger.debug('updated %d mks to is_current=False' % updated)
 
     def update_members_from_file(self):
+        logger.debug('update_members_from_file')
         f = gzip.open(os.path.join(DATA_ROOT, 'members.tsv.gz'))
         content = f.read().split('\n')
         for line in content:
             if len(line) <= 1:
                 continue
-            (member_id, name, img_url, phone, fax, website, email, family_status, number_of_children,
-             date_of_birth, year_of_birth, place_of_birth, date_of_death, year_of_aliyah, _) = line.split('\t')
+            (member_id, name, img_url, phone, fax, website, email,
+             family_status, number_of_children, date_of_birth,
+             year_of_birth, place_of_birth, date_of_death,
+             year_of_aliyah, k18, k19, _) = line.split('\t')
             if email != '':
                 email = email.split(':')[1]
             try:
@@ -377,15 +396,34 @@ class Command(NoArgsCommand):
 
             try:
                 m = Member.objects.get(id=member_id)
-            except: # member_id not found. create new
+                m.phone = phone
+                m.fax = fax
+                m.email = email
+                m.family_status = family_status
+                m.number_of_children = number_of_children
+                m.date_of_death = date_of_death
+                m.save()
+                logger.debug('updated member %d' % m.id)
+            except Member.DoesNotExist: # member_id not found. create new
                 m = Member(id=member_id, name=name, img_url=img_url, phone=phone, fax=fax, website=None, email=email, family_status=family_status,
                             number_of_children=number_of_children, date_of_birth=date_of_birth, place_of_birth=place_of_birth,
                             date_of_death=date_of_death, year_of_aliyah=year_of_aliyah)
                 m.save()
+                logger.debug('created member %d' % m.id)
                 if len(website)>0:
                     l = Link(title='אתר האינטרנט של %s' % name, url=website, content_type=ContentType.objects.get_for_model(m), object_pk=str(m.id))
                     l.save()
 
+            if k19:
+                parties = Party.objects.filter(knesset_id=19).values_list('name','id')
+                k19 = k19.decode(ENCODING)
+                for k,v in parties:
+                    if k in k19:
+                        m.current_party_id = int(v)
+                        logger.debug('member %s, k19 %s, party %s'
+                                     % (m.name,
+                                        k19,
+                                        k))
 
     def get_search_string(self,s):
         if isinstance(s,unicode):

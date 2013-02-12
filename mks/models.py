@@ -302,7 +302,10 @@ class Member(models.Model):
         if self.is_current:
             return (date.today() - self.start_date).days
         else:
-            return (self.end_date - self.start_date).days
+            try:
+                return (self.end_date - self.start_date).days
+            except TypeError:
+                return None
 
     def average_weekly_presence(self):
         hours = WeeklyPresence.objects.filter(

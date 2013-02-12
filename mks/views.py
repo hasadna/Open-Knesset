@@ -190,7 +190,10 @@ class MemberCsvView(CsvView):
 
 class MemberDetailView(DetailView):
 
-    queryset = Member.objects.select_related('current_party', 'voting_statistics')
+    queryset = Member.objects.filter(is_current=True)\
+                             .exclude(current_party__isnull=True)\
+                             .select_related('current_party',
+                                             'voting_statistics')
     MEMBER_INITIAL_DATA = 2
 
     @method_decorator(ensure_csrf_cookie)
@@ -292,6 +295,7 @@ class MemberDetailView(DetailView):
                 general_discipline_params['against_opposition'] = True
             general_discipline = VoteAction.objects.filter(
                 **general_discipline_params).select_related('vote')
+
 
             about_videos=get_videos_queryset(member,group='about')[:1]
             if len(about_videos):

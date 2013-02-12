@@ -241,6 +241,12 @@ class GovProposalParser(object):
             try:
                 return datetime.datetime.strptime(m.group(0),'%d.%m.%Y').date()
             except AttributeError:
+                # try backwards:
+                m = re.search('\d{4}\.\d{1,2}\.\d{1,2}',page_text)
+                try:
+                    return datetime.datetime.strptime(m.group(0)[::-1],'%d.%m.%Y').date()
+                except AttributeError:
+                    pass
                 pass
         return None
 
