@@ -385,8 +385,13 @@ class BillDetailView (DetailView):
             if request.user.has_perm('laws.change_bill') and 'bill_name' in request.POST.keys():
                 new_title = request.POST.get('bill_name')
                 new_popular_name = request.POST.get('popular_name')
+                logger.info('user %s is updating bill %s. new_title=%s, new_popular_name=%s' %
+                                (request.user,object_id, new_title,
+                                 new_popular_name))
                 Bill.objects.filter(pk=object_id).update(title=new_title, full_title=new_title,
                                                          popular_name=new_popular_name)
+            else:
+                return HttpResponseForbidden()
         else:
             return HttpResponseBadRequest()
 

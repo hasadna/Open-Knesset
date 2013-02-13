@@ -202,6 +202,28 @@
             <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
         </div>
     </div>
+    {% if perms.laws.change_bill %}
+    <div id="edit-bill-modal" class="modal hide fade"
+        tabindex="-1" role="dialog" aria-labelledby="editBillModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+            <h3 id="editBillModalLabel">{% trans "Edit Bill" %}</h3>
+        </div>
+        <div class="modal-body">
+            <form method="post" action=".">{% csrf_token %}
+                <input type="hidden" name="user_input_type" value="change_bill_name"></input>
+                <label for="bill_name">{% trans 'name' %}:</label>
+                <input type="text" name="bill_name" id="bill_name" value="{{ object.full_title }}" /><br/>
+                <label for="bill_name">{% trans 'popular name' %}:</label>
+                <input type="text" name="popular_name" id="popular_name" value="{{ object.popular_name }}" />
+                <input class="clearfix" type="submit" value="{% trans 'Submit' %}" />
+            </form>       
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
+        </div>
+    </div>
+    {% endif %}
     <section class="card card-main-party">
         <div class="row">
             <div class="span9 card-details">
@@ -221,6 +243,9 @@
               <div class="spacer actions-panel">
                 {% include "auxiliary/_watch.html" with watched_id=object.id watched_type="bill"%}
                 <a href="#embed-information-modal" class="btn btn-big" role="button" data-toggle="modal">{% trans "embed" %}</a>
+                {% if perms.laws.change_bill %}
+                <a href="#edit-bill-modal" class="btn btn-big" role="button" data-toggle="modal">{% trans "Edit Bill" %}</a>
+                {% endif %}
             </div>
     </section>
     {% if proposers %}
