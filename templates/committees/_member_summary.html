@@ -4,7 +4,7 @@
     <li>
         {% trans 'Presence:' %}
         <div id="percent_{{mk.id}}" class="percent"></div>
-        <script>set_percent({{mk.id}},{{ mk.meetings_count }});</script>
+        <script>set_percent({{mk.id}},{{ mk.meetings_percentage }});</script>
     </li>
     <li><h4>
     {% if mk in chairpersons %}

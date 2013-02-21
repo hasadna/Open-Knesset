@@ -60,26 +60,30 @@ class Committee(models.Model):
                               "%s.committee_id=%%s" % meeting_tn],
                     params = [ self.id ]).distinct()
 
+
     def members_by_presence(self):
-        n = self.meetings.count()
-        if n==0: # this committee had not meetings, can really compute presence
-                 # scores. just return all relevant mks.
-            members = (self.members.all()|
-                       self.chairpersons.all()|
-                       self.replacements.all()).distinct()
-            for m in members:
-                m.meetings_count = 0
-            return members
-        # otherwise compute presence
-        members = []
-        for m in (self.members.all()|
-                  self.chairpersons.all()|
-                  self.replacements.all()).distinct():
-            m.meetings_count = \
-                100 * m.committee_meetings.filter(committee=self).count() / n
-            members.append(m)
-        members.sort(key=lambda x:x.meetings_count, reverse=True)
+        """Return the committee members with computed presence percentage"""
+        def count_percentage(res_set, total_count):
+            return (100 * res_set.count() / total_count) if total_count else 0
+
+        def filter_this_year(res_set):
+            return res_set.filter(date__gte='%d-01-01' % datetime.now().year)
+
+        members = list((self.members.all() |
+                        self.chairpersons.all() |
+                        self.replacements.all()).distinct())
+
+        all_meet_count = self.meetings.count()
+        year_meet_count = filter_this_year(self.meetings).count()
+        for m in members:
+            all_member_meetings = m.committee_meetings.filter(committee=self)
+            year_member_meetings = filter_this_year(all_member_meetings)
+            m.meetings_percentage = count_percentage(all_member_meetings, all_meet_count)
+            m.meetings_percentage_year = count_percentage(year_member_meetings, year_meet_count)
+
+        members.sort(key=lambda x: x.meetings_percentage, reverse=True)
         return members
+
 
     def recent_meetings(self):
         return self.meetings.all().order_by('-date')[:10]
@@ -130,7 +134,7 @@ def legitimate_header(line):
 class CommitteeMeeting(models.Model):
     committee = models.ForeignKey(Committee, related_name='meetings')
     date_string = models.CharField(max_length=256)
-    date = models.DateField()
+    date = models.DateField(db_index=True)
     mks_attended = models.ManyToManyField('mks.Member', related_name='committee_meetings')
     votes_mentioned = models.ManyToManyField('laws.Vote', related_name='committee_meetings', blank=True)
     protocol_text = models.TextField(null=True,blank=True)

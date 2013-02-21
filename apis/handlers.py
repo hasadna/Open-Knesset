@@ -500,7 +500,7 @@ class CommitteeHandler(BaseHandler, HandlerExtensions):
     def members(cls, committee):
         return [ { 'url': x.get_absolute_url(),
                    'name' : x.name,
-                   'presence' : x.meetings_count }
+                   'presence' : x.meetings_percentage }
                 for x in committee.members_by_presence() ]
 
 class CommitteeMeetingHandler(BaseHandler, HandlerExtensions):

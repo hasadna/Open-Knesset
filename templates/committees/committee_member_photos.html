@@ -1,7 +1,8 @@
 {% extends "mks/member_photos.html" %}{% load i18n %}
 {% block member_extra %}
 {% spaceless %}
-<p>{% trans 'Presence:' %} {{member.meetings_count}}%</p>
+<p>{% trans 'Presence:' %} {{member.meetings_percentage}}%</p>
+<p>{% trans 'Presence this year:' %} {{member.meetings_percentage_year}}%</p>
 <p>
 {% if member in chairpersons %}
     {% trans 'Chairperson' %}
