@@ -22,11 +22,17 @@
     // current hit count = {% get_hit_count for object %}
 </script>
 {% endblock %}
-{% block nav-committees %}class="active"{% endblock %}
+
+
+{% block nav-committees %}{% ifnotequal object.committee.type 'plenum' %}class="active"{% endifnotequal %}{% endblock %}
+{% block nav-plenum %}{% ifequal object.committee.type 'plenum' %}class="active"{% endifequal %}{% endblock %}
+
 
 {% block breadcrumbs %}
-        <li><a href="{% url committee-list %}">{% trans "Committees" %}</a> <span class="divider">/</span></li>
-        <li><a href="{% url committee-detail object.committee.id %}">{{ object.committee }}</a> <span class="divider">/</span></l1>
+        {% ifnotequal object.committee.type 'plenum' %}
+            <li><a href="{% url committee-list %}">{% trans "Committees" %}</a> <span class="divider">/</span></li>
+        {% endifnotequal %}
+        <li><a href="{{ object.committee.get_absolute_url }}">{{ object.committee }}</a> <span class="divider">/</span></l1>
         <li class="active">{{object.topics}}</li>
 {% endblock %}
 
@@ -40,31 +46,33 @@
 </span>
 {% endblock %}
 {% block divcontent %}
-    <section class="card card-main">
-        <div class="row">
-            <div class="span6 card-details">
-                <div class="spacer fill">
-                    <h1>{{ object.topics|safe }}</h1>
-                    <p>{{title}}</p>
+    {% ifnotequal object.committee.type 'plenum' %}
+        <section class="card card-main">
+            <div class="row">
+                <div class="span6 card-details">
+                    <div class="spacer fill">
+                        <h1>{{ object.topics|safe }}</h1>
+                        <p>{{title}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="span6 social-details">
-                <div class="spacer fill">
-                    <h2>{% trans "MKs attended" %}</h2>
-                    {% include "committees/committee_member_photos.html" with members=object.mks_attended.all chairpersons=object.committee.chairpersons.all replacements=object.committee.replacements.all%}
+                <div class="span6 social-details">
+                    <div class="spacer fill">
+                        <h2>{% trans "MKs attended" %}</h2>
+                        {% include "committees/committee_member_photos.html" with members=object.mks_attended.all chairpersons=object.committee.chairpersons.all replacements=object.committee.replacements.all%}
 
-                    {% if user.is_authenticated %}
-                    <form method="post" action="." class="form-inline">{% csrf_token %}
-                        <input type="hidden" name="user_input_type" value="mk">
-                        <label for="id_mk_name">{% trans "Suggest an MK" %}</label>
-                        <input type="text" name="mk_name" id="id_mk_name">
-                        <input type="submit" value="{% trans "Submit" %}" class="btn">
-                    </form>
-                    {% endif %}
+                        {% if user.is_authenticated %}
+                        <form method="post" action="." class="form-inline">{% csrf_token %}
+                            <input type="hidden" name="user_input_type" value="mk">
+                            <label for="id_mk_name">{% trans "Suggest an MK" %}</label>
+                            <input type="text" name="mk_name" id="id_mk_name">
+                            <input type="submit" value="{% trans "Submit" %}" class="btn">
+                        </form>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    {% endifnotequal %}
 
     <div class="row">
         <div class="span9 cards">
@@ -78,25 +86,26 @@
                 </ul>
             </section>
             {% endif %}
-
-            <section class="card card-list">
-                <header><h2>{% trans "Bills" %}</h2></header>
-                <ul>
-                {% for b in object.bills_first.all %}<li><a href="{% url bill-detail b.id %}">{{ b }}</a></li>{% endfor %}
-                {% for b in object.bills_second.all %}<li><a href="{% url bill-detail b.id %}">{{ b }}</a></li>{% endfor %}
-                {% if user.is_authenticated %}
-                <li>
-                    <form method="post" action="." class="form-inline">{% csrf_token %}
-                        <input type="hidden" name="user_input_type" value="bill">
-                        <label for="id_bill_text">{% trans "Suggest a matching bill" %}</label>
-                        <input type="text" class="bill_input" name="bill_text" id="id_bill_text">
-                        <input type="hidden" name="bill_id">
-                        <input type="submit" value="{% trans 'Submit' %}" class="btn"></input>
-                    </form>
-                </li>
-                {% endif %}
-                </ul>
-            </section>
+            {% ifnotequal object.committee.type 'plenum' %}
+                <section class="card card-list">
+                    <header><h2>{% trans "Bills" %}</h2></header>
+                    <ul>
+                    {% for b in object.bills_first.all %}<li><a href="{% url bill-detail b.id %}">{{ b }}</a></li>{% endfor %}
+                    {% for b in object.bills_second.all %}<li><a href="{% url bill-detail b.id %}">{{ b }}</a></li>{% endfor %}
+                    {% if user.is_authenticated %}
+                    <li>
+                        <form method="post" action="." class="form-inline">{% csrf_token %}
+                            <input type="hidden" name="user_input_type" value="bill">
+                            <label for="id_bill_text">{% trans "Suggest a matching bill" %}</label>
+                            <input type="text" class="bill_input" name="bill_text" id="id_bill_text">
+                            <input type="hidden" name="bill_id">
+                            <input type="submit" value="{% trans 'Submit' %}" class="btn"></input>
+                        </form>
+                    </li>
+                    {% endif %}
+                    </ul>
+                </section>
+            {% endifnotequal %}
 
             {% with object.parts.list as parts %}
             <section class="card card-list">

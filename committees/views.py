@@ -37,7 +37,7 @@ committees_list = ListView(queryset=Committee.objects.all(), paginate_by=20)
 
 class CommitteeListView(generic.ListView):
     context_object_name = 'committees'
-    model = Committee
+    queryset = Committee.objects.exclude(type='plenum')
     paginate_by = 20
     INITIAL_TOPICS = 10
 

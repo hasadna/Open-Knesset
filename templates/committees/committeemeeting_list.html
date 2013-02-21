@@ -15,11 +15,16 @@
 
 {% block keywords %}{{ title }}{% endblock %}
 {% block description %}{{ title }} - {% endblock %}
-{% block nav-committees %}class="active"{% endblock %}
+
+{% block nav-committees %}{% ifnotequal object.committee.type 'plenum' %}class="active"{% endifnotequal %}{% endblock %}
+{% block nav-plenum %}{% ifequal object.committee.type 'plenum' %}class="active"{% endifequal %}{% endblock %}
+
 
 {% block breadcrumbs %}
-        <li><a href="{% url committee-list %}">{% trans "Committees" %}</a> <span class="divider">/</span></li>
-        <li><a href="{% url committee-detail committee.id %}">{{ committee }}</a> <span class="divider">/</span></l1>
+        {% ifnotequal committee.type 'plenum' %}
+            <li><a href="{% url committee-list %}">{% trans "Committees" %}</a> <span class="divider">/</span></li>
+        {% endifnotequal %}
+        <li><a href="{{ committee.get_absolute_url }}">{{ committee }}</a> <span class="divider">/</span></l1>
         <li class="active">{% trans "All meetings" %}</li>
 {% endblock %}
 
@@ -35,15 +40,17 @@
                 </ul>
             </section>
         </div>
-        <div class="span4">
-            <aside class="sidebar">
-                <h2>{% trans 'Lookup by date' %}</h2>
-                <p>
-                    <input type="text" id="datelookup_input" value="{{ object_list.0.date|date:"Y-m-d" }}"/>
-                    <input class="btn" type="submit" id="datelookup_submit" value="{% trans "Submit" %}"/>
-                </p>
-            </aside>
-        </div>
+        {% ifnotequal committee_type 'plenum' %}
+            <div class="span4">
+                <aside class="sidebar">
+                    <h2>{% trans 'Lookup by date' %}</h2>
+                    <p>
+                        <input type="text" id="datelookup_input" value="{{ object_list.0.date|date:"Y-m-d" }}"/>
+                        <input class="btn" type="submit" id="datelookup_submit" value="{% trans "Submit" %}"/>
+                    </p>
+                </aside>
+            </div>
+        {% endifnotequal %}
     </div>
     </div>
     {% if page_obj %}

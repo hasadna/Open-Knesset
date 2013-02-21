@@ -17,6 +17,7 @@ from knesset.sitemap import sitemaps as sitemaps_dict
 from mks.urls import mksurlpatterns
 from laws.urls import lawsurlpatterns
 from committees.urls import committeesurlpatterns
+from plenum.urls import plenumurlpatterns
 from persons.urls import personsurlpatterns
 from mks.views import get_mk_entry, mk_is_backlinkable
 from laws.models import Bill
@@ -92,7 +93,7 @@ urlpatterns = patterns('',
     (r'^video/', include('video.urls')),
     (r'^mmm-documents/', include('mmm.urls')),
 )
-urlpatterns += mksurlpatterns + lawsurlpatterns + committeesurlpatterns
+urlpatterns += mksurlpatterns + lawsurlpatterns + committeesurlpatterns + plenumurlpatterns
 urlpatterns += staticfiles_urlpatterns() + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += polyorgurlpatterns + personsurlpatterns
 

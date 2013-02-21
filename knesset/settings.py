@@ -167,6 +167,7 @@ INSTALLED_APPS = (
     'okhelptexts',
     'tastypie',
     'polyorg',
+    'plenum',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

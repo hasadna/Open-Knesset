@@ -70,7 +70,7 @@
         <li id="nav-parties" {% block nav-parties %} {% endblock %} ><a href="{% url parties-members %}">{% trans "Members and Parties" %}</a></li>
         <li id="laws" {% block nav-laws %} {% endblock %} > <a href="{% url bill-list %}">{% trans "Legislation" %}</a> </li>
         <li id="nav-committees" {% block nav-committees %} {% endblock %} > <a href="{% url committee-list %}">{% trans 'Committees' %}</a> </li>
-        <!-- <li><a href="#">מליאה</a></li> -->
+        <li id="nav-plenum" {% block nav-plenum %} {% endblock %} ><a href="{% url plenum %}">מליאה</a></li>
         <li id="nav-agendas" {% block nav-agendas %} {% endblock %} > <a href="{% url agenda-list %}">{% trans 'Agendas' %}</a> </li>
       </ul>
     </header>
@@ -122,7 +122,7 @@
                         <li><a href="{% url party-list %}">{% trans "Members and Parties" %}</a></li>
                         <li><a href="{% url bill-list %}">{% trans "Legislation" %}</a> </li>
                         <li><a href="{% url committee-list %}">{% trans 'Committees' %}</a> </li>
-                        <!-- <li><a href="#">מליאה</a></li> -->
+                        <li><a href="{% url plenum %}">מליאה</a></li>
                         <li><a href="{% url agenda-list %}">{% trans 'Agendas' %}</a> </li>
                     </ul>
                 </nav>

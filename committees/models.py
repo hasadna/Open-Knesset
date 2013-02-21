@@ -16,6 +16,7 @@ from djangoratings.fields import RatingField
 from annotatetext.models import Annotation
 from events.models import Event
 from links.models import Link
+from plenum.create_protocol_parts import create_plenum_protocol_parts
 
 COMMITTEE_PROTOCOL_PAGINATE_BY = 120
 
@@ -32,13 +33,17 @@ class Committee(models.Model):
        object_id_field="which_pk")
     description = models.TextField(null=True,blank=True)
     portal_knesset_broadcasts_url = models.URLField(max_length=1000, verify_exists=False, blank=True)
+    type = models.CharField(max_length=10,default='committee')
 
     def __unicode__(self):
         return "%s" % self.name
 
     @models.permalink
     def get_absolute_url(self):
-        return ('committee-detail', [str(self.id)])
+        if self.type=='plenum':
+            return('plenum', []) 
+        else:
+            return ('committee-detail', [str(self.id)])
 
     @property
     def annotations(self):
@@ -152,7 +157,10 @@ class CommitteeMeeting(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('committee-meeting', [str(self.id)])
+        if self.committee.type=='plenum':
+            return ('plenum-meeting', [str(self.id)])
+        else:
+            return ('committee-meeting', [str(self.id)])
 
     def _get_tags(self):
         tags = Tag.objects.get_for_object(self)
@@ -182,9 +190,12 @@ class CommitteeMeeting(models.Model):
         else:
             if self.parts.count():
                 raise ValidationError('CommitteeMeeting already has parts. delete them if you want to run create_protocol_parts again.')
-
         if not self.protocol_text: # sometimes there are empty protocols
             return # then we don't need to do anything here.
+
+        if self.committee.type=='plenum':
+            create_plenum_protocol_parts(self)
+            return
 
         # break the protocol to its parts
         # first, fix places where the colon is in the begining of next line
@@ -258,6 +269,7 @@ class ProtocolPart(models.Model):
     body = models.TextField(blank=True)
     speaker = models.ForeignKey('persons.Person', blank=True, null=True, related_name='protocol_parts')
     objects = ProtocolPartManager()
+    type = models.TextField(blank=True,max_length=20)
 
     annotatable = True
 
