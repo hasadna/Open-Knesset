@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-21 15:11+0200\n"
+"POT-Creation-Date: 2013-02-21 21:39+0200\n"
 "PO-Revision-Date: 2013-02-21 15:13+0200\n"
 "Last-Translator: Ofri Raviv <ofri.raviv@gmail.com>\n"
 "Language-Team: Django-i18n <django-i18n@googlegroups.com>\n"
@@ -261,49 +261,53 @@ msgstr "עוקב אחר חבר כנסת"
 msgid "You are following an MK"
 msgstr "עוקב/ת אחר ח\"כ"
 
-#: committees/models.py:146
+#: committees/models.py:40
+msgid "Plenum"
+msgstr "מליאה"
+
+#: committees/models.py:149
 msgid "Committee Meeting"
 msgstr "ישיבת ועדה"
 
-#: committees/models.py:147 templates/laws/bill_detail.html:343
+#: committees/models.py:150 templates/laws/bill_detail.html:343
 #: templates/laws/bill_detail.html:402 templates/laws/law_detail.html:17
 #: templates/laws/law_detail.html.py:30 templates/laws/law_detail.html:43
 msgid "Committee Meetings"
 msgstr "ישיבות הוועדה"
 
-#: committees/models.py:338 laws/views.py:553
+#: committees/models.py:341 laws/views.py:553
 msgid "Title"
 msgstr "כותרת"
 
-#: committees/models.py:340
+#: committees/models.py:343
 msgid "Description"
 msgstr "תאור"
 
-#: committees/models.py:342
+#: committees/models.py:345
 msgid "published"
 msgstr "פורסמה"
 
-#: committees/models.py:343
+#: committees/models.py:346
 msgid "flagged"
 msgstr "חשודה"
 
-#: committees/models.py:344
+#: committees/models.py:347
 msgid "rejected"
 msgstr "נדחתה"
 
-#: committees/models.py:345
+#: committees/models.py:348
 msgid "accepted"
 msgstr "אושרה"
 
-#: committees/models.py:346
+#: committees/models.py:349
 msgid "appeal"
 msgstr "בערעור"
 
-#: committees/models.py:347
+#: committees/models.py:350
 msgid "deleted"
 msgstr "נמחקה"
 
-#: committees/models.py:356 templates/base.html:72 templates/base.html.py:124
+#: committees/models.py:359 templates/base.html:72 templates/base.html.py:124
 #: templates/committees/committee_detail.html:49
 #: templates/committees/committee_list.html:3
 #: templates/committees/committee_list.html:4
@@ -320,11 +324,11 @@ msgstr "נמחקה"
 msgid "Committees"
 msgstr "ועדות"
 
-#: committees/models.py:364
+#: committees/models.py:367
 msgid "Topic"
 msgstr "הצעה לסדר"
 
-#: committees/models.py:365 templates/committees/topic_list.html:4
+#: committees/models.py:368 templates/committees/topic_list.html:4
 #: templates/user/followed_topics.html:4
 msgid "Topics"
 msgstr "הצעות לסדר"

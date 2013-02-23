@@ -46,11 +46,12 @@ def _copy(url,to):
 
 def _antiword(filename):
     cmd='antiword -x db '+filename+' > '+filename+'.awdb.xml'
-    #_debug(cmd)
-    subprocess.call(cmd,shell=True)
+    _debug(cmd)
+    _debug(subprocess.check_output(cmd,stderr=subprocess.STDOUT,shell=True))
     xmldata=''
     with open(filename+'.awdb.xml','r') as f:
         xmldata=f.read()
+    _debug('len(xmldata) = '+str(len(xmldata)))
     os.remove(filename+'.awdb.xml')
     return xmldata
 
