@@ -96,7 +96,17 @@ def create_plenum_protocol_parts(meeting):
         if len(titleHeader)>0 or len(titleBody)>0:
             _savePart(meeting,titleHeader,'\n\n'.join(titleBody),'title')
     if len(_parts)>0:
-        committees.models.ProtocolPart.objects.bulk_create(_parts)
-    logger.debug('wrote '+str(len(_parts))+' protocol parts')
-
+        # find duplicates
+        gotDuplicate=False
+        otherMeetings=committees.models.CommitteeMeeting.objects.filter(date_string=meeting.date_string).exclude(id=meeting.id)
+        if len(otherMeetings)>0:
+            for otherMeeting in otherMeetings:
+                if otherMeeting.parts.count()==len(_parts):
+                    meeting.delete()
+                    gotDuplicate=True
+        if gotDuplicate:
+            logger.debug('got a duplicate meeting - deleting my meeting')
+        else:
+            committees.models.ProtocolPart.objects.bulk_create(_parts)
+            logger.debug('wrote '+str(len(_parts))+' protocol parts')
 

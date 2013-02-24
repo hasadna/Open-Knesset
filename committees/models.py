@@ -155,12 +155,18 @@ class CommitteeMeeting(models.Model):
     def __unicode__(self):
         cn = cache.get('committee_%d_name' % self.committee_id)
         if not cn:
-            cn = self.committee.name
+            if self.committee.type=='plenum':
+                cn='Plenum'
+            else:
+                cn = unicode(self.committee)
             cache.set('committee_%d_name' % self.committee_id,
                       cn,
                       settings.LONG_CACHE_TIME)
-        return (u"%s - %s" % (cn,
-                              self.title())).replace("&nbsp;", u"\u00A0")
+        if cn=='Plenum':
+            return (u"%s" % (self.title())).replace("&nbsp;", u"\u00A0")
+        else:
+            return (u"%s - %s" % (cn,
+                                self.title())).replace("&nbsp;", u"\u00A0")
 
     @models.permalink
     def get_absolute_url(self):
