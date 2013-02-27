@@ -12,12 +12,12 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from persons.models import Person
 
 class Event(models.Model):
-    ''' hold the when, who, what, where and which fields of events
+    ''' holds the when, who, what, where and which fields of events
         and allows the users to contribute resources (through links)
         and discuss upcoming events.
     '''
     when = models.DateTimeField()
-    when_over = models.DateTimeField(null=True)
+    when_over = models.DateTimeField(null=True, blank=True)
     # KNESSET_TODO the end time of a committee meeting is not recorded anywhere,
     # so we are left to guess
     when_over_guessed = models.BooleanField(default=True)
@@ -31,6 +31,7 @@ class Event(models.Model):
             related_name="event_for_%(class)s", null=True)
     which_pk = models.TextField(_('object ID'), null=True)
     which_object = generic.GenericForeignKey(ct_field="which_type", fk_field="which_pk")
+    why = models.TextField(null=True)
 
     @property
     def is_future(self):
@@ -45,6 +46,7 @@ class Event(models.Model):
     def which(self):
         return self.which_object and unicode(self.which_object) or self.what
 
+    # TODO: fix this
     def get_absolute_url(self):
         if self.which_object:
             return '%s#event-%d' % (self.which_object.get_absolute_url(), self.id)
