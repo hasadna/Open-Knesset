@@ -5,7 +5,15 @@ from datetime import datetime
 import vobject
 
 from django.http import HttpResponse
+from hashnav.detail import DetailView
 from models import Event
+
+class EventDetailView(DetailView):
+    model = Event
+    def get_context_data(self, *args, **kwargs):
+        context = super(EventDetailView, self).get_context_data(**kwargs)
+        context['creators'] = [x.mk for x in context['object'].who.all()]
+        return context
 
 def icalendar(request, summary_length=50, future_only=True):
     """
