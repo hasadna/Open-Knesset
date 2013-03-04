@@ -1,5 +1,24 @@
+{% load i18n %}
 {% load video %}
+<div id='video_playlist_modal_{{playlist_id}}' class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="{{playlist_id}}ModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+        <h3>{% trans "Video" %}</h3>
+    </div>
+    <div class="modal-body">
+        <p>
+            <div class="video_playlist_player_embed">
+                <iframe src="" width="400" height="300" frameborder="0"></iframe>
+                <div><a class="video_viewlink" href="" target="_blank"></a></div>
+                <p class='video_description'></p>
+            </div>
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
+    </div>
+</div>
 {% for video in videos %}
-    {% video_playlist_player video %}
+    {% video_playlist_player video playlist_id %}
 {% endfor %}
 

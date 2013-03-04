@@ -1,19 +1,18 @@
 {% load i18n %}
-<div class='video_playlist_player' embed_link='{{embed_link}}' view_link='{{link}}'>
+<li class='video_playlist_player' embed_link='{{embed_link}}' view_link='{{link}}' data-description='{{description}}' data-playlist-id='{{playlist_id}}'>
     <div class='video_image'>
-		{% if source_type = 'youtube' %}
-	        <div><img src='{{image_link}}'/></div>
-	        <div class='video_playbtn'></div>
-	    {% else %}
-	    	{% trans "video cannot be embeded" %}
-	    {% endif %}
+        {% if source_type = 'youtube' %}
+            <div><img src='{{image_link}}'/></div>
+            <div class='video_playbtn'></div>
+        {% else %}
+            {% trans "video cannot be embeded" %}
+        {% endif %}
     </div>
     <div class='video_description'>
-        <a class='video_playlink video_title' href='javascript:;'>
-            {{title}}
-            ({{ published|date:"d/m/Y" }})
-        </a>
-        &nbsp;&nbsp;
-        {{description}}
+        <p class="item-action">{% if source_type = 'youtube' %}סרטון מyoutube{% else %}סרטון{% endif %}</p>
+        <p class="item-title">
+            <a class='video_playlink video_title' href='javascript:;'>{{title}}</a>
+        </p>
+        <p class="item-context">{{ published|date:"d/m/Y" }}</p>
     </div>
-</div>
+</li>

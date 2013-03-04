@@ -20,11 +20,11 @@ def video_player(width,height,embed_link,image_link):
     }
 
 @register.inclusion_tag('video/_video_playlist.html')
-def video_playlist(videos):
-    return {'videos':videos}
+def video_playlist(videos,playlist_id):
+    return {'videos':videos,playlist_id:playlist_id}
 
 @register.inclusion_tag('video/_video_playlist_player.html')
-def video_playlist_player(video):
+def video_playlist_player(video,playlist_id):
     if video.source_type=='mms-knesset-portal':
         embed_link=''
         link=video.embed_link
@@ -45,5 +45,6 @@ def video_playlist_player(video):
         'link':link,
         'published':video.published,
         'source_type':video.source_type,
+        'playlist_id':playlist_id
     }
 

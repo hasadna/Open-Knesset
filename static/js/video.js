@@ -12,22 +12,18 @@
     	var parent=$(that).parents('.video_playlist_player');
         var embed_link=parent.attr('embed_link').replace('https://','http://');
         var view_link=parent.attr('view_link');
+        var playlist_id=parent.attr('data-playlist-id');
+        var description=parent.attr('data-description');
         if (embed_link.length>0) {
-	        $('.video_playlist_player_embed').remove();
-	        $('.video_playlist_player').show();
-	        var title=parent.find('.video_title').text();
-	        var prev=parent.prev('.video_playlist_player_embed');
-	        var player='<div class="video_playlist_player_embed">'
-	            +'<iframe src="'+embed_link+'" width=400" height="300" frameborder="0"></iframe>'
-	            +'<div><a class="video_viewlink" href="'+view_link+'" target="_blank">'+title+'</a></div>'
-	        +'</div>';
-	        player=$(player);
-	        player.find('.video_viewlink').click(function(){
-	            $('.video_playlist_player_embed').remove();
-	            $('.video_playlist_player').show();
-	        });
-	        parent.before(player);
-	        parent.hide();
+            var title=parent.find('.video_title').text();
+            var modal=$('#video_playlist_modal_'+playlist_id);
+            modal.find('iframe').attr('src',embed_link);
+            modal.find('.video_viewlink').attr('href',view_link).text(title);
+            modal.find('.video_description').text(description);
+            modal.bind('hide', function(){
+                modal.find('iframe').attr('src','');
+            });
+            modal.modal('show');
         } else if (view_link.length>0) {
         	window.open(view_link);
         };

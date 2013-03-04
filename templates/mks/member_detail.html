@@ -232,6 +232,17 @@
             </section>
 
             {% endif %}
+            
+            {% if num_related_videos > 0 %}
+            <section class="card card-list card-list-latest">
+                <header>
+                    <h2>{% trans "Video" %}</h2>
+                </header>
+                <ul id="related_videos">
+                    {% video_playlist related_videos 'related_videos' %}
+                </ul>
+            </section>
+            {% endif %}            
         </div> <!-- /span9 -->
         <div class="span3">
 	 		<aside class="sidebar sidebar-stats">
