@@ -2336,7 +2336,7 @@ msgstr "הצעות לסדר יום"
 
 #: templates/committees/committee_detail.html:134
 msgid "Suggest Topic"
-msgstr "הצעה לסדר"
+msgstr "העלו הצעה"
 
 #: templates/committees/committee_detail.html:136
 msgid "to suggest a topic"
