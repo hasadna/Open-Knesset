@@ -52,50 +52,56 @@
 {% endblock %}
 
 {% block divcontent %}
-    {% ifnotequal object.type 'plenum' %}
+
+    {% if object.type == 'committee' or object.description != None %}
         <section class="card card-main">
             <div class="row">
                 <div class="span6 card-details">
                     <div class="spacer fill">
-                        <h1>{{object.name}}</h1>
-                        {% ifnotequal object.description None %}
-                            <p>{{object.description|linebreaksbr}}</p>
-                        {% endifnotequal %}
+                        <h1>
+                            {% ifequal object.type 'plenum' %}
+                                {% trans "Knesset Plenum" %}
+                            {% else %}
+                                {{object}}
+                            {% endifequal %}
+                        </h1>
+                        <p>{{object.description|linebreaksbr}}</p>
                     </div>
                 </div>
-                <div class="span6 social-details">
-                    <div class="spacer fill">
-                        {% include "committees/committee_member_photos.html" %}
+                {% ifequal object.type 'committee' %}
+                    <div class="span6 social-details">
+                        <div class="spacer fill">
+                            {% include "committees/committee_member_photos.html" %}
+                        </div>
                     </div>
-                </div>
+                {% endifequal %}
             </div>
         </section>
-    {% endifnotequal %}
+    {% endif %}
+    
 
     <div class="row">
         <div class="cards span8">
-            {% ifnotequal object.type 'plenum' %}
-                <section class="card card-list">
-                    <header><h2>{% trans 'Future Meetings' %}</h2></header>
-                    <ul>
-                    {% for o in future_meetings_list %}
-                        {% include "events/_event_li.html" %}
-                    {% empty %}
-                        <li>{% trans "None" %}</li>
-                    {% endfor %}
-                    </ul>
-                </section>
-                <section class="card card-list">
-                    <header><h2>{% trans 'Meetings for which a protocol was not yet published' %}</h2></header>
-                    <ul>
-                    {% for o in protocol_not_yet_published_list %}
-                        {% include "events/_event_li.html" %}
-                    {% empty %}
-                        <li>{% trans "None" %}</li>
-                    {% endfor %}
-                    </ul>
-                </section>
-            {% endifnotequal %}
+            <section class="card card-list">
+                <header><h2>{% trans 'Future Meetings' %}</h2></header>
+                <ul>
+                {% for o in future_meetings_list %}
+                    {% include "events/_event_li.html" %}
+                {% empty %}
+                    <li>{% trans "None" %}</li>
+                {% endfor %}
+                </ul>
+            </section>
+            <section class="card card-list">
+                <header><h2>{% trans 'Meetings for which a protocol was not yet published' %}</h2></header>
+                <ul>
+                {% for o in protocol_not_yet_published_list %}
+                    {% include "events/_event_li.html" %}
+                {% empty %}
+                    <li>{% trans "None" %}</li>
+                {% endfor %}
+                </ul>
+            </section>
             <section class="card card-list card-list-latest">
                 <header><h2>{% trans 'Last Meetings' %}</h2></header>
                 <ul>

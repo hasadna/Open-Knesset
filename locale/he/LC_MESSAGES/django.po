@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-04 13:52+0200\n"
+"POT-Creation-Date: 2013-03-04 19:56+0200\n"
 "PO-Revision-Date: 2013-03-04 13:53+0200\n"
 "Last-Translator: Ofri Raviv <ofri.raviv@gmail.com>\n"
 "Language-Team: Django-i18n <django-i18n@googlegroups.com>\n"
@@ -149,9 +149,9 @@ msgstr "בעריכת"
 
 #: agendas/views.py:108 agendas/views.py:233 agendas/views.py:251
 #: agendas/views.py:269 agendas/views.py:290
-#: templates/committees/committee_detail.html:84
-#: templates/committees/committee_detail.html:94
-#: templates/committees/committee_detail.html:105
+#: templates/committees/committee_detail.html:91
+#: templates/committees/committee_detail.html:101
+#: templates/committees/committee_detail.html:111
 #: templates/mks/member_detail.html:361 templates/user/editprofile.html:56
 #: templates/user/editprofile.html.py:70 templates/user/editprofile.html:84
 msgid "None"
@@ -2073,7 +2073,7 @@ msgid "Please select"
 msgstr "נא לבחור"
 
 #: templates/agendas/agendasfor.html:47
-#: templates/committees/committeemeeting_detail.html:68
+#: templates/committees/committeemeeting_detail.html:69
 #: templates/committees/committeemeeting_detail.html:102
 #: templates/committees/committeemeeting_list.html:49
 #: templates/laws/bill_detail.html:221 templates/laws/bill_detail.html:334
@@ -2261,7 +2261,7 @@ msgid "No comments yet"
 msgstr "אין עדיין תגובות"
 
 #: templates/comments/object_comment_list.html:36
-#: templates/committees/committee_detail.html:130
+#: templates/committees/committee_detail.html:136
 #: templates/committees/committeemeeting_detail.html:226
 #: templates/laws/bill_detail.html:566 templates/laws/bill_detail.html:603
 #: templates/laws/vote_detail.html:140
@@ -2269,7 +2269,7 @@ msgid "Please"
 msgstr "אנא"
 
 #: templates/comments/object_comment_list.html:36
-#: templates/committees/committee_detail.html:131
+#: templates/committees/committee_detail.html:137
 #: templates/committees/committeemeeting_detail.html:226
 #: templates/laws/bill_detail.html:566 templates/laws/bill_detail.html:603
 #: templates/laws/vote_detail.html:140
@@ -2303,50 +2303,54 @@ msgstr "מ&quot;מ"
 msgid "No topics suggested yet"
 msgstr "טרם הוצעו הצעות לסדר"
 
-#: templates/committees/committee_detail.html:79
+#: templates/committees/committee_detail.html:63
+msgid "Knesset Plenum"
+msgstr "מליאת הכנסת"
+
+#: templates/committees/committee_detail.html:86
 msgid "Future Meetings"
 msgstr "ישיבות קרובות"
 
-#: templates/committees/committee_detail.html:89
+#: templates/committees/committee_detail.html:96
 msgid "Meetings for which a protocol was not yet published"
 msgstr "ישיבות מהן טרם פורסם פרוטוקול"
 
-#: templates/committees/committee_detail.html:100
+#: templates/committees/committee_detail.html:106
 msgid "Last Meetings"
 msgstr "ישיבות אחרונות"
 
-#: templates/committees/committee_detail.html:107
+#: templates/committees/committee_detail.html:113
 msgid "more..."
 msgstr "עוד..."
 
-#: templates/committees/committee_detail.html:112
+#: templates/committees/committee_detail.html:118
 msgid "MMM Documents"
 msgstr "מסמך ממ\"מ"
 
-#: templates/committees/committee_detail.html:123
+#: templates/committees/committee_detail.html:129
 #: templates/committees/committee_list.html:71
 #: templates/committees/committee_list.html:82
 #: templates/committees/topic_list.html:8
 msgid "Suggested Agenda Topics"
 msgstr "הצעות לסדר יום"
 
-#: templates/committees/committee_detail.html:128
+#: templates/committees/committee_detail.html:134
 msgid "Suggest Topic"
 msgstr "הצעה לסדר"
 
-#: templates/committees/committee_detail.html:130
+#: templates/committees/committee_detail.html:136
 msgid "to suggest a topic"
 msgstr "להעלות הצעה לסדר"
 
-#: templates/committees/committee_detail.html:134
+#: templates/committees/committee_detail.html:140
 msgid "Please login to suggest a topic"
 msgstr "יש להזדהות כדי לפרסם הצעה לסדר"
 
-#: templates/committees/committee_detail.html:143
+#: templates/committees/committee_detail.html:149
 msgid "Latest Annotations"
 msgstr "הארות אחרונות"
 
-#: templates/committees/committee_detail.html:159
+#: templates/committees/committee_detail.html:165
 #: templates/user/annotated_items.html:29
 #: templates/user/public_profile.html:56
 msgid "No annotations yet..."
@@ -2373,11 +2377,11 @@ msgstr "מצטערים, רק עורכים יכולים למחוק הערות"
 msgid "Please email editors if an annotation should be deleted"
 msgstr "נא לשלוח דואל לעורכי האתר אם צריך למחוק את ההארה"
 
-#: templates/committees/committeemeeting_detail.html:60
+#: templates/committees/committeemeeting_detail.html:61
 msgid "MKs attended"
 msgstr "ח\"כים נוכחים"
 
-#: templates/committees/committeemeeting_detail.html:66
+#: templates/committees/committeemeeting_detail.html:67
 #: templates/laws/vote_member_photos.html:35
 msgid "Suggest an MK"
 msgstr "הוספת חבר כנסת"

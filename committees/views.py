@@ -284,7 +284,11 @@ class MeetingsListView(ListView):
         if not self.items:
             raise Http404
         committee = self.items[0].committee
-        context['title'] = _('All meetings by %(committee)s') % {'committee':committee.name}
+        if committee.type=='plenum':
+            committee_name=_('Knesset Plenum')
+        else:
+            committee_name=committee.name
+        context['title'] = _('All meetings by %(committee)s') % {'committee':committee_name}
         context['none'] = _('No %(object_type)s found') % {'object_type': CommitteeMeeting._meta.verbose_name_plural }
         context['committee'] = committee
         context['committee_id'] = self.committee_id
