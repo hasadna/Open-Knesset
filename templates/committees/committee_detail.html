@@ -1,6 +1,6 @@
 {% extends "site_base.html" %}
 {% load i18n mks_tags avatar_tags %}{% load static from staticfiles %}
-{% block extratitle %}{{ object.name }}{% endblock %}
+{% block extratitle %}{{ object }}{% endblock %}
 {% block keywords %}{{ object.name }}{% endblock %}
 {% block extrajs %}
     <script src="{% static "js/jquery.raty.min.js" %}"></script>
