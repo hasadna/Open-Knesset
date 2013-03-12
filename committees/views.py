@@ -121,6 +121,12 @@ class MeetingDetailView(DetailView):
             parts_lengths[part.id] = len(part.body)
         context['parts_lengths'] = json.dumps(parts_lengths)
         context['paginate_by'] = COMMITTEE_PROTOCOL_PAGINATE_BY
+
+        #get meeting members with presence calculation
+        meeting_members_ids = set(m.id for m in cm.mks_attended.all())
+        context['members'] = [m for m in cm.committee.members_by_presence()
+                              if m.id in meeting_members_ids]
+
         return context
 
 

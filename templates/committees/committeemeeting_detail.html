@@ -59,7 +59,7 @@
             <div class="span6 social-details">
                 <div class="spacer fill">
                     <h2>{% trans "MKs attended" %}</h2>
-                    {% include "committees/committee_member_photos.html" with members=object.mks_attended.all chairpersons=object.committee.chairpersons.all replacements=object.committee.replacements.all%}
+                    {% include "committees/committee_member_photos.html" with chairpersons=object.committee.chairpersons.all replacements=object.committee.replacements.all%}
 
                     {% if user.is_authenticated %}
                     <form method="post" action="." class="form-inline">{% csrf_token %}
