@@ -187,7 +187,7 @@ class CommitteeMeeting(models.Model):
     def save(self, **kwargs):
         super(CommitteeMeeting, self).save(**kwargs)
 
-    def create_protocol_parts(self, delete_existing=False):
+    def create_protocol_parts(self, delete_existing=False, mks=None, mk_names=None):
         """ Create protocol parts from this instance's protocol_text
             Optionally, delete existing parts.
             If the meeting already has parts, and you don't ask to
@@ -207,7 +207,7 @@ class CommitteeMeeting(models.Model):
             return # then we don't need to do anything here.
 
         if self.committee.type=='plenum':
-            create_plenum_protocol_parts(self)
+            create_plenum_protocol_parts(self,mks=mks,mk_names=mk_names)
             return
 
         # break the protocol to its parts

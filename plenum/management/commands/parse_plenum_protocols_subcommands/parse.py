@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 from django.conf import settings
 from django.db.models import Count
 from committees.models import Committee, CommitteeMeeting
+from plenum import create_protocol_parts
 
 verbosity=1
 
@@ -20,5 +21,6 @@ def Parse(verbosity_level,reparse):
         console = logging.StreamHandler()
         console.setLevel(logging.DEBUG)
         logging.getLogger('').addHandler(console)
+    (mks,mk_names)=create_protocol_parts.get_all_mk_names()
     for meeting in meetings:
-        meeting.create_protocol_parts(delete_existing=reparse)
+        meeting.create_protocol_parts(delete_existing=reparse,mks=mks,mk_names=mk_names)
