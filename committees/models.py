@@ -72,7 +72,7 @@ class Committee(models.Model):
         def filter_this_year(res_set):
             return res_set.filter(date__gte='%d-01-01' % datetime.now().year)
 
-        members = list((self.members.all() |
+        members = list((self.members.filter(is_current=True) |
                         self.chairpersons.all() |
                         self.replacements.all()).distinct())
 
