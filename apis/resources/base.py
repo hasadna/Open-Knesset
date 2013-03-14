@@ -48,9 +48,13 @@ class IterJSONAndCSVSerializer(Serializer):
 
         response.write(u'\ufeff'.encode('utf8'))  # BOM for excel
         writer = csv.writer(response, dialect='excel')
-        for item in data['objects']:
+
+        #   if data contains an 'objects' key, refer to it's value as a list of objects.
+        #   else, treat data as a single object itself
+        objects = data.get('objects', [data])
+        for item in objects:
             writer.writerow([unicode(item[key]).encode(
-                            "utf-8", "replace") for key in item.keys()])
+                "utf-8", "replace") for key in item.keys()])
         return response
 
 
