@@ -9,9 +9,17 @@ from video.models import Video
 
 class UpdateMembersRelatedVideos(SubCommand):
 
-    def __init__(self,command,members=None):
+    def __init__(self,command,members=None,only_current_knesset=False,member_ids=[]):
         SubCommand.__init__(self,command)
-        if members is None: members=Member.objects.all()
+        if members is None:
+            if len(member_ids)>0:
+                members=Member.objects.filter(id__in=member_ids)
+            elif only_current_knesset is True:
+                members=Member.current_knesset.filter(is_current=True)
+                self._debug('only current knesset')
+            else:
+                members=Member.objects.all()
+        self._debug('updating related videos for '+str(len(members))+' members')
         for member in members:
             self._debug(member.name)
             self._check_timer()
@@ -33,7 +41,7 @@ class UpdateMembersRelatedVideos(SubCommand):
 
     def _verify_related_video(self,video,name):
         if validate_dict(video,['title','description']):
-            titledesc=video['title']+video['description']
+            titledesc=video['title'] #+video['description']
             if (
                 validate_dict(video,['embed_url_autoplay','thumbnail90x120','id','link','published'])
                 and name in titledesc

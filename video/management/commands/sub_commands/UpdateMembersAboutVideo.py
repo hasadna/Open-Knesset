@@ -8,9 +8,17 @@ from video.models import Video
 
 class UpdateMembersAboutVideo(SubCommand):
 
-    def __init__(self,command,members=None):
+    def __init__(self,command,members=None,only_current_knesset=False,member_ids=[]):
         SubCommand.__init__(self,command)
-        if members is None: members=Member.objects.all()
+        if members is None:
+            if len(member_ids)>0:
+                members=Member.objects.filter(id__in=member_ids)
+            elif only_current_knesset is True:
+                members=Member.current_knesset.filter(is_current=True)
+                self._debug('only current knesset')
+            else:
+                members=Member.objects.all()
+        self._debug('updating about videos for '+str(len(members))+' members')
         for member in members:
             self._debug(member.name)
             self._check_timer()
@@ -46,7 +54,7 @@ class UpdateMembersAboutVideo(SubCommand):
         videos=[]
         for name in member.names:
             for video in self._fetchSourceVideos(name):
-                if validate_dict(video,['published']):
+                if validate_dict(video,['published','title']) and name in video['title']:
                     videos.append(video)
         return sorted(videos,key=lambda video: video['published'], reverse=True)
     

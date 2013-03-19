@@ -36,6 +36,10 @@ class Command(NoArgsCommand,SubCommand):
             help='limit the process time (in minutes)'),
         make_option('--only-members', action='store_true', dest='only-members',
             help='only run sub commands related to members'),
+        make_option('--current-knesset', action='store_true', dest='current-knesset',
+            help='only run for the current knesset'),
+        make_option('--only-member-ids', action='store', type='string', dest='member-ids',
+            help='only run for the specified member ids (numbers separated with comma ",")'),
         make_option('--only-committees', action='store_true', dest='only-committees',
             help='only run sub commands related to committees'),
         make_option('--committee-id', action='store', type='int', dest='committee-id',
@@ -54,10 +58,12 @@ class Command(NoArgsCommand,SubCommand):
             'update':options.get('update', False),
             'with-history':options.get('with-history', False),
             'only-members':options.get('only-members', False),
+            'current-knesset':options.get('current-knesset',False),
             'only-committees':options.get('only-committees', False),
             'committee-id':options.get('committee-id', None),
             'download-mb-quota':options.get('download-mb-quota',None),
             'get-youtube-token':options.get('get-youtube-token',False),
+            'member-ids':options.get('member-ids',None),
         }
         
     def _init_opts(self):
@@ -86,6 +92,8 @@ class Command(NoArgsCommand,SubCommand):
             self._opts['update']=False
             self._opts['download']=False
             self._opts['upload']=False
+        if self._opts['member-ids'] is not None:
+            self._opts['only-members']=True
 
     def _init_subCommand(self,options):
         if options.get('time-limit', None) is None:
@@ -108,10 +116,14 @@ class Command(NoArgsCommand,SubCommand):
         if self._opts['update']:
             self._info("beginning update phase")
             if not self._opts['only-committees']:
+                if self._opts['member-ids'] is not None:
+                    member_ids=[int(id) for id in self._opts['member-ids'].split(',')]
+                else:
+                    member_ids=[]
                 self._check_timer()
-                UpdateMembersAboutVideo(self)
+                UpdateMembersAboutVideo(self, only_current_knesset=self._opts['current-knesset'], member_ids=member_ids)
                 self._check_timer()
-                UpdateMembersRelatedVideos(self)
+                UpdateMembersRelatedVideos(self, only_current_knesset=self._opts['current-knesset'], member_ids=member_ids)
             if not self._opts['only-members']:
                 self._check_timer()
                 UpdateCommitteesVideos(self)
