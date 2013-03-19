@@ -33,7 +33,7 @@
             <li><a href="{% url committee-list %}">{% trans "Committees" %}</a> <span class="divider">/</span></li>
         {% endifnotequal %}
         <li><a href="{{ object.committee.get_absolute_url }}">{{ object.committee }}</a> <span class="divider">/</span></l1>
-        <li class="active">{{object.topics|safe}}</li>
+        <li class="active">{{object.date_string}}</li>
 {% endblock %}
 
 {% block messages %}
