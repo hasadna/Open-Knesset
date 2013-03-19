@@ -47,6 +47,7 @@ running this command event in case of no changes):
         `pip install -r Open-Knesset/requirements.txt`
 
 
+
 Run migrations and tests
 --------------------------------
 
@@ -60,6 +61,8 @@ group to see if that's something you should worry about.
 
 .. _oknesset-dev: https://groups.google.com/forum/#!forum/oknesset-dev
 
+
+See :ref:`devel_tips` for a few bash functions that may help.
 
 While Coding
 ==============

@@ -39,7 +39,7 @@ Contents:
     environment/index
     workflow
     css_docs
-    ide
+    tips
 
 Indices and tables
 ==================
