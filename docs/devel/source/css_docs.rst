@@ -40,7 +40,7 @@ activated::
 .. _Sphinx: http://sphinx-doc.org/
 
 Edit the relevant docs under the ``docs`` directory, and once done, run
-``make.html``. You'll have the resulting documentation in ``build/html``
+``make html``. You'll have the resulting documentation in ``build/html``
 directory.
 
 We have 2 documentation directories:
