@@ -34,7 +34,7 @@ Documentation
 Our documentation is written with Sphinx_, install it with the virtualenv
 activated::
 
-    pip install sphinx
+    pip install -E . sphinx
 
 
 .. _Sphinx: http://sphinx-doc.org/
