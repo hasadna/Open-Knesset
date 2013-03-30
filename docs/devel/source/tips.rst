@@ -103,7 +103,7 @@ A possible session might include:
         git pull git@github.com:hasadna/Open-Knesset.git master
 
         cd ..
-        pip install -r requirements.txt
+        pip install -E . -r Open-Knesset/requirements.txt
         cd Open-Knesset
 
         ./manage.py migrate
