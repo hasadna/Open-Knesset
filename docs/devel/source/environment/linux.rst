@@ -96,8 +96,20 @@ run:
 
 .. code-block:: sh
 
-    pip install -E . -r Open-Knesset/requirements.txt
+    pip install -r Open-Knesset/requirements.txt
     
+.. note::
+    
+    Those with an old version of pip may need to run ``export PIP_RESPECT_VIRTUALENV=true``
+    before executing any pip-related commands from the virtualenv. A good way 
+    to ensure it is to run:
+
+    .. code-block:: sh
+
+        export PIP_RESPECT_VIRTUALENV=true >> bin/activate
+        . bin/activate
+
+
 And wait ...
 
 Once done, proceed to :ref:`tests_develdb`.

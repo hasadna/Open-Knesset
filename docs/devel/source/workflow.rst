@@ -35,7 +35,7 @@ Enter the `Open-Knesset` directory, and run:
 If `requirements.txt` was modified, make sure all of them are installed (no harm
 running this command event in case of no changes):
 
-    `pip install -E .. -r requirements.txt`
+    `pip install -r requirements.txt`
 
 .. note::
 
@@ -44,7 +44,7 @@ running this command event in case of no changes):
     packages from git repos. in that case::
 
 
-        `pip install -E . -r Open-Knesset/requirements.txt`
+        `pip install -r Open-Knesset/requirements.txt`
 
 
 

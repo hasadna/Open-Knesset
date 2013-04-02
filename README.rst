@@ -63,8 +63,21 @@ Linux
 
   This creates a copy of the project on your local machine.
 
-- Install required packages: ``pip install -E . -r Open-Knesset/requirements.txt``
+- Install required packages: ``pip install -r Open-Knesset/requirements.txt``
   and wait ...
+
+.. note::
+    
+    Those with an old version of pip may need to run ``export PIP_RESPECT_VIRTUALENV=true``
+    before executing any pip-related commands from the virtualenv. A good way 
+    to ensure it is to run:
+
+    .. code-block:: sh
+
+        export PIP_RESPECT_VIRTUALENV=true >> bin/activate
+        . bin/activate
+
+
 - Run the tests::
 
     cd Open-Knesset
@@ -102,7 +115,7 @@ MS Windows
 - If you haven't already forked the repository (top right of page), do so. 
 - Clone the repository. In the `oknesset` directory and run
   ``git clone git@github.com:your-name/Open-Knesset.git``
-- Install requirements: ``pip install -E . -r Open-Knesset\requirements.txt`` and
+- Install requirements: ``pip install -r Open-Knesset\requirements.txt`` and
   wait.
 - Run the tests::
 
@@ -167,7 +180,7 @@ OS X
 
 - Install required packages::
 
-    pip install -E . -r Open-Knesset/requirements.txt
+    pip install -r Open-Knesset/requirements.txt
 
   and wait ...
 - Run the tests::
@@ -213,7 +226,7 @@ Please do this every time before you start developing.
 
 - ``cd Open-Knesset``
 - ``git pull git@github.com:hasadna/Open-Knesset.git master``
-- ``pip install -E .. -r requirements.txt``  # only needed if the file requirements.txt was changed; but can't hurt you if you run it every time.
+- ``pip install -r requirements.txt``  # only needed if the file requirements.txt was changed; but can't hurt you if you run it every time.
 - ``python manage.py migrate``              # do not create a superuser account
 - ``python manage.py test``                 # if there are any failures, contact the other developers to see if that's something you should worry about.
 - ``python manage.py runserver``            # now you can play with the site using your browser

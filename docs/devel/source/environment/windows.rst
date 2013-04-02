@@ -177,7 +177,7 @@ inside the *oknesset* directory, run:
 
 .. code-block:: sh
 
-    pip install -E . -r Open-Knesset/requirements.txt
+    pip install -r Open-Knesset/requirements.txt
 
 And wait ... See an example in the following screenshot:
 
