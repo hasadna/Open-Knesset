@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-18 13:07+0200\n"
-"PO-Revision-Date: 2013-03-18 13:08+0200\n"
+"POT-Creation-Date: 2013-04-03 11:17+0300\n"
+"PO-Revision-Date: 2013-04-03 11:25+0200\n"
 "Last-Translator: Benny Daon <bennydaon@gmail.com>\n"
 "Language-Team: Django-i18n <django-i18n@googlegroups.com>\n"
 "Language: \n"
@@ -284,16 +284,18 @@ msgstr "הידעת"
 msgid "Tidbits"
 msgstr "הידעת"
 
-#: auxiliary/views.py:37
+#: auxiliary/views.py:39
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/help/wiki_plugin.py:13
+#: build/wiki/wiki/plugins/help/wiki_plugin.py:13
 msgid "Help"
 msgstr "עזרה"
 
-#: auxiliary/views.py:109
+#: auxiliary/views.py:113
 #: templates/main.he.html:5
 msgid "Home"
 msgstr "דף הבית"
 
-#: auxiliary/views.py:122
+#: auxiliary/views.py:128
 msgid "Sorry, you do not have the permission to annotate."
 msgstr "אין לך הרשאות להוסיף הארות."
 
@@ -337,6 +339,2186 @@ msgstr "עוקב אחר חבר כנסת"
 msgid "You are following an MK"
 msgstr "עוקב/ת אחר ח\"כ"
 
+#: build/django-mptt/mptt/admin.py:96
+msgid "Database error"
+msgstr "שגיאת בסיס נתונים"
+
+#: build/django-mptt/mptt/admin.py:132
+#, python-format
+msgid "%(count)s %(name)s was changed successfully."
+msgid_plural "%(count)s %(name)s were changed successfully."
+msgstr[0] "שינוי %(count)s %(name)s בהצלחה."
+msgstr[1] "שינוי %(count)s %(name)s בהצלחה."
+
+#: build/django-mptt/mptt/admin.py:213
+#: build/django-mptt/mptt/admin.py:215
+msgid "Add child"
+msgstr ""
+
+#: build/django-mptt/mptt/admin.py:221
+#: build/django-mptt/mptt/admin.py:223
+msgid "View on site"
+msgstr "צפיה באתר"
+
+#: build/django-mptt/mptt/admin.py:235
+#, fuzzy, python-format
+msgid "Successfully deleted %s items."
+msgstr "%(count)d %(items)s  היו נמחקו בהצלחה."
+
+#: build/django-mptt/mptt/admin.py:240
+#, python-format
+msgid "Delete selected %(verbose_name_plural)s"
+msgstr "מחק את %(verbose_name_plural)s שבחרת בו"
+
+#: build/django-mptt/mptt/forms.py:72
+msgid "First child"
+msgstr ""
+
+#: build/django-mptt/mptt/forms.py:73
+#, fuzzy
+msgid "Last child"
+msgstr "שבוע אחרון"
+
+#: build/django-mptt/mptt/forms.py:74
+msgid "Left sibling"
+msgstr ""
+
+#: build/django-mptt/mptt/forms.py:75
+#, fuzzy
+msgid "Right sibling"
+msgstr "שמונה"
+
+#: build/django-mptt/mptt/forms.py:177
+#, fuzzy
+msgid "Invalid parent"
+msgstr "סוג גיאומטרי שגוי."
+
+#: build/django-mptt/mptt/managers.py:206
+msgid "Cannot insert a node which has already been saved."
+msgstr ""
+
+#: build/django-mptt/mptt/managers.py:385
+#: build/django-mptt/mptt/managers.py:557
+#: build/django-mptt/mptt/managers.py:593
+#: build/django-mptt/mptt/managers.py:748
+#, python-format
+msgid "An invalid position was given: %s."
+msgstr ""
+
+#: build/django-mptt/mptt/managers.py:543
+#: build/django-mptt/mptt/managers.py:728
+msgid "A node may not be made a sibling of itself."
+msgstr ""
+
+#: build/django-mptt/mptt/managers.py:707
+#: build/django-mptt/mptt/managers.py:829
+msgid "A node may not be made a child of itself."
+msgstr ""
+
+#: build/django-mptt/mptt/managers.py:709
+#: build/django-mptt/mptt/managers.py:831
+msgid "A node may not be made a child of any of its descendants."
+msgstr ""
+
+#: build/django-mptt/mptt/managers.py:730
+msgid "A node may not be made a sibling of any of its descendants."
+msgstr ""
+
+#: build/django-mptt/mptt/models.py:44
+msgid "`tree_manager_attr` is deprecated; just instantiate a TreeManager as a normal manager on your model"
+msgstr ""
+
+#: build/django-mptt/mptt/models.py:201
+msgid "register() expects a Django model class argument"
+msgstr ""
+
+#: build/django-mptt/mptt/templatetags/mptt_tags.py:28
+#, python-format
+msgid "full_tree_for_model tag was given an invalid model: %s"
+msgstr ""
+
+#: build/django-mptt/mptt/templatetags/mptt_tags.py:52
+#, python-format
+msgid "drilldown_tree_for_node tag was given an invalid model: %s"
+msgstr ""
+
+#: build/django-mptt/mptt/templatetags/mptt_tags.py:59
+#, python-format
+msgid "drilldown_tree_for_node tag was given an invalid model field: %s"
+msgstr ""
+
+#: build/django-mptt/mptt/templatetags/mptt_tags.py:86
+#, python-format
+msgid "%s tag requires three arguments"
+msgstr ""
+
+#: build/django-mptt/mptt/templatetags/mptt_tags.py:88
+#: build/django-mptt/mptt/templatetags/mptt_tags.py:143
+#, python-format
+msgid "second argument to %s tag must be 'as'"
+msgstr ""
+
+#: build/django-mptt/mptt/templatetags/mptt_tags.py:140
+#, python-format
+msgid "%s tag requires either three, seven or eight arguments"
+msgstr ""
+
+#: build/django-mptt/mptt/templatetags/mptt_tags.py:147
+#, python-format
+msgid "if seven arguments are given, fourth argument to %s tag must be 'with'"
+msgstr ""
+
+#: build/django-mptt/mptt/templatetags/mptt_tags.py:150
+#, python-format
+msgid "if seven arguments are given, sixth argument to %s tag must be 'in'"
+msgstr ""
+
+#: build/django-mptt/mptt/templatetags/mptt_tags.py:155
+#, python-format
+msgid "if eight arguments are given, fourth argument to %s tag must be 'cumulative'"
+msgstr ""
+
+#: build/django-mptt/mptt/templatetags/mptt_tags.py:158
+#, python-format
+msgid "if eight arguments are given, fifth argument to %s tag must be 'count'"
+msgstr ""
+
+#: build/django-mptt/mptt/templatetags/mptt_tags.py:161
+#, python-format
+msgid "if eight arguments are given, seventh argument to %s tag must be 'in'"
+msgstr ""
+
+#: build/django-mptt/mptt/templatetags/mptt_tags.py:251
+msgid "cache_tree_children was passed nodes in the wrong order!"
+msgstr ""
+
+#: build/django-mptt/mptt/templatetags/mptt_tags.py:313
+#, python-format
+msgid "%s tag requires a queryset"
+msgstr ""
+
+#: build/sorl-thumbnail/sorl/thumbnail/fields.py:47
+msgid "Upload a valid image. The file you uploaded was either not an image or a corrupted image."
+msgstr "נא להעלות תמונה חוקית. הקובץ שהעלת אינו תמונה או מכיל תמונה מקולקלת."
+
+#: build/sorl-thumbnail/sorl/thumbnail/admin/compat.py:56
+msgid "Clear image"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/__init__.py:32
+#: build/wiki/django_notify/__init__.py:32
+msgid "You supplied a target_object that's not an instance of a django Model."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:15
+#: build/wiki/django_notify/models.py:15
+msgid "unique key"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:17
+#: build/wiki/django_notify/models.py:17
+#, fuzzy
+msgid "verbose name"
+msgstr "שם משתמש"
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:26
+#: build/wiki/django_notify/models.py:26
+#: templates/video/_video_list_item.html:13
+msgid "type"
+msgstr "סוג"
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:27
+#: build/wiki/django_notify/models.py:27
+#, fuzzy
+msgid "types"
+msgstr "סוג"
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:32
+#: build/wiki/django_notify/models.py:32
+msgid "interval"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:36
+#: build/wiki/django_notify/models.py:36
+#, python-format
+msgid "Settings for %s"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:41
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:42
+#: build/wiki/django_notify/models.py:41
+#: build/wiki/django_notify/models.py:42
+#, fuzzy
+msgid "settings"
+msgstr "ישיבות אחרונות"
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:49
+#: build/wiki/django_notify/models.py:49
+msgid "Leave this blank to subscribe to any kind of object"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:54
+#: build/wiki/django_notify/models.py:54
+#, fuzzy, python-format
+msgid "Subscription for: %s"
+msgstr "תאור"
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:59
+#: build/wiki/django_notify/models.py:59
+#, fuzzy
+msgid "subscription"
+msgstr "תאור"
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:60
+#: build/wiki/django_notify/models.py:60
+#, fuzzy
+msgid "subscriptions"
+msgstr "תאור"
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:66
+#: build/wiki/django_notify/models.py:66
+#, fuzzy
+msgid "link for notification"
+msgstr "התראות דוא\"ל"
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:71
+#: build/wiki/django_notify/models.py:71
+msgid "occurrences"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:72
+#: build/wiki/django_notify/models.py:72
+msgid "If the same notification was fired multiple times with no intermediate notifications"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:125
+#: build/wiki/django_notify/models.py:125
+#, fuzzy
+msgid "notification"
+msgstr "פעולה"
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/models.py:126
+#: build/wiki/django_notify/models.py:126
+#, fuzzy
+msgid "notifications"
+msgstr "הארות"
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/settings.py:23
+#: build/wiki/django_notify/settings.py:23
+#, fuzzy
+msgid "instantly"
+msgstr "פיאסטאני"
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/settings.py:24
+#: build/wiki/django_notify/settings.py:24
+#, fuzzy
+msgid "daily"
+msgstr "יומי"
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/settings.py:25
+#: build/wiki/django_notify/settings.py:25
+#, fuzzy
+msgid "weekly"
+msgstr "שבועי"
+
+#: build/wiki/build/lib.linux-i686-2.7/django_notify/views.py:32
+#: build/wiki/django_notify/views.py:32
+#, fuzzy, python-format
+msgid "%d times"
+msgstr "כל הזמנים"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/admin.py:72
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:25
+#: build/wiki/wiki/admin.py:72
+#: build/wiki/wiki/models/article.py:25
+msgid "created"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:42
+#: build/wiki/wiki/forms.py:42
+msgid "Spam protection failed to find both a logged in user and an IP address."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:55
+#: build/wiki/wiki/forms.py:55
+#, python-format
+msgid "Spam protection: You are only allowed to create or edit %(revisions)d article per %(interval_name)s."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:71
+#: build/wiki/wiki/forms.py:71
+#, fuzzy
+msgid "minute"
+msgstr "דקה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:71
+#: build/wiki/wiki/forms.py:71
+#, fuzzy, python-format
+msgid "%d minutes"
+msgstr "דקות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:78
+#: build/wiki/wiki/forms.py:78
+msgid "hour"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:82
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:90
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:250
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/dir.html:48
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/search.html:24
+#: build/wiki/wiki/forms.py:82
+#: build/wiki/wiki/forms.py:90
+#: build/wiki/wiki/forms.py:250
+#: build/wiki/wiki/templates/wiki/dir.html:48
+#: build/wiki/wiki/templates/wiki/search.html:24
+#: committees/models.py:347
+#: laws/views.py:553
+msgid "Title"
+msgstr "כותרת"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:82
+#: build/wiki/wiki/forms.py:82
+msgid "Initial title of the article. May be overridden with revision titles."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:83
+#: build/wiki/wiki/forms.py:83
+msgid "Type in some contents"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:84
+#: build/wiki/wiki/forms.py:84
+msgid "This is just the initial contents of your article. After creating it, you can use more complex features like adding plugins, meta data, related articles etc..."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:91
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:253
+#: build/wiki/wiki/forms.py:91
+#: build/wiki/wiki/forms.py:253
+#, fuzzy
+msgid "Contents"
+msgstr "תוכן"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:94
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:256
+#: build/wiki/wiki/forms.py:94
+#: build/wiki/wiki/forms.py:256
+#, fuzzy
+msgid "Summary"
+msgstr "תקציר"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:94
+#: build/wiki/wiki/forms.py:94
+msgid "Give a short reason for your edit, which will be stated in the revision log."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:140
+#: build/wiki/wiki/forms.py:140
+msgid "While you were editing, someone else changed the revision. Your contents have been automatically merged with the new contents. Please review the text below."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:142
+#: build/wiki/wiki/forms.py:142
+msgid "No changes made. Nothing to save."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:205
+#: build/wiki/wiki/forms.py:205
+#, fuzzy
+msgid "Select an option"
+msgstr "נקה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:251
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/dir.html:49
+#: build/wiki/wiki/forms.py:251
+#: build/wiki/wiki/templates/wiki/dir.html:49
+msgid "Slug"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:251
+#: build/wiki/wiki/forms.py:251
+msgid "This will be the address where your article can be found. Use only alphanumeric characters and - or _. Note that you cannot change the slug after creating the article."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:256
+#: build/wiki/wiki/forms.py:256
+msgid "Write a brief message for the article's history log."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:262
+#: build/wiki/wiki/forms.py:262
+msgid "A slug may not begin with an underscore."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:271
+#: build/wiki/wiki/forms.py:271
+#, fuzzy, python-format
+msgid "A deleted article with slug \"%s\" already exists."
+msgstr "משתמש עם שם משתמש זה קיים כבר"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:273
+#: build/wiki/wiki/forms.py:273
+#, fuzzy, python-format
+msgid "A slug named \"%s\" already exists."
+msgstr "משתמש עם שם משתמש זה קיים כבר"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:290
+#: build/wiki/wiki/forms.py:290
+#, fuzzy
+msgid "Yes, I am sure"
+msgstr "כן, אני בטוח/ה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:292
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/deleted.html:47
+#: build/wiki/wiki/forms.py:292
+#: build/wiki/wiki/templates/wiki/deleted.html:47
+msgid "Purge"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:293
+#: build/wiki/wiki/forms.py:293
+msgid "Purge the article: Completely remove it (and all its contents) with no undo. Purging is a good idea if you want to free the slug such that users can create new articles in its place."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:300
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/forms.py:24
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/forms.py:65
+#: build/wiki/wiki/forms.py:300
+#: build/wiki/wiki/plugins/attachments/forms.py:24
+#: build/wiki/wiki/plugins/images/forms.py:65
+msgid "You are not sure enough!"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:302
+#: build/wiki/wiki/forms.py:302
+msgid "While you tried to delete this article, it was modified. TAKE CARE!"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:308
+#: build/wiki/wiki/forms.py:308
+msgid "Lock article"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:308
+#: build/wiki/wiki/forms.py:308
+msgid "Deny all users access to edit this article."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:311
+#: build/wiki/wiki/forms.py:311
+msgid "Permissions"
+msgstr "הרשאות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:315
+#: build/wiki/wiki/forms.py:315
+msgid "Owner"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:316
+#: build/wiki/wiki/forms.py:316
+msgid "Enter the username of the owner."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:317
+#: build/wiki/wiki/forms.py:317
+#, fuzzy
+msgid "(none)"
+msgstr "אין"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:322
+#: build/wiki/wiki/forms.py:322
+#, fuzzy
+msgid "Inherit permissions"
+msgstr "הרשאות משתמש"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:322
+#: build/wiki/wiki/forms.py:322
+msgid "Check here to apply the above permissions recursively to articles under this one."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:327
+#: build/wiki/wiki/forms.py:327
+msgid "Permission settings for the article were updated."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:329
+#: build/wiki/wiki/forms.py:329
+msgid "Your permission settings were unchanged, so nothing saved."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:368
+#: build/wiki/wiki/forms.py:368
+#, fuzzy
+msgid "No user with that username"
+msgstr "משתמש עם שם משתמש זה קיים כבר"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:390
+#: build/wiki/wiki/forms.py:390
+msgid "Article locked for editing"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:397
+#: build/wiki/wiki/forms.py:397
+msgid "Article unlocked for editing"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:410
+#: build/wiki/wiki/forms.py:410
+#, fuzzy
+msgid "Filter..."
+msgstr "סינון"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/forms.py:415
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/base.html:109
+#: build/wiki/wiki/forms.py:415
+#: build/wiki/wiki/templates/wiki/base.html:109
+#, fuzzy
+msgid "Search..."
+msgstr "חיפוש"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/core/plugins/base.py:44
+#: build/wiki/wiki/core/plugins/base.py:44
+msgid "Settings for plugin"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:20
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/pluginbase.py:165
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/models.py:19
+#: build/wiki/wiki/models/article.py:20
+#: build/wiki/wiki/models/pluginbase.py:165
+#: build/wiki/wiki/plugins/attachments/models.py:19
+msgid "current revision"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:22
+#: build/wiki/wiki/models/article.py:22
+msgid "The revision being displayed for this article. If you need to do a roll-back, simply change the value of this field."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:26
+#: build/wiki/wiki/models/article.py:26
+#, fuzzy
+msgid "modified"
+msgstr "תאריך הצטרפות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:27
+#: build/wiki/wiki/models/article.py:27
+msgid "Article properties last modified"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:29
+#: build/wiki/wiki/models/article.py:29
+msgid "owner"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:31
+#: build/wiki/wiki/models/article.py:31
+msgid "The owner of the article, usually the creator. The owner always has both read and write access."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:33
+#: build/wiki/wiki/models/article.py:33
+#: templates/video/_video_list_item.html:13
+msgid "group"
+msgstr "קבוצה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:35
+#: build/wiki/wiki/models/article.py:35
+msgid "Like in a UNIX file system, permissions can be given to a user according to group membership. Groups are handled through the Django auth system."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:37
+#: build/wiki/wiki/models/article.py:37
+msgid "group read access"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:38
+#: build/wiki/wiki/models/article.py:38
+msgid "group write access"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:39
+#: build/wiki/wiki/models/article.py:39
+msgid "others read access"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:40
+#: build/wiki/wiki/models/article.py:40
+msgid "others write access"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:168
+#: build/wiki/wiki/models/article.py:168
+#, python-format
+msgid "Article without content (%(id)d)"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:198
+#: build/wiki/wiki/models/article.py:198
+#: events/models.py:41
+#: links/models.py:37
+#: notify/models.py:10
+msgid "content type"
+msgstr "סוג תוכן"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:200
+#: build/wiki/wiki/models/article.py:200
+#: events/models.py:43
+#: links/models.py:39
+#: notify/models.py:12
+msgid "object ID"
+msgstr "מזהה אובייקט"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:207
+#: build/wiki/wiki/models/article.py:207
+#, fuzzy
+msgid "Article for object"
+msgstr "אובייקט מקושר"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:208
+#: build/wiki/wiki/models/article.py:208
+#, fuzzy
+msgid "Articles for object"
+msgstr "Fields on %s objects"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:216
+#: build/wiki/wiki/models/article.py:216
+#, fuzzy
+msgid "revision number"
+msgstr "מספר כנסת"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:221
+#: build/wiki/wiki/models/article.py:221
+msgid "IP address"
+msgstr "כתובת IP"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:222
+#: build/wiki/wiki/models/article.py:222
+#: tagvotes/models.py:17
+msgid "user"
+msgstr "משתמש"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:233
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:23
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:21
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:40
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/revision_info.html:15
+#: build/wiki/wiki/models/article.py:233
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:23
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:21
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:40
+#: build/wiki/wiki/templates/wiki/includes/revision_info.html:15
+#: committees/models.py:356
+msgid "deleted"
+msgstr "נמחקה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:234
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/article.html:23
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/revision_info.html:21
+#: build/wiki/wiki/models/article.py:234
+#: build/wiki/wiki/templates/wiki/article.html:23
+#: build/wiki/wiki/templates/wiki/includes/revision_info.html:21
+msgid "locked"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:252
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/pluginbase.py:39
+#: build/wiki/wiki/models/article.py:252
+#: build/wiki/wiki/models/pluginbase.py:39
+#, fuzzy
+msgid "article"
+msgstr "סיעות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:255
+#: build/wiki/wiki/models/article.py:255
+msgid "article contents"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:259
+#: build/wiki/wiki/models/article.py:259
+msgid "article title"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/article.py:260
+#: build/wiki/wiki/models/article.py:260
+msgid "Each revision contains a title field that must be filled out, even if the title has not changed"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/pluginbase.py:77
+#: build/wiki/wiki/models/pluginbase.py:77
+#, fuzzy
+msgid "original article"
+msgstr "רישום יומן"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/pluginbase.py:78
+#: build/wiki/wiki/models/pluginbase.py:78
+msgid "Permissions are inherited from this article"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/pluginbase.py:138
+#: build/wiki/wiki/models/pluginbase.py:138
+#, fuzzy
+msgid "A plugin was changed"
+msgstr "סיסמתך שונתה."
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/pluginbase.py:167
+#: build/wiki/wiki/models/pluginbase.py:167
+msgid "The revision being displayed for this plugin.If you need to do a roll-back, simply change the value of this field."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/urlpath.py:40
+#: build/wiki/wiki/models/urlpath.py:40
+msgid "Cache lookup value for articles"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/urlpath.py:44
+#: build/wiki/wiki/models/urlpath.py:44
+#, fuzzy
+msgid "slug"
+msgstr "טלגו"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/urlpath.py:139
+#: build/wiki/wiki/models/urlpath.py:139
+msgid "(root)"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/urlpath.py:149
+#: build/wiki/wiki/models/urlpath.py:149
+msgid "URL path"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/urlpath.py:150
+#: build/wiki/wiki/models/urlpath.py:150
+msgid "URL paths"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/urlpath.py:156
+#: build/wiki/wiki/models/urlpath.py:156
+msgid "Sorry but you cannot have a root article with a slug."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/urlpath.py:158
+#: build/wiki/wiki/models/urlpath.py:158
+msgid "A non-root note must always have a slug."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/urlpath.py:161
+#: build/wiki/wiki/models/urlpath.py:161
+#, python-format
+msgid "There is already a root node on %s"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/urlpath.py:265
+#: build/wiki/wiki/models/urlpath.py:265
+msgid ""
+"Articles who lost their parents\n"
+"===============================\n"
+"\n"
+"The children of this article have had their parents deleted. You should probably find a new home for them."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/models/urlpath.py:268
+#: build/wiki/wiki/models/urlpath.py:268
+#, fuzzy
+msgid "Lost and found"
+msgstr "לא נמצאו תוצאות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/forms.py:9
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:14
+#: build/wiki/wiki/plugins/attachments/forms.py:9
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:14
+#: committees/models.py:349
+msgid "Description"
+msgstr "תאור"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/forms.py:10
+#: build/wiki/wiki/plugins/attachments/forms.py:10
+msgid "A short summary of what the file contains"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/forms.py:19
+#: build/wiki/wiki/plugins/attachments/forms.py:19
+#, fuzzy
+msgid "Yes I am sure..."
+msgstr "כן, אני בטוח/ה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/models.py:21
+#: build/wiki/wiki/plugins/attachments/models.py:21
+msgid "The revision of this attachment currently in use (on all articles using the attachment)"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/models.py:24
+#: build/wiki/wiki/plugins/attachments/models.py:24
+#, fuzzy
+msgid "original filename"
+msgstr "רישום יומן"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/models.py:36
+#: build/wiki/wiki/plugins/attachments/models.py:36
+#, fuzzy
+msgid "attachment"
+msgstr "הצהרה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/models.py:37
+#: build/wiki/wiki/plugins/attachments/models.py:37
+#, fuzzy
+msgid "attachments"
+msgstr "תגובות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/models.py:80
+#: build/wiki/wiki/plugins/attachments/models.py:80
+msgid "file"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/models.py:86
+#: build/wiki/wiki/plugins/attachments/models.py:86
+msgid "attachment revision"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/models.py:87
+#: build/wiki/wiki/plugins/attachments/models.py:87
+msgid "attachment revisions"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/views.py:54
+#: build/wiki/wiki/plugins/attachments/views.py:54
+#, fuzzy, python-format
+msgid "%s was successfully added."
+msgstr "הסיסמה שונתה בהצלחה."
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/views.py:57
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/views.py:121
+#: build/wiki/wiki/plugins/attachments/views.py:57
+#: build/wiki/wiki/plugins/attachments/views.py:121
+#, python-format
+msgid "Your file could not be saved: %s"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/views.py:60
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/views.py:125
+#: build/wiki/wiki/plugins/attachments/views.py:60
+#: build/wiki/wiki/plugins/attachments/views.py:125
+msgid "Your file could not be saved, probably because of a permission error on the web server."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/views.py:119
+#: build/wiki/wiki/plugins/attachments/views.py:119
+#, python-format
+msgid "%s uploaded and replaces old attachment."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/views.py:133
+#: build/wiki/wiki/plugins/attachments/views.py:133
+msgid "Your new file will automatically be renamed to match the file already present. Files with different extensions are not allowed."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/views.py:188
+#: build/wiki/wiki/plugins/attachments/views.py:188
+#, python-format
+msgid "Current revision changed for %s."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/views.py:207
+#: build/wiki/wiki/plugins/attachments/views.py:207
+#, python-format
+msgid "Added a reference to \"%(att)s\" from \"%(art)s\"."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/views.py:237
+#: build/wiki/wiki/plugins/attachments/views.py:237
+#, fuzzy, python-format
+msgid "The file %s was deleted."
+msgstr "ה-%(verbose_name)s נמחק."
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/views.py:240
+#: build/wiki/wiki/plugins/attachments/views.py:240
+#, python-format
+msgid "This article is no longer related to the file %s."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/wiki_plugin.py:31
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:5
+#: build/wiki/wiki/plugins/attachments/wiki_plugin.py:31
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:5
+#, fuzzy
+msgid "Attachments"
+msgstr "תגובות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/wiki_plugin.py:37
+#: build/wiki/wiki/plugins/attachments/wiki_plugin.py:37
+#, fuzzy, python-format
+msgid "A file was changed: %s"
+msgstr "אף שדה לא השתנה."
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/wiki_plugin.py:37
+#: build/wiki/wiki/plugins/attachments/wiki_plugin.py:37
+#, python-format
+msgid "A file was deleted: %s"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:5
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:10
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:35
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/delete.html:8
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:5
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:10
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:35
+#: build/wiki/wiki/templates/wiki/delete.html:8
+#: templates/committees/topic_detail.html:73
+#: templates/laws/bill_detail.html:521
+msgid "Delete"
+msgstr "מחיקה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:12
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:12
+msgid ""
+"\n"
+"    The file may be referenced on other articles. Deleting it means that they will loose their references to this file. The following articles reference this file:\n"
+"    "
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:27
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:48
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:49
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/replace.html:34
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:71
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/purge.html:21
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/revision_add.html:21
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/create.html:52
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/delete.html:12
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/delete.html:46
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:27
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:48
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:49
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/replace.html:34
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:71
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/purge.html:21
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/revision_add.html:21
+#: build/wiki/wiki/templates/wiki/create.html:52
+#: build/wiki/wiki/templates/wiki/delete.html:12
+#: build/wiki/wiki/templates/wiki/delete.html:46
+msgid "Go back"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:31
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:31
+#, fuzzy
+msgid "Delete it!"
+msgstr "מחיקה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:37
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:37
+#: templates/comments/delete.html:13
+#: templates/committees/delete_topic.html:13
+msgid "Remove"
+msgstr "מחיקה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:39
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:39
+msgid ""
+"\n"
+"    You can remove a reference to a file, but it will retain its references on other articles.\n"
+"    "
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:52
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/delete.html:52
+#, fuzzy
+msgid "Remove reference"
+msgstr "ראה גם"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:5
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:9
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:5
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:9
+#, fuzzy
+msgid "History of"
+msgstr "היסטוריה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:12
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:24
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:12
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:24
+#, fuzzy
+msgid "Date"
+msgstr "תאריך:"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:13
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:13
+#, fuzzy
+msgid "User"
+msgstr "משתמשים"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:15
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:22
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:15
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:22
+#, fuzzy
+msgid "File"
+msgstr "סינון"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:16
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:29
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:26
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/index.html:22
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:16
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:29
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:26
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/index.html:22
+msgid "Size"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:17
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:27
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:17
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:27
+#, fuzzy
+msgid "Action"
+msgstr "פעולה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:28
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:33
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:28
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:33
+#, fuzzy
+msgid "<em>No description</em>"
+msgstr "תאור"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:36
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:51
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:36
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:51
+msgid "Download"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:41
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/history.html:41
+msgid "Use this!"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:10
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:10
+msgid "The following files are available for this article. Copy the markdown tag to directly refer to a file from the article text."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:27
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/index.html:20
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:27
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/index.html:20
+msgid "Markdown tag"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:28
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:25
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/index.html:21
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:28
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:25
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/index.html:21
+#, fuzzy
+msgid "Uploaded by"
+msgstr "הוצע על ידי"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:33
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/replace.html:5
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/replace.html:9
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:34
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:33
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/replace.html:5
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/replace.html:9
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:34
+#, fuzzy
+msgid "Replace"
+msgstr "מ&quot;מ"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:37
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:37
+msgid "Detach"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:44
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/deleted.html:25
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/deleted.html:30
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:44
+#: build/wiki/wiki/templates/wiki/deleted.html:25
+#: build/wiki/wiki/templates/wiki/deleted.html:30
+msgid "Restore"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:53
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:53
+#, fuzzy
+msgid "File history"
+msgstr "היסטוריה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:53
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:53
+#, fuzzy
+msgid "revisions"
+msgstr "התחברויות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:68
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:68
+msgid "There are no attachments for this article."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:80
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:80
+#, fuzzy
+msgid "Upload new file"
+msgstr "העלה תמונה חדשה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:92
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:92
+msgid "Upload file"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:103
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:103
+#, fuzzy
+msgid "Search and add file"
+msgstr "שמירה והוספת אחר"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:109
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:109
+msgid "You can reuse files from other articles. These files are subject to updates on other articles which may or may not be a good thing."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:114
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:114
+#: templates/search/search.html:4
+#: templates/search/search.html.py:7
+#: templates/search/search.html:17
+msgid "Search"
+msgstr "חיפוש"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:127
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/index.html:127
+msgid "The article is currently locked for editing, and therefore no new attachments can be added."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/render.html:5
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/render.html:5
+msgid "Click to download"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/replace.html:12
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/replace.html:12
+#, python-format
+msgid ""
+"\n"
+"  Replacing an attachment means adding a new file that will be used in its place. All references to the file will be replaced by the one you upload and the file will be downloaded as <strong>%(filename)s</strong>. Please note that this attachment is in use on other articles, you may distort contents. However, do not hestitate to take advantage of this and make replacements for the listed articles where necessary. This way of working is more efficient....\n"
+"  "
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/replace.html:16
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/replace.html:16
+#, fuzzy
+msgid "Articles using"
+msgstr "כניסה באמצעות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/replace.html:23
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/replace.html:23
+#, python-format
+msgid ""
+"\n"
+"  Replacing an attachment means adding a new file that will be used in its place. All references to the file will be replaced by the one you upload and the file will be downloaded as <strong>%(filename)s</strong>.\n"
+"  "
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/replace.html:38
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/revision_add.html:25
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/replace.html:38
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/revision_add.html:25
+#, fuzzy
+msgid "Upload replacement"
+msgstr "מ&quot;מ"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:5
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:5
+msgid "Add file to"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:9
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:9
+msgid "Add attachment from other article"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:15
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:15
+#, fuzzy
+msgid "Search files and articles"
+msgstr "ח&quot;כים וסיעות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:23
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:23
+#, fuzzy
+msgid "Main article"
+msgstr "ראשי"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:55
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:55
+msgid "Add to article"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:63
+#: build/wiki/wiki/plugins/attachments/templates/wiki/plugins/attachments/search.html:63
+msgid "Your search did not return any results"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/help/templates/wiki/plugins/help/sidebar.html:1
+#: build/wiki/wiki/plugins/help/templates/wiki/plugins/help/sidebar.html:1
+msgid "Adding new articles"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/help/templates/wiki/plugins/help/sidebar.html:3
+#: build/wiki/wiki/plugins/help/templates/wiki/plugins/help/sidebar.html:3
+msgid "To create a new wiki article, create a link to it. Clicking the link gives you the creation page."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/help/templates/wiki/plugins/help/sidebar.html:6
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/links/templates/wiki/plugins/links/sidebar.html:20
+#: build/wiki/wiki/plugins/help/templates/wiki/plugins/help/sidebar.html:6
+#: build/wiki/wiki/plugins/links/templates/wiki/plugins/links/sidebar.html:20
+#, fuzzy
+msgid "An external link"
+msgstr "הטמעה באתר חיצוני"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/help/templates/wiki/plugins/help/sidebar.html:9
+#: build/wiki/wiki/plugins/help/templates/wiki/plugins/help/sidebar.html:9
+msgid "Headers"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/help/templates/wiki/plugins/help/sidebar.html:10
+#: build/wiki/wiki/plugins/help/templates/wiki/plugins/help/sidebar.html:10
+msgid "Use these codes for headers and to automatically generate Tables of Contents."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/help/templates/wiki/plugins/help/sidebar.html:25
+#: build/wiki/wiki/plugins/help/templates/wiki/plugins/help/sidebar.html:25
+msgid "Typography"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/help/templates/wiki/plugins/help/sidebar.html:30
+#: build/wiki/wiki/plugins/help/templates/wiki/plugins/help/sidebar.html:30
+msgid "Lists"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/forms.py:17
+#: build/wiki/wiki/plugins/images/forms.py:17
+#, python-format
+msgid "New image %s was successfully uploaded. You can use it by selecting it from the list of available images."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/forms.py:60
+#: build/wiki/wiki/plugins/images/forms.py:60
+msgid "Are you sure?"
+msgstr "האם את/ה בטוח/ה ?"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/models.py:40
+#: build/wiki/wiki/plugins/images/models.py:40
+msgid "image"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/models.py:41
+#: build/wiki/wiki/plugins/images/models.py:41
+#, fuzzy
+msgid "images"
+msgstr "עמודים"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/models.py:45
+#: build/wiki/wiki/plugins/images/models.py:45
+#, python-format
+msgid "Image: %s"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/models.py:45
+#: build/wiki/wiki/plugins/images/models.py:45
+msgid "Current revision not set!!"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/models.py:92
+#: build/wiki/wiki/plugins/images/models.py:92
+msgid "image revision"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/models.py:93
+#: build/wiki/wiki/plugins/images/models.py:93
+#, fuzzy
+msgid "image revisions"
+msgstr "הרשאות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/models.py:98
+#: build/wiki/wiki/plugins/images/models.py:98
+#, python-format
+msgid "Image Revsion: %d"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/views.py:64
+#: build/wiki/wiki/plugins/images/views.py:64
+#, python-format
+msgid "%s has been restored"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/views.py:66
+#: build/wiki/wiki/plugins/images/views.py:66
+#, python-format
+msgid "%s has been marked as deleted"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/views.py:116
+#: build/wiki/wiki/plugins/images/views.py:116
+#, python-format
+msgid "%(file)s has been changed to revision #%(revision)d"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/views.py:150
+#: build/wiki/wiki/plugins/images/views.py:150
+#, fuzzy, python-format
+msgid "%(file)s has been saved."
+msgstr "פרופיל המשתמש עודכן"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/wiki_plugin.py:16
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/index.html:5
+#: build/wiki/wiki/plugins/images/wiki_plugin.py:16
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/index.html:5
+#, fuzzy
+msgid "Images"
+msgstr "עמודים"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/wiki_plugin.py:27
+#: build/wiki/wiki/plugins/images/wiki_plugin.py:27
+#, python-format
+msgid "An image was added: %s"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/index.html:8
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/index.html:8
+msgid "The following images are available for this article. Copy the markdown tag to directly refer to an image from the article text."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/index.html:12
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/index.html:12
+#, fuzzy
+msgid "Back to edit page"
+msgstr "חזרה לעמוד הראשי"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/index.html:19
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/index.html:19
+msgid "No file"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/index.html:35
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/index.html:35
+#, fuzzy
+msgid "Upload new image"
+msgstr "העלה תמונה חדשה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/index.html:40
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/index.html:40
+msgid "Restore image"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/index.html:45
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/index.html:45
+#, fuzzy
+msgid "Remove image"
+msgstr "מחיקה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/index.html:52
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/index.html:52
+msgid "Completely delete"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/index.html:66
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:5
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/index.html:66
+#: build/wiki/wiki/templates/wiki/history.html:5
+msgid "History"
+msgstr "היסטוריה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/index.html:85
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/index.html:85
+#, fuzzy
+msgid "Revert to this version"
+msgstr "הוסבה לנושא לדיון"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/index.html:98
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/index.html:98
+msgid "There are no images for this article."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/purge.html:5
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/deleted.html:40
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/purge.html:5
+#: build/wiki/wiki/templates/wiki/deleted.html:40
+msgid "Purge deletion"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/purge.html:14
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/purge.html:14
+msgid "Purge image: Completely remove image file and all revisions."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/purge.html:25
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/purge.html:25
+#, fuzzy
+msgid "Remove it completely!"
+msgstr "מחיקת הערה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/render.html:14
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/render.html:14
+#, fuzzy
+msgid "Image not found"
+msgstr "דף לא קיים"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/revision_add.html:5
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/revision_add.html:5
+#, fuzzy
+msgid "Replace image"
+msgstr "מ&quot;מ"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/revision_add.html:14
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/revision_add.html:14
+msgid "Choose an image file to replace current image."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:30
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:30
+msgid "Image id"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:32
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/links/templates/wiki/plugins/links/sidebar.html:14
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:32
+#: build/wiki/wiki/plugins/links/templates/wiki/plugins/links/sidebar.html:14
+msgid "Insert"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:48
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:48
+#, fuzzy
+msgid "No images found for this article"
+msgstr "אין תקציר להצבעה זו"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:57
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:57
+msgid "Manage images"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:63
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:63
+#, fuzzy
+msgid "Add new image"
+msgstr "העלה תמונה חדשה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:99
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:99
+#, fuzzy
+msgid "Add image"
+msgstr "הוספת אג'נדה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:107
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:107
+#, fuzzy
+msgid "You do not have permissions to add images."
+msgstr "אין לך הרשאות להוסיף הארות."
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:114
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:114
+msgid "How to use images"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:117
+#: build/wiki/wiki/plugins/images/templates/wiki/plugins/images/sidebar.html:117
+msgid "After uploading an image, it is attached to this particular artice and can be used only here. Other users may replace the image, but older versions are kept. You probably want to show the image with a nice caption. To achieve this, press the Insert button and fill in the caption fields and possibly choose to have you image floating right or left of the content. You can use Markdown in the caption. The markdown code syntax for images looks like this, possible values for align are left and right:"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/links/wiki_plugin.py:20
+#: build/wiki/wiki/plugins/links/wiki_plugin.py:20
+#: templates/committees/topic_detail.html:83
+#: templates/laws/bill_detail.html:572
+#: templates/laws/vote_detail.html:55
+msgid "Links"
+msgstr "קישורים"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/links/templates/wiki/plugins/links/sidebar.html:3
+#: build/wiki/wiki/plugins/links/templates/wiki/plugins/links/sidebar.html:3
+#, fuzzy
+msgid "Link to another wiki page"
+msgstr "חזרה לעמוד הראשי"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/links/templates/wiki/plugins/links/sidebar.html:6
+#: build/wiki/wiki/plugins/links/templates/wiki/plugins/links/sidebar.html:6
+msgid "Type in something from another wiki page's title and auto-complete will help you create a tag for you wiki link. Tags for links look like this:"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/links/templates/wiki/plugins/links/sidebar.html:23
+#: build/wiki/wiki/plugins/links/templates/wiki/plugins/links/sidebar.html:23
+msgid "You can link to another website simply by inserting an address example.com or http://example.com or by using the markdown syntax:"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/notifications/forms.py:13
+#: build/wiki/wiki/plugins/notifications/forms.py:13
+#, fuzzy
+msgid "Notifications"
+msgstr "התראות דוא\"ל"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/notifications/forms.py:17
+#: build/wiki/wiki/plugins/notifications/forms.py:17
+msgid "When this article is edited"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/notifications/forms.py:18
+#: build/wiki/wiki/plugins/notifications/forms.py:18
+msgid "Also receive emails about article edits"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/notifications/forms.py:41
+#: build/wiki/wiki/plugins/notifications/forms.py:41
+#, fuzzy
+msgid "Your notification settings were updated."
+msgstr "פרופיל המשתמש עודכן"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/notifications/forms.py:43
+#: build/wiki/wiki/plugins/notifications/forms.py:43
+msgid "Your notification settings were unchanged, so nothing saved."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/notifications/models.py:18
+#: build/wiki/wiki/plugins/notifications/models.py:18
+#, python-format
+msgid "%(user)s subscribing to %(article)s (%(type)s)"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/notifications/models.py:41
+#: build/wiki/wiki/plugins/notifications/models.py:41
+#, python-format
+msgid "Article deleted: %s"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/notifications/models.py:44
+#: build/wiki/wiki/plugins/notifications/models.py:44
+#, fuzzy, python-format
+msgid "Article modified: %s"
+msgstr "תאריך הצטרפות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/plugins/notifications/models.py:47
+#: build/wiki/wiki/plugins/notifications/models.py:47
+#, python-format
+msgid "New article created: %s"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/article.html:56
+#: build/wiki/wiki/templates/wiki/article.html:56
+msgid "This article was last modified:"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/base.html:125
+#: build/wiki/wiki/templates/wiki/base.html:125
+msgid "Log out"
+msgstr "יציאה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/base.html:131
+#: build/wiki/wiki/templates/wiki/base.html:131
+#, fuzzy
+msgid "No notifications"
+msgstr "התראות דוא\"ל"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/base.html:133
+#: build/wiki/wiki/templates/wiki/base.html:133
+#, fuzzy
+msgid "Clear notifications list"
+msgstr "התראות דוא\"ל"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/base.html:141
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/accounts/login.html:4
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/accounts/signup.html:3
+#: build/wiki/wiki/templates/wiki/base.html:141
+#: build/wiki/wiki/templates/wiki/accounts/login.html:4
+#: build/wiki/wiki/templates/wiki/accounts/signup.html:3
+#: templates/user/password_reset_complete.html:15
+msgid "Log in"
+msgstr "כניסה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/base.html:144
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/accounts/login.html:19
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/accounts/signup.html:6
+#: build/wiki/wiki/templates/wiki/base.html:144
+#: build/wiki/wiki/templates/wiki/accounts/login.html:19
+#: build/wiki/wiki/templates/wiki/accounts/signup.html:6
+#, fuzzy
+msgid "Sign up"
+msgstr "סנינה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/create.html:5
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/create.html:45
+#: build/wiki/wiki/templates/wiki/create.html:5
+#: build/wiki/wiki/templates/wiki/create.html:45
+msgid "Add new article"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/create.html:56
+#: build/wiki/wiki/templates/wiki/create.html:56
+msgid "Create article"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/delete.html:5
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/delete.html:50
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/edit.html:49
+#: build/wiki/wiki/templates/wiki/delete.html:5
+#: build/wiki/wiki/templates/wiki/delete.html:50
+#: build/wiki/wiki/templates/wiki/edit.html:49
+#, fuzzy
+msgid "Delete article"
+msgstr "מחיקת ההצבעה שלך"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/delete.html:11
+#: build/wiki/wiki/templates/wiki/delete.html:11
+msgid "You cannot delete a root article."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/delete.html:17
+#: build/wiki/wiki/templates/wiki/delete.html:17
+msgid "You cannot delete this article because you do not have permission to delete articles with children. Try to remove the children manually one-by-one."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/delete.html:23
+#: build/wiki/wiki/templates/wiki/delete.html:23
+msgid "You are deleting an article. This means that its children will be deleted as well. If you choose to purge, children will also be purged!"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/delete.html:25
+#: build/wiki/wiki/templates/wiki/delete.html:25
+msgid "Articles that will be deleted"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/delete.html:31
+#: build/wiki/wiki/templates/wiki/delete.html:31
+#, fuzzy
+msgid "...and more!"
+msgstr "קרא עוד"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/delete.html:39
+#: build/wiki/wiki/templates/wiki/delete.html:39
+msgid "You are deleting an article. Please confirm."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/deleted.html:5
+#: build/wiki/wiki/templates/wiki/deleted.html:5
+#, fuzzy
+msgid "Article deleted"
+msgstr "נמחקה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/deleted.html:14
+#: build/wiki/wiki/templates/wiki/deleted.html:14
+msgid "Article Deleted"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/deleted.html:17
+#: build/wiki/wiki/templates/wiki/deleted.html:17
+msgid "The article you were looking for has been deleted."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/deleted.html:26
+#: build/wiki/wiki/templates/wiki/deleted.html:26
+msgid "You may restore this article and its children by clicking restore."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/deleted.html:41
+#: build/wiki/wiki/templates/wiki/deleted.html:41
+msgid "You may remove this article and any children permanently and free their slugs by clicking the below button. This action cannot be undone."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/dir.html:5
+#: build/wiki/wiki/templates/wiki/dir.html:5
+msgid "Listing articles in"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/dir.html:17
+#: build/wiki/wiki/templates/wiki/dir.html:17
+msgid "Up one level"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/dir.html:22
+#: build/wiki/wiki/templates/wiki/dir.html:22
+msgid "Add article"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/dir.html:30
+#: build/wiki/wiki/templates/wiki/dir.html:30
+msgid "clear"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/dir.html:40
+#: build/wiki/wiki/templates/wiki/dir.html:40
+msgid "article,articles"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/dir.html:40
+#: build/wiki/wiki/templates/wiki/dir.html:40
+msgid "is,are"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/dir.html:40
+#: build/wiki/wiki/templates/wiki/dir.html:40
+#, python-format
+msgid ""
+"\n"
+"      Browsing <strong><a href=\"%(self_url)s\">/%(path)s</a></strong>. There %(articles_plur_verb)s <strong>%(cnt)s %(articles_plur)s</strong> in this level.\n"
+"    "
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/dir.html:50
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/search.html:25
+#: build/wiki/wiki/templates/wiki/dir.html:50
+#: build/wiki/wiki/templates/wiki/search.html:25
+#, fuzzy
+msgid "Last modified"
+msgstr "תאריך הצטרפות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/dir.html:74
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/search.html:50
+#: build/wiki/wiki/templates/wiki/dir.html:74
+#: build/wiki/wiki/templates/wiki/search.html:50
+msgid "There are no articles in this level"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/edit.html:5
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/article_menu.html:34
+#: build/wiki/wiki/templates/wiki/edit.html:5
+#: build/wiki/wiki/templates/wiki/includes/article_menu.html:34
+#: templates/agendas/agenda_detail.html:49
+#: templates/committees/topic_detail.html:72
+msgid "Edit"
+msgstr "עריכה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/edit.html:11
+#: build/wiki/wiki/templates/wiki/edit.html:11
+msgid "<strong>Warning:</strong> You are not logged in. Your IP address will be logged."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/edit.html:12
+#: build/wiki/wiki/templates/wiki/edit.html:12
+#, fuzzy
+msgid "Click here to log in"
+msgstr "יש ללחוץ כאן"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/edit.html:39
+#: build/wiki/wiki/templates/wiki/edit.html:39
+msgid "Preview"
+msgstr "תצוגה מקדימה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/edit.html:43
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/edit.html:65
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/settings.html:16
+#: build/wiki/wiki/templates/wiki/edit.html:43
+#: build/wiki/wiki/templates/wiki/edit.html:65
+#: build/wiki/wiki/templates/wiki/settings.html:16
+#, fuzzy
+msgid "Save changes"
+msgstr "או לבצע שינויים"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/edit.html:61
+#: build/wiki/wiki/templates/wiki/edit.html:61
+#, fuzzy
+msgid "Back to editor"
+msgstr "חזרה לוועדה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:56
+#: build/wiki/wiki/templates/wiki/history.html:56
+msgid "Click each revision to see a list of edited lines. Click the Preview button to see how the article looked at this stage. At the bottom of this page, you can change to a particular revision or merge an old revision with the current one."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:79
+#: build/wiki/wiki/templates/wiki/history.html:79
+#, fuzzy
+msgid "no log message"
+msgstr "הערה לשינוי"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:91
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:96
+#: build/wiki/wiki/templates/wiki/history.html:91
+#: build/wiki/wiki/templates/wiki/history.html:96
+msgid "Preview this revision"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:110
+#: build/wiki/wiki/templates/wiki/history.html:110
+msgid "Auto log:"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:118
+#: build/wiki/wiki/templates/wiki/history.html:118
+#, fuzzy
+msgid "Change"
+msgstr "שינוי:"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:136
+#: build/wiki/wiki/templates/wiki/history.html:136
+msgid "Merge selected with current..."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:140
+#: build/wiki/wiki/templates/wiki/history.html:140
+msgid "Switch to selected version"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:156
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:183
+#: build/wiki/wiki/templates/wiki/history.html:156
+#: build/wiki/wiki/templates/wiki/history.html:183
+msgid "Back to history view"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:161
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:166
+#: build/wiki/wiki/templates/wiki/history.html:161
+#: build/wiki/wiki/templates/wiki/history.html:166
+msgid "Switch to this version"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:174
+#: build/wiki/wiki/templates/wiki/history.html:174
+msgid "Merge with current"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:175
+#: build/wiki/wiki/templates/wiki/history.html:175
+msgid "When you merge a revision with the current, all data will be retained from both versions and merged at its approximate location from each revision."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:175
+#: build/wiki/wiki/templates/wiki/history.html:175
+msgid "After this, it's important to do a manual review."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:188
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/history.html:193
+#: build/wiki/wiki/templates/wiki/history.html:188
+#: build/wiki/wiki/templates/wiki/history.html:193
+#, fuzzy
+msgid "Create new merged version"
+msgstr "יצירת משתמש חדש"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/permission_denied.html:8
+#: build/wiki/wiki/templates/wiki/permission_denied.html:8
+#, fuzzy
+msgid "Permission Denied"
+msgstr "הרשאות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/permission_denied.html:11
+#: build/wiki/wiki/templates/wiki/permission_denied.html:11
+#, fuzzy
+msgid "Sorry, you don't have permission to access this page."
+msgstr "אין לך הרשאות להוסיף הארות."
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/permission_denied.html:16
+#: build/wiki/wiki/templates/wiki/permission_denied.html:16
+msgid "This article is locked for editing."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/permission_denied.html:22
+#: build/wiki/wiki/templates/wiki/permission_denied.html:22
+#, fuzzy
+msgid "Back to article"
+msgstr "חזרה לוועדה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/preview_inline.html:8
+#: build/wiki/wiki/templates/wiki/preview_inline.html:8
+msgid "Previewing revision"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/preview_inline.html:15
+#: build/wiki/wiki/templates/wiki/preview_inline.html:15
+msgid "Previewing merge between"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/preview_inline.html:17
+#: build/wiki/wiki/templates/wiki/preview_inline.html:17
+msgid "and"
+msgstr "ו"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/preview_inline.html:26
+#: build/wiki/wiki/templates/wiki/preview_inline.html:26
+#, fuzzy
+msgid "This revision has been deleted."
+msgstr "הערך הוזכר במקום נוסף"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/preview_inline.html:27
+#: build/wiki/wiki/templates/wiki/preview_inline.html:27
+msgid "Restoring to this revision will mark the article as deleted."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/search.html:5
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/search.html:9
+#: build/wiki/wiki/templates/wiki/search.html:5
+#: build/wiki/wiki/templates/wiki/search.html:9
+#, fuzzy
+msgid "Search results for:"
+msgstr "תוצאות החיפוש עבור"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/search.html:17
+#: build/wiki/wiki/templates/wiki/search.html:17
+#, python-format
+msgid "Your search returned <strong>%(cnt)s</strong> results."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/settings.html:5
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/article_menu.html:9
+#: build/wiki/wiki/templates/wiki/settings.html:5
+#: build/wiki/wiki/templates/wiki/includes/article_menu.html:9
+#, fuzzy
+msgid "Settings"
+msgstr "רשימת הישיבות המלאה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/source.html:5
+#: build/wiki/wiki/templates/wiki/source.html:5
+#, fuzzy
+msgid "Source of"
+msgstr "מקור?"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/source.html:10
+#: build/wiki/wiki/templates/wiki/source.html:10
+msgid "This article is currently locked for editing."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/accounts/login.html:7
+#: build/wiki/wiki/templates/wiki/accounts/login.html:7
+#, fuzzy
+msgid "Please log in"
+msgstr "כניסה אחרונה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/accounts/login.html:13
+#: build/wiki/wiki/templates/wiki/accounts/login.html:13
+#, fuzzy
+msgid "Log me in..."
+msgstr "כניסה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/accounts/login.html:19
+#: build/wiki/wiki/templates/wiki/accounts/login.html:19
+msgid "Don't have an account?"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/accounts/signup.html:12
+#: build/wiki/wiki/templates/wiki/accounts/signup.html:12
+msgid "Sign me up..."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/article/create_root.html:4
+#: build/wiki/wiki/templates/wiki/article/create_root.html:4
+msgid "Create root article"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/article/create_root.html:22
+#: build/wiki/wiki/templates/wiki/article/create_root.html:22
+#, fuzzy
+msgid "Congratulations!"
+msgstr "החלת דין רציפות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/article/create_root.html:24
+#: build/wiki/wiki/templates/wiki/article/create_root.html:24
+msgid "You have django-wiki installed... but there are no articles. So it's time to create the first one, the root article. In the beginning, it will only be editable by administrators, but you can define permissions after."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/article/create_root.html:27
+#: build/wiki/wiki/templates/wiki/article/create_root.html:27
+msgid "Root article"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/article/create_root.html:32
+#: build/wiki/wiki/templates/wiki/article/create_root.html:32
+#, fuzzy
+msgid "Create root"
+msgstr "יצירת תגית חדשה"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/anonymous_blocked.html:7
+#: build/wiki/wiki/templates/wiki/includes/anonymous_blocked.html:7
+#, python-format
+msgid ""
+"\n"
+"  You need to <a href=\"%(login_url)s\">log in</a> or <a href=\"%(signup_url)s\">sign up</a> to use this function.\n"
+"  "
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/anonymous_blocked.html:11
+#: build/wiki/wiki/templates/wiki/includes/anonymous_blocked.html:11
+msgid "You need to log in og sign up to use this function."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/article_menu.html:26
+#: build/wiki/wiki/templates/wiki/includes/article_menu.html:26
+#, fuzzy
+msgid "Changes"
+msgstr "שינוי %s"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/article_menu.html:41
+#: build/wiki/wiki/templates/wiki/includes/article_menu.html:41
+#, fuzzy
+msgid "View Source"
+msgstr "מקור?"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/article_menu.html:49
+#: build/wiki/wiki/templates/wiki/includes/article_menu.html:49
+#, fuzzy
+msgid "View"
+msgstr "הצגת כל ההערות"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/breadcrumbs.html:16
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/breadcrumbs.html:42
+#: build/wiki/wiki/templates/wiki/includes/breadcrumbs.html:16
+#: build/wiki/wiki/templates/wiki/includes/breadcrumbs.html:42
+msgid "Sub-articles for"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/breadcrumbs.html:28
+#: build/wiki/wiki/templates/wiki/includes/breadcrumbs.html:28
+msgid "No sub-articles"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/breadcrumbs.html:31
+#: build/wiki/wiki/templates/wiki/includes/breadcrumbs.html:31
+#, fuzzy
+msgid "...and more"
+msgstr "קרא עוד"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/breadcrumbs.html:35
+#: build/wiki/wiki/templates/wiki/includes/breadcrumbs.html:35
+msgid "Browse articles in this level"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/breadcrumbs.html:51
+#: build/wiki/wiki/templates/wiki/includes/breadcrumbs.html:51
+msgid "New article next to"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/breadcrumbs.html:56
+#: build/wiki/wiki/templates/wiki/includes/breadcrumbs.html:56
+msgid "New article below"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/revision_info.html:10
+#: build/wiki/wiki/templates/wiki/includes/revision_info.html:10
+#: templates/agendas/agenda_list_item.html:14
+#: templates/annotatetext/_annotation.html:5
+#: templates/committees/topic_list.html:14
+#: templates/laws/knessetproposal_detail.html:13
+#: templates/laws/knessetproposal_list.html:16
+#: templates/user/followed_topics.html:13
+msgid "by"
+msgstr "על ידי"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/revision_info.html:10
+#: build/wiki/wiki/templates/wiki/includes/revision_info.html:10
+msgid "anonymous (IP logged)"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/revision_info.html:18
+#: build/wiki/wiki/templates/wiki/includes/revision_info.html:18
+msgid "restored"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/templates/wiki/includes/revision_info.html:24
+#: build/wiki/wiki/templates/wiki/includes/revision_info.html:24
+msgid "unlocked"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/accounts.py:30
+#: build/wiki/wiki/views/accounts.py:30
+msgid "You are now sign up... and now you can sign in!"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/accounts.py:42
+#: build/wiki/wiki/views/accounts.py:42
+#, fuzzy
+msgid "You are no longer logged in. Bye bye!"
+msgstr "את/ה כבר מחובר/ת."
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/accounts.py:72
+#: build/wiki/wiki/views/accounts.py:72
+#, fuzzy
+msgid "You are now logged in! Have fun!"
+msgstr "את/ה כבר מחובר/ת."
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/article.py:86
+#: build/wiki/wiki/views/article.py:86
+#, python-format
+msgid "New article '%s' created."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/article.py:93
+#: build/wiki/wiki/views/article.py:93
+#, python-format
+msgid "There was an error creating this article: %s"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/article.py:95
+#: build/wiki/wiki/views/article.py:95
+msgid "There was an error creating this article."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/article.py:173
+#: build/wiki/wiki/views/article.py:173
+msgid "This article cannot be deleted because it has children or is a root article."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/article.py:184
+#: build/wiki/wiki/views/article.py:184
+msgid "This article together with all its contents are now completely gone! Thanks!"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/article.py:191
+#: build/wiki/wiki/views/article.py:191
+#, python-format
+msgid "The article \"%s\" is now marked as deleted! Thanks for keeping the site free from unwanted material!"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/article.py:268
+#: build/wiki/wiki/views/article.py:268
+#, fuzzy
+msgid "Your changes were saved."
+msgstr "סיסמתך שונתה."
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/article.py:291
+#: build/wiki/wiki/views/article.py:291
+msgid "A new revision of the article was succesfully added."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/article.py:344
+#: build/wiki/wiki/views/article.py:344
+msgid "Restoring article"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/article.py:346
+#: build/wiki/wiki/views/article.py:346
+#, python-format
+msgid "The article \"%s\" and its children are now restored."
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/article.py:562
+#: build/wiki/wiki/views/article.py:562
+#, python-format
+msgid "The article %(title)s is now set to display revision #%(revision_number)d"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/article.py:625
+#: build/wiki/wiki/views/article.py:625
+#, fuzzy
+msgid "New title"
+msgstr "כותרת"
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/article.py:649
+#: build/wiki/wiki/views/article.py:649
+#, python-format
+msgid "Merge between Revision #%(r1)d and Revision #%(r2)d"
+msgstr ""
+
+#: build/wiki/build/lib.linux-i686-2.7/wiki/views/article.py:653
+#: build/wiki/wiki/views/article.py:653
+#, python-format
+msgid "A new revision was created: Merge between Revision #%(r1)d and Revision #%(r2)d"
+msgstr ""
+
 #: committees/models.py:40
 msgid "Plenum"
 msgstr "מליאה"
@@ -353,15 +2535,6 @@ msgstr "ישיבת ועדה"
 #: templates/laws/law_detail.html:43
 msgid "Committee Meetings"
 msgstr "ישיבות הוועדה"
-
-#: committees/models.py:347
-#: laws/views.py:553
-msgid "Title"
-msgstr "כותרת"
-
-#: committees/models.py:349
-msgid "Description"
-msgstr "תאור"
 
 #: committees/models.py:351
 msgid "published"
@@ -382,10 +2555,6 @@ msgstr "אושרה"
 #: committees/models.py:355
 msgid "appeal"
 msgstr "בערעור"
-
-#: committees/models.py:356
-msgid "deleted"
-msgstr "נמחקה"
 
 #: committees/models.py:365
 #: templates/base.html:72
@@ -473,25 +2642,35 @@ msgstr "לא נמצאו הצעות חוק בנושא \"%s\""
 msgid "Committee Meetings tagged %(tag)s"
 msgstr "ישיבות וועדה שתויגו %(tag)s"
 
-#: events/models.py:30
-#: links/models.py:37
-#: notify/models.py:10
-msgid "content type"
-msgstr "סוג תוכן"
+#: events/models.py:39
+msgid "earth"
+msgstr "כדור הארץ"
 
-#: events/models.py:32
-#: links/models.py:39
-#: notify/models.py:12
-msgid "object ID"
-msgstr "מזהה אובייקט"
-
-#: events/models.py:69
+#: events/models.py:80
 msgid "no end date data - guessed it to be 2 hours after start"
 msgstr "חסרה שעת סיום הדיון"
 
-#: events/models.py:78
+#: events/models.py:89
 msgid "oknesset warnings:"
 msgstr "התראות כנסת פתוחה:"
+
+#: events/templates/events/event_detail.html:23
+msgid "Days"
+msgstr ""
+
+#: events/templates/events/event_detail.html:26
+msgid "Hours"
+msgstr ""
+
+#: events/templates/events/event_detail.html:29
+#, fuzzy
+msgid "Minutes"
+msgstr "דקות"
+
+#: events/templates/events/event_detail.html:44
+#: templates/committees/topic_detail.html:118
+msgid "share"
+msgstr "הפיצו"
 
 #: knesset/feeds.py:10
 #: knesset/feeds.py:24
@@ -518,6 +2697,7 @@ msgid "Bills feed"
 msgstr "הזנה של הצעות חוק"
 
 #: knesset/feeds.py:83
+#: templates/main.he.html:129
 #: templates/user/annotated_items.html:4
 #: templates/user/annotated_items.html:9
 #: templates/user/public_profile.html:41
@@ -530,39 +2710,39 @@ msgstr "הארות"
 msgid "feed"
 msgstr "פיד"
 
-#: knesset/settings.py:236
+#: knesset/settings.py:237
 msgid "Statement"
 msgstr "הצהרה"
 
-#: knesset/settings.py:237
+#: knesset/settings.py:238
 msgid "Funny :-)"
 msgstr "מצחיק :-)"
 
-#: knesset/settings.py:238
+#: knesset/settings.py:239
 msgid "False fact"
 msgstr "עובדה שגויה"
 
-#: knesset/settings.py:239
+#: knesset/settings.py:240
 msgid "Source?"
 msgstr "מקור?"
 
-#: knesset/settings.py:240
+#: knesset/settings.py:241
 msgid "Found source"
 msgstr "הפניה למקור"
 
-#: knesset/settings.py:241
+#: knesset/settings.py:242
 msgid "Cross reference"
 msgstr "ראה גם"
 
-#: knesset/settings.py:242
+#: knesset/settings.py:243
 msgid "Important"
 msgstr "חשוב"
 
-#: knesset/settings.py:243
+#: knesset/settings.py:244
 msgid "Formatting/Error!"
 msgstr "עיצוב/שגיאה"
 
-#: knesset/settings.py:244
+#: knesset/settings.py:245
 msgid "Comment"
 msgstr "תגובה"
 
@@ -1108,18 +3288,19 @@ msgstr "מפלגה"
 #: mks/models.py:76
 #: templates/agendas/agenda_detail.html:119
 #: templates/mks/parties_members.html:23
-#: templates/mks/parties_members.html:31
 #: templates/mks/party_list.html:25
 msgid "Parties"
 msgstr "סיעות"
 
 #: mks/models.py:126
 #: mks/views.py:607
+#: templates/mks/parties_members.html:31
 msgid "Coalition"
 msgstr "קואליציה"
 
 #: mks/models.py:126
 #: mks/views.py:608
+#: templates/mks/parties_members.html:44
 msgid "Opposition"
 msgstr "אופוזיציה"
 
@@ -1380,13 +3561,75 @@ msgstr "נבחר על ידי (מספר)"
 msgid "How many people voted for this person"
 msgstr "כמה מצביעים תמכו במועמד"
 
+#: suggestions/models.py:40
+msgid "New"
+msgstr ""
+
+#: suggestions/models.py:41
+msgid "Fixed"
+msgstr ""
+
+#: suggestions/models.py:42
+msgid "Won't Fix"
+msgstr ""
+
+#: suggestions/models.py:46
+#, fuzzy
+msgid "Suggested at"
+msgstr "הוספת תגיות"
+
+#: suggestions/models.py:51
+msgid "Resolved at"
+msgstr ""
+
+#: suggestions/models.py:55
+#, fuzzy
+msgid "Resolved status"
+msgstr "סטטוס משתמש על"
+
+#: suggestions/models.py:61
+#, fuzzy
+msgid "Suggestion"
+msgstr "העלו הצעה"
+
+#: suggestions/models.py:62
+#, fuzzy
+msgid "Suggestions"
+msgstr "הוספת תגיות"
+
+#: suggestions/models.py:87
+#, fuzzy
+msgid "Create new model instance"
+msgstr "יצירת תגית חדשה"
+
+#: suggestions/models.py:88
+msgid "Add related object to m2m relation or new model instance"
+msgstr ""
+
+#: suggestions/models.py:89
+msgid "Remove related object from m2m relation"
+msgstr ""
+
+#: suggestions/models.py:90
+msgid "Set field value. For m2m _replaces_ (use ADD if needed)"
+msgstr ""
+
+#: suggestions/models.py:95
+#, fuzzy
+msgid "Suggestion type"
+msgstr "העלו הצעה"
+
+#: suggestions/models.py:101
+msgid "Can be blank, for create operations"
+msgstr ""
+
+#: suggestions/models.py:177
+msgid "Field or relation set name"
+msgstr ""
+
 #: tagvotes/models.py:14
 msgid "tagged item"
 msgstr "פריט מתויג"
-
-#: tagvotes/models.py:17
-msgid "user"
-msgstr "משתמש"
 
 #: tagvotes/models.py:24
 msgid "tag vote"
@@ -1618,6 +3861,48 @@ msgstr "פחות..."
 #: templates/main.he.html:4
 msgid "Non partisan, non commercial site that brings you relevant, detailed and accurate information about the knesset"
 msgstr "אתר לא מפלגתי, לא מסחרי שמביא לכם תוכן רלוונטי, מפורט ועדכני על אודות הכנסת"
+
+#: templates/main.he.html:53
+msgid "Upcoming Events"
+msgstr "בקרוב"
+
+#: templates/main.he.html:63
+#: templates/agendas/agenda_detail.html:78
+#: templates/agendas/agenda_detail.html:93
+#: templates/agendas/agenda_detail.html:108
+#: templates/auxiliary/_watch.html:13
+#: templates/committees/committee_list.html:77
+#: templates/mks/member_detail.html:168
+#: templates/mks/member_detail.html:187
+#: templates/mks/member_detail.html:206
+#: templates/mks/member_detail.html:225
+msgid "Loading"
+msgstr "טוען"
+
+#: templates/main.he.html:66
+#: templates/agendas/agenda_detail.html:81
+#: templates/agendas/agenda_detail.html:96
+#: templates/agendas/agenda_detail.html:111
+#: templates/committees/committee_list.html:82
+#: templates/laws/bill_detail.html:423
+#: templates/laws/vote_detail.html:32
+#: templates/laws/vote_list.html:32
+#: templates/mks/member_detail.html:80
+#: templates/mks/member_detail.html:171
+#: templates/mks/member_detail.html:190
+#: templates/mks/member_detail.html:209
+#: templates/mks/member_detail.html:228
+#: templates/mks/member_detail.html:412
+#: templates/user/public_profile.html:61
+#: templates/user/public_profile.html:81
+msgid "More"
+msgstr "עוד"
+
+#: templates/main.he.html:122
+#: templates/agendas/agenda_meeting_partial.html:11
+#: templates/agendas/agendasfor.html:23
+msgid "comments"
+msgstr "תגובות"
 
 #: templates/accounts/email_validation.html:2
 #: templates/accounts/email_validation_subject.html:1
@@ -1972,11 +4257,6 @@ msgstr "לא נמצאו תוצאות"
 msgid "Edited by"
 msgstr "בעריכת"
 
-#: templates/agendas/agenda_detail.html:49
-#: templates/committees/topic_detail.html:72
-msgid "Edit"
-msgstr "עריכה"
-
 #: templates/agendas/agenda_detail.html:64
 msgid "Note: This agenda is private. It is only viewable by its editors. If you feel this agenda should be made public, contact us at"
 msgstr "שימו לב: אג'נדה זו פרטית. רק עורכי האג'נדה יכולים לראות אותה. אם אתם מרגישים שהיא מוכנה להפוך לציבורית, שלחו לנו מייל ל"
@@ -1984,36 +4264,6 @@ msgstr "שימו לב: אג'נדה זו פרטית. רק עורכי האג'נד�
 #: templates/agendas/agenda_detail.html:72
 msgid "Ascribed Votes"
 msgstr "הצבעות משויכות"
-
-#: templates/agendas/agenda_detail.html:78
-#: templates/agendas/agenda_detail.html:93
-#: templates/agendas/agenda_detail.html:108
-#: templates/auxiliary/_watch.html:13
-#: templates/committees/committee_list.html:77
-#: templates/mks/member_detail.html:168
-#: templates/mks/member_detail.html:187
-#: templates/mks/member_detail.html:206
-#: templates/mks/member_detail.html:225
-msgid "Loading"
-msgstr "טוען"
-
-#: templates/agendas/agenda_detail.html:81
-#: templates/agendas/agenda_detail.html:96
-#: templates/agendas/agenda_detail.html:111
-#: templates/committees/committee_list.html:82
-#: templates/laws/bill_detail.html:423
-#: templates/laws/vote_detail.html:32
-#: templates/laws/vote_list.html:32
-#: templates/mks/member_detail.html:80
-#: templates/mks/member_detail.html:171
-#: templates/mks/member_detail.html:190
-#: templates/mks/member_detail.html:209
-#: templates/mks/member_detail.html:228
-#: templates/mks/member_detail.html:412
-#: templates/user/public_profile.html:61
-#: templates/user/public_profile.html:81
-msgid "More"
-msgstr "עוד"
 
 #: templates/agendas/agenda_detail.html:87
 msgid "Ascribed Bills"
@@ -2097,23 +4347,9 @@ msgstr "עוקבים"
 msgid "Including you"
 msgstr "כולל אותך"
 
-#: templates/agendas/agenda_list_item.html:14
-#: templates/annotatetext/_annotation.html:5
-#: templates/committees/topic_list.html:14
-#: templates/laws/knessetproposal_detail.html:13
-#: templates/laws/knessetproposal_list.html:16
-#: templates/user/followed_topics.html:13
-msgid "by"
-msgstr "על ידי"
-
 #: templates/agendas/agenda_list_item.html:17
 msgid "Editors:"
 msgstr "עורכים"
-
-#: templates/agendas/agenda_meeting_partial.html:11
-#: templates/agendas/agendasfor.html:23
-msgid "comments"
-msgstr "תגובות"
 
 #: templates/agendas/agenda_vote_partial.html:15
 #: templates/laws/vote_list_item.html:16
@@ -2364,11 +4600,6 @@ msgstr "מחיקת הערה"
 #: templates/comments/delete.html:8
 msgid "Really remove this comment?"
 msgstr "באמת למחוק הערה זו?"
-
-#: templates/comments/delete.html:13
-#: templates/committees/delete_topic.html:13
-msgid "Remove"
-msgstr "מחיקה"
 
 #: templates/comments/delete.html:13
 #: templates/committees/committeemeeting_detail.html:149
@@ -2661,17 +4892,6 @@ msgstr "הצעה לסדר"
 msgid "Suggested Topics for a committee meeting"
 msgstr "הצעות לסדר יום"
 
-#: templates/committees/topic_detail.html:73
-#: templates/laws/bill_detail.html:521
-msgid "Delete"
-msgstr "מחיקה"
-
-#: templates/committees/topic_detail.html:83
-#: templates/laws/bill_detail.html:572
-#: templates/laws/vote_detail.html:55
-msgid "Links"
-msgstr "קישורים"
-
 #: templates/committees/topic_detail.html:95
 msgid "Rating"
 msgstr "דירוג"
@@ -2687,10 +4907,6 @@ msgstr "הדירוג שלך"
 #: templates/committees/topic_detail.html:111
 msgid "average rating"
 msgstr "דירוג ממוצע"
-
-#: templates/committees/topic_detail.html:118
-msgid "share"
-msgstr "הפיצו"
 
 #: templates/committees/topic_list.html:8
 msgid "for"
@@ -3609,12 +5825,6 @@ msgstr "תוצאות הבחירות לכנסת ה- 19"
 msgid "Factions in the 19th Knesset"
 msgstr "סיעות בכנסת ה- 19"
 
-#: templates/search/search.html:4
-#: templates/search/search.html.py:7
-#: templates/search/search.html:17
-msgid "Search"
-msgstr "חיפוש"
-
 #: templates/search/search.html:15
 msgid "Search results for"
 msgstr "תוצאות החיפוש עבור"
@@ -3725,10 +5935,6 @@ msgstr "איפוס הסיסמה הושלם"
 msgid "Your password has been set.  You may go ahead and log in now."
 msgstr "ססמתך נשמרה. כעת ניתן להתחבר."
 
-#: templates/user/password_reset_complete.html:15
-msgid "Log in"
-msgstr "כניסה"
-
 #: templates/user/password_reset_confirm.html:3
 #: templates/user/password_reset_confirm.html:6
 #: templates/user/password_reset_done.html:6
@@ -3825,14 +6031,6 @@ msgstr "%(count)s ענינים שתויגו על ידי "
 #: templates/video/_paginator.html:13
 msgid "Pages"
 msgstr "עמודים"
-
-#: templates/video/_video_list_item.html:13
-msgid "type"
-msgstr "סוג"
-
-#: templates/video/_video_list_item.html:13
-msgid "group"
-msgstr "קבוצה"
 
 #: templates/video/_video_list_item.html:14
 msgid "related object"
@@ -4037,9 +6235,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid "Voted against own bill"
 #~ msgstr "הצביע נגד הצעת חוק שהוא יזם"
 
-#~ msgid "Back to committee"
-#~ msgstr "חזרה לוועדה"
-
 #~ msgid "Compare by"
 #~ msgstr "השוואה לפי"
 
@@ -4230,9 +6425,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid "%(committee)s meeting: %(topic)s"
 #~ msgstr "ישיבה של %(committee)s: %(topic)s"
 
-#~ msgid "Delete your vote"
-#~ msgstr "מחיקת ההצבעה שלך"
-
 #~ msgid "Negligible"
 #~ msgstr "זניח"
 
@@ -4255,9 +6447,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid "commented"
 #~ msgstr "הגיב/ה על"
 
-#~ msgid "Description:"
-#~ msgstr "תאור"
-
 #~ msgid "Number of followers"
 #~ msgstr "מספר עוקבים"
 
@@ -4275,9 +6464,6 @@ msgstr "פרופיל המשתמש עודכן"
 
 #~ msgid "Last Month"
 #~ msgstr "חודש אחרון"
-
-#~ msgid "All times"
-#~ msgstr "כל הזמנים"
 
 #~ msgid "Time range"
 #~ msgstr "טווח זמנים"
@@ -4297,9 +6483,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgstr[1] ""
 #~ "\n"
 #~ "%(counter)s ח\"כים"
-
-#~ msgid "No summary for this vote"
-#~ msgstr "אין תקציר להצבעה זו"
 
 #~ msgid "Link to compete vote text"
 #~ msgstr "קישור למסמך המלא"
@@ -4325,12 +6508,6 @@ msgstr "פרופיל המשתמש עודכן"
 
 #~ msgid "I'm just sitting here watching the wheels go round and round."
 #~ msgstr "אתר הכנסת הפתוחה"
-
-#~ msgid "This entry has been pinged"
-#~ msgstr "הערך הוזכר במקום נוסף"
-
-#~ msgid "Suggest Tags"
-#~ msgstr "הוספת תגיות"
 
 #~ msgid "Percentile"
 #~ msgstr "אחוזון"
@@ -4361,9 +6538,6 @@ msgstr "פרופיל המשתמש עודכן"
 
 #~ msgid "previous results"
 #~ msgstr "התוצאות הקודמות"
-
-#~ msgid "Embed in external site"
-#~ msgstr "הטמעה באתר חיצוני"
 
 #~ msgid "Add the code above to your site, to get a dynamically generated info"
 #~ msgstr "הוסף את הקוד לאתר שלך, לקבלת מידע דינמי באתרך"
@@ -4435,10 +6609,6 @@ msgstr "פרופיל המשתמש עודכן"
 #, fuzzy
 #~ msgid "Show Toolbar"
 #~ msgstr "הצג הכל"
-
-#, fuzzy
-#~ msgid "Location"
-#~ msgstr "פעולה"
 
 #, fuzzy
 #~ msgid "Hits"
@@ -4525,10 +6695,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgstr "תשעה"
 
 #, fuzzy
-#~ msgid "File"
-#~ msgstr "סינון"
-
-#, fuzzy
 #~ msgid "SQL Profiled"
 #~ msgstr "ערוך פרופיל"
 
@@ -4559,17 +6725,6 @@ msgstr "פרופיל המשתמש עודכן"
 #, fuzzy
 #~ msgid "Package"
 #~ msgstr "פראג"
-
-#~ msgid "and"
-#~ msgstr "ו"
-
-#, fuzzy
-#~ msgid "slug"
-#~ msgstr "טלגו"
-
-#, fuzzy
-#~ msgid "description"
-#~ msgstr "תאור"
 
 #, fuzzy
 #~ msgid "Inactive"
@@ -4627,10 +6782,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgstr "כותרת"
 
 #, fuzzy
-#~ msgid "Rights"
-#~ msgstr "שמונה"
-
-#, fuzzy
 #~ msgid "Infos"
 #~ msgstr "אין נתונים"
 
@@ -4639,20 +6790,12 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgstr "תג:"
 
 #, fuzzy
-#~ msgid "Last checked"
-#~ msgstr "שבוע אחרון"
-
-#, fuzzy
 #~ msgid "Is active"
 #~ msgstr "שמירה"
 
 #, fuzzy
 #~ msgid "Feed"
 #~ msgstr "פיד"
-
-#, fuzzy
-#~ msgid "Date modified"
-#~ msgstr "תאריך הצטרפות"
 
 #, fuzzy
 #~ msgid "Post"
@@ -4758,10 +6901,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgstr "רשימה מלאה של מאמרים מהבלוג"
 
 #, fuzzy
-#~ msgid "original entry"
-#~ msgstr "רישום יומן"
-
-#, fuzzy
 #~ msgid "Posts list"
 #~ msgstr "מאמרים ב "
 
@@ -4815,9 +6954,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid "Password (again)"
 #~ msgstr "סיסמה (שוב)"
 
-#~ msgid "A user with that username already exists."
-#~ msgstr "משתמש עם שם משתמש זה קיים כבר"
-
 #~ msgid "The two password fields didn't match."
 #~ msgstr "שני שדות הסיסמה אינם זהים."
 
@@ -4840,10 +6976,6 @@ msgstr "פרופיל המשתמש עודכן"
 #, fuzzy
 #~ msgid "Bogus object"
 #~ msgstr "הצג מזהה אובייקט"
-
-#, fuzzy
-#~ msgid "Invalid object"
-#~ msgstr "סוג גיאומטרי שגוי."
 
 #, fuzzy
 #~ msgid "Text changed"
@@ -5049,15 +7181,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid "Traditional Chinese"
 #~ msgstr "סינית מסורתית"
 
-#~ msgid "Successfully deleted %(count)d %(items)s."
-#~ msgstr "%(count)d %(items)s  היו נמחקו בהצלחה."
-
-#~ msgid "Are you sure?"
-#~ msgstr "האם את/ה בטוח/ה ?"
-
-#~ msgid "Delete selected %(verbose_name_plural)s"
-#~ msgstr "מחק את %(verbose_name_plural)s שבחרת בו"
-
 #~ msgid ""
 #~ "<h3>By %s:</h3>\n"
 #~ "<ul>\n"
@@ -5077,9 +7200,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid "No"
 #~ msgstr "לא"
 
-#~ msgid "Action:"
-#~ msgstr "פעולה"
-
 #, fuzzy
 #~ msgid "action time"
 #~ msgstr "קוד אימות"
@@ -5090,9 +7210,6 @@ msgstr "פרופיל המשתמש עודכן"
 #, fuzzy
 #~ msgid "action flag"
 #~ msgstr "סמן הערה"
-
-#~ msgid "change message"
-#~ msgstr "הערה לשינוי"
 
 #~ msgid "log entries"
 #~ msgstr "רישומי יומן"
@@ -5108,9 +7225,6 @@ msgstr "פרופיל המשתמש עודכן"
 
 #~ msgid "Deleted %(name)s \"%(object)s\"."
 #~ msgstr "נמחק %(name)s \"%(object)s\"."
-
-#~ msgid "No fields changed."
-#~ msgstr "אף שדה לא השתנה."
 
 #~ msgid "The %(name)s \"%(obj)s\" was added successfully."
 #~ msgstr "הוספת %(name)s \"%(obj)s\" בוצעה בהצלחה."
@@ -5134,18 +7248,6 @@ msgstr "פרופיל המשתמש עודכן"
 
 #~ msgid "%(name)s object with primary key %(key)r does not exist."
 #~ msgstr "הפריט %(name)s עם המקש %(key)r אינו קיים."
-
-#~ msgid "Change %s"
-#~ msgstr "שינוי %s"
-
-#~ msgid "Database error"
-#~ msgstr "שגיאת בסיס נתונים"
-
-#~ msgid "%(count)s %(name)s was changed successfully."
-
-#~ msgid_plural "%(count)s %(name)s were changed successfully."
-#~ msgstr[0] "שינוי %(count)s %(name)s בהצלחה."
-#~ msgstr[1] "שינוי %(count)s %(name)s בהצלחה."
 
 #~ msgid "The %(name)s \"%(obj)s\" was deleted successfully."
 #~ msgstr "מחיקת %(name)s \"%(obj)s\" בוצעה בהצלחה."
@@ -5184,14 +7286,8 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid "One or more %(fieldname)s in %(name)s:"
 #~ msgstr "אחד או יותר %(fieldname)s ב%(name)s:"
 
-#~ msgid "Date:"
-#~ msgstr "תאריך:"
-
 #~ msgid "Time:"
 #~ msgstr "שעה:"
-
-#~ msgid "Change:"
-#~ msgstr "שינוי:"
 
 #~ msgid "Add Another"
 #~ msgstr "הוסף עוד אחת"
@@ -5226,20 +7322,11 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid "Change password"
 #~ msgstr "שינוי סיסמה"
 
-#~ msgid "Log out"
-#~ msgstr "יציאה"
-
 #~ msgid "Django site admin"
 #~ msgstr "ניהול אתר Django"
 
 #~ msgid "Django administration"
 #~ msgstr "ניהול Django"
-
-#~ msgid "History"
-#~ msgstr "היסטוריה"
-
-#~ msgid "View on site"
-#~ msgstr "צפיה באתר"
 
 #~ msgid "Please correct the error below."
 
@@ -5264,9 +7351,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgstr ""
 #~ "האם ברצונך למחוק את %(object_name)s \"%(escaped_object)s\"? כל הפריטים "
 #~ "הקשורים הבאים יימחקו:"
-
-#~ msgid "Yes, I'm sure"
-#~ msgstr "כן, אני בטוח/ה"
 
 #~ msgid "Delete multiple objects"
 #~ msgstr "מחק כמה פריטים"
@@ -5339,9 +7423,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid "%(full_result_count)s total"
 #~ msgstr "%(full_result_count)s סה\"כ"
 
-#~ msgid "Save and add another"
-#~ msgstr "שמירה והוספת אחר"
-
 #~ msgid "Save and continue editing"
 #~ msgstr "שמירה והמשך עריכה"
 
@@ -5372,9 +7453,6 @@ msgstr "פרופיל המשתמש עודכן"
 
 #~ msgid "Password change successful"
 #~ msgstr "הסיסמה שונתה בהצלחה"
-
-#~ msgid "Your password was changed."
-#~ msgstr "סיסמתך שונתה."
 
 #~ msgid ""
 #~ "Please enter your old password, for security's sake, and then enter your "
@@ -5438,9 +7516,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid "all %s"
 #~ msgstr "כל %s"
 
-#~ msgid "Fields on %s objects"
-#~ msgstr "Fields on %s objects"
-
 #~ msgid "Integer"
 #~ msgstr "מספר שלם"
 
@@ -5464,9 +7539,6 @@ msgstr "פרופיל המשתמש עודכן"
 
 #~ msgid "Floating point number"
 #~ msgstr "מספר עשרוני"
-
-#~ msgid "IP address"
-#~ msgstr "כתובת IP"
 
 #~ msgid "Boolean (Either True, False or None)"
 #~ msgstr "בוליאני (אמת, שקר או כלום)"
@@ -5530,17 +7602,11 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid "As above, but opens the admin page in a new window."
 #~ msgstr "כנ\"ל, אך דף הניהול ייפתח בחלון חדש."
 
-#~ msgid "Permissions"
-#~ msgstr "הרשאות"
-
 #~ msgid "Groups"
 #~ msgstr "קבוצות"
 
 #~ msgid "Add user"
 #~ msgstr "הוספת משתמש"
-
-#~ msgid "Password changed successfully."
-#~ msgstr "הסיסמה שונתה בהצלחה."
 
 #~ msgid "Change password: %s"
 #~ msgstr "שינוי סיסמה: %s"
@@ -5624,16 +7690,10 @@ msgstr "פרופיל המשתמש עודכן"
 #~ "מציין האם יש להתייחס למשתמש כפעיל. יש לבטל בחירה זו במקום למחוק חשבונות "
 #~ "משתמשים."
 
-#~ msgid "superuser status"
-#~ msgstr "סטטוס משתמש על"
-
 #~ msgid ""
 #~ "Designates that this user has all permissions without explicitly "
 #~ "assigning them."
 #~ msgstr "מציין שלמשתמש זה יש את כל ההרשאות ללא הצורך המפורש בהענקתן."
-
-#~ msgid "last login"
-#~ msgstr "כניסה אחרונה"
 
 #~ msgid ""
 #~ "In addition to the permissions manually assigned, this user will also get "
@@ -5641,9 +7701,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgstr ""
 #~ "בנוסף לכל ההרשאות שהוקצו ידנית, יוענקו למשתמש גם כל ההרשאות של כל קבוצה "
 #~ "המשוייכת אליו."
-
-#~ msgid "user permissions"
-#~ msgstr "הרשאות משתמש"
 
 #~ msgid "users"
 #~ msgstr "משתמשים"
@@ -5669,9 +7726,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid ""
 #~ "If you enter anything in this field your comment will be treated as spam"
 #~ msgstr "אם יוזן משהו בשדה היחס לתגובתך יהיה כמו לספאם"
-
-#~ msgid "user's name"
-#~ msgstr "שם משתמש"
 
 #~ msgid "user's email address"
 #~ msgstr "כתובת דוא\"ל משתמש"
@@ -5745,9 +7799,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid "Thanks for flagging"
 #~ msgstr "תודה לציון"
 
-#~ msgid "Preview"
-#~ msgstr "תצוגה מקדימה"
-
 #~ msgid "Comment moderation queue"
 #~ msgstr "תור תגובה עבור מתון של תגובות"
 
@@ -5776,9 +7827,6 @@ msgstr "פרופיל המשתמש עודכן"
 #, fuzzy
 #~ msgid "Post your comment"
 #~ msgstr "פרסם את התגובה"
-
-#~ msgid "or make changes"
-#~ msgstr "או לבצע שינויים"
 
 #~ msgid "python model class name"
 #~ msgstr "שם ה-class של מודל פייתון"
@@ -6910,9 +8958,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid "Pezinok"
 #~ msgstr "פזינוק"
 
-#~ msgid "Piestany"
-#~ msgstr "פיאסטאני"
-
 #~ msgid "Poltar"
 #~ msgstr "פולטר"
 
@@ -7310,9 +9355,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid "session"
 #~ msgstr "התחברות"
 
-#~ msgid "sessions"
-#~ msgstr "התחברויות"
-
 #~ msgid "sites"
 #~ msgstr "אתרים"
 
@@ -7415,12 +9457,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid ""
 #~ "Ensure this filename has at most %(max)d characters (it has %(length)d)."
 #~ msgstr "על שם הקובץ להיות לא יותר מ %(max)d תווים (יש לו%(length)d)."
-
-#~ msgid ""
-#~ "Upload a valid image. The file you uploaded was either not an image or a "
-#~ "corrupted image."
-#~ msgstr ""
-#~ "נא להעלות תמונה חוקית. הקובץ שהעלת אינו תמונה או מכיל תמונה מקולקלת."
 
 #~ msgid "Enter a valid URL."
 #~ msgstr "יש להזין URL חוקי."
@@ -7655,15 +9691,6 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgstr[0] "שנה"
 #~ msgstr[1] "שנים"
 
-#~ msgid "minute"
-
-#~ msgid_plural "minutes"
-#~ msgstr[0] "דקה"
-#~ msgstr[1] "דקות"
-
-#~ msgid "minutes"
-#~ msgstr "דקות"
-
 #~ msgid "%(number)d %(type)s"
 #~ msgstr "%(number)d %(type)s"
 
@@ -7688,19 +9715,9 @@ msgstr "פרופיל המשתמש עודכן"
 #~ msgid "The %(verbose_name)s was updated successfully."
 #~ msgstr "ה-%(verbose_name)s עודכן בהצלחה."
 
-#~ msgid "The %(verbose_name)s was deleted."
-#~ msgstr "ה-%(verbose_name)s נמחק."
-
 #, fuzzy
 #~ msgid "OpenID failed"
 #~ msgstr "&rlm;OpenID"
-
-#, fuzzy
-#~ msgid "Sign in"
-#~ msgstr "סנינה"
-
-#~ msgid "Main Page"
-#~ msgstr "ראשי"
 
 #~ msgid "abstain"
 #~ msgstr "נמנע"

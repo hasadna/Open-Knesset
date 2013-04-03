@@ -1,0 +1,202 @@
+{% extends "site_base.html" %}
+{% load i18n links_tags mks_tags common_visual_elements %}{% load static from staticfiles %}
+{% block extratitle %}{{ object.which }}{% endblock %}
+{% block description %}{{ object.which }} - {{ object.what }}{% endblock %}
+{% block nav-laws %}class="active"{% endblock %}
+
+ {% block breadcrumbs %}
+ <li><a href="{{ object.which_object.get_absolute_url }}">{{ objct.which }}</a> <span class="divider">/</span></li>
+            <li class="active">{{ object.what }}</li>
+ {% endblock %}
+
+{% block divcontent %}
+
+    <section class="card card-main">
+        <div class="row">
+            <div class="span1 card-details">
+              <div class="timer">
+                        <p>עוד<br/>
+                        <strong>..</strong><br/>
+                        </p>
+                        {% if in_days %}
+                          <h1>{{in_days}}</h1>
+                          <p>{% trans "Days" %}</p>
+                        {% endif %}
+                        <h1>{{in_hours}}</h1>
+                        <p>{% trans "Hours" %}</p>
+                        <h1>{{in_minutes}}</h1>
+                        <p><strong>..</strong></p>
+                        <p>{% trans "Minutes" %}</p>
+                        <p>
+                          <strong>..</strong>
+                        </p>
+              </div>
+            </div>
+
+            <div class="span8 event-details">
+                <h2>{{object.what}}</h2>
+                <h1><a href="{{object.which_object.get_absolute_url}}">{{object.which}}</h1>
+                {{ object.when }}
+            </div>
+            <div class="span3 ">
+              <div class="spacer actions-panel">
+                {% include "auxiliary/_watch.html" with watched_id=object.id watched_type="bill"%}
+                <a href="#share-event-modal" class="btn btn-big" role="button" data-toggle="modal">{% trans "share" %}</a>
+              </div>
+            </div>
+        </div>
+        </section>
+          <section class="card card-list">
+            <div class="row">
+              <div class="span1">
+                  {% include "mks/member_photos.html" with members=creators %}
+              </div>
+              <div class="span7 event-why">
+                  <p>{{object.why}}</p>
+              </div>
+          </div>
+          </section>
+        </div>
+{% comment %}
+
+    <div class="row">
+        <div class="cards span8">
+            <section class="card card-list card-list-latest">
+                <header><h2>{% trans "Agendas" %}</h2></header>
+                <ul>
+                {% for agenda in agendas %}
+                    <li>
+                        <p class="item-title"><a href="{% url agenda-detail agenda.id %}">{{ agenda }}</a></p>
+                        <div class="row">
+                            <span class="span1 numeric text-{% if agenda.score < 0 %}error{%else%}success{% endif %}">
+                                {{agenda.score|floatformat:"0"}}%
+                            </span>
+                            <span class="span4">{% bar agenda.score -100 100%}</span>
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            </section>
+        </div>
+
+        <div class="span4">
+            <aside class="sidebar sidebar-comments">
+                <h2>{% trans "Statistics" %}</h2>
+                <ul>
+                    <li class="row agenda-mini">
+                        <span class="span2">{% trans "Number of votes" %}</span>
+                        <span class="span1">{{ object.voting_statistics.votes_count }}</span>
+                    </li>
+                    <li class="row agenda-mini">
+                        <span class="span2">{% trans "Average votes per MK" %}</span>
+                        <span class="span1">{{ object.voting_statistics.votes_per_seat|floatformat:2 }}</span>
+                    </li>
+                    <li class="row agenda-mini">
+                        <span class="span2">{% trans "Factional discipline" %}</span>
+                        <span class="span1">{{ object.voting_statistics.discipline|floatformat:2 }}%</span>
+                    </li>
+
+                    <li class="row agenda-mini">
+                        <span class="span2">
+                        {% if object.is_coalition %}
+                            {% trans "Coalition discipline" %}
+                        {% else %}
+                            {% trans "Opposition discipline" %}
+                        {% endif %}
+                        </span>
+                        <span class="span1">{{ object.voting_statistics.coalition_discipline|floatformat:2 }}%</span>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+    </div>
+    <div class="list-wrap">
+        <div id="residence_map"></div>
+    </div>
+    <script>
+    var g_member_residences = [];
+    function add_addresses() {
+        var address = null;
+        {% for mk in object.current_members.all %}
+            address = "{{mk.place_of_residence}}";
+            if (address) {
+                g_member_residences.push({address: address,
+                                        {% if mk.place_of_residence_lat %}
+                                         latlng: new GLatLng( {{ mk.place_of_residence_lat }}, {{ mk.place_of_residence_lon }} ),
+                                        {% else %}
+                                         latlng: null,
+                                        {% endif %}
+                                         name: "{{mk.name}}"});
+            }
+        {% endfor %}
+    }
+    function draw_mk_residence_map() {
+            add_addresses();
+            if (g_member_residences.length == 0) {
+                $('#residence_map').hide();
+                return;
+            }
+            var map_dom = $('#residence_map')[0];
+            var copyOSM = new google.maps.CopyrightCollection("<a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a>");
+            copyOSM.addCopyright(new google.maps.Copyright(1, new google.maps.LatLngBounds(new google.maps.LatLng(-90,-180), new google.maps.LatLng(90,180)), 0, " "));
+            var tilesMapnik     = new google.maps.TileLayer(copyOSM, 1, 17, {tileUrlTemplate: 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png'});
+            var mapMapnik     = new google.maps.MapType([tilesMapnik],
+                                                        G_NORMAL_MAP.getProjection(),
+                                                        "מפת רחובות",
+                                                        { maxResolution: 18 });
+            var mapSatellite  = new google.maps.MapType(G_SATELLITE_MAP.getTileLayers(),
+                                                        G_SATELLITE_MAP.getProjection(),
+                                                        "תמונת לווין");
+            var map           = new google.maps.Map2(map_dom, { mapTypes: [ mapMapnik,mapSatellite ] });
+            map.addControl(new google.maps.SmallMapControl());
+            map.addControl(new google.maps.MapTypeControl());
+
+            var all_lat_lngs = [];
+
+            //map.setUIToDefault();
+            //set the center & zoom for israel
+            map.setCenter(new GLatLng(32.0554, 34.7595), 7);
+            setTimeout(function() {
+                $('#residence_map > div').css({"white-space":"normal"});
+            }, 1000);
+            /*
+            //this code centers the map around the center of gravity
+            //for all members of the party, and sets the zoom level
+            //to contain them all.
+            var center_map = function() {
+                if (all_lat_lngs.length == g_member_residences.length) {
+                    var bounds = new GLatLngBounds();
+                    for (var idx in all_lat_lngs) {
+                        var lat_lng = all_lat_lngs[idx];
+                        bounds.extend(lat_lng);
+                    }
+                    var zoom = map.getBoundsZoomLevel(bounds);
+                    var center = bounds.getCenter();
+                    map.setCenter(bounds.getCenter(), zoom-1);
+                }
+            };*/
+
+            for (var idx in g_member_residences) {
+                var tmp = g_member_residences[idx];
+                if (!tmp.address || !tmp.latlng) {
+                    continue;
+                }
+                var add_mk = function(member_data) {
+                    var lat_lng = member_data.latlng;
+                    if (lat_lng != null) {
+                        var address = member_data.address;
+                        var name = member_data.name;
+                        var marker = new GMarker(lat_lng, {title: name + " ("+address+")"});
+                        map.addOverlay(marker);
+                    }
+                }
+                add_mk(tmp);
+            }
+        }
+
+        $(document).ready(function() {
+            draw_mk_residence_map();
+        });
+    </script>
+{% endcomment %}
+{% endblock %}

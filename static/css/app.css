@@ -6311,6 +6311,8 @@ div.color_swatch {
   cursor: pointer;
   line-height: 12px;
 }
+.timer { text-align: center; padding: 21px 16px 0 5px; }
+.event-why { padding:1em; }
 #google-search-outer {
   margin-bottom: 20px;
 }

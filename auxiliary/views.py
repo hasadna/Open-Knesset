@@ -1,4 +1,5 @@
 import csv, random, tagging, logging
+from datetime import datetime
 from operator import attrgetter
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
@@ -25,6 +26,7 @@ from tagging.models import Tag, TaggedItem
 from annotatetext.views import post_annotation as annotatetext_post_annotation
 from annotatetext.models import Annotation
 from knesset.utils import notify_responsible_adult, main_actions
+from events.models import Event
 from .models import  Tidbit
 
 
@@ -105,11 +107,15 @@ def main(request):
     #                                     .order_by('-modified')\
     #                                     .select_related('creator')[:10]
     #    cache.set('main_page_context', context, 300) # 5 Minutes
+    NUMOF_EVENTS = 5
+    events = Event.objects.get_upcoming()
     context = {
         'title': _('Home'),
         'hide_crumbs': True,
         'is_index': True,
-        'tidbits': Tidbit.active.all().order_by('?')
+        'tidbits': Tidbit.active.all().order_by('-id'),
+        'events': events[:NUMOF_EVENTS],
+        'events_more': events.count() > NUMOF_EVENTS,
     }
     template_name = '%s.%s%s' % ('main', settings.LANGUAGE_CODE, '.html')
     return render_to_response(template_name, context, context_instance=RequestContext(request))
