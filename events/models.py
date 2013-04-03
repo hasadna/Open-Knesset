@@ -6,32 +6,45 @@ from datetime import datetime, timedelta
 import vobject
 
 from django.db import models
+from django.conf import settings
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _, ugettext
 from persons.models import Person
 
+class EventManager(models.Manager):
+    """This is a manager for Event class"""
+    def get_upcoming(self):
+        if settings.DEBUG:
+            now = datetime(2011,11,11)
+        else:
+            now = datetime.now()
+
+        return self.filter(when__gte=now).order_by('when')
+
 class Event(models.Model):
-    ''' hold the when, who, what, where and which fields of events
+    ''' holds the when, who, what, where and which fields of events
         and allows the users to contribute resources (through links)
         and discuss upcoming events.
     '''
     when = models.DateTimeField()
-    when_over = models.DateTimeField(null=True)
+    when_over = models.DateTimeField(null=True, blank=True)
     # KNESSET_TODO the end time of a committee meeting is not recorded anywhere,
     # so we are left to guess
     when_over_guessed = models.BooleanField(default=True)
-    who = models.ManyToManyField(Person)
+    who = models.ManyToManyField(Person, null=True)
     # TODO - just randomly looking it seems to be wrong in some objects:
     # key 1957, contains repetition of the subject.
     what = models.TextField()
-    where = models.TextField()
+    where = models.TextField(default=_("earth"))
     which_type   = models.ForeignKey(ContentType,
             verbose_name=_('content type'),
             related_name="event_for_%(class)s", null=True)
     which_pk = models.TextField(_('object ID'), null=True)
     which_object = generic.GenericForeignKey(ct_field="which_type", fk_field="which_pk")
+    why = models.TextField(null=True)
 
+    objects = EventManager()
     @property
     def is_future(self):
         return self.when > datetime.now()
@@ -45,11 +58,9 @@ class Event(models.Model):
     def which(self):
         return self.which_object and unicode(self.which_object) or self.what
 
+    @models.permalink
     def get_absolute_url(self):
-        if self.which_object:
-            return '%s#event-%d' % (self.which_object.get_absolute_url(), self.id)
-        else:
-            return '#'
+        return ('event-detail', [str(self.id)])
 
     def add_vevent_to_ical(self, cal, summary_length):
         """

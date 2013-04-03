@@ -92,6 +92,7 @@ urlpatterns = patterns('',
         name='vote-on-bill'),
     (r'^video/', include('video.urls')),
     (r'^mmm-documents/', include('mmm.urls')),
+    (r'^event/', include('events.urls')),
     (r'^tinymce/', include('tinymce.urls')),
 )
 urlpatterns += mksurlpatterns + lawsurlpatterns + committeesurlpatterns + plenumurlpatterns

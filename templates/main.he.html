@@ -6,101 +6,131 @@
 {% block nav-main-page %} class="selected" {% endblock %}
 
 {% block extrajs %}
+<script type="text/javascript">
+  var btn = $("#events-more");
+  if (btn)
+    $(function() {
+        btn.attr("data-initial", $("#upcoming-events li").length)
+    });
 {% if tidbits %}
-    <script type="text/javascript">
-        $(function() {
-            $('#tidbitCarousel').carousel()
-        });
-    </script>
+  $(function() {
+     $('#tidbitCarousel').carousel()
+  });
 {% endif %}
+</script>
+
 {% endblock %}
 
 {% block divcontent %}
-{% if tidbits %}
-<div id="tidbitCarousel" class="carousel slide card card-main" style="margin-top:20px;">
-    <!--ol class="carousel-indicators">
-        <li data-target="#tidbitCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#tidbitCarousel" data-slide-to="1"></li>
-        <li data-target="#tidbitCarousel" data-slide-to="2"></li>
-        <li data-target="#tidbitCarousel" data-slide-to="3"></li>
-    </ol-->
-    <!-- Carousel items -->
-    <div class="carousel-inner">
-        {% for tidbit in tidbits  %}
-        <div class="item {% if forloop.first %}active{% endif %}">
-            <h1 class="tidbit-icon-{{tidbit.icon}}">{{tidbit.title}}</h1>
-            <div>{{tidbit.content|safe}}</div>
-            <a class="btn" href="{{tidbit.button_link}}">{{tidbit.button_text}}</a>
-        </div>
-        {% endfor %}
-    </div>
-    <!-- Carousel nav -->
-    <a class="carousel-control left" href="#tidbitCarousel" data-slide="next">&lsaquo;</a>
-    <a class="carousel-control right" href="#tidbitCarousel" data-slide="prev">&rsaquo;</a>
-</div>
-{% endif %}
-<div class="row">
+<div class="row" style="margin-top:20px;">
     <div class="cards span8">
-        <div class="card card-list text-center">
-            <div class="spacer" style="padding:39px 0">
-                <img src="{% static "img/elections2013.jpg" %}">
+      <div class="card card-list">
+        <div id="tidbitCarousel" class="carousel slide" >
+            <!-- Carousel items -->
+            <div class="carousel-inner">
+                {% for tidbit in tidbits  %}
+                <div class="item {% if forloop.first %}active{% endif %}">
+                    <h1 class="tidbit-icon-{{tidbit.icon}}">{{tidbit.title}}</h1>
+                    <div>{{tidbit.content|safe}}</div>
+                    <a class="btn" href="{{tidbit.button_link}}">{{tidbit.button_text}}</a>
+                </div>
+                {% empty %}
+                <div class="item active">
+                  <h1>No Tidbits</h1>
+                    <div>Seems like the db is clean of tidbits.</div>
+                    <a class="btn" href="admin/auxiliary/tidbit/add/">Add a tidbit</a>
+                </div>
+                {% endfor %}
             </div>
+            <!-- Carousel nav -->
+            <a class="carousel-control left" href="#tidbitCarousel" data-slide="next">&lsaquo;</a>
+            <a class="carousel-control right" href="#tidbitCarousel" data-slide="prev">&rsaquo;</a>
         </div>
-        <div class="alert alert-block text-center"><a href="{% url help %}">מה אפשר לעשות באתר?</a></div>
+      </div>
+      {% if events %}
+      <div class="card card-list card-list-latest">
+        <header>
+            <h2>{% trans "Upcoming Events" %}</h2>
+        </header>
+        <ul id="upcoming-events">
+          {% for o in events %}
+              {% include "events/_event_li.html" %}
+          {% endfor %}
+        </ul>
+        <footer>
+        {% if events_more %}
+        <button id="events-more" class="btn btn-mini btn-expand" data-provide="okmore"
+            data-loading-text="{% trans "Loading" %} ..."
+            autocomplete="off" data-target="#upcoming-events" 
+            data-url="{% url more-upcoming-events %}"
+            >{% trans "More" %} +</button>
+        {% endif %}
+        </footer>
+      </div>
+      {% endif %}
     </div>
     <div class="span4">
-        <aside class="sidebar sidebar-agendas">
-            <h2>אודותינו</h2>
-            <ul>
-                <li class="agenda-mini clearfix"> 
-                    <p>
-                        האתר מאפשר לכל אזרח להשתתף באורח פעיל יותר בפעילות הכנסת.  אנו
-                        סורקים את אתר הכנסת ומקורות מידע רשמיים ובאמצעות אלגוריתמים
-                        חישוביים וצוות עורכים מסור, מסדרים ומארגנים את המידע לנוחות המשתמש.
-                        האתר עדיין בפיתוח, ואנו מתנצלים מראש על באגים ושגיאות בנתונים.
-                    </p>
-                    <a class="btn btn-more" href="/about/">קראו עוד אודות כנסת פתוחה</a>
-                </li>
-                <li>
-                    <p>
-                        <a href="http://www.hasadna.org.il/"><img src="/static/img/hasadna-logo.png" style="width:50px; float:left"></a>
-                        כנסת פתוחה מפותח על ידי עמותת
-                        <a href="http://www.hasadna.org.il/">הסדנא לידע ציבורי</a>.
-                        אנחנו זקוקים לעזרתכם להפיץ את האתר:
-                    </p>
-                    <!-- AddToAny BEGIN -->
-                    <p class="a2a_kit a2a_default_style" style="width:200px; margin:0 auto;">
-                        <a class="a2a_dd" href="http://www.addtoany.com/share_save">שיתוף</a>
-                        <span class="a2a_divider"></span>
-                        <a class="a2a_button_email"></a>
-                        <a class="a2a_button_facebook"></a>
-                        <a class="a2a_button_twitter"></a>
-                        <a class="a2a_button_google_plus"></a>
-                        <a class="a2a_button_delicious"></a>
-                        <a class="a2a_button_digg"></a>
-                        <script type="text/javascript">
-                        var a2a_config = a2a_config || {};
-                        a2a_config.locale = "he";
-                        </script>
-                        <script type="text/javascript" src="http://static.addtoany.com/menu/page.js"></script>
-                    </p>
-                    <!-- AddToAny END -->
-                </li>
-            </ul>
+        <aside class="sidebar">
+          <h1><a href="{% url help %}">מה אפשר לעשות באתר?</a></h1>
+        </aside>
+        <aside class="sidebar">
+          <h2>אודותינו</h2>
+          <ul>
+              <li class="agenda-mini clearfix"> 
+                  <p>
+                      האתר מאפשר לכל אזרח להשתתף באורח פעיל יותר בפעילות הכנסת.  אנו
+                      סורקים את אתר הכנסת ומקורות מידע רשמיים ובאמצעות אלגוריתמים
+                      חישוביים וצוות עורכים מסור, מסדרים ומארגנים את המידע לנוחות המשתמש.
+                      האתר עדיין בפיתוח, ואנו מתנצלים מראש על באגים ושגיאות בנתונים.
+                  </p>
+                  <a class="btn btn-more" href="/about/">קראו עוד אודות כנסת פתוחה</a>
+              </li>
+              <li>
+                  <p>
+                      <a href="http://www.hasadna.org.il/"><img src="/static/img/hasadna-logo.png" style="width:50px; float:left"></a>
+                      כנסת פתוחה מפותח על ידי עמותת
+                      <a href="http://www.hasadna.org.il/">הסדנא לידע ציבורי</a>.
+                      אנחנו זקוקים לעזרתכם להפיץ את האתר:
+                  </p>
+                  <!-- AddToAny BEGIN -->
+                  <p class="a2a_kit a2a_default_style" style="width:200px; margin:0 auto;">
+                      <a class="a2a_dd" href="http://www.addtoany.com/share_save">שיתוף</a>
+                      <span class="a2a_divider"></span>
+                      <a class="a2a_button_email"></a>
+                      <a class="a2a_button_facebook"></a>
+                      <a class="a2a_button_twitter"></a>
+                      <a class="a2a_button_google_plus"></a>
+                      <a class="a2a_button_delicious"></a>
+                      <a class="a2a_button_digg"></a>
+                      <script type="text/javascript">
+                      var a2a_config = a2a_config || {};
+                      a2a_config.locale = "he";
+                      </script>
+                      <script type="text/javascript" src="http://static.addtoany.com/menu/page.js"></script>
+                  </p>
+                  <!-- AddToAny END -->
+              </li>
+          </ul>
         </aside>
     </div>
 </div>
-
-    <!--
-    <div id="main-help" class="display_note_outer">
-        <p>תרומות כספיות יכולות לעזור לנו מאוד להמשיך בפיתוח האתר, והן גם עוזרות לנו בכך שהן מראות שהציבור איתנו.</p>
-        <form method="post" action="https://www.paypal.com/cgi-bin/webscr">
-            <input type="hidden" value="_s-xclick" name="cmd">
-            <input type="hidden" value="K7X4FWYPBR7H4" name="hosted_button_id">
-            <input type="image" border="0" alt="PayPal - הדרך הקלה והבטוחה לשלם באופן מקוון!" name="submit" src="https://www.paypalobjects.com/WEBSCR-640-20110306-1/he_IL/IL/i/btn/btn_donateCC_LG.gif">
-            <img width="1" height="1" border="0" src="https://www.paypalobjects.com/WEBSCR-640-20110306-1/he_IL/i/scr/pixel.gif" alt="">
-        </form>
+{% if FUTURE %}
+<div class="row">
+    <div class="span6">
+      <div class="card card-list">
+        <header>
+          <h2>{% trans "comments" %}</h2>
+        </header>
+      </div>
     </div>
-    -->
+    <div class="span6">
+      <div class="card card-list">
+        <header>
+          <h2>{% trans "Annotations" %}</h2>
+        </header>
+      </div>
+    </div>
+</div>
+{% endif %}
 
 {% endblock %}
