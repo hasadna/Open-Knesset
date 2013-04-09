@@ -1300,7 +1300,7 @@ class Command(NoArgsCommand):
         """
 
         d = datetime.date.today()-datetime.timedelta(60) # only look through cms in last 60 days.
-        for cm in CommitteeMeeting.objects.filter(date__gt=d).exclude(protocol_text=None):
+        for cm in CommitteeMeeting.objects.filter(date__gt=d,committee__type='committee').exclude(protocol_text=None):
             c = cannonize(cm.protocol_text)
             for gp in gps:
                 if c.find(gp['c1'])>=0 or c.find(gp['c2'])>=0:
