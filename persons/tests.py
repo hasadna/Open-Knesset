@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 from django.test import TestCase
 from unittest import skip
@@ -8,14 +8,12 @@ from mks.models import Member
 
 
 class PersonTests(TestCase):
-
-    @skip
     def test_member_person_sync(self):
         """
         Test member/person sync on member save()
         """
 
-        birth = datetime.now()
+        birth = date.today()
 
         defaults = {
             'name': 'The MK',
