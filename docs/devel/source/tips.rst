@@ -97,13 +97,17 @@ A possible session might include:
     oknesset_update () { #Pull the new code and prepare the environment
         oknesset_activate
 
-        wget http://oknesset-devdb.s3.amazonaws.com/dev.db.bz2
-        mv dev.db dev.db.old
-        bzip2 -d dev.db.bz2
+        DB_URL="http://oknesset-devdb.s3.amazonaws.com/dev.db.bz2"
+        if wget --timestamping $DB_URL | grep Saving  # new version downloaded
+        then
+            mv dev.db dev.db.old
+            bzip2 -kd `basename $DB_URL`
+        fi
+
         git pull git@github.com:hasadna/Open-Knesset.git master
 
         cd ..
-        pip install -r requirements.txt
+        pip install -r Open-Knesset/requirements.txt
         cd Open-Knesset
 
         ./manage.py migrate
