@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>הצעות חוק</title>
+    <style type="text/css">
+        @font-face {
+            font-family: 'Alef';
+            src: url('/static/img/vote_flyer_share/Alef-bold.eot');
+            src: url('/static/img/vote_flyer_share/Alef-bold.eot?#iefix') format('embedded-opentype'),
+            url('/static/img/vote_flyer_share/Alef-bold.woff') format('woff'),
+            url('/static/img/vote_flyer_share/Alef-bold.ttf') format('truetype'),
+            url('/static/img/vote_flyer_share/Alef-bold.svg#alefbold') format('svg');
+            font-weight: bold;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Alef';
+            src: url('/static/img/vote_flyer_share/Alef-regular.eot');
+            src: url('/static/img/vote_flyer_share/Alef-regular.eot?#iefix') format('embedded-opentype'),
+            url('/static/img/vote_flyer_share/Alef-regular.woff') format('woff'),
+            url('/static/img/vote_flyer_share/Alef-regular.ttf') format('truetype'),
+            url('/static/img/vote_flyer_share/Alef-regular.svg#alefregular') format('svg');
+            font-weight: normal;
+            font-style: normal;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .container {
+            width: 500px;
+            margin: 0 auto;
+            direction: rtl;
+        }
+        .proposalDesc {
+            background: url('/static/img/vote_flyer_share/ShareVotes_BackgroundTOP.jpg') no-repeat #ffffff;
+            color: #808080;
+            font-family: Alef;
+            font-weight: bold;
+            font-size: 34px;
+            line-height: 34px;
+            padding-top: 80px;
+            padding-right: 15px;
+            padding-left: 30px;
+            padding-bottom: 37px;
+            text-align: right;
+        }
+        .proposalPercents {
+            background: url('/static/img/vote_flyer_share/ShareVotes_BackgroundPROCON.jpg') no-repeat;
+            height: 33px;
+            font-family: arial;
+            font-weight: bold;
+            font-size: 20px;
+            color: #ffffff;
+            padding-top: 62px;
+        }
+        .proposalPercents table {
+            height: 27px;
+        }
+        .proposalPercents table td {
+            padding-top: 2px;
+        }
+        .proposalPercents table .pro {
+            background: url('/static/img/vote_flyer_share/ShareVotes_ProBarStretchPct.jpg') repeat-x;
+            width: {{ forPercent }}%;
+            text-align: right;
+            margin-right: 5px;
+        }
+        .proposalPercents table .con {
+            background: url('/static/img/vote_flyer_share/ShareVotes_ConBarStretchPct.jpg') repeat-x;
+            text-align: left;
+            margin-left: 5px;
+        }
+        .proposalVoters {
+            background: url('/static/img/vote_flyer_share/ShareVotes_BackgroundBOTTOM.jpg') no-repeat #BDBDE3;
+        }
+        .proposalVoters table td {
+            vertical-align: top;
+        }
+        .proposalVoters table .party {
+            clear: both;
+        }
+        .proposalVoters table .party .partyName {
+            font-family: Alef;
+            font-weight: bold;
+            font-size: 35px;
+            line-height: 33px;
+            color: #787878;
+        }
+        .proposalVoters table .party .members {
+
+        }
+        .proposalVoters table .party .members .member {
+            position: relative;
+            width: 65px;
+            height: 96px;
+            background-repeat: no-repeat;
+            background-position: top right;
+            margin-bottom: 10px;
+        }
+        .proposalVoters table .party .members .member .memberName {
+            font-family: Alef;
+            font-weight: normal;
+            font-size: 10px;
+            line-height: 10px;
+            color: #ffffff;
+            position: absolute;
+            bottom: 1px;
+            right: 1px;
+        }
+        .proposalVoters table .pro {
+            width: 50%;
+        }
+        .proposalVoters table .pro .party .partyName {
+            text-align: right;
+            margin-right: 5px;
+        }
+        .proposalVoters table .pro .members .member {
+            float: right;
+            margin-right: 10px;
+        }
+        .proposalVoters table .con {
+            width: 50%;
+        }
+        .proposalVoters table .con .party .partyName {
+            text-align: left;
+            margin-left: 5px;
+        }
+        .proposalVoters table .con .members .member {
+            float: left;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="proposalDesc">
+        {{ title }}
+    </div>
+    <div class="proposalPercents">
+        <table>
+            <tr>
+                <td class="pro">
+                    {{ forPercent }}%
+                </td>
+                <td class="con">
+                    {{ againstPercent }}%
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="proposalVoters">
+        <table>
+            <tr>
+                <td class="pro">
+                    {% for party in forParties %}
+                        <div class="party">
+                            <div class="partyName">
+                                {{ party }}
+                            </div>
+                            <div class="members">
+                                {% for k,memList in forParties.items %}
+                                    {% ifequal k party %}
+                                        {% for member in memList %}
+                                            <div class="member" style="background: url({{ member.1 }})">
+                                                <div class="memberName">
+                                                    {{member.0 }}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endifequal %}
+                                {% endfor %}
+                                </div>
+                        </div>
+                    {% endfor %}
+                <td class="con">
+                    {% for party in againstParties %}
+                        <div class="party">
+                            <div class="partyName">
+                                {{ party }}
+                            </div>
+                            <div class="members">
+                                {% for k,memList in againstParties.items %}
+                                    {% ifequal k party %}
+                                        {% for member in memList %}
+                                            <div class="member" style="background: url({{ member.1 }})">
+                                                <div class="memberName">
+                                                    {{member.0 }}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endifequal %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

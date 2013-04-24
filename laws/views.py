@@ -18,6 +18,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.decorators import method_decorator
 from django.core.files.storage import default_storage
 from django.views.decorators.csrf import ensure_csrf_cookie
+from social_auth.models import UserSocialAuth
 
 from tagging.models import Tag, TaggedItem
 from tagging.views import tagged_object_list
@@ -31,6 +32,8 @@ from tagvotes.models import TagVote
 from hashnav import DetailView, ListView
 from agendas.models import Agenda,UserSuggestedVote
 from auxiliary.views import CsvView
+from auxiliary.picturfy import html2png
+import tempfile
 from forms import VoteSelectForm, BillSelectForm, BudgetEstimateForm
 from models import *
 
@@ -335,6 +338,8 @@ class BillDetailView (DetailView):
         if not object_id:
             return HttpResponseBadRequest()
 
+
+        vote = None
         bill = get_object_or_404(Bill, pk=object_id)
         user_input_type = request.POST.get('user_input_type')
         vote_types = ['approval vote','first vote','pre vote']
@@ -431,6 +436,18 @@ def bill_unbind_vote(request, object_id, vote_id):
         return render_to_response("laws/bill_unbind_vote.html", context)
 
 
+class BillListView (ListView):
+
+    friend_pages = [
+            ('stage','all',_('All stages')),
+    ]
+    friend_pages.extend([('stage',x[0],_(x[1])) for x in BILL_STAGE_CHOICES])
+
+    bill_stages_names = { 'proposed':_('(Bills) proposed'),
+                          'pre':_('(Bills) passed pre-vote'),
+                          'first':_('(Bills) passed first vote'),
+                          'approved':_('(Bills) approved'),
+                        }
 
 class BillListMixin(object):
     """Mixin for using both bill index index and "more" views"""
@@ -571,6 +588,7 @@ class VoteCsvView(CsvView):
 
         return Vote.objects.filter_and_order(**options)
 
+
 class VoteDetailView(DetailView):
     model = Vote
     template_resource_name = 'vote'
@@ -697,3 +715,58 @@ def embed_bill_details(request, object_id):
 
     context = RequestContext (request,{'bill': bill})
     return render_to_response("laws/embed_bill_detail.html", context)
+
+class VoteFlyerDetailView(VoteDetailView):
+    def get_template_names(self):
+        return ["laws/vote_flyer.html"]
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(VoteDetailView, self).get_context_data(*args, **kwargs)
+        vote = context['vote']
+        forParties = {}
+        againstParties = {}
+        for_votes = vote.for_votes().select_related('member','member__current_party')
+        against_votes = vote.against_votes().select_related('member','member__current_party')
+        for m in for_votes:
+            if m.member.current_party.name not in forParties.keys():
+                forParties[m.member.current_party.name] = []
+            forParties[m.member.current_party.name].append([m.member.name, m.member.img_url])
+        for m in against_votes:
+            if m.member.current_party.name not in againstParties.keys():
+                againstParties[m.member.current_party.name] = []
+            againstParties[m.member.current_party.name].append([m.member.name, m.member.img_url])
+        context['forParties'] = forParties
+        context['againstParties'] = againstParties
+        totalVotes = vote.for_votes_count + vote.against_votes_count
+        context['forPercent'] = (100*vote.for_votes_count) / totalVotes
+        context['againstPercent'] = (100*vote.against_votes_count) / totalVotes
+        context['title'] = vote.title
+        return context
+
+
+
+#TODO: this needs to be changed to use Amazon micro instance
+def vote_flyer_share_file_view(request, object_id):
+    tmpFile=tempfile.mktemp(suffix=".png")
+    host = request.build_absolute_uri("/vote/flyer/" + object_id + "/")
+    url= host
+    print url
+    html2png(url,"500",tmpFile)
+    fsock = open(tmpFile,'rb')
+    response = HttpResponse(mimetype="image/png")
+    #response['Content-Disposition'] = 'filename=yay.png'
+    #response['Content-Length'] = os.path.getsize(path)
+    response.write(fsock.read())
+    fsock.close()
+    return response
+
+def vote_flyer_share_view(request, object_id):
+    #get token from django-social-auth
+    a=None
+    if str(request.user) != "AnonymousUser":
+        a = UserSocialAuth.objects.filter(provider='facebook',user=request.user)
+    token = a[0].tokens["access_token"]
+    
+    #TODO complete
+    
+    return render_to_response("laws/vote_flyer_share.html", {"token" : token})
