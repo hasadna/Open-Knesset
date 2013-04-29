@@ -1,7 +1,6 @@
 from django.utils.translation import ugettext as _
 from django.http import Http404
-from django.views.generic import ListView
-from hashnav.detail import DetailView
+from django.views.generic import ListView, DetailView
 from persons.models import Person
 from committees.models import CommitteeMeeting
 

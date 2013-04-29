@@ -19,7 +19,8 @@ from tagging.models import TaggedItem, Tag
 from tagging.utils import get_tag
 import tagging
 from actstream import action
-from hashnav import ListView, DetailView, method_decorator as hashnav_method_decorator
+from hashnav import method_decorator as hashnav_method_decorator
+from django.views.generic import DetailView, ListView
 from laws.models import Bill, PrivateProposal
 from mks.models import Member
 from events.models import Event
@@ -32,10 +33,8 @@ from auxiliary.views import GetMoreView
 
 logger = logging.getLogger("open-knesset.committees.views")
 
-committees_list = ListView(queryset=Committee.objects.all(), paginate_by=20)
 
-
-class CommitteeListView(generic.ListView):
+class CommitteeListView(ListView):
     context_object_name = 'committees'
     queryset = Committee.objects.exclude(type='plenum')
     paginate_by = 20
@@ -180,7 +179,7 @@ class MeetingDetailView(DetailView):
 _('added-bill-to-cm')
 _('added-mk-to-cm')
 
-class TopicListView(generic.ListView):
+class TopicListView(ListView):
     model = Topic
     context_object_name = 'topics'
 

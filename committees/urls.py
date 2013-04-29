@@ -7,7 +7,7 @@ from hashnav import DetailView
 from models import *
 from views import *
 
-meetings_list = MeetingsListView(queryset=CommitteeMeeting.objects.all(), paginate_by=20)
+meetings_list = MeetingsListView.as_view(queryset=CommitteeMeeting.objects.all(), paginate_by=20)
 
 committeesurlpatterns = patterns ('',
     url(r'^committee/$', CommitteeListView.as_view(), name='committee-list'),

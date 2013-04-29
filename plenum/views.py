@@ -1,5 +1,5 @@
-from committees.views import *
-from committees.models import *
+from committees.views import MeetingsListView, CommitteeDetailView
+from committees.models import Committee, CommitteeMeeting
 
 class PlenumView(CommitteeDetailView):    
     
