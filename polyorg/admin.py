@@ -25,3 +25,8 @@ class CandidateAdmin(admin.ModelAdmin):
    
 admin.site.register(Candidate, CandidateAdmin)
 
+
+class PartyAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(Party, PartyAdmin)

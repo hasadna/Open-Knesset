@@ -41,9 +41,13 @@ class CandidateList(models.Model):
 
 class Party(models.Model):
     name = models.CharField(max_length=64)
+    accepts_memberships = models.BooleanField(default=True)
     
     def __unicode__(self):
         return self.name
+    
+    class Meta:
+        verbose_name_plural = 'parties'
 
 
 class Candidate(models.Model):
