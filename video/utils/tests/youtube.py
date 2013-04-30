@@ -31,7 +31,7 @@ class testYoutube(TestCase):
         self.assertEqual(videos[1]['thumbnail90x120'],"http://i.ytimg.com/vi/PaaEToi3wHE/1.jpg")
 
     def testGetYoutubeVideos(self):
-        videos=GetYoutubeVideos(q='"funny cat"',max_results=2).videos
+        videos=GetYoutubeVideos(q='"gangnam style"',max_results=2).videos
         self.assertEqual(len(videos),2)
         video=videos[1]
         self.assertIsNotNone(video['description'])
@@ -41,8 +41,8 @@ class testYoutube(TestCase):
         self.assertIsNotNone(video['id'])
         self.assertIsNotNone(video['published'])
         title_and_desc = (video['title'] + video['description']).lower()
-        self.assertIn('funny',title_and_desc)
-        self.assertIn('cat',title_and_desc)
+        self.assertIn('gangnam',title_and_desc)
+        self.assertIn('style',title_and_desc)
 
     def testGetYoutubeVideoIdUrl(self):
         videos=GetYoutubeVideos(youtube_id_url='http://gdata.youtube.com/feeds/api/videos/4SA3ecqrGvM').videos
