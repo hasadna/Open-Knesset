@@ -10,7 +10,8 @@ from tagging.models import Tag, TaggedItem
 from laws.models import Bill
 from mks.models import Member
 from links.models import LinkType
-from models import *
+from models import Committee, CommitteeMeeting, Topic
+from models import TOPIC_REJECTED
 
 just_id = lambda x: x.id
 APP = 'committees'

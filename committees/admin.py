@@ -1,9 +1,10 @@
+from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.generic import GenericTabularInline
 from django.db.models import Q
 from django.contrib import admin
 from video.models import Video
-from models import *
-
+from models import Committee, CommitteeMeeting, Topic
+from links.models import Link
 
 class CommitteeRelatedVideosInline(generic.GenericTabularInline):
     model = Video

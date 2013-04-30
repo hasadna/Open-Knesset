@@ -6,7 +6,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Permission
 
-from models import *
+from models import EmailValidation
 
 import logging
 import sys,traceback

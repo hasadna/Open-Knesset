@@ -1,10 +1,21 @@
 #encoding: UTF-8
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import url, patterns
 from django.utils.translation import ugettext
 from django.views.generic.base import TemplateView
 
-from models import *
-from views import *
+from models import Agenda
+from views import AgendaListView
+from views import AgendaDetailView
+from views import AgendaMkDetailView
+from views import AgendaDetailEditView
+from views import AgendaVoteDetailView
+from views import AgendaVotesMoreView
+from views import AgendaBillDetailView
+from views import AgendaBillsMoreView
+from views import AgendaMeetingDetailView
+from views import AgendaMeetingsMoreView
+from views import agenda_add_view
+from views import update_editors_agendas
 
 agenda_list_view            = AgendaListView(queryset = Agenda.objects.all(),paginate_by=0, extra_context={'title':ugettext('Agendas')})
 agenda_detail_view          = AgendaDetailView.as_view()
@@ -12,7 +23,7 @@ agenda_mk_detail_view       = AgendaMkDetailView.as_view()
 agenda_detail_edit_view     = AgendaDetailEditView.as_view()
 agenda_vote_detail_view     = AgendaVoteDetailView.as_view()
 agenda_bill_detail_view     = AgendaBillDetailView.as_view()
-agenda_meeting_detail_view     = AgendaMeetingDetailView.as_view()
+agenda_meeting_detail_view  = AgendaMeetingDetailView.as_view()
 
 
 urlpatterns = patterns('',
