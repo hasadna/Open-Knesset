@@ -22,39 +22,38 @@
 
 {% block divcontent %}
 
-<div id="tidbitCarousel" class="carousel slide card card-main" style="margin-top:20px">
-    {% include "auxiliary/_suggestion_button.html" with suggest_for="tidbit" %}
-    <!--ol class="carousel-indicators">
-    {% for tidbit in tidbits  %}
-        <li {% if forloop.first %} class="active"{% endif %} data-slide-to="{{forloop.counter0}}" data-target="#tidbitCarousel"> </li>
-    {% endfor %}
-    </ol-->
-    <!-- Carousel items -->
-    <div class="carousel-inner">
+<div class="row" style="margin-top:20px">
+  <div class="span8">
+    <div id="tidbitCarousel" class="carousel slide card card-main" >
+        {% include "auxiliary/_suggestion_button.html" with suggest_for="tidbit" %}
+        <!--ol class="carousel-indicators">
         {% for tidbit in tidbits  %}
-        <div class="item {% if forloop.first %}active{% endif %}">
-            <img class="tidbit-pic"
-                src="{% if tidbit.photo %}{{tidbit.photo.url}}{% else %}{{STATIC_URL}}img/tidbits/{{tidbit.icon}}.png{% endif %}"
-                alt="Tidbit photo">
-            <strong class="tidbit-icon-{{tidbit.icon}}">{{tidbit.title}}</strong>
-            <div>{{tidbit.content|safe}}</div>
-            <a class="btn btn-more" href="{{tidbit.button_link}}">{{tidbit.button_text}}</a>
-        </div>
-        {% empty %}
-        <div class="item active">
-            <h1>No Tidbits</h1>
-            <div>Seems like the db is clean of tidbits.</div>
-            <a class="btn" href="admin/auxiliary/tidbit/add/">Add a tidbit</a>
-        </div>
+            <li {% if forloop.first %} class="active"{% endif %} data-slide-to="{{forloop.counter0}}" data-target="#tidbitCarousel"> </li>
         {% endfor %}
-    </div>
-    <!-- Carousel nav -->
-    <a class="carousel-control left" href="#tidbitCarousel" data-slide="prev">&lsaquo;</a>
-    <a class="carousel-control right" href="#tidbitCarousel" data-slide="next">&rsaquo;</a>
-</div>
-
-<div class="row">
-    <div class="span8">
+        </ol-->
+        <!-- Carousel items -->
+        <div class="carousel-inner">
+            {% for tidbit in tidbits  %}
+            <div class="item {% if forloop.first %}active{% endif %}">
+                <img class="tidbit-pic"
+                    src="{% if tidbit.photo %}{{tidbit.photo.url}}{% else %}{{STATIC_URL}}img/tidbits/{{tidbit.icon}}.png{% endif %}"
+                    alt="Tidbit photo">
+                <strong class="tidbit-icon-{{tidbit.icon}}">{{tidbit.title}}</strong>
+                <div>{{tidbit.content|safe}}</div>
+                <a class="btn btn-more" href="{{tidbit.button_link}}">{{tidbit.button_text}}</a>
+            </div>
+            {% empty %}
+            <div class="item active">
+                <h1>No Tidbits</h1>
+                <div>Seems like the db is clean of tidbits.</div>
+                <a class="btn" href="admin/auxiliary/tidbit/add/">Add a tidbit</a>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Carousel nav -->
+        <a class="carousel-control left" href="#tidbitCarousel" data-slide="prev">&lsaquo;</a>
+        <a class="carousel-control right" href="#tidbitCarousel" data-slide="next">&rsaquo;</a>
+      </div>
       <div class="card card-list card-list-latest">
         <header>
             <h2>{% trans "Upcoming Events" %}</h2>
@@ -79,8 +78,13 @@
         </footer>
         {% endif %}
       </div>
-    </div>
-    <div class="span4">
+  </div>
+  <div class="span4">
+        <aside style="margin: 0 auto 30px; text-align:center;">
+          <div><a href="http://www.indiegogo.com/projects/mobile-knesset">
+            <img src="{{STATIC_URL}}img/indiegogo.png" alt="indiegogo campaign">
+          </a></div>
+        </aside>
         <aside class="sidebar">
             <h2>מה אפשר לעשות באתר?</h2>
             <ul>
@@ -144,7 +148,6 @@
           </ul>
         </aside>
     </div>
-</div>
 {% if FUTURE %}
 <div class="row">
     <div class="span6">
