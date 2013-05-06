@@ -35,12 +35,12 @@
         <div class="carousel-inner">
             {% for tidbit in tidbits  %}
             <div class="item {% if forloop.first %}active{% endif %}">
+                <a class="btn btn-more" href="{{tidbit.button_link}}">{{tidbit.button_text}}</a>
                 <img class="tidbit-pic"
                     src="{% if tidbit.photo %}{{tidbit.photo.url}}{% else %}{{STATIC_URL}}img/tidbits/{{tidbit.icon}}.png{% endif %}"
                     alt="Tidbit photo">
                 <strong class="tidbit-icon-{{tidbit.icon}}">{{tidbit.title}}</strong>
                 <div>{{tidbit.content|safe}}</div>
-                <a class="btn btn-more" href="{{tidbit.button_link}}">{{tidbit.button_text}}</a>
             </div>
             {% empty %}
             <div class="item active">

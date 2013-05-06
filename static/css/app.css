@@ -4982,6 +4982,7 @@ a.badge:hover {
   overflow: hidden;
   width: 100%;
   position: relative;
+  background: url("../img/graphy.png");
 }
 .carousel-inner > .item {
   display: none;
@@ -6398,9 +6399,7 @@ div#tidbitCarousel .carousel-control {
   display: none;
 }
 div#tidbitCarousel .item {
-  height: 200px;
-  padding: 30px 220px 0 30px;
-  background: url("../img/graphy.png");
+  padding: 30px 220px 72px 30px;
 }
 div#tidbitCarousel .item img {
   width: 200px;
@@ -6433,7 +6432,7 @@ div#tidbitCarousel .item div {
 div#tidbitCarousel .btn {
   position: absolute;
   left: 0;
-  bottom: 10px;
+  bottom: 0px;
   font-size: 120%;
   padding: 15px 40px;
 }
