@@ -5,7 +5,7 @@
     {% endifchanged %}
     <p>
      <span class="time">{{o.when|date:"H:i"}}</span>&nbsp;&nbsp;-&nbsp;&nbsp;
-     <span class="title">{{o.what}}</span>
+     <span class="title">{% if o.which %}{{o.which}}: {% endif %}{{o.what}}</span>
      </p>
 </li>
 

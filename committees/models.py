@@ -64,17 +64,23 @@ class Committee(models.Model):
                     params = [ self.id ]).distinct()
 
 
-    def members_by_presence(self):
-        """Return the committee members with computed presence percentage"""
+    def members_by_presence(self, ids=None):
+        """Return the members with computed presence percentage.
+        If ids is not provided, this will return committee members. if ids is
+        provided, this will return presence data for the given members.
+        """
         def count_percentage(res_set, total_count):
             return (100 * res_set.count() / total_count) if total_count else 0
 
         def filter_this_year(res_set):
             return res_set.filter(date__gte='%d-01-01' % datetime.now().year)
 
-        members = list((self.members.filter(is_current=True) |
-                        self.chairpersons.all() |
-                        self.replacements.all()).distinct())
+        if ids:
+            members = Member.objects.filter(id__in=ids)
+        else:
+            members = list((self.members.filter(is_current=True) |
+                            self.chairpersons.all() |
+                            self.replacements.all()).distinct())
 
         all_meet_count = self.meetings.count()
         year_meet_count = filter_this_year(self.meetings).count()

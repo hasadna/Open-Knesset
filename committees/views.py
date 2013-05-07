@@ -131,8 +131,7 @@ class MeetingDetailView(DetailView):
         else:
             #get meeting members with presence calculation
             meeting_members_ids = set(m.id for m in cm.mks_attended.all())
-            context['members'] = [m for m in cm.committee.members_by_presence()
-                                  if m.id in meeting_members_ids]
+            context['members'] = cm.committee.members_by_presence(ids=meeting_members_ids)
             context['hide_member_presence'] = False
 
         return context
