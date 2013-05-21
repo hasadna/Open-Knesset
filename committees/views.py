@@ -224,7 +224,7 @@ def edit_topic(request, committee_id, topic_id=None):
     if request.method == 'POST':
         if topic_id:
             t = Topic.objects.get(pk=topic_id)
-            if request.user != t.creator:
+            if not t.can_edit(request.user):
                 return HttpResponseForbidden()
         else:
             t = None
@@ -252,7 +252,7 @@ def edit_topic(request, committee_id, topic_id=None):
     if request.method == 'GET':
         if topic_id: # editing existing topic
             t = Topic.objects.get(pk=topic_id)
-            if request.user != t.creator:
+            if not t.can_edit(request.user):
                 return HttpResponseForbidden()
             edit_form = EditTopicForm(instance=t)
             ct = ContentType.objects.get_for_model(t)
@@ -271,7 +271,7 @@ def edit_topic(request, committee_id, topic_id=None):
 @login_required
 def delete_topic(request, pk):
     topic = get_object_or_404(Topic, pk=pk)
-    if request.user == topic.creator or request.user.is_staff:
+    if topic.can_edit(request.user):
         # Delete on POST
         if request.method == 'POST':
             topic.status = models.TOPIC_DELETED
@@ -409,6 +409,4 @@ def delete_topic_rating(request, object_id):
         topic= get_object_or_404(Topic, pk=object_id)
         topic.rating.delete(request.user, request.META['REMOTE_ADDR'])
         return HttpResponse('Vote deleted.')
-
-
 

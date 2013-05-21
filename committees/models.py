@@ -399,7 +399,8 @@ class Topic(models.Model):
        self.save()
 
     def can_edit(self, user):
-        return user==self.creator or user in self.editors.all()
+        return user.is_superuser or user==self.creator or \
+               user in self.editors.all()
 
 
 from listeners import *

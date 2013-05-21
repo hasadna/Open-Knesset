@@ -45,9 +45,10 @@ class LinksTable(GenericTabularInline):
 
 class TopicAdmin(admin.ModelAdmin):
     ordering = ('-created', )
+    list_select_related = True
+    exclude = ('meetings', )
     inlines = [
         LinksTable,
     ]
-
 
 admin.site.register(Topic, TopicAdmin)
