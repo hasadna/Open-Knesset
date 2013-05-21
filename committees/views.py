@@ -24,8 +24,7 @@ from django.views.generic import DetailView, ListView
 from tagging.models import TaggedItem, Tag
 
 import models
-from .models import (Committee, CommitteeMeeting, Topic,
-                     COMMITTEE_PROTOCOL_PAGINATE_BY)
+from models import Committee, CommitteeMeeting, Topic
 from auxiliary.views import GetMoreView, BaseTagMemberListView
 from forms import EditTopicForm, LinksFormset
 from hashnav import method_decorator as hashnav_method_decorator
@@ -123,7 +122,7 @@ class MeetingDetailView(DetailView):
         for part in cm.parts.all():
             parts_lengths[part.id] = len(part.body)
         context['parts_lengths'] = json.dumps(parts_lengths)
-        context['paginate_by'] = COMMITTEE_PROTOCOL_PAGINATE_BY
+        context['paginate_by'] = models.COMMITTEE_PROTOCOL_PAGINATE_BY
 
         if cm.committee.type == 'plenum':
             context['members'] = cm.mks_attended.order_by('name')

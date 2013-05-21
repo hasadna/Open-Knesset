@@ -7,7 +7,7 @@ Replace this with more appropriate tests for your application.
 
 from django.test import TestCase
 from persons.models import Person
-from models import *
+from models import Candidate, CandidateList
 
 
 class CreationTest(TestCase):

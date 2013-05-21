@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import url, patterns, include
 from views import PublicUserProfile, ProfileListView
 
 profile_list = ProfileListView.as_view()

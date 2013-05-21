@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import url, patterns
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, Http404
 
@@ -29,13 +29,13 @@ urlpatterns = patterns('',
     url(r'^member/(?P<object_id>\d+)/$',
         mk_detail,
         name='mk-detail'),
-    url(r'^member/(?P<object_id>\d+)/(?P<slug>[\w\-\"]+)/$', 
-        mk_detail, 
+    url(r'^member/(?P<object_id>\d+)/(?P<slug>[\w\-\"]+)/$',
+        mk_detail,
         name='member-detail-with-slug'),
     url(r'^pingback/$',
         default_server,
         name='pingback-server'),
-    url(r'^trackback/member/(?P<object_id>\d+)/$', 
+    url(r'^trackback/member/(?P<object_id>\d+)/$',
         MockTrackBackServer(get_mk_entry, mk_is_backlinkable),
         name='trackback-server'),
 

@@ -4,7 +4,7 @@ from django.forms.models import modelformset_factory
 from django.forms.models import inlineformset_factory
 from django.contrib.contenttypes import generic
 
-from models import *
+from models import Event
 from links.models import Link
 
 class EventLinksInline(generic.GenericTabularInline):

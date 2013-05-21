@@ -1,10 +1,14 @@
 #encoding: UTF-8
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import url, patterns
 from django.utils.translation import ugettext
 from django.views.generic import RedirectView
 from hashnav import ListView
-from models import *
-from views import *
+from models import Vote, Bill
+from views import VoteListView, VoteCsvView, VoteDetailView, VoteTagsView
+from views import BillListView, BillCsvView, BillDetailView, BillTagsView
+from views import bill_unbind_vote, bill_auto_complete
+from views import bill_tags_cloud, embed_bill_details
+from views import vote_tags_cloud, vote_auto_complete
 import feeds
 
 vote_view = VoteListView(queryset = Vote.objects.all(),paginate_by=20, extra_context={'votes':True,'title':ugettext('Votes')})

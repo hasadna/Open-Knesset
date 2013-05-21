@@ -1,5 +1,5 @@
 #encoding: UTF-8
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import url, patterns
 
 from views import PlenumMeetingsListView, PlenumView
 from committees.models import CommitteeMeeting

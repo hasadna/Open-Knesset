@@ -29,7 +29,8 @@ from forms import VoteSelectForm, BillSelectForm, BudgetEstimateForm
 from hashnav import DetailView, ListView as HashnavListView
 from knesset.utils import notify_responsible_adult
 from mks.models import Member
-from models import *
+from models import Bill, BillBudgetEstimation, Vote
+from models import BILL_STAGE_CHOICES
 
 
 logger = logging.getLogger("open-knesset.laws.views")

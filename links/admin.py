@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import *
+from models import Link, LinkType
 from django.utils.translation import ugettext_lazy as _, ungettext
 
 def make_active(modeladmin, request, queryset):

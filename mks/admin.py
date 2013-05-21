@@ -5,7 +5,8 @@ from django.forms.models import inlineformset_factory
 from django.contrib.contenttypes import generic
 from django.db.models import Q
 
-from models import *
+from models import Member, Membership, MemberAltname
+from models import CoalitionMembership, Correlation, Party
 from links.models import Link
 from video.models import Video
 
