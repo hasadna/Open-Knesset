@@ -360,7 +360,13 @@ class Member(models.Model):
         """Roles list (splitted by comma)"""
 
         return [x.strip() for x in self.get_role.split(',')]
-
+	
+	@property
+	def committees(self):
+		"""Committee list (splitted by comma)"""
+		
+		return [x.strip() for x in self.committees.split(',')]
+	
     @property
     def is_minister(self):
         """Check if one of the roles starts with minister"""

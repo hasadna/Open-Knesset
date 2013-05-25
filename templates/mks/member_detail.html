@@ -85,6 +85,19 @@
                 | <a href="#" data-target="#member-extra-roles" data-toggle="oktoggle" data-text="{% trans "More" %} +|{% trans "Less" %} -">{% trans "More" %} +</a>
                 {% endif %}
             </p>
+			<p>
+				{% if object.committees.all|length > 0 %}
+				<strong>{% trans "Committees" %}:</strong>
+				{% for committee in object.committees.all|slice:":2" %}
+				{% if not forloop.first %} | {% endif %} {{ committee }}
+                {% endfor %}
+				{% if object.committees.all|length > 2 %}
+				<span id="member-extra-committees" style="display:none">
+                    {% for committee in object.committees.all|slice:"2:" %} | {{ committee }} {% endfor %}
+                </span>
+                | <a href="#" data-target="#member-extra-committees" data-toggle="oktoggle" data-text="{% trans "More" %} +|{% trans "Less" %} -">{% trans "More" %} +</a>
+                {% endif %} {% endif %}
+			</p>
             <div id="member-details" style="display:none">
                 {% if object.date_of_death %}
                 <div>{% trans "date of death" %} - {{ object.date_of_death }}</div>
