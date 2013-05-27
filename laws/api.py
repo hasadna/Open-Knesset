@@ -88,7 +88,7 @@ class VoteResource(BaseResource):
 
             agenda_bundle = {
                 'name': agenda.name,
-                'image': agenda.image.url,
+                'image': agenda.image.url if agenda.image else None,
                 'resource_uri': resource_uri,
                 'score': avote.score,
                 'importance': avote.importance,

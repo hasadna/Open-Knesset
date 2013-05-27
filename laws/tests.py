@@ -15,6 +15,7 @@ from tagging.models import Tag, TaggedItem
 
 from laws.models import Vote,Law, Bill,KnessetProposal, BillBudgetEstimation
 from mks.models import Member, Party, Membership
+from agendas.models import Agenda, AgendaVote
 
 just_id = lambda x: x.id
 APP='laws'
@@ -223,7 +224,7 @@ class BillViewsTest(TestCase):
                                 #explicitly missing: 'be_yearly_ext': 4,
                                 'be_summary': 'Trust me.'})
         self.assertEqual(res.status_code, 302)
-        budget_est = self.bill_1.budget_ests.get(estimator__username='jacob') 
+        budget_est = self.bill_1.budget_ests.get(estimator__username='jacob')
         self.assertEqual(budget_est.one_time_gov,1)
         self.assertEqual(budget_est.yearly_gov,2)
         self.assertEqual(budget_est.one_time_ext,3)
@@ -245,7 +246,7 @@ class BillViewsTest(TestCase):
                                 #explicitly missing: 'be_yearly_ext': 4,
                                 'be_summary': 'Trust me.'})
         self.assertEqual(res.status_code, 302)
-        budget_est = self.bill_1.budget_ests.get(estimator__username='jacob') 
+        budget_est = self.bill_1.budget_ests.get(estimator__username='jacob')
         self.assertEqual(budget_est.one_time_gov,1)
         self.assertEqual(budget_est.yearly_gov,2)
         self.assertEqual(budget_est.one_time_ext,3)
@@ -261,7 +262,7 @@ class BillViewsTest(TestCase):
                                 'be_yearly_ext': 1,
                                 'be_summary': 'Trust him.'})
         self.assertEqual(res.status_code, 302)
-        budget_est = self.bill_1.budget_ests.get(estimator__username='jacob') 
+        budget_est = self.bill_1.budget_ests.get(estimator__username='jacob')
         self.assertEqual(budget_est.one_time_gov,None)
         self.assertEqual(budget_est.yearly_gov,3)
         self.assertEqual(budget_est.one_time_ext,2)
@@ -283,7 +284,7 @@ class BillViewsTest(TestCase):
                                 'be_summary': 'Trust me.'})
         self.assertEqual(res.status_code, 200)
         try:
-            budget_est = self.bill_1.budget_ests.get(estimator__username='jacob') 
+            budget_est = self.bill_1.budget_ests.get(estimator__username='jacob')
             budget_est.delete()
             raise AssertionError('Budget shouldn\'t be created.')
         except BillBudgetEstimation.DoesNotExist:
@@ -303,7 +304,7 @@ class BillViewsTest(TestCase):
                                 #explicitly missing: 'be_yearly_ext': 4,
                                 'be_summary': 'Trust me.'})
         self.assertEqual(res.status_code, 302)
-        budget_est = self.bill_1.budget_ests.get(estimator__username='jacob') 
+        budget_est = self.bill_1.budget_ests.get(estimator__username='jacob')
         self.assertEqual(budget_est.one_time_gov,1)
         self.assertEqual(budget_est.yearly_gov,2)
         self.assertEqual(budget_est.one_time_ext,3)
@@ -322,7 +323,7 @@ class BillViewsTest(TestCase):
                                 'be_summary': 'Trust him.'})
         self.assertEqual(res.status_code, 302)
         # check first user, should give same result.
-        budget_est = self.bill_1.budget_ests.get(estimator__username='jacob') 
+        budget_est = self.bill_1.budget_ests.get(estimator__username='jacob')
         self.assertEqual(budget_est.one_time_gov,1)
         self.assertEqual(budget_est.yearly_gov,2)
         self.assertEqual(budget_est.one_time_ext,3)
@@ -341,7 +342,7 @@ class BillViewsTest(TestCase):
                                 'be_summary': 'Trust him.'})
         self.assertEqual(res.status_code, 302)
         # check first bill, should give same result.
-        budget_est = self.bill_1.budget_ests.get(estimator__username='jacob') 
+        budget_est = self.bill_1.budget_ests.get(estimator__username='jacob')
         self.assertEqual(budget_est.one_time_gov,1)
         self.assertEqual(budget_est.yearly_gov,2)
         self.assertEqual(budget_est.one_time_ext,3)
@@ -521,7 +522,8 @@ class APIv2Test(TestCase):
         self.mk_1 = Member.objects.create(name='mk 2',
                 current_party=self.party_1)
         # Membership.objects.create(member=self.mk_1, party=self.party_1)
-        self.bill_1 = Bill.objects.create(stage='1', title='bill 1', popular_name="The Bill")
+        self.bill_1 = Bill.objects.create(stage='1', title='bill 1',
+                                          popular_name="The Bill")
         self.bill_1.proposers.add(self.mk_1)
         self.bill_2 = Bill.objects.create(stage='2', title='bill 2',
                 popular_name="Another Bill")
@@ -530,6 +532,10 @@ class APIv2Test(TestCase):
                                                    date=date.today())
         self.law_1 = Law.objects.create(title='law 1')
         self.tag_1 = Tag.objects.create(name='tag1')
+        self.agenda_1 = Agenda.objects.create(name='agenda 1',
+                                          public_owner_name='owner name')
+        self.agenda_vote = AgendaVote.objects.create(agenda=self.agenda_1,
+                                                     vote=self.vote_1)
 
     def test_law_resource(self):
         uri = '%s/law/%s/' % (self.url_prefix, self.law_1.id)
@@ -548,6 +554,16 @@ class APIv2Test(TestCase):
         self.assertEqual(data['resource_uri'], uri)
         self.assertEqual(int(data['id']), self.bill_1.id)
         self.assertEqual(data['title'], "bill 1")
+
+    def test_vote_resource(self):
+        uri = '%s/vote/%s/' % (self.url_prefix, self.vote_1.id)
+        res = self.client.get(uri, format='json')
+        self.assertEqual(res.status_code,200)
+        data = json.loads(res.content)
+        self.assertEqual(data['resource_uri'], uri)
+        self.assertEqual(int(data['id']), self.vote_1.id)
+        self.assertEqual(data['title'], "vote 1")
+        self.assertEqual(data["agendas"][0]['name'], "agenda 1")
 
     def test_bill_list(self):
         uri = reverse('api_dispatch_list', kwargs={'resource_name': 'bill',
