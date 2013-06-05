@@ -89,11 +89,14 @@
 				{% if object.committees.all|length > 0 %}
 				<strong>{% trans "Committees" %}:</strong>
 				{% for committee in object.committees.all|slice:":2" %}
-				{% if not forloop.first %} | {% endif %} {{ committee }}
+				{% if not forloop.first %} | {% endif %} 
+				<a href="{{party.knesset.get_absolute_url}}{{ committee.get_absolute_url }}"> {{committee}} </a>				
                 {% endfor %}
 				{% if object.committees.all|length > 2 %}
 				<span id="member-extra-committees" style="display:none">
-                    {% for committee in object.committees.all|slice:"2:" %} | {{ committee }} {% endfor %}
+                    {% for committee in object.committees.all|slice:"2:" %}
+					|<a href="{{party.knesset.get_absolute_url}}{{ committee.get_absolute_url }}"> {{committee}} </a>
+					{% endfor %}
                 </span>
                 | <a href="#" data-target="#member-extra-committees" data-toggle="oktoggle" data-text="{% trans "More" %} +|{% trans "Less" %} -">{% trans "More" %} +</a>
                 {% endif %} {% endif %}
