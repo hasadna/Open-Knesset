@@ -27,7 +27,7 @@ Python
     :alt: Python 2.7 install
     :align: right
     :target: ../_static/python27_win.png
-    
+
     Python 2.7 install (click to enlarge)
 
 `Download the latest Python 2.7`_ MSI installer matching your architecture
@@ -40,34 +40,25 @@ Once downloaded, run the installer, and accept defaults.
 
 .. important::
 
-    The docmentation assumes you've installed to the default ``C:\Python27``. If
+    The documentation assumes you've installed to the default ``C:\Python27``. If
     it's not the case, please adjust accordingly.
 
 
 distribute
 ~~~~~~~~~~~~~~~
 
-.. figure:: t_distribute_win.png
-    :alt: distribute installer
-    :align: right
-    :target: ../_static/distribute_win.png
-    
-    distribute install (click to enlarge)
-
-distribute replaces setuptools and makes our windows install simpler (as 
+distribute replaces setuptools and makes our windows install simpler (as
 setuptools for python2.7 on windows has problems on 64bit platforms and needs a
 different installation method).
 
-`Download distribute`_ for your architecture and install it.
+Download the `distribute setup script`_ and run it, either automatically
+via your browser, by double-clicking it in windows explorer or
+manually by running::
 
-.. note::
+    python \path\to\the\download\directory\distribute_setup.py
 
-    If the installation complains that "Python was not found in the registry",
-    you probably have 32-bit python installed, so you should select the 32-bit
-    distribute (and other binary) package.
+.. _distribute setup script: http://python-distribute.org/distribute_setup.py
 
-
-.. _Download distribute: http://www.lfd.uci.edu/~gohlke/pythonlibs/#distribute
 
 pip and virtualenv
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -82,17 +73,17 @@ PIL and lxml
 ~~~~~~~~~~~~~~
 
 Since compiling those packages (inside the virtualenv) is not an easy task,
-we'll download and use installers for them, and instruct virtualenv to use
-Python's global site-packages (not pure, but will make things easier for MS
+we'll install them separately and instruct virtualenv to use python's
+global site-packages (not pure, but will make things easier for MS
 Windows developers).
 
-Download and install the installers matching your architecture for:
+* Download and run the installer matching your architecture for `lxml`_ (version 2.3.x)
 
-- PIL_
-- lxml_ (version 2.3.x)
-
-.. _PIL: http://www.lfd.uci.edu/~gohlke/pythonlibs/#pil
 .. _lxml: http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml
+
+* Install easy_install by running::
+
+    easy_install http://effbot.org/downloads/PIL-1.1.7.win32-py2.7.exe
 
 
 git and GitHub tools
@@ -102,7 +93,7 @@ git and GitHub tools
     :alt: GitHub tools installer
     :align: right
     :target: ../_static/github_tools_win.png
-    
+
     GitHub tools install (click to enlarge)
 
 
@@ -132,7 +123,7 @@ with git already configured, in the shell::
 
 .. note::
     If this command fails:
-    
+
     * You probably have an older virtualenv installed.
       The quickest work-around is to replace it with the latest version::
 

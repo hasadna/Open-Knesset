@@ -15,6 +15,14 @@ is Python_ and Django_ based.
     For 3rd party applications and services developers, please see the API
     documentation.
 
+    Some useful project links:
+
+    * `Our code repository`_
+    * `The issue tracker`_ (bugs, tasks etc.)
+    * The production `Open Knesset`_ site
+    * The `Hasadna`_ site (our parent organization)
+
+
 .. important::
 
     If not done already, please subscribe to the
@@ -29,6 +37,11 @@ is Python_ and Django_ based.
 .. _Python: http://www.python.org/
 .. _Django: https://www.djangoproject.com/
 .. _Open Knesset Developers group: https://groups.google.com/forum/#!forum/oknesset-dev
+.. _Our code repository: https://github.com/hasadna/Open-Knesset/
+.. _The issue tracker: https://github.com/hasadna/Open-Knesset/issues/
+.. _Open Knesset: http://oknesset.org/
+.. _Hasadna: http://www.hasadna.org.il/
+
 
 Contents:
 
