@@ -16,7 +16,6 @@ from django.shortcuts import get_object_or_404
 from backlinks.pingback.server import default_server
 from actstream import actor_stream
 from actstream.models import Follow
-
 from hashnav.detail import DetailView
 from models import Member, Party, Knesset
 from polyorg.models import CandidateList
@@ -77,7 +76,7 @@ class MemberListView(ListView):
         context['friend_pages'] = self.pages
         context['stat_type'] = info
         context['title'] = dict(self.pages)[info]
-
+        context['csv_path'] = 'api/v2/member' + '?' + self.request.GET.urlencode() + '&format=csv&limit=0'     
         context['past_mks'] = Member.current_knesset.filter(is_current=False)
 
         # We make sure qs are lists so that the template can get min/max

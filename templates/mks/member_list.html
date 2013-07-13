@@ -102,5 +102,7 @@
     </div>
 
 
-    {% include "mks/export_csv_link.html" %}
+     <span id="export-csv" class="awesome-button medium">
+            <a href=" https://oknesset.org/{{csv_path}}">{% trans 'Export data to Excel' %}</a>
+     </span>
 {% endblock %}

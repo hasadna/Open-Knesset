@@ -615,7 +615,7 @@ class BillListView (BillListMixin, HashnavListView):
         context['friend_pages'] = r
         context['form'] = self._get_filter_form()
         context['query_string'] = self.request.META['QUERY_STRING']
-        context['csv_file'] = BillCsvView.filename if default_storage.exists(BillCsvView.filename) else None
+        
         return context
 
 
@@ -652,7 +652,7 @@ class VoteListView(HashnavListView):
 
         context['form'] = self._get_filter_form()
         context['query_string'] = self.request.META['QUERY_STRING']
-        context['csv_file'] = VoteCsvView.filename if default_storage.exists(VoteCsvView.filename) else None
+        
         return context
 
 

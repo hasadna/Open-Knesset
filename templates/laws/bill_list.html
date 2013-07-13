@@ -14,7 +14,7 @@
         <ul class="actions">
             <li>
                 <span id="export-csv" class="awesome-button medium">
-                    <a href="{% if not csv_file %}./csv/?{% else %}{{MEDIA_URL}}{{csv_file}}{% endif %}">{% trans 'Export data to Excel' %}</a>
+                    <a href="../{{csv_path}}">{% trans 'Export data to Excel' %}</a>
                 </span>
             </li>
         </ul>

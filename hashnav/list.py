@@ -112,10 +112,15 @@ class ListView(View):
         self.get_items()
         self.paginate_items()
         template_list_name = '%s_list' % self.template_object_name
+        
+        params = '' if len(self.request.GET) == 0 else self.request.GET.urlencode() + '&'
+        csv_path = 'api/v2' + self.request.path + '?' + params + 'format=csv&limit=0'
+        
         context.update({
             'paginator': self.paginator,
             'page_obj': self.page,
             'is_paginated':  self.paginator is not None,
+            'csv_path': csv_path,
             template_list_name: self.items,
         })
         return context

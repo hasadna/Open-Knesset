@@ -23,7 +23,7 @@
             </div>
             <div class="span3 social-details">
                 <div class="spacer actions-panel">
-                    <a class="btn btn-big" href="{% if query_string or not csv_file %}./csv/?{{ query_string }}{% else %}{{MEDIA_URL}}{{csv_file}}{% endif %}">{% trans 'Export data to Excel' %}</a>
+                    <a class="btn btn-big" href="../{{csv_path}}">{% trans 'Export data to Excel' %}</a>
                 </div>
             </div>
         </div>

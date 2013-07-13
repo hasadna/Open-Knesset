@@ -146,7 +146,9 @@ class InternalLinksTest(TestCase):
                 self.failUnless(link, "There seems to be an empty link in %s (href='')" % page)
                 if (link in visited_links) or (link.startswith("http")) or link.startswith("#"):
                     continue
-                if link.startswith("./"):
+                if link.startswith("../"):
+                    link = '/' + '/'.join(link.split('/')[1:])
+                elif link.startswith("./"):
                     link = link[2:]
                 elif link.startswith("."):
                     link = link[1:]

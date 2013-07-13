@@ -357,9 +357,9 @@ class Member(models.Model):
 
     @property
     def roles(self):
-        """Roles list (splitted by comma)"""
+        """Roles list (splitted by pipe)"""
 
-        return [x.strip() for x in self.get_role.split(',')]
+        return [x.strip() for x in self.get_role.split('|')]
 	
 	@property
 	def committees(self):
