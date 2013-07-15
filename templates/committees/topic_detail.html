@@ -57,6 +57,7 @@
                     <p><a href="{% url 'public-profile' topic.creator.username %}">{% avatar topic.creator 64 %}</a></p>
                     <p><a href="{% url 'public-profile' topic.creator.username %}">{{ topic.creator }}</a></p>
                     <p>{{topic.creator.get_full_name}}</p>
+                    <p>{{topic.created}}</p>
                 </div>
             </div>
             <div class="span8">

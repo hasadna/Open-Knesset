@@ -12,7 +12,7 @@
           <header>
               <a href="{% url 'public-profile' comment.user.username %}" alt="{{comment.user}}">{% avatar comment.user 48 %}</a>
               <h3>
-                  <a href="{% url 'public-profile' comment.user.username %}">{{comment.user}}</a>&nbsp; &nbsp;{{comment.user.get_full_name}}
+                  <a href="{% url 'public-profile' comment.user.username %}">{{comment.user}}</a>&nbsp; &nbsp;{{comment.user.get_full_name}}&nbsp; &nbsp;{{comment.submit_date}}
               </h3>
           </header>
           <div>
