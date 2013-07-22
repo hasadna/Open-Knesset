@@ -57,6 +57,7 @@
                     <p><a href="{% url 'public-profile' topic.creator.username %}">{% avatar topic.creator 64 %}</a></p>
                     <p><a href="{% url 'public-profile' topic.creator.username %}">{{ topic.creator }}</a></p>
                     <p>{{topic.creator.get_full_name}}</p>
+                    <p>{{topic.created}}</p>
                 </div>
             </div>
             <div class="span8">
@@ -121,7 +122,7 @@
                         <a href="https://twitter.com/share" class="twitter-share-button social-row" data-count="horizontal" data-via="oknesset" style="display:block;float:right;">צייץ</a><script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
                     </li>
                     <li>
-                        <iframe src="http://www.facebook.com/plugins/like.php?href={{request.get_host|iriencode}}{{request.get_full_path|iriencode}}&amp;locale=he_IL&amp;layout=standard&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;" scrolling="no" frameborder="0" allowTransparency="true" style="height:40px; width: 250px;" ></iframe>
+                        <iframe src="http://www.facebook.com/plugins/like.php?href=http://{{request.get_host|iriencode}}{{request.get_full_path|iriencode}}&amp;locale=he_IL&amp;layout=standard&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;" scrolling="no" frameborder="0" allowTransparency="true" style="height:40px; width: 250px;" ></iframe>
                     </li>
                     <li>
                         <!-- Place this tag where you want the +1 button to render -->
