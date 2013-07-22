@@ -55,6 +55,11 @@
                             {% object_icon_links object %}
                         </ul>
                     </div>
+                    {% if object.logo %}
+                    <div class="text-center logo-party">
+                         <img src={{object.logo.url}}>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
 

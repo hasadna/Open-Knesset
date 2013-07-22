@@ -72,6 +72,8 @@ class Party(models.Model):
     knesset = models.ForeignKey(Knesset, related_name='parties', db_index=True,
                                 null=True, blank=True)
 
+    logo = models.ImageField(blank=True,null=True,upload_to='partyLogos')
+
     objects = BetterManager()
     current_knesset = CurrentKnessetPartyManager()
 
