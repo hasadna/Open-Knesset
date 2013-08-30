@@ -37,7 +37,7 @@ VOTE_ACTION_TYPE_CHOICES = (
 CONVERT_TO_DISCUSSION_HEADERS = ('להעביר את הנושא'.decode('utf8'), 'העברת הנושא'.decode('utf8'))
 
 class CandidateListVotingStatistics(models.Model):
-    candidates_list = models.OneToOneField('polyorg.CandidateList',related_name='voting_statistics')
+    candidates_list = models.OneToOneField('polyorg.CandidateList', related_name='voting_statistics')
 
     def votes_against_party_count(self):
         return VoteAction.objects.filter(member__id__in=self.candidates_list.member_ids, against_party=True).count()
@@ -50,14 +50,14 @@ class CandidateListVotingStatistics(models.Model):
 
     def discipline(self):
         total_votes = self.votes_count()
-        if total_votes > 0:
+        if total_votes:
             votes_against_party = self.votes_against_party_count()
-            return round(100.0*(total_votes-votes_against_party)/total_votes,1)
-        else:
-            return _('N/A')
+            return round(100.0*(total_votes - votes_against_party) / total_votes, 1)
+        return _('N/A')
+
 
 class PartyVotingStatistics(models.Model):
-    party = models.OneToOneField('mks.Party',related_name='voting_statistics')
+    party = models.OneToOneField('mks.Party', related_name='voting_statistics')
 
     def votes_against_party_count(self):
         return VoteAction.objects.filter(member__current_party=self.party, against_party=True).count()
@@ -70,65 +70,57 @@ class PartyVotingStatistics(models.Model):
 
     def discipline(self):
         total_votes = self.votes_count()
-        if total_votes > 0:
+        if total_votes:
             votes_against_party = self.votes_against_party_count()
-            return round(100.0*(total_votes-votes_against_party)/total_votes,1)
-        else:
-            return _('N/A')
+            return round(100.0*(total_votes - votes_against_party) / total_votes, 1)
+        return _('N/A')
 
     def coalition_discipline(self): # if party is in opposition this actually returns opposition_discipline
         total_votes = self.votes_count()
-        if total_votes > 0:
+        if total_votes:
             if self.party.is_coalition:
                 votes_against_coalition = VoteAction.objects.filter(member__current_party=self.party, against_coalition=True).count()
             else:
                 votes_against_coalition = VoteAction.objects.filter(member__current_party=self.party, against_opposition=True).count()
-            return round(100.0*(total_votes-votes_against_coalition)/total_votes,1)
-        else:
-            return _('N/A')
+            return round(100.0*(total_votes - votes_against_coalition) / total_votes, 1)
+        return _('N/A')
 
     def __unicode__(self):
-        return "%s" % self.party.name
+        return "{}".format(self.party.name)
+
 
 class MemberVotingStatistics(models.Model):
     member = models.OneToOneField('mks.Member', related_name='voting_statistics')
 
-    def votes_against_party_count(self, from_date = None):
+    def votes_against_party_count(self, from_date=None):
         if from_date:
             return VoteAction.objects.filter(member=self.member, against_party=True, vote__time__gt=from_date).count()
-        else:
-            return VoteAction.objects.filter(member=self.member, against_party=True).count()
+        return VoteAction.objects.filter(member=self.member, against_party=True).count()
 
-    def votes_count(self, from_date = None):
+    def votes_count(self, from_date=None):
         if from_date:
             return VoteAction.objects.filter(member=self.member, vote__time__gt=from_date).exclude(type='no-vote').count()
-        else:
-            vc = cache.get('votes_count_%d' % self.member.id)
-            if not vc:
-                vc = VoteAction.objects.filter(member=self.member).exclude(type='no-vote').count()
-                cache.set('votes_count_%d' % self.member.id,
-                          vc,
-                          settings.LONG_CACHE_TIME)
-            return vc
+        vc = cache.get('votes_count_%d' % self.member.id)
+        if not vc:
+            vc = VoteAction.objects.filter(member=self.member).exclude(type='no-vote').count()
+            cache.set('votes_count_%d' % self.member.id, vc, settings.LONG_CACHE_TIME)
+        return vc
 
     def average_votes_per_month(self):
         if hasattr(self, '_average_votes_per_month'):
             return self._average_votes_per_month
         st = self.member.service_time()
-        if st:
-                self._average_votes_per_month =  30.0*self.votes_count()/st
-        else:
-                self._average_votes_per_month = 0
+        self._average_votes_per_month = (30.0*self.votes_count() / st) if st else 0
         return self._average_votes_per_month
 
-    def discipline(self, from_date = None):
+    def discipline(self, from_date=None):
         total_votes = self.votes_count(from_date)
         if total_votes <= 3: # not enough data
             return None
         votes_against_party = self.votes_against_party_count(from_date)
-        return round(100.0*(total_votes-votes_against_party)/total_votes,1)
+        return round(100.0*(total_votes - votes_against_party) / total_votes, 1)
 
-    def coalition_discipline(self, from_date = None): # if party is in opposition this actually returns opposition_discipline
+    def coalition_discipline(self, from_date=None): # if party is in opposition this actually returns opposition_discipline
         total_votes = self.votes_count(from_date)
         if total_votes <= 3: # not enough data
             return None
@@ -139,22 +131,23 @@ class MemberVotingStatistics(models.Model):
         if from_date:
             v = v.filter(vote__time__gt=from_date)
         votes_against_coalition = v.count()
-        return round(100.0*(total_votes-votes_against_coalition)/total_votes,1)
-
+        return round(100.0*(total_votes - votes_against_coalition) / total_votes, 1)
 
     def __unicode__(self):
-        return "%s" % self.member.name
+        return "{}".format(self.member.name)
 
 class VoteAction(models.Model):
-    type   = models.CharField(max_length=10,choices=VOTE_ACTION_TYPE_CHOICES)
+    type   = models.CharField(max_length=10, choices=VOTE_ACTION_TYPE_CHOICES)
     member = models.ForeignKey('mks.Member')
     vote   = models.ForeignKey('Vote')
     against_party = models.BooleanField(default=False)
     against_coalition = models.BooleanField(default=False)
     against_opposition = models.BooleanField(default=False)
     against_own_bill = models.BooleanField(default=False)
+    
     def __unicode__(self):
-        return "%s %s %s" % (self.member.name, self.type, self.vote.title)
+        return "{} {} [}".format(self.member.name, self.type, self.vote.title)
+
 
 class VoteManager(models.Manager):
     # TODO: add i18n to the types so we'd have
@@ -165,7 +158,7 @@ class VoteManager(models.Manager):
     def filter_and_order(self, *args, **kwargs):
         qs = self.all()
         filter_kwargs = {}
-        if kwargs.get('vtype', None) and kwargs['vtype'] != 'all':
+        if kwargs.get('vtype') and kwargs['vtype'] != 'all':
             filter_kwargs['title__startswith'] = self.VOTE_TYPES[kwargs['vtype']]
 
         if filter_kwargs:
@@ -174,19 +167,19 @@ class VoteManager(models.Manager):
         # In dealing with 'tagged' we use an ugly workaround for the fact that generic relations
         # don't work as expected with annotations.
         # please read http://code.djangoproject.com/ticket/10461 before trying to change this code
-        if kwargs.get('tagged', None):
+        if kwargs.get('tagged'):
             if kwargs['tagged'] == 'false':
                 qs = qs.exclude(tagged_items__isnull=False)
             elif kwargs['tagged'] != 'all':
                 qs = qs.filter(tagged_items__tag__name=kwargs['tagged'])
 
-        if kwargs.get('to_date', None):
+        if kwargs.get('to_date'):
             qs = qs.filter(time__lte=kwargs['to_date']+timedelta(days=1))
 
-        if kwargs.get('from_date', None):
+        if kwargs.get('from_date'):
             qs = qs.filter(time__gte=kwargs['from_date'])
 
-        exclude_agendas = kwargs.get('exclude_agendas', None)
+        exclude_agendas = kwargs.get('exclude_agendas')
         if exclude_agendas:
             # exclude votes that are ascribed to any of the given agendas
             from agendas.models import AgendaVote
@@ -194,11 +187,11 @@ class VoteManager(models.Manager):
                 agenda__in=exclude_agendas).values('vote__id'))
 
         if 'order' in kwargs:
-            if kwargs['order']=='controversy':
+            if kwargs['order'] == 'controversy':
                 qs = qs.order_by('-controversy')
-            if kwargs['order']=='against-party':
+            if kwargs['order'] == 'against-party':
                 qs = qs.order_by('-against_party')
-            if kwargs['order']=='votes':
+            if kwargs['order'] == 'votes':
                 qs = qs.order_by('-votes_count')
 
         if kwargs.get('exclude_ascribed', False):  # exclude votes ascribed to
@@ -207,11 +200,12 @@ class VoteManager(models.Manager):
                 bills_first__isnull=False).exclude(bill_approved__isnull=False)
         return qs
 
+
 class Vote(models.Model):
-    meeting_number = models.IntegerField(null=True,blank=True)
-    vote_number = models.IntegerField(null=True,blank=True)
-    src_id = models.IntegerField(null=True,blank=True)
-    src_url = models.URLField(max_length=1024,null=True,blank=True)
+    meeting_number = models.IntegerField(null=True, blank=True)
+    vote_number = models.IntegerField(null=True, blank=True)
+    src_id = models.IntegerField(null=True, blank=True)
+    src_url = models.URLField(max_length=1024, null=True, blank=True)
     title = models.CharField(max_length=1000)
     time = models.DateTimeField(db_index=True)
     time_string = models.CharField(max_length=100)
@@ -225,14 +219,13 @@ class Vote(models.Model):
     against_coalition = models.IntegerField(null=True, blank=True)
     against_opposition = models.IntegerField(null=True, blank=True)
     against_own_bill = models.IntegerField(null=True, blank=True)
-    summary = models.TextField(null=True,blank=True)
-    full_text = models.TextField(null=True,blank=True)
-    full_text_url = models.URLField(max_length=1024,null=True,blank=True)
+    summary = models.TextField(null=True, blank=True)
+    full_text = models.TextField(null=True, blank=True)
+    full_text_url = models.URLField(max_length=1024, null=True, blank=True)
 
     tagged_items = generic.GenericRelation(TaggedItem,
                                            object_id_field="object_id",
                                            content_type_field="content_type")
-
 
     objects = VoteManager()
 
@@ -273,20 +266,19 @@ class Vote(models.Model):
                 return dict(TYPE_CHOICES)[vtype]
 
     def short_summary(self):
-        if self.summary==None:
+        if self.summary is None:
             return ''
-        else:
-            return self.summary[:60]
+        return self.summary[:60]
 
     def full_text_link(self):
-        if self.full_text_url==None:
+        if self.full_text_url is None:
             return ''
-        else:
-            return '<a href="%s">link</a>' % self.full_text_url
+        return '<a href="{}">link</a>'.format(self.full_text_url)
+        
     full_text_link.allow_tags = True
 
     def bills(self):
-        "Return a list of all bills related to this vote"
+        """Return a list of all bills related to this vote"""
         result = list(self.bills_pre_votes.all())
         result.extend(self.bills_first.all())
         b = Bill.objects.filter(approval_vote=self)
@@ -311,9 +303,9 @@ class Vote(models.Model):
         tags = Tag.objects.get_for_object(self)
         for t in tags:
             ti = TaggedItem.objects.filter(tag=t).filter(object_id=self.id)[0]
-            t.score = sum(TagVote.objects.filter(tagged_item=ti).values_list('vote',flat=True))
+            t.score = sum(TagVote.objects.filter(tagged_item=ti).values_list('vote', flat=True))
             v = TagVote.objects.filter(tagged_item=ti).filter(user=user)
-            if(len(v)>0):
+            if v:
                 t.user_score = v[0].vote
             else:
                 t.user_score = 0
@@ -402,8 +394,10 @@ class Vote(models.Model):
                                self.against_votes_count or 0)
         self.save()
 
+
 class TagForm(forms.Form):
     tags = TagField()
+
 
 class Law(models.Model):
     title = models.CharField(max_length=1000)
@@ -413,11 +407,12 @@ class Law(models.Model):
         return self.title
 
     def merge(self, another_law):
-        """ Merges another_law into this one.
-            Move all pointers from another_law to self,
-            Then mark another_law as deleted by setting its merged_into field to self.
+        """ 
+        Merges another_law into this one.
+        Move all pointers from another_law to self,
+        Then mark another_law as deleted by setting its merged_into field to self.
         """
-        if another_law == self:
+        if another_law is self:
             return # don't accidentally delete myself by trying to merge.
         for pp in another_law.laws_privateproposal_related.all():
             pp.law = self
@@ -431,15 +426,17 @@ class Law(models.Model):
         another_law.merged_into = self
         another_law.save()
 
+
 class BillProposal(models.Model):
     knesset_id = models.IntegerField(blank=True, null=True)
     law = models.ForeignKey('Law', related_name="%(app_label)s_%(class)s_related", blank=True, null=True)
     title = models.CharField(max_length=1000)
     date = models.DateField(blank=True, null=True)
-    source_url = models.URLField(max_length=1024,null=True,blank=True)
-    content_html = models.TextField(blank=True,default="")
+    source_url = models.URLField(max_length=1024, null=True, blank=True)
+    content_html = models.TextField(blank=True, default="")
     committee_meetings = models.ManyToManyField('committees.CommitteeMeeting', related_name="%(app_label)s_%(class)s_related", blank=True, null=True)
     votes = models.ManyToManyField('Vote', related_name="%(app_label)s_%(class)s_related", blank=True, null=True)
+    
     class Meta:
         abstract = True
 
@@ -449,8 +446,7 @@ class BillProposal(models.Model):
     def get_absolute_url(self):
         if self.bill:
             return self.bill.get_absolute_url()
-        else:
-            return ""
+        return ""
 
     def get_explanation(self):
         r = re.search(r"דברי הסבר.*?(<p>.*?)<p>-+".decode('utf8'), self.content_html, re.M|re.DOTALL)
@@ -460,20 +456,19 @@ class PrivateProposal(BillProposal):
     proposal_id = models.IntegerField(blank=True, null=True)
     proposers = models.ManyToManyField('mks.Member', related_name='proposals_proposed', blank=True, null=True)
     joiners = models.ManyToManyField('mks.Member', related_name='proposals_joined', blank=True, null=True)
-    bill = models.ForeignKey('Bill', related_name='proposals',
-                             blank=True, null=True)
+    bill = models.ForeignKey('Bill', related_name='proposals', blank=True, null=True)
+
 
 class KnessetProposal(BillProposal):
     committee = models.ForeignKey('committees.Committee',related_name='bills', blank=True, null=True)
     booklet_number = models.IntegerField(blank=True, null=True)
     originals = models.ManyToManyField('PrivateProposal', related_name='knesset_proposals', blank=True, null=True)
-    bill = models.OneToOneField('Bill', related_name='knesset_proposal',
-                                 blank=True, null=True)
+    bill = models.OneToOneField('Bill', related_name='knesset_proposal', blank=True, null=True)
+
 
 class GovProposal(BillProposal):
     booklet_number = models.IntegerField(blank=True, null=True)
-    bill = models.OneToOneField('Bill', related_name='gov_proposal',
-                                 blank=True, null=True)
+    bill = models.OneToOneField('Bill', related_name='gov_proposal', blank=True, null=True)
 
 
 class BillManager(models.Manager):
@@ -504,7 +499,7 @@ class BillManager(models.Manager):
                 qs = TaggedItem.objects.get_by_model(qs,get_tag(kwargs['tagged']))
 
         if booklet:
-            kps = KnessetProposal.objects.filter(booklet_number=booklet).values_list('id',flat=True)
+            kps = KnessetProposal.objects.filter(booklet_number=booklet).values_list('id', flat=True)
             if kps:
                 qs = qs.filter(knesset_proposal__in=kps)
 
@@ -523,16 +518,15 @@ class Bill(models.Model):
     popular_name = models.CharField(max_length=1000, blank=True)
     popular_name_slug = models.CharField(max_length=1000, blank=True)
     law = models.ForeignKey('Law', related_name="bills", blank=True, null=True)
-    stage = models.CharField(max_length=10,choices=BILL_STAGE_CHOICES)
+    stage = models.CharField(max_length=10, choices=BILL_STAGE_CHOICES)
     stage_date = models.DateField(blank=True, null=True) # date of entry to current stage
     pre_votes = models.ManyToManyField('Vote',related_name='bills_pre_votes', blank=True, null=True) # link to pre-votes related to this bill
-    first_committee_meetings = models.ManyToManyField('committees.CommitteeMeeting',related_name='bills_first', blank=True, null=True) # CM related to this bill, *before* first vote
+    first_committee_meetings = models.ManyToManyField('committees.CommitteeMeeting', related_name='bills_first', blank=True, null=True) # CM related to this bill, *before* first vote
     first_vote = models.ForeignKey('Vote',related_name='bills_first', blank=True, null=True) # first vote of this bill
-    second_committee_meetings = models.ManyToManyField('committees.CommitteeMeeting',related_name='bills_second', blank=True, null=True) # CM related to this bill, *after* first vote
+    second_committee_meetings = models.ManyToManyField('committees.CommitteeMeeting', related_name='bills_second', blank=True, null=True) # CM related to this bill, *after* first vote
     approval_vote = models.OneToOneField('Vote',related_name='bill_approved', blank=True, null=True) # approval vote of this bill
     proposers = models.ManyToManyField('mks.Member', related_name='bills', blank=True, null=True) # superset of all proposers of all private proposals related to this bill
-    joiners = models.ManyToManyField('mks.Member', related_name='bills_joined',
-                                     blank=True, null=True) # superset of all joiners
+    joiners = models.ManyToManyField('mks.Member', related_name='bills_joined', blank=True, null=True) # superset of all joiners
 
     objects = BillManager()
 
@@ -548,7 +542,7 @@ class Bill(models.Model):
     def get_absolute_url(self):
         return ('bill-detail', [str(self.id)])
 
-    def save(self,**kwargs):
+    def save(self, **kwargs):
         self.slug = slugify_name(self.title)
         self.popular_name_slug = slugify_name(self.popular_name)
         if self.law:
@@ -568,25 +562,23 @@ class Bill(models.Model):
 
     tags = property(_get_tags, _set_tags)
 
-
     def merge(self,another_bill):
-        """Merges another_bill into self, and delete another_bill
-        """
-        if not(self.id):
+        """Merges another_bill into self, and delete another_bill"""
+        if not self.id:
             logger.debug('trying to merge into a bill with id=None, title=%s', self.title)
             self.save()
-        if not(another_bill.id):
+        if not another_bill.id:
             logger.debug('trying to merge a bill with id=None, title=%s', another_bill.title)
             another_bill.save()
 
-        if self==another_bill:
+        if self is another_bill:
             logger.debug('abort merging bill %d into itself' % self.id)
             return
         logger.debug('merging bill %d into bill %d' % (another_bill.id, self.id))
 
         other_kp = KnessetProposal.objects.filter(bill=another_bill)
         my_kp = KnessetProposal.objects.filter(bill=self)
-        if(len(my_kp) and len(other_kp)):
+        if my_kp and other_kp:
             logger.debug('abort merging bill %d into bill %d, because both have KPs' % (another_bill.id, self.id))
             return
 
@@ -594,18 +586,18 @@ class Bill(models.Model):
             self.pre_votes.add(pv)
         for cm in another_bill.first_committee_meetings.all():
             self.first_committee_meetings.add(cm)
-        if not(self.first_vote) and another_bill.first_vote:
+        if not self.first_vote and another_bill.first_vote:
             self.first_vote = another_bill.first_vote
         for cm in another_bill.second_committee_meetings.all():
             self.second_committee_meetings.add(cm)
-        if not(self.approval_vote) and another_bill.approval_vote:
+        if not self.approval_vote and another_bill.approval_vote:
             self.approval_vote = another_bill.approval_vote
         for m in another_bill.proposers.all():
             self.proposers.add(m)
         for pp in another_bill.proposals.all():
             pp.bill = self
             pp.save()
-        if len(other_kp):
+        if other_kp:
             other_kp[0].bill = self
             other_kp[0].save()
         another_bill.delete()
@@ -617,16 +609,16 @@ class Bill(models.Model):
         if gp:
             gp = gp[0]
             for this_v in gp.votes.all():
-                if (this_v.title.find('אישור'.decode('utf8')) == 0):
+                if this_v.title.find('אישור'.decode('utf8')) == 0:
                     self.approval_vote = this_v
                     used_votes.append(this_v.id)
                 if this_v.title.find('להעביר את'.decode('utf8')) == 0:
                     self.first_vote = this_v
 
         kp = KnessetProposal.objects.filter(bill=self)
-        if len(kp):
+        if kp:
             for this_v in kp[0].votes.all():
-                if (this_v.title.find('אישור'.decode('utf8')) == 0):
+                if this_v.title.find('אישור'.decode('utf8')) == 0:
                     self.approval_vote = this_v
                     used_votes.append(this_v.id)
                 if this_v.title.find('להעביר את'.decode('utf8')) == 0:
@@ -636,19 +628,19 @@ class Bill(models.Model):
                         self.pre_votes.add(this_v)
                     used_votes.append(this_v.id)
         pps = PrivateProposal.objects.filter(bill=self)
-        if len(pps):
+        if pps:
             for pp in pps:
                 for this_v in pp.votes.all():
                     if this_v.id not in used_votes:
                         self.pre_votes.add(this_v)
         self.update_stage()
 
-
     def update_stage(self, force_update=False):
-        """Updates the stage for this bill according to all current data
-           force_update - assume current stage is wrong, and force
-           recalculation. default is False, so we assume current status is OK,
-           and only look for updates.
+        """
+        Updates the stage for this bill according to all current data
+        force_update - assume current stage is wrong, and force
+        recalculation. default is False, so we assume current status is OK,
+        and only look for updates.
         """
         if not self.stage_date or force_update: # might be empty if bill is new
             self.stage_date = date(1948, 5, 13)
