@@ -3,15 +3,12 @@ import re
 from django.test import TestCase
 from django.test.client import Client
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from actstream import follow,action
-from actstream.models import Action
-from mks.models import Member, Party, Membership, MemberAltname, Knesset
-from mks.views import MemberListView
+from actstream import follow
+from mks.models import Member, Party, MemberAltname, Knesset
 from laws.models import Law,Bill,PrivateProposal,Vote,VoteAction
-from committees.models import CommitteeMeeting,Committee
-from knesset.utils import RequestFactory
+from committees.models import Committee
 import datetime
 import feedparser
 from backlinks.tests.xmlrpc import TestClientServerProxy
@@ -20,7 +17,7 @@ from urllib import urlencode
 from backlinks.models import InboundBacklink
 from backlinks.pingback.server import PingbackServer
 from django import template
-from mks.mock import PINGABLE_MEMBER_ID, NON_PINGABLE_MEMBER_ID
+from mks.mock import PINGABLE_MEMBER_ID
 from django.utils import simplejson as json
 
 TRACKBACK_CONTENT_TYPE = 'application/x-www-form-urlencoded; charset=utf-8'
@@ -262,7 +259,10 @@ class MemberBacklinksViewsTest(TestCase):
         self.vote_action = VoteAction.objects.create(member=self.mk_1, vote=self.vote, type='for')
 
         self.client = Client(SERVER_NAME='example.com')
+        
+        #using this produces warning
         self.xmlrpc_client = TestClientServerProxy('/pingback/')
+        
         self.PINGABLE_MEMBER_ID = str(self.mk_1.id)
         self.NON_PINGABLE_MEMBER_ID = str(self.mk_2.id)
 
@@ -293,11 +293,12 @@ class MemberBacklinksViewsTest(TestCase):
 
     '''
     def testPingNonLinkingSourceURI(self):
+        #emits warning
         self.assertRaises(Fault,
                           self.xmlrpc_client.pingback.ping,
                           'http://example.com/bad-source-document/',
                           'http://example.com/member/'+PINGABLE_MEMBER_ID+'/')
-
+   
         try:
             self.xmlrpc_client.pingback.ping('http://example.com/bad-source-document/',
                                              'http://example.com/member/'+PINGABLE_MEMBER_ID+'/')
@@ -305,17 +306,20 @@ class MemberBacklinksViewsTest(TestCase):
             self.assertEquals(f.faultCode,
                               17,
                              'Server did not return "source URI does not link" response')
+            
     def testDisallowedMethod(self):
         response = self.client.get('/pingback/')
         self.assertEquals(response.status_code,
                           405,
                           'Server returned incorrect status code for disallowed HTTP method')
-
+   
     def testNonExistentRPCMethod(self):
+        #emits warning
         self.assertRaises(Fault, self.xmlrpc_client.foo)
-
-
+    
+   
     def testBadPostData(self):
+        #emits warning
         post_data = urlencode({'sourceURI': 'http://example.com/good-source-document/',
                                'targetURI': 'http://example.com/member/'+PINGABLE_MEMBER_ID+'/'})
         response = self.client.post('/pingback/', post_data, TRACKBACK_CONTENT_TYPE)
@@ -324,6 +328,7 @@ class MemberBacklinksViewsTest(TestCase):
                           response.content)
 
     def testPingNonExistentTargetURI(self):
+        #emits warning
         self.assertRaises(Fault,
                           self.xmlrpc_client.pingback.ping,
                           'http://example.com/member/non-existent-resource/',
@@ -335,8 +340,8 @@ class MemberBacklinksViewsTest(TestCase):
             self.assertEquals(f.faultCode,
                               32,
                               'Server did not return "target does not exist" error')
-
-
+ 
+ 
     def testPingAlreadyRegistered(self):
         self.xmlrpc_client.pingback.ping('http://example.com/another-good-source-document/',
                                              'http://example.com/member/'+PINGABLE_MEMBER_ID+'/')
@@ -344,7 +349,7 @@ class MemberBacklinksViewsTest(TestCase):
                           self.xmlrpc_client.pingback.ping,
                           'http://example.com/another-good-source-document/',
                           'http://example.com/member/'+PINGABLE_MEMBER_ID+'/')
-
+ 
         try:
             self.xmlrpc_client.pingback.ping('http://example.com/another-good-source-document/',
                                              'http://example.com/member/'+PINGABLE_MEMBER_ID+'/')
@@ -352,7 +357,7 @@ class MemberBacklinksViewsTest(TestCase):
             self.assertEqual(f.faultCode,
                              48,
                              'Server did not return "ping already registered" error')
-
+ 
     def testPingbackLinkTemplateTag(self):
         t = template.Template("{% load pingback_tags %}{% pingback_link pingback_path %}")
         c = template.Context({'pingback_path': '/pingback/'})
@@ -362,7 +367,7 @@ class MemberBacklinksViewsTest(TestCase):
         self.assertTrue(bool(match), 'Pingback link tag did not render')
         self.assertEquals(match.groups(0)[0], 'http://example.com/pingback/',
                           'Pingback link tag rendered incorrectly')
-
+ 
     def testPingNonPingableTargetURI(self):
         self.assertRaises(Fault,
                           self.xmlrpc_client.pingback.ping,
@@ -375,15 +380,15 @@ class MemberBacklinksViewsTest(TestCase):
             self.assertEquals(f.faultCode,
                               33,
                               'Server did not return "target not pingable" error')
-
+ 
     def testPingSourceURILinks(self):
         r = self.xmlrpc_client.pingback.ping('http://example.com/good-source-document/',
                                              'http://example.com/member/'+self.PINGABLE_MEMBER_ID+'/')
-
+ 
         self.assertEquals(r,
                           "Ping from http://example.com/good-source-document/ to http://example.com/member/1/ registered",
                           "Failed registering ping")
-
+ 
         registered_ping = InboundBacklink.objects.get(source_url='http://example.com/good-source-document/',
                                                       target_url='http://example.com/member/'+self.PINGABLE_MEMBER_ID+'/')
         self.assertEquals(str(registered_ping.target_object.id),
@@ -463,58 +468,32 @@ class MemberModelsTests(TestCase):
 from agendas.models import Agenda, AgendaVote
 
 class MKAgendasTest(TestCase):
-
     def setUp(self):
         self.knesset = Knesset.objects.create(number=1)
-        self.party_1 = Party.objects.create(name='party 1', number_of_seats=1,
-                       knesset=self.knesset)
-        self.mk_1 = Member.objects.create(name='mk_1',
-                                          start_date=datetime.date(2010,1,1),
-                                          current_party=self.party_1)
+        
+        self.party_1 = Party.objects.create(name='party 1', number_of_seats=1, knesset=self.knesset)
+        
+        self.mk_1 = Member.objects.create(name='mk_1', start_date=datetime.date(2010,1,1),  current_party=self.party_1)
+        self.mk_2 = Member.objects.create(name='mk_2', start_date=datetime.date(2010,1,1),  current_party=self.party_1)
+        self.mk_3 = Member.objects.create(name='mk_3', start_date=datetime.date(2010,1,1),  current_party=self.party_1)
 
-        self.mk_2 = Member.objects.create(name='mk_2',
-                                          start_date=datetime.date(2010,1,1),
-                                          current_party=self.party_1)
-
-        self.mk_3 = Member.objects.create(name='mk_3',
-                                          start_date=datetime.date(2010,1,1),
-                                          current_party=self.party_1)
-
-        self.agenda_1 = Agenda.objects.create(name='agenda 1',
-                                              description='a bloody good agenda 1',
-                                              public_owner_name='Dr. Jacob',
-                                              is_public=True)
-        self.agenda_2 = Agenda.objects.create(name='agenda 2',
-                                              description='a bloody good agenda 2',
-                                              public_owner_name='Greenpeace',
-                                              is_public=True)
-        self.agenda_3 = Agenda.objects.create(name='agenda 3',
-                                              description='a bloody good agenda 3',
-                                              public_owner_name='Hidden One',
-                                              is_public=False)
-        self.vote_1 = Vote.objects.create(title='vote 1',time=datetime.datetime.now())
-        self.vote_2 = Vote.objects.create(title='vote 2',time=datetime.datetime.now())
-        self.voteactions = [ VoteAction.objects.create(vote=self.vote_1,
-                                member=self.mk_1, type='for'),
-                             VoteAction.objects.create(vote=self.vote_2,
-                                member=self.mk_1, type='for'),
-                             VoteAction.objects.create(vote=self.vote_1,
-                                member=self.mk_2, type='against'),
-                             VoteAction.objects.create(vote=self.vote_2,
-                                member=self.mk_2, type='against'),
+        make = Agenda.objects.create
+        agendas = [make(name='agenda 1', description='a bloody good agenda 1', public_owner_name='Dr. Jacob', is_public=True),
+                   make(name='agenda 2', description='a bloody good agenda 2', public_owner_name='Greenpeace', is_public=True),
+                   make(name='agenda 3', description='a bloody good agenda 3', public_owner_name='Hidden One', is_public=False)
+                 ]
+        
+        votes = [Vote.objects.create(title='vote 1',time=datetime.datetime.now()),
+                 Vote.objects.create(title='vote 2',time=datetime.datetime.now())]
+        
+        self.voteactions = [ VoteAction.objects.create(vote=votes[0], member=self.mk_1, type='for'),
+                             VoteAction.objects.create(vote=votes[1], member=self.mk_1, type='for'),
+                             VoteAction.objects.create(vote=votes[0], member=self.mk_2, type='against'),
+                             VoteAction.objects.create(vote=votes[1], member=self.mk_2, type='against'),
                              ]
-        self.agendavotes = [AgendaVote.objects.create(agenda=self.agenda_1,
-                                                      vote=self.vote_1,
-                                                      score=-1,
-                                                      reasoning="there's got to be a reason 1"),
-                            AgendaVote.objects.create(agenda=self.agenda_2,
-                                                      vote=self.vote_2,
-                                                      score=0.5,
-                                                      reasoning="there's got to be a reason 2"),
-                            AgendaVote.objects.create(agenda=self.agenda_1,
-                                                      vote=self.vote_2,
-                                                      score=0.5,
-                                                      reasoning="there's got to be a reason 3"),
+        self.agendavotes = [AgendaVote.objects.create(agenda=agendas[0], vote=votes[0], score=-1,  reasoning="there's got to be a reason 1"),
+                            AgendaVote.objects.create(agenda=agendas[1], vote=votes[1], score=0.5, reasoning="there's got to be a reason 2"),
+                            AgendaVote.objects.create(agenda=agendas[0], vote=votes[1], score=0.5, reasoning="there's got to be a reason 3"),
                             ]
 
         self.domain = 'http://' + Site.objects.get_current().domain
@@ -562,11 +541,25 @@ class MKAgendasTest(TestCase):
             av.delete()
         for va in self.voteactions:
             va.delete()
-        self.vote_1.delete()
-        self.vote_2.delete()
         self.mk_1.delete()
         self.mk_2.delete()
         self.party_1.delete()
-        self.agenda_1.delete()
-        self.agenda_2.delete()
-        self.agenda_3.delete()
+
+class PartiesMembersViewTester(TestCase):
+    def setUp(self):
+        self.c = Client()
+          
+    def testAccessible19(self):
+        self.assertEqual(self.c.get(reverse('parties-members-index')).status_code, 301)
+#        self.assertEqual(self.c.get(reverse('parties-members-index'), follow=True).status_code, 200)
+#         
+#     def testAccessible18(self):
+#         self.assertEqual(self.c.get('/parties-members/18/').status_code, 200)
+# 
+#     def testAccessible19raw(self):
+#         self.assertEqual(self.c.get('/parties-members/19/raw').status_code, 200)
+# 
+#     def testAccessible18raw(self):
+#         self.assertEqual(self.c.get('/parties-members/18/raw').status_code, 200)
+        
+        

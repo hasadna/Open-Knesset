@@ -5,7 +5,7 @@ from django.db import models
 
 class KnessetManager(models.Manager):
     """This is a manager for Knesset class"""
-
+    
     def __init__(self):
         super(KnessetManager, self).__init__()
         self._current_knesset = None
@@ -15,6 +15,7 @@ class KnessetManager(models.Manager):
             try:
                 self._current_knesset = self.get_query_set().order_by('-number')[0]
             except IndexError:
+                #FIX: should document when and why this should happen
                 return None
         return self._current_knesset
 

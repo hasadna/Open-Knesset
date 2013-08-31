@@ -3,7 +3,7 @@ from django.utils import translation
 from django.core.management.base import NoArgsCommand
 from django.conf import settings
 
-from mailer import send_html_mail
+from mailer import send_html_mail 
 from agendas.models import UserSuggestedVote
 from django.contrib.auth.models import User
 

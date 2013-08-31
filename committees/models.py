@@ -17,7 +17,7 @@ from annotatetext.models import Annotation
 from events.models import Event
 from links.models import Link
 from plenum.create_protocol_parts import create_plenum_protocol_parts
-from mks.models import Knesset
+from mks.models import Knesset, Member
 
 COMMITTEE_PROTOCOL_PAGINATE_BY = 120
 
@@ -38,9 +38,9 @@ class Committee(models.Model):
 
     def __unicode__(self):
         if self.type=='plenum':
-            return "%s" % ugettext('Plenum')
+            return u"%s" % ugettext('Plenum')
         else:
-            return "%s" % self.name
+            return u"{}".format(self.name)
 
     @models.permalink
     def get_absolute_url(self):
@@ -59,8 +59,8 @@ class Committee(models.Model):
         ret = Annotation.objects.filter(content_type=protocol_part_ct)
         return ret.extra(tables = [protocol_part_tn,
                     meeting_tn, committee_tn],
-                    where = [ "%s.object_id=%s.id" % (annotation_tn, protocol_part_tn),
-                              "%s.meeting_id=%s.id" % (protocol_part_tn, meeting_tn),
+                    where = [ "{}.object_id={}.id".format(annotation_tn, protocol_part_tn),
+                              "{}.meeting_id={}.id".format(protocol_part_tn, meeting_tn),
                               "%s.committee_id=%%s" % meeting_tn],
                     params = [ self.id ]).distinct()
 
@@ -139,9 +139,7 @@ def legitimate_header(line):
     """Retunrs true if 'line' looks like something should should be a protocol part header"""
     if re.match(r'^\<.*\>\W*$',line): # this is a <...> line.
         return True
-    if not(line.endswith(':')) or len(line)>50 or not_header.search(line):
-        return False
-    return True
+    return line.endswith(':') and len(line)<=50 and not not_header.search(line)
 
 class CommitteeMeeting(models.Model):
     committee = models.ForeignKey(Committee, related_name='meetings')
@@ -158,32 +156,31 @@ class CommitteeMeeting(models.Model):
         verbose_name = _('Committee Meeting')
         verbose_name_plural = _('Committee Meetings')
 
-    def title (self):
-        truncator = Truncator(self.topics)
-        return truncator.words(12)
+    @property
+    def title(self):
+        return Truncator(self.topics).words(12)
 
     def __unicode__(self):
-        cn = cache.get('committee_%d_name' % self.committee_id)
+        cachename = 'committee_{}_name'.format(self.committee_id)
+        cn = cache.get(cachename)
         if not cn:
-            if self.committee.type=='plenum':
-                cn='Plenum'
+            if self.committee.type == 'plenum':
+                cn = u'Plenum'
             else:
                 cn = unicode(self.committee)
-            cache.set('committee_%d_name' % self.committee_id,
-                      cn,
-                      settings.LONG_CACHE_TIME)
-        if cn=='Plenum':
-            return (u"%s" % (self.title())).replace("&nbsp;", u"\u00A0")
+            cache.set(cachename, cn, settings.LONG_CACHE_TIME)
+        if cn == u'Plenum':
+            res = u"{}".format(self.title)
         else:
-            return (u"%s - %s" % (cn,
-                                self.title())).replace("&nbsp;", u"\u00A0")
+            res = u"{} - {}".format(cn,  self.title)
+        return res.replace(u"&nbsp;", u"\u00A0") 
 
     @models.permalink
     def get_absolute_url(self):
         if self.committee.type=='plenum':
-            return ('plenum-meeting', [str(self.id)])
+            return ('plenum-meeting', [unicode(self.id)])
         else:
-            return ('committee-meeting', [str(self.id)])
+            return ('committee-meeting', [unicode(self.id)])
 
     def _get_tags(self):
         tags = Tag.objects.get_for_object(self)
@@ -192,7 +189,7 @@ class CommitteeMeeting(models.Model):
     def _set_tags(self, tag_list):
         Tag.objects.update_tags(self, tag_list)
 
-    tags = property(_get_tags, _set_tags)
+    tags = property(Tag.objects.get_for_object, Tag.objects.update_tags)
 
     def save(self, **kwargs):
         super(CommitteeMeeting, self).save(**kwargs)
@@ -237,18 +234,17 @@ class CommitteeMeeting(models.Model):
         i = 1
         section = []
         header = ''
-
         # now create the sections
         for line in protocol_text:
             if legitimate_header(line):
-                if (i>1)or(section):
+                if i > 1 or section:
                     ProtocolPart(meeting=self, order=i,
                         header=header, body='\n'.join(section)).save()
                 i += 1
-                header = re.sub('[\>:]+$','',re.sub('^[\< ]+','',line))
+                header = re.sub(r'(^[\< ]+)|([\>:]+$)','',line)
                 section = []
             else:
-                section.append (line)
+                section.append(line)
 
         # don't forget the last section
         ProtocolPart(meeting=self, order=i,
@@ -313,7 +309,7 @@ class ProtocolPart(models.Model):
                                                     self.meeting.id, self.order)
 
     def __unicode__(self):
-        return "%s %s: %s" % (self.meeting.committee.name, self.header,
+        return u"{} {}: {}".format(self.meeting.committee.name, self.header,
                               self.header)
 
 TOPIC_PUBLISHED, TOPIC_FLAGGED, TOPIC_REJECTED,\
@@ -387,21 +383,21 @@ class Topic(models.Model):
         return ('topic-detail', [str(self.id)])
 
     def __unicode__(self):
-        return "%s" % self.title
+        return self.title
 
     objects = TopicManager()
 
     def set_status(self, status, message=''):
-       self.status = status
-       self.log = '\n'.join((u'%s: %s' % (self.get_status_display(), datetime.now()),
+        self.status = status
+        self.log = '\n'.join((u'%s: %s' % (self.get_status_display(), datetime.now()),
                             u'\t%s' % message,
                             self.log,)
                            )
-       self.save()
+        self.save()
 
     def can_edit(self, user):
         return user.is_superuser or user==self.creator or \
                user in self.editors.all()
 
-
-from listeners import *
+import listeners
+del listeners

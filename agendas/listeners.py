@@ -1,99 +1,48 @@
-#encoding: utf-8
+# encoding: utf-8
 import datetime
 from django.db.models.signals import post_save, pre_delete, post_delete
 from django.contrib.contenttypes.models import ContentType
-from planet.models import Feed, Post
 from actstream import action
 from actstream.models import Follow
-from knesset.utils import cannonize, disable_for_loaddata
-from agendas.models import AgendaVote, AgendaMeeting, AgendaBill, Agenda
-from links.models import Link, LinkType
+from knesset.utils import disable_for_loaddata
 
-@disable_for_loaddata
-def record_agenda_ascription_action(sender, created, instance, **kwargs):
-    if created:
-        action.send(instance.agenda, verb='agenda ascribed',
-                    description='agenda "%s" ascribed to vote "%s"' % 
-                        (instance.agenda.__unicode__(),instance.vote.title),
-                    target = instance,
-                    timestamp = datetime.datetime.now())
-    else:
-        action.send(instance.agenda, verb='agenda-vote relation updated',
-                    description='relation between agenda "%s" and vote "%s" was updated' %
-                        (instance.agenda.__unicode__(),instance.vote.title),
-                    target = instance,
-                    timestamp = datetime.datetime.now())
-post_save.connect(record_agenda_ascription_action, sender=AgendaVote)
+class Listener():
+    fmt_updated = u'agenda {atype} relation updated',   u'relation between agenda "{name}" and {atype} "{title}" was updated'
+    fmt_created = u'agenda {atype} ascribed',           u'agenda "{name}" ascribed to {atype} "{title}"'
+    fmt_removed = u'agenda {atype} removed',            u'agenda "{name}" removed from {atype} "{title}"'
 
-@disable_for_loaddata
-def record_agenda_removal_action(sender, instance, **kwargs):
-    action.send(instance.agenda, verb='agenda removed',
-                description="agenda %s removed from vote %s" %
-                    (instance.agenda.name,instance.vote.title),
-                target = instance.vote,
-                timestamp = datetime.datetime.now())
-pre_delete.connect(record_agenda_removal_action, sender=AgendaVote)
+    def do_send(self, instance, verb, fmt, get=False):
+        title = instance.key.full_title if hasattr(instance.key, 'full_title') else instance.key.title
+        action.send(instance.agenda, verb=verb.format(atype=self.keyname()),
+                    target=(self.key if get else instance),
+                    timestamp=datetime.datetime.now(),
+                    description=fmt.format(name=instance.agenda.name, title=title, atype=self.keyname()))
+        
+    @disable_for_loaddata
+    def record_ascription_action(self, sender, created, instance, **kwargs):
+        verb, fmt = Listener.fmt_created if created else Listener.fmt_updated
+        self.do_send(instance, verb, fmt)
 
-@disable_for_loaddata
-def record_agenda_bill_ascription_action(sender, created, instance, **kwargs):
-    if created:
-        action.send(instance.agenda, verb='agenda_bill_ascribed',
-                    description='agenda "%s" ascribed to bill "%s"' %
-                        (instance.agenda.__unicode__(),instance.bill.full_title),
-                    target = instance,
-                    timestamp = datetime.datetime.now())
-    else:
-        action.send(instance.agenda, verb='agenda_bill_relation_updated',
-                    description='relation between agenda "%s" and bill "%s" was updated' %
-                        (instance.agenda.__unicode__(),instance.bill.full_title),
-                    target = instance,
-                    timestamp = datetime.datetime.now())
-post_save.connect(record_agenda_bill_ascription_action, sender=AgendaBill)
+    @disable_for_loaddata
+    def record_removal_action(self, sender, instance, **kwargs):
+        verb, fmt = Listener.fmt_removed
+        self.do_send(instance, verb, fmt, True)
+        
+    def __call__(self, aclass):    
+        post_save.connect(self.record_ascription_action, sender=aclass)
+        pre_delete.connect(self.record_removal_action, sender=aclass)
+        return aclass
 
-@disable_for_loaddata
-def record_agenda_bill_removal_action(sender, instance, **kwargs):
-    action.send(instance.agenda, verb='agenda removed',
-                description="agenda %s removed from bill %s" % 
-                    (instance.agenda.name,instance.bill.full_title),
-                target = instance.bill,
-                timestamp = datetime.datetime.now())
-pre_delete.connect(record_agenda_bill_removal_action, sender=AgendaBill)
-
-@disable_for_loaddata
-def record_agenda_meeting_ascription_action(sender, created, instance, **kwargs):
-    if created:
-        action.send(instance.agenda, verb='agenda_meeting_ascribed',
-                    description='agenda "%s" ascribed to meeting "%s"' %
-                    (instance.agenda.__unicode__(),instance.meeting.title()),
-                    target = instance,
-                    timestamp = datetime.datetime.now())
-    else:
-        action.send(instance.agenda, verb='agenda_meeting_relation_updated',
-                    description='relation between agenda "%s" and meeting "%s" was updated' %
-                        (instance.agenda.__unicode__(), instance.meeting.title()),
-                    target = instance,
-                    timestamp = datetime.datetime.now())
-post_save.connect(record_agenda_meeting_ascription_action, sender=AgendaMeeting)
-
-@disable_for_loaddata
-def record_agenda_meeting_removal_action(sender, instance, **kwargs):
-    action.send(instance.agenda, verb='agenda_meeting_removed',
-                description='agenda "%s" removed from meeting "%s"' %
-                    (instance.agenda.__unicode__(),instance.meeting.title()),
-                target = instance.meeting,
-                timestamp = datetime.datetime.now())
-pre_delete.connect(record_agenda_meeting_removal_action, sender=AgendaMeeting)
-
-@disable_for_loaddata
-def update_num_followers(sender, instance, **kwargs):
-    agenda = instance.actor
-    if isinstance(agenda, Agenda):
-        agenda.num_followers = Follow.objects.filter(
-            content_type = ContentType.objects.get(
-                    app_label="agendas",
-                    model="agenda").id,
-            object_id=agenda.id).count()
-        agenda.save()
-
-post_delete.connect(update_num_followers, sender=Follow)
-post_save.connect(update_num_followers, sender=Follow)
+    
+def Follower(agenda_class):
+    @disable_for_loaddata
+    def _update_num_followers(sender, instance, **kwargs):
+        agenda = instance.actor
+        if isinstance(agenda, agenda_class):
+            agenda.num_followers = Follow.objects.filter(
+                content_type=ContentType.objects.get(app_label="agendas", model="agenda").id,
+                object_id=agenda.id).count()
+            agenda.save()
+    post_delete.connect(_update_num_followers, sender=Follow)
+    post_save.connect(_update_num_followers, sender=Follow)
+    return agenda_class

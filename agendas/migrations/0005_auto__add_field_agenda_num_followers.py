@@ -1,19 +1,15 @@
 # encoding: utf-8
-import datetime
 from south.db import db
 from south.v2 import SchemaMigration
-from django.db import models
 
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-
         # Adding field 'Agenda.num_followers'
         db.add_column('agendas_agenda', 'num_followers', self.gf('django.db.models.fields.IntegerField')(default=0), keep_default=False)
 
 
     def backwards(self, orm):
-
         # Deleting field 'Agenda.num_followers'
         db.delete_column('agendas_agenda', 'num_followers')
 

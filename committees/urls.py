@@ -1,6 +1,9 @@
 #encoding: UTF-8
 from django.conf.urls import url, patterns
 from djangoratings.views import AddRatingFromModel
+from django.views.decorators.cache import cache_page
+
+cached = cache_page(60 * 15)
 
 from .models import CommitteeMeeting
 from views import (
@@ -14,7 +17,7 @@ meetings_list = MeetingsListView.as_view(
     queryset=CommitteeMeeting.objects.all(), paginate_by=20)
 
 committeesurlpatterns = patterns('',
-    url(r'^committee/$', CommitteeListView.as_view(), name='committee-list'),
+    url(r'^committee/$', cached(CommitteeListView.as_view()), name='committee-list'),
     url(r'^committee/more-topics/$', TopicsMoreView.as_view(), name='committee-topics-more'),
     url(r'^committee/(?P<pk>\d+)/$', CommitteeDetailView.as_view(), name='committee-detail'),
     url(r'^committee/(?P<committee_id>\d+)/all_meetings/$', meetings_list, name='committee-all-meetings'),

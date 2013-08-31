@@ -1,6 +1,4 @@
 from django.conf.urls import url, patterns
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse, Http404
 
 from mock import mock_reader
 from backlinks.pingback.server import PingbackServer

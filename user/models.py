@@ -3,13 +3,12 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
-from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 
-from actstream import follow
 from actstream.models import Follow
 
-from mks.models import Party, Member, GENDER_CHOICES
+from mks.models import Party, Member
+from persons.models import GENDER_CHOICES
 from laws.models import Bill
 from agendas.models import Agenda
 from committees.models import CommitteeMeeting,Topic
@@ -50,42 +49,37 @@ class UserProfile(models.Model):
     email_notification = models.CharField(max_length=1, choices=NOTIFICATION_PERIOD_CHOICES, blank=True, null=True)
     party = models.ForeignKey('mks.Party', null=True, blank=True)
 
+    def get_actors(self, model, *related):
+        lst = Follow.objects.filter(user=self.user,
+                       content_type=ContentType.objects.get_for_model(model))
+        if related:
+            lst = lst.prefetch_related(*related)
+        return [x.actor for x in lst]
+    
     @property
     def members(self):
-        return map(lambda x: x.actor,
-            Follow.objects.filter(user=self.user,
-                content_type=ContentType.objects.get_for_model(Member)).prefetch_related('actor'))
+        return self.get_actors(Member, 'actor')
 
     @property
     def bills(self):
-        return map(lambda x: x.actor,
-            Follow.objects.filter(user=self.user,
-                content_type=ContentType.objects.get_for_model(Bill)).prefetch_related('actor'))
+        return self.get_actors(Bill, 'actor')
 
     @property
     def parties(self):
         #TODO: ther has to be a faster way
-        return map(lambda x: x.actor,
-            Follow.objects.filter(user=self.user, content_type=ContentType.objects.get_for_model(Party)))
+        return self.get_actors(Party)
 
     @property
     def agendas(self):
-        return map(lambda x: x.actor,
-            Follow.objects.filter(user=self.user,
-                content_type=ContentType.objects.get_for_model(Agenda)).prefetch_related('actor',
-                                                                                         'actor__agendavotes'))
+        return self.get_actors(Agenda, 'actor', 'actor__agendavotes')
 
     @property
     def meetings(self):
-        return map(lambda x: x.actor,
-            Follow.objects.filter(user=self.user,
-                content_type=ContentType.objects.get_for_model(CommitteeMeeting)).prefetch_related('actor'))
+        return self.get_actors(CommitteeMeeting, 'actor')
 
     @property
     def topics(self):
-        return map(lambda x: x.actor,
-            Follow.objects.filter(user=self.user,
-                content_type=ContentType.objects.get_for_model(Topic)).prefetch_related('actor'))
+        return self.get_actors(Topic, 'actor')
 
 
     def get_badges(self):

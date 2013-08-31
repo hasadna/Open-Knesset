@@ -5,7 +5,8 @@ from django.test.client import Client
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-from mks.models import Member, Party, GENDER_CHOICES
+from mks.models import Member, Party
+from persons.models import GENDER_CHOICES
 from committees.models import Committee
 
 from . import consts

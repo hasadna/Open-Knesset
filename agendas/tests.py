@@ -11,7 +11,7 @@ from django.conf import settings
 from models import Agenda, AgendaVote, AgendaBill, AgendaMeeting
 from laws.models import Vote, VoteAction, Bill
 from mks.models import Party, Member, Membership, Knesset
-from committees.models import Committee, CommitteeMeeting
+from committees.models import Committee
 just_id = lambda x: x.id
 
 class SimpleTest(TestCase):
@@ -145,8 +145,8 @@ I have a deadline''')
 
     def testAgendaDetail(self):
         # Access public agenda while not logged in
-        res = self.client.get('%s?all_mks' % reverse('agenda-detail',
-                                      kwargs={'pk': self.agenda_1.id}))
+        res = self.client.get('{}?all_mks'.format(
+                            reverse('agenda-detail', kwargs={'pk': self.agenda_1.id})))
         self.assertEqual(res.status_code, 200)
         self.assertTemplateUsed(res,
                                 'agendas/agenda_detail.html')
@@ -333,8 +333,7 @@ I have a deadline''')
         self.assertEqual(len(res.context['related_votes']), 2)
 
     def testAgendaDetailOptCacheFail(self):
-        res = self.client.get(reverse('agenda-detail',
-                                      kwargs={'pk': self.agenda_1.id}))
+        self.client.get(reverse('agenda-detail', kwargs={'pk': self.agenda_1.id}))
 
         self.agenda_4 = Agenda.objects.create(name='agenda 4',
                                               description='a bloody good agenda 4',
@@ -355,8 +354,6 @@ I have a deadline''')
         self.assertIn('url', vote, "Got vote with no url in agenda-todo")
         self.assertIn('title', vote, "Got vote with no title in agenda-todo")
         self.assertIn('score', vote, "Got vote with no importance in agenda-todo")
-
-
 
     def test_suggest_votes_for_new_agenda(self):
         new_agenda = Agenda.objects.create(name='new agenda',

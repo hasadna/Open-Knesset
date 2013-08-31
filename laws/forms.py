@@ -26,7 +26,7 @@ class BudgetEstimateForm(forms.Form):
 
         if bill is not None and user is not None:
             try:
-                be = BillBudgetEstimation.objects.get(bill=bill,estimator__username=str(user))
+                be = BillBudgetEstimation.objects.get(bill=bill,estimator__username=unicode(user))
                 self.fields['be_one_time_gov'].initial = be.one_time_gov
                 self.fields['be_yearly_gov'].initial = be.yearly_gov
                 self.fields['be_one_time_ext'].initial = be.one_time_ext

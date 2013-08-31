@@ -2,9 +2,9 @@ from django import forms
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
-from mks.models import GENDER_CHOICES, Party
+from mks.models import Party
 from models import NOTIFICATION_PERIOD_CHOICES
-
+from persons.models import GENDER_CHOICES
 
 class RegistrationForm(UserCreationForm):
     username = forms.RegexField(label=_("Username"), max_length=30, regex=r'^(?u)[ \w.@+-]{4,}$',

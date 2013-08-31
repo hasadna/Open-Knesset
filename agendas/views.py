@@ -7,20 +7,20 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.db.models import Count
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponseForbidden
-from django.shortcuts import get_object_or_404, render_to_response, redirect
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseForbidden
+from django.shortcuts import get_object_or_404, render_to_response
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
 
 from hashnav import DetailView, ListView
-from laws.models import Vote
+#from laws.models import Vote
 from mks.models import Member, Party
 from apis.urls import vote_handler
 
-from forms import (EditAgendaForm, AddAgendaForm, VoteLinkingFormSet,
-                   MeetingLinkingFormSet)
+from forms import (EditAgendaForm, AddAgendaForm,
+                   VoteLinkingForm, BillLinkingForm, MeetingLinkingForm)
 from models import Agenda, AgendaVote, AgendaMeeting, AgendaBill
 
 import queries
@@ -46,36 +46,34 @@ class AgendaListView(ListView):
         # optimization - create query for votes per agenda
         # store in context as dictionary votes[agendaid]=<votenum>
         agenda_votes_results = Agenda.objects.values("id").annotate(Count("votes"))
-        agenda_votes = dict(map(lambda vote:(vote["id"],str(vote["votes__count"])),agenda_votes_results))
-        parties_lookup = {party.id: party.name for
-                          party in Party.current_knesset.all()}
+        agenda_votes = {vote["id"]:str(vote["votes__count"]) for vote in agenda_votes_results}
+        parties_lookup = {party.id: party.name for party in Party.current_knesset.all()}
 
         allAgendaPartyVotes = cache.get('AllAgendaPartyVotes')
         if not allAgendaPartyVotes:
             # filtering for current knesset is done here
 
+            #TODO: this is embarassingly slow. ~1300ms !
             allAgendaPartyVotes = queries.getAllAgendaPartyVotes()
 
             for agenda_id, party_votes in allAgendaPartyVotes.iteritems():
                 allAgendaPartyVotes[agenda_id] = [
-                    x for x in party_votes if x[0] in parties_lookup]
+                    (k[0], k[1]) for k in party_votes if k[0] in parties_lookup]
 
             cache.set('AllAgendaPartyVotes', allAgendaPartyVotes, 1800)
 
-        if self.request.user.is_authenticated():
-            p = self.request.user.get_profile()
-            watched = p.agendas
-        else:
-            watched = None
+        #so should `watched` be False or None?
+        watched = self.request.user.get_profile().agendas if self.request.user.is_authenticated() else None
+        
         agendaEditorIds = queries.getAgendaEditorIds()
         allEditorIds = list(set(chain.from_iterable(agendaEditorIds.values())))
         editors = User.objects.filter(id__in=allEditorIds)
         context['agenda_editors'] = agendaEditorIds
-        context['editors'] = dict(map(lambda obj:(obj.id,obj),editors))
+        context['editors'] = {obj.id:obj for obj in  editors}
         context['watched'] = watched
-        context['agenda_votes']=agenda_votes
-        context['agenda_party_values']=allAgendaPartyVotes
-        context['parties_lookup']=parties_lookup
+        context['agenda_votes'] = agenda_votes
+        context['agenda_party_values'] = allAgendaPartyVotes
+        context['parties_lookup'] = parties_lookup
         return context
 
 
@@ -94,14 +92,13 @@ class AgendaDetailView(DetailView):
 
     def get(self, request, *arg, **kwargs):
         try:
-            response = super(AgendaDetailView, self).get(request, *arg, **kwargs)
+            return super(AgendaDetailView, self).get(request, *arg, **kwargs)
         except self.ForbiddenAgenda:
             return HttpResponseForbidden()
-        return response
 
     def get_object(self):
         obj = super(AgendaDetailView, self).get_object()
-        has_id = Agenda.objects.get_relevant_for_user(user=self.request.user).filter(pk=obj.id).count() > 0
+        has_id = Agenda.objects.get_relevant_for_user(user=self.request.user).filter(pk=obj.id).exists()
         if has_id:
             return obj
         else:
@@ -111,41 +108,46 @@ class AgendaDetailView(DetailView):
         context = super(AgendaDetailView, self).get_context_data(*args, **kwargs)
         agenda = context['object']
         try:
-            context['title'] = "%s" % agenda.name
+            context['title'] = _(u"%s") % (agenda.name)
         except AttributeError:
             context['title'] = _('None')
-
-        if self.request.user.is_authenticated():
-            p = self.request.user.get_profile()
+        user = self.request.user
+        if user.is_authenticated():
+            p = user.get_profile()
             watched = agenda in p.agendas
-            watched_members = self.request.user.get_profile().members
+            watched_members = p.members
         else:
             watched = False
             watched_members = False
         context.update({'watched_object': watched})
         context['watched_members'] = watched_members
 
-        all_mks = 'all_mks' in self.request.GET.keys()
+        #TODO: This is wrong. It only gives raw mks.
+        #      Nothing relevant to this agenda
         mks_values = agenda.get_mks_values()
         context['agenda_mk_values'] = dict(mks_values)
-        cmp_rank = lambda x, y: x[1]['rank'] - y[1]['rank']
-        if all_mks:
-            context['all_mks_ids'] = map(itemgetter(0),mks_values[:200])
+        
+        #cmp_rank = lambda x, y: x[1]['rank'] - y[1]['rank']
+        def get_first(iterable):
+            return [x[0] for x in iterable]
+        
+        if 'all_mks' in self.request.GET.keys():
+            context['all_mks_ids'] = get_first(mks_values[:200])
             context['all_mks'] = True
         else:
-            context['mks_top'] = map(itemgetter(0),mks_values[:5])
-            context['mks_bottom'] = map(itemgetter(0),mks_values[-5:])
+            context['mks_top'] = get_first(mks_values[:5])
+            context['mks_bottom'] = get_first(mks_values[-5:])
 
-        allAgendaPartyVotes = agenda.get_all_party_values()
-        context['agenda_party_values']=dict(map(lambda x:(x[0],x[1]),allAgendaPartyVotes.setdefault(agenda.id,[])))
-        context['agendaTopParties']=map(itemgetter(0),sorted(allAgendaPartyVotes[agenda.id],key=itemgetter(1),reverse=True)[:20])
-
-        agenda_votes = cache.get('agenda_votes_%d' % agenda.id)
+        allAgendaPartyVotes = Agenda.objects.get_all_party_values()
+        context['agenda_party_values'] = { k[0]:k[1] for k in allAgendaPartyVotes.setdefault(agenda.id, [])}
+        context['agendaTopParties'] = get_first(sorted(allAgendaPartyVotes[agenda.id], key=itemgetter(1), reverse=True)[:20])
+        
+        agenda_votes_name = 'agenda_votes_{}'.format(agenda.id)
+        agenda_votes = cache.get(agenda_votes_name)
 
         if not agenda_votes:
-            agenda_votes = agenda.agendavotes.order_by(
-                '-vote__time').select_related('vote')
-            cache.set('agenda_votes_%d' % agenda.id, agenda_votes, 900)
+            agenda_votes = agenda.agendavotes.order_by('-vote__time').select_related('vote')
+            cache.set(agenda_votes_name, agenda_votes, 900)
 
         try:
             total_votes = agenda_votes.count()
@@ -166,13 +168,8 @@ class AgendaDetailView(DetailView):
 
         # Optimization: get all parties and members before rendering
         # Further possible optimization: only bring parties/members needed for rendering
-        parties_objects = Party.objects.all()
-        partiesDict = dict(map(lambda party:(party.id,party),parties_objects))
-        context['parties']=partiesDict
-
-        member_objects = Member.objects.all()
-        membersDict = dict(map(lambda mk:(mk.id,mk),member_objects))
-        context['members']=membersDict
+        for name, cls in [('parties', Party), ('members', Member)]:
+            context[name] = { x.id:x for x in cls.objects.all() }
         return context
 
 
@@ -183,25 +180,19 @@ class AgendaVotesMoreView(GetMoreView):
 
     def get_queryset(self):
         agenda = get_object_or_404(Agenda, pk=self.kwargs['pk'])
-        agenda_votes = cache.get('agenda_votes_%d' % agenda.id)
+        agenda_name = 'agenda_votes_{}'.format(agenda.id)
+        agenda_votes = cache.get(agenda_name)
 
         if not agenda_votes:
-            agenda_votes = agenda.agendavotes.order_by(
-                '-vote__time').select_related('vote')
-            cache.set('agenda_votes_%d' % agenda.id, agenda_votes, 900)
+            agenda_votes = agenda.agendavotes.order_by('-vote__time').select_related('vote')
+            cache.set(agenda_name, agenda_votes, 900)
         return agenda_votes
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(AgendaVotesMoreView, self).get_context_data(*args, **kwargs)
-
-        if self.request.user.is_authenticated():
-            p = self.request.user.get_profile()
-            watched_members = p.members
-        else:
-            watched_members = False
-        ctx['watched_members'] = watched_members
-
-        return ctx
+        context = super(AgendaVotesMoreView, self).get_context_data(*args, **kwargs)
+        user = self.request.user
+        context['watched_members'] = user.get_profile().members if user.is_authenticated() else False
+        return context
 
 
 class AgendaBillsMoreView(GetMoreView):
@@ -223,62 +214,33 @@ class AgendaMeetingsMoreView(GetMoreView):
         agenda = get_object_or_404(Agenda, pk=self.kwargs['pk'])
         return agenda.agendameetings.all()
 
+def _log(xid, name, kid):
+    logger.error( _('Attribute error trying to generate title for agenda %d %s %d') % (xid, name, kid))
 
-class AgendaVoteDetailView (DetailView):
+class AbstractSelectableDetailView(DetailView):
+    def get_context_data(self, *args, **kwargs):
+        context = super(AbstractSelectableDetailView , self).get_context_data(*args, **kwargs)
+        rel = context['object']
+        try:
+            context['title'] =  _("Comments on agenda %s %s %s") % (rel.agenda, rel.keyname(), rel.title)
+        except AttributeError:
+            _log(rel.agenda.id, rel.keyname(), rel.key.id)
+            context['title'] =  _('None')
+        return context
+
+class AgendaVoteDetailView(AbstractSelectableDetailView):
     model = AgendaVote
     template_name = 'agendas/agenda_vote_detail.html'
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(AgendaVoteDetailView, self).get_context_data(*args, **kwargs)
-        agendavote = context['object']
-        vote = agendavote.vote
-        agenda = agendavote.agenda
-        try:
-            context['title'] = _("Comments on agenda %(agenda)s vote %(vote)s") % {
-                  'vote':vote.title,
-                  'agenda':agenda.name}
-        except AttributeError:
-            context['title'] = _('None')
-            logger.error('Attribute error trying to generate title for agenda %d vote %d' % (agenda.id,vote.id))
-        return context
-
-class AgendaMeetingDetailView (DetailView):
+class AgendaMeetingDetailView(AbstractSelectableDetailView):
     model = AgendaMeeting
     template_name = 'agendas/agenda_meeting_detail.html'
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(AgendaMeetingDetailView , self).get_context_data(*args, **kwargs)
-        agendameeting = context['object']
-        meeting = agendameeting.meeting
-        agenda = agendameeting.agenda
-        try:
-            context['title'] = _("Comments on agenda %(agenda)s meeting %(meeting)s") % {
-                  'meeting':meeting,
-                  'agenda':agenda.name}
-        except AttributeError:
-            context['title'] = _('None')
-            logger.error('Attribute error trying to generate title for agenda %d meeting %d' % (agenda.id,meeting.id))
-        return context
-
-class AgendaBillDetailView (DetailView):
+class AgendaBillDetailView(AbstractSelectableDetailView):
     model = AgendaBill
     template_name = 'agendas/agenda_bill_detail.html'
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(AgendaBillDetailView , self).get_context_data(*args, **kwargs)
-        agendabill = context['object']
-        bill = agendabill.bill
-        agenda = agendabill.agenda
-        try:
-            context['title'] = _("Comments on agenda %(agenda)s bill %(bill)s") % {
-                  'bill':bill.full_title,
-                  'agenda':agenda.name}
-        except AttributeError:
-            context['title'] = _('None')
-            logger.error('Attribute error trying to generate title for agenda %d bill %d' % (agenda.id,bill.id))
-        return context
-
-class AgendaMkDetailView (DetailView):
+class AgendaMkDetailView(DetailView):
     model = Agenda
     template_name = 'agendas/mk_agenda_detail.html'
 
@@ -287,31 +249,25 @@ class AgendaMkDetailView (DetailView):
         agenda = context['object']
         context['agenda_url'] = agenda.get_absolute_url()
         context['agenda_name'] = agenda.name
-        member =  Member.objects.get(pk=context['member_id'])
+        member = Member.objects.get(pk=context['member_id'])
         context['member'] = member
         context['member_url'] = member.get_absolute_url()
         context['score'] = agenda.member_score(member)
 
         try:
-            context['title'] = _("Analysis of %(member)s votes by agenda %(agenda)s") % {'member':member.name, 'agenda':agenda.name}
+            context['title'] = _("Analysis of %s votes by agenda %s") % (member.name, agenda.name)
         except AttributeError:
             context['title'] = _('None')
-            logger.error('Attribute error trying to generate title for agenda %d member %d' % (self.object_id,self.member_id))
+            _log(self.object_id, 'member', self.member_id)
 
-        related_mk_votes = agenda.related_mk_votes(member)
+        context['related_votes'] = agenda.related_mk_votes(member)
 
-        if self.request.user.is_authenticated():
-            p = self.request.user.get_profile()
-            watched = agenda in p.agendas
-        else:
-            watched = False
-
-        context.update({'watched_object': watched})
-        context.update({'related_votes': related_mk_votes})
-
+        user = self.request.user
+        context['watched_object'] = agenda in user.get_profile().agendas if user.is_authenticated() \
+                                    else False
         return context
 
-class AgendaDetailEditView (DetailView):
+class AgendaDetailEditView(DetailView):
     model = Agenda
     template_name = 'agendas/agenda_detail_edit.html'
 
@@ -338,7 +294,7 @@ class AgendaDetailEditView (DetailView):
         if request.user not in agenda.editors.all():
             return HttpResponseForbidden()
         form = EditAgendaForm(data=self.request.POST)
-        if form.is_valid(): # All validation rules pass
+        if form.is_valid():  # All validation rules pass
             agenda.name = form.cleaned_data['name']
             agenda.public_owner_name = form.cleaned_data['public_owner_name']
             agenda.description = form.cleaned_data['description']
@@ -350,8 +306,8 @@ class AgendaDetailEditView (DetailView):
             return super(AgendaDetailEditView, self).get(request, *args, **kwargs)
 
 class MockApiCaller(Client):
-    def get_vote_api(self,vote):
-        return vote_handler( self.get('/api/vote/%d/' % vote.id) )  # TODO: get the url from somewhere else?
+    def get_vote_api(self, vote):
+        return vote_handler(self.get('/api/vote/{}/'.format(vote.id)))  # TODO: get the url from somewhere else?
 
     def request(self, **request):
         environ = {
@@ -372,8 +328,7 @@ mock_api = MockApiCaller()
 
 @login_required
 def agenda_add_view(request):
-    allowed_methods = ['GET', 'POST']
-    template_name = 'agendas/agenda_add.html'
+    #allowed_methods = ['GET', 'POST']
 
     if not request.user.is_superuser:
         return HttpResponseRedirect('/agenda/')
@@ -387,144 +342,75 @@ def agenda_add_view(request):
             agenda.description = form.cleaned_data['description']
             agenda.save()
             agenda.editors.add(request.user)
-            return HttpResponseRedirect(agenda.get_absolute_url()) # Redirect after POST
+            return HttpResponseRedirect(agenda.get_absolute_url())  # Redirect after POST
     else:
         initial_data = {'public_owner_name': request.user.username}
-        form = AddAgendaForm(initial=initial_data) # An unbound form with initial data
+        form = AddAgendaForm(initial=initial_data)  # An unbound form with initial data
 
+    template_name = 'agendas/agenda_add.html'
     return render_to_response(template_name, {'form': form}, context_instance=RequestContext(request))
 
-
-# used for redirection after an object has been added to the agenda
-object_redirect = {'vote':('vote-detail','vote-list'),
-                   'bill':('bill-detail','bill-list'),
-                   'committeemeeting':('committee-meeting','committee-list'),
-                  }
-object_formset_classes = {'vote':VoteLinkingFormSet,
-                          'bill':VoteLinkingFormSet,
-                          'committeemeeting':MeetingLinkingFormSet,
-                         }
+# general form_selector. perhaps better suited at forms.py
+form_selector = { 
+'vote':                  VoteLinkingForm,
+'bill':                  BillLinkingForm,
+'committeemeeting':      MeetingLinkingForm
+}
 
 @login_required
 def update_editors_agendas(request):
-    if request.method == 'POST':
-        object_type = request.POST.get('form-0-object_type',None)
-        object_id = request.POST.get('form-0-obj_id',None)
-        vl_formset = object_formset_classes[object_type](request.POST)
-        if vl_formset.is_valid():
-            for a in vl_formset.cleaned_data:
-                if a:
-                    # Check that the user is an editor of the agenda
-                    # he's trying to edit
-                    try:
-                        agenda = Agenda.objects.get(pk=a['agenda_id'])
-                        if request.user not in agenda.editors.all():
-                            return HttpResponseForbidden()
-                    except Agenda.DoesNotExist:
-                        return HttpResponseForbidden()
-
-                    if a['object_type'] == 'vote':
-                        if a['DELETE']:
-                            try:
-                                object_id = a['obj_id']
-                                av = AgendaVote.objects.get(
-                                       agenda__id=a['agenda_id'],
-                                       vote__id = a['obj_id'])
-                                av.delete()
-                            except AgendaVote.DoesNotExist:
-                                pass
-                        else: # not delete, so try to create
-                            if (a['weight'] is not '' and
-                                a['importance'] is not ''):
-                                try:
-                                    object_id = a['obj_id']
-                                    av = AgendaVote.objects.get(
-                                           agenda__id=a['agenda_id'],
-                                           vote__id = a['obj_id'])
-                                    av.score = a['weight']
-                                    av.importance = a['importance']
-                                    av.reasoning = a['reasoning']
-                                    av.save()
-                                except AgendaVote.DoesNotExist:
-                                    av = AgendaVote(
-                                           agenda_id=int(a['agenda_id']),
-                                           vote_id=int(a['obj_id']),
-                                           score = a['weight'],
-                                           importance = a['importance'],
-                                           reasoning = a['reasoning'])
-                                    av.save()
-                    if a['object_type'] == 'bill':
-                        if a['DELETE']:
-                            try:
-                                object_id = a['obj_id']
-                                av = AgendaBill.objects.get(
-                                       agenda__id=a['agenda_id'],
-                                       bill__id = a['obj_id'])
-                                av.delete()
-                            except AgendaBill.DoesNotExist:
-                                pass
-                        else: # not delete, so try to create
-                            if (a['weight'] is not '' and
-                                a['importance'] is not ''):
-                                try:
-                                    object_id = a['obj_id']
-                                    av = AgendaBill.objects.get(
-                                           agenda__id=a['agenda_id'],
-                                           bill__id = a['obj_id'])
-                                    av.score = a['weight']
-                                    av.importance = a['importance']
-                                    av.reasoning = a['reasoning']
-                                    av.save()
-                                except AgendaBill.DoesNotExist:
-                                    av = AgendaBill(
-                                           agenda_id=int(a['agenda_id']),
-                                           bill_id=int(a['obj_id']),
-                                           score = a['weight'],
-                                           importance = a['importance'],
-                                           reasoning = a['reasoning'])
-                                    av.save()
-                    if a['object_type'] == 'committeemeeting':
-                        if a['DELETE']:
-                            try:
-                                object_id = a['obj_id']
-                                av = AgendaMeeting.objects.get(
-                                       agenda__id=a['agenda_id'],
-                                       meeting__id = a['obj_id'])
-                                av.delete()
-                            except AgendaMeeting.DoesNotExist:
-                                pass
-                        else: # not delete, so try to create
-                            try:
-                                object_id = a['obj_id']
-                                av = AgendaMeeting.objects.get(
-                                       agenda__id=a['agenda_id'],
-                                       meeting__id = a['obj_id'])
-                                av.score = a['weight']
-                                av.reasoning = a['reasoning']
-                                av.save()
-                            except AgendaMeeting.DoesNotExist:
-                                av = AgendaMeeting(
-                                       agenda_id=int(a['agenda_id']),
-                                       meeting_id=int(a['obj_id']),
-                                       score = a['weight'],
-                                       reasoning = a['reasoning'])
-                                av.save()
-                else:
-                    logger.info("invalid form")
-
-        else:
-            # TODO: Error handling: what to do with illeal forms?
-            logger.info("invalid formset")
-            logger.info("%s" % vl_formset.errors)
-        if object_type in object_redirect:
-            if object_id: # return to object page
-                return HttpResponseRedirect(
-                        reverse(object_redirect[object_type][0],
-                                kwargs={'pk':object_id}))
-            else: # return to list
-                return HttpResponseRedirect(reverse(object_redirect[object_type][1]))
-        else:
-            logger.warn('unknown object_type')
-            return HttpResponseRedirect(reverse('main'))
-    else:
+    if request.method != 'POST':
         return HttpResponseNotAllowed(['POST'])
+    object_type = request.POST.get('form-0-object_type', None)
+    if object_type not in form_selector:
+        logger.warn('unknown object_type')
+        return HttpResponseRedirect(reverse('main'))
+    
+    Form = form_selector[object_type]
+    linked_class = Form.linked_to()
+    Formset = Form.get_formset()
+    
+    vl_formset = Formset(request.POST)
+    if not vl_formset.is_valid():
+        # TODO: Error handling: what to do with illeal forms?
+        logger.info("invalid formset")
+        logger.info("{}".format(vl_formset.errors))
+    else:
+        for a in vl_formset.cleaned_data:
+            if not a:
+                logger.info("invalid form")
+                continue
+            # Check that the user is an editor of the agenda
+            # he's trying to edit
+            try:
+                agenda = Agenda.objects.get(pk=a['agenda_id'])
+                if request.user not in agenda.editors.all():
+                    raise Agenda.DoesNotExist()
+            except Agenda.DoesNotExist:
+                return HttpResponseForbidden()
+            type_id = '{}_id'.format(linked_class.keyname())
+            d = {type_id:a['obj_id'], 'agenda_id':a['agenda_id']}
+            if a['DELETE']:
+                try:
+                    linked_class.objects.get(**d).delete()
+                except linked_class.DoesNotExist:
+                    pass
+                continue
+            try:
+                #create:
+                try:
+                    av = linked_class.objects.get(**d)
+                except linked_class.DoesNotExist:
+                    av = linked_class(**{k:int(v) for k, v in d.items()})
+                av.update(a)
+            except KeyError:
+                logger.info("invalid form: nothing to do")
+            else:
+                av.save()
+            
+    object_id = request.POST.get('form-0-obj_id', None)
+    if object_id:
+        param, kwargs = (Form.detailname(), {'pk':object_id})
+    else: 
+        param, kwargs = ('{}-list'.format(Form.linked_to().keyname()), None)
+    return HttpResponseRedirect(reverse(param, kwargs=kwargs))

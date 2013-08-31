@@ -238,8 +238,7 @@ We use south to manage database migration. The work process looks something like
 - ``python manage.py schemamigration sample_app --auto`` this generates a new
   migration under `src/knesset/sample_app/migrations`. You should review it to
   make sure it does what you expect.
-- ``python manage.py --migrate`` To run un the migration (make the changes on
-  the db).
+- ``python manage.py migrate`` To run the migration (make the changes on the db).
 - don't forget to git add/commit the migration file.
 
 Updating the translation strings

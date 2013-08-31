@@ -1,67 +1,16 @@
-{% extends "site_base.html" %}
+{% extends "mks/parties_members_base.html" %}
 {% load i18n %}
-{% block extratitle %}{% trans "Members and Parties" %}{% endblock %}
-{% block description %}{% trans "Members and Parties" %} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
-{% block extrajs %}
-    <script type="text/javascript">
-        $(function() {
-            $('a[rel="tooltip"]').tooltip();
-        });
-    </script>
+
+{% block other_type_link %}{% url 'parties-members-list-raw' knesset_number %}{% endblock %}
+{% block other_type_name %}{% trans "Text only" %}{% endblock %}
+
+{% block other_knesset %}
+     <a href="{{kn.get_absolute_url}}">{{kn}}</a>
 {% endblock %}
 
-{% block nav-parties %}class="active"{% endblock %}
-{% block breadcrumbs %}
-            <li class="active">{% trans "Members and Parties" %} {{object}}</li>
-{% endblock %}
-
-{% block divcontent %}
-    <div class="row">
-        <div class="span4">
-            <h1>{{ object }}</h1>
-        </div>
-        <div class="span4">
-            <div class="alert">
-            {% trans "See also" %}:
-            {% for kn in other_knessets %}
-                <a href="{{kn.get_absolute_url}}">{{kn}}</a>
-            {% endfor %}
-            </div>
-        </div>
-        <div class="span4">
-            <div class="alert">
-                {% trans "Looking for comparisons ? Compare between" %}
-                <a href="{% url 'party-list' %}">{% trans "Parties" %}</a> {% trans "Or" %}
-                <a href="{% url 'member-list' %}">{% trans "Members" %}</a>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-      <div class="cards span12">
-        <section class="card card-list card-list-latest compact">
-            <header><h1>{% trans "Coalition" %}</h1></header>
-            <ul>
-            {% for party in coalition %}
-                <li>
-                    <h2><a href="{{party.get_absolute_url}}">{{party.name}}<a></h2>
-                    {% include "mks/member_photos.html" with members=party.current_members %}
-                </li>
-            {% endfor %}
-            </ul>
-        </section>
-      </div>
-      <div class="cards span12">
-        <section class="card card-list card-list-latest compact">
-            <header><h1>{% trans "Opposition" %}</h1></header>
-            <ul>
-            {% for party in opposition %}
-                <li>
-                    <h2><a href="{{party.get_absolute_url}}">{{party.name}}<a></h2>
-                    {% include "mks/member_photos.html" with members=party.current_members %}
-                </li>
-            {% endfor %}
-            </ul>
-        </section>
-      </div>
-    </div>
+{% block actual_content %}
+    <li>
+        <h2><a href="{{party.get_absolute_url}}">{{party.name}}</a>  ({{party.current_members.count}}{#{% trans "MKs" %}#})</h2>
+        {% include "mks/member_photos.html" with members=party.current_members %}
+    </li>
 {% endblock %}

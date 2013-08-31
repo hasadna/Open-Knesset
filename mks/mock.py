@@ -1,4 +1,3 @@
-import re
 from StringIO import StringIO
 from urllib2 import HTTPError, URLError
 from backlinks.pingback.server import default_server

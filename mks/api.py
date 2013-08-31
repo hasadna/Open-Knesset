@@ -27,7 +27,8 @@ class PartyResource(BaseResource):
 
     class Meta(BaseResource.Meta):
         queryset = Party.objects.filter(
-            knesset=Knesset.objects.current_knesset())
+            knesset=Knesset.objects.current_knesset()
+            )
         allowed_methods = ['get']
         excludes = ['end_date', 'start_date']
         include_absolute_url = True

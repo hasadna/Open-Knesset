@@ -14,5 +14,5 @@ class LastSent(models.Model):
     time = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return "%s %s %s" % (self.user.username, self.content_object, self.time)    
+        return u"{} {} {}".format(self.user.username, self.content_object, self.time)    
 

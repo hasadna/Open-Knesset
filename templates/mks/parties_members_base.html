@@ -1,0 +1,58 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% block extratitle %}{% trans "Members and Parties" %}{% endblock %}
+{% block description %}{% trans "Members and Parties" %} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
+{% block extrajs %}
+    <script type="text/javascript">
+        $(function() {
+            $('a[rel="tooltip"]').tooltip();
+        });
+    </script>
+{% endblock %}
+
+{% block nav-parties %}class="active"{% endblock %}
+{% block breadcrumbs %}
+            <li class="active">{% trans "Members and Parties" %} {{object}}</li>
+{% endblock %}
+
+{% block divcontent %}
+    <div class="row">
+        <div class="span3">
+            <h1>{{ object }}</h1>
+        </div>
+        <div class="span2">
+            <h5><a href="{% block other_type_link %}{% endblock %}">{% block other_type_name %}{% endblock %}</a></h5>
+        </div>
+        <div class="span3">
+            <div class="alert">
+            {% trans "See also" %}:
+            {% for kn in other_knessets %}
+            	{% block other_knesset %}{% endblock %}
+            {% endfor %}
+            </div>
+        </div>
+        <div class="span4">
+            <div class="alert">
+                {% trans "Looking for comparisons ? Compare between" %}
+                <a href="{% url 'party-list' %}">{% trans "Parties" %}</a> {% trans "Or" %}
+                <a href="{% url 'member-list' %}">{% trans "Members" %}</a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+    {% if sides %} 
+	{% for side in sides %}    
+      <div class="cards span12">
+        <section class="card card-list card-list-latest compact">
+        	<header><h1>{% if forloop.last %}{% trans "Opposition" %}{% else %}{% trans "Coalition" %}{% endif %}</h1></header>
+            <ul>
+            {% for party in side %}
+            	{% block actual_content %}{% endblock %}
+            {% endfor %}
+            </ul>
+        </section>
+      </div>
+    {% endfor %}  
+    {% endif %}
+    </div>
+{% endblock %}

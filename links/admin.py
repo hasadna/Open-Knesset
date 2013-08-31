@@ -1,6 +1,6 @@
 from django.contrib import admin
 from models import Link, LinkType
-from django.utils.translation import ugettext_lazy as _, ungettext
+from django.utils.translation import ugettext_lazy as _
 
 def make_active(modeladmin, request, queryset):
     queryset.update(active=True)

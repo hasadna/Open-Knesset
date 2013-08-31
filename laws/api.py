@@ -8,16 +8,10 @@ from tastypie.constants import ALL
 import tastypie.fields as fields
 
 from apis.resources.base import BaseResource
-from mks.models import Member, Party
 from mks.api import MemberResource
-from video.utils import get_videos_queryset
-from video.api import VideoResource
-from links.models import Link
-from links.api import LinkResource
 from models import Law, Bill, Vote, VoteAction, PrivateProposal
 
 from simple.management.commands.syncdata_globals import p_explanation
-from agendas.models import AgendaVote
 
 logger = logging.getLogger("open-knesset.laws.api")
 
@@ -34,10 +28,7 @@ class VoteActionResource(BaseResource):
         include_resource_uri = False
 
     vote_type = fields.CharField('type',null=True)
-    member = fields.ToOneField(MemberResource,
-                              'member',
-                              full=False)
-
+    member = fields.ToOneField(MemberResource,  'member',  full=False)
 
 class VoteResource(BaseResource):
 
@@ -123,33 +114,15 @@ class BillResource(BaseResource):
 
     explanation = fields.CharField()
     legal_code = fields.CharField()
-    proposers = fields.ToManyField(MemberResource,
-                    'proposers',
-                    full=False)
-    pre_votes = fields.ToManyField(VoteResource,
-                    'pre_votes',
-                    null=True,
-                    full=False)
-
-    first_vote = fields.ToOneField(VoteResource,
-                    'first_vote',
-                    null=True,
-                    full=False)
-
-    approval_vote = fields.ToOneField(VoteResource,
-                    'approval_vote',
-                    null=True,
-                    full=False)
-    proposals = fields.ToManyField(PrivateProposalResource,
-                                   'proposals',
-                                   null=True,
-                                   full=True)
-
+    proposers = fields.ToManyField(MemberResource,   'proposers',         null=False, full=False)
+    pre_votes = fields.ToManyField(VoteResource,     'pre_votes',         null=True,  full=False)
+    first_vote = fields.ToOneField(VoteResource,    'first_vote',         null=True,  full=False)
+    approval_vote = fields.ToOneField(VoteResource, 'approval_vote',      null=True,  full=False)
+    proposals = fields.ToManyField(PrivateProposalResource, 'proposals',  null=True,  full=True )
 
     def dehydrate_explanation(self, bundle):
-        result = None
         try:
-            result = self.get_src_parts(bundle)[1]
+            return self.get_src_parts(bundle)[1]
         except:
             logging.error('Got exception dehydrating explanation')
             return ""

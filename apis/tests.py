@@ -5,7 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User, Group, Permission
 from tagging.models import Tag, TaggedItem
 from laws.models import Vote, VoteAction, Bill, Law
-from mks.models import Member, Party, WeeklyPresence, Knesset
+from mks.models import Member, Party, Knesset
 from agendas.models import Agenda
 from committees.models import Committee
 from events.models import Event

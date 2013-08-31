@@ -1,7 +1,4 @@
-from django import forms
 from django.contrib import admin
-from django.forms.models import modelformset_factory
-from django.forms.models import inlineformset_factory
 from django.contrib.contenttypes import generic
 from django.db.models import Q
 
@@ -50,11 +47,13 @@ class PartyAdmin(admin.ModelAdmin):
     inlines = (MembershipInline,)
 admin.site.register(Party, PartyAdmin)
 
+def correlation_list_to_string(m, cl):
+    return ", ".join(["%s (%.0f)" % ((c.m2 if c.m1 == m else c.m1).get_name_with_link(), 100 * c.normalized_score) for c in cl])
 
 class MemberAdmin(admin.ModelAdmin):
     ordering = ('name',)
 #    fields = ('name','start_date','end_date')
-    list_display = ('name', 'gender', 'PartiesString', 'current_party',
+    list_display = ('name', 'gender', 'parties_string', 'current_party',
                     'is_current', 'current_position')
     list_editable = ('is_current', 'current_position')
     search_fields = ['name']
@@ -66,10 +65,12 @@ class MemberAdmin(admin.ModelAdmin):
 
     def change_view(self, request, object_id, extra_context=None):
         m = Member.objects.get(id=object_id)
+        corrs = Correlation.objects.filter(m1=m.id).order_by('normalized_score')
+        
         my_context = {
             'extra': {
-                'hi_corr': m.CorrelationListToString(m.HighestCorrelations()),
-                'low_corr': m.CorrelationListToString(m.LowestCorrelations()),
+                'hi_corr': correlation_list_to_string(m, corrs[:4]),
+                'low_corr': correlation_list_to_string(m, corrs[-3:]),
             }
         }
         return super(MemberAdmin, self).change_view(request, object_id,

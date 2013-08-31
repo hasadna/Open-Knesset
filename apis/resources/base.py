@@ -96,8 +96,8 @@ class BaseResource(ModelResource):
             if getattr(self._meta, 'include_absolute_url', False):
                 field_names.append('absolute_url')
 
-            fields = dict((name, obj) for name, obj in self.fields.iteritems()
-                          if name in field_names)
+            fields = {name:obj for name, obj in self.fields.iteritems()
+                          if name in field_names}
         else:
             fields = None
 
@@ -170,7 +170,7 @@ class BaseResource(ModelResource):
             bundle.data[field_name] = field_object.dehydrate(bundle)
 
             # Check for an optional method to do further dehydration.
-            method = getattr(self, "dehydrate_%s" % field_name, None)
+            method = getattr(self, "dehydrate_{}".format(field_name), None)
 
             if method:
                 bundle.data[field_name] = method(bundle)

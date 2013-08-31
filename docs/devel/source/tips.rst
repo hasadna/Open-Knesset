@@ -107,7 +107,7 @@ A possible session might include:
         git pull git@github.com:hasadna/Open-Knesset.git master
 
         cd ..
-        pip install -r Open-Knesset/requirements.txt
+        pip-2.7 install -r Open-Knesset/requirements.txt
         cd Open-Knesset
 
         ./manage.py migrate
@@ -125,3 +125,67 @@ A possible session might include:
         make html
         popd >/dev/null
     }
+    
+
+Debugging
+===================================
+During debugging, you can use the Python debugger, pdb_.
+
+Add ``import pbd`` in the code, and ``pdb.set_trace()`` in the line you want to begin debugging from.
+
+Run the server and browse the site as usual. When the code hit the line you set a trace in, the browser will hang, and you will get the pdb shell back:
+
+.. code-block:: bash
+
+	> /home/yourname/workspace/oknesset/Open-Knesset/agendas/models.py(448)get_mks_values()
+	-> summaries_for_ranges = []
+	
+	(Pdb) 
+
+You can run any python code from there, just like a normal python interpreter, in addition to `control commands`_, 
+like ``c`` to continue execution, and ``n`` to step single line.
+
+.. warning::
+
+	The debugger will not work in ``python manage.py``, since the output is blocked. The tests will just hang.
+
+
+.. important::
+
+	Remember to remove any ``set_trace()`` commands from the code before committing.
+
+.. _pdb: http://docs.python.org/2/library/pdb.html
+.. _`control commands`: http://docs.python.org/2/library/pdb.html#debugger-commands
+
+Quicker testing
+===================================
+
+PASSWORD_HASHERS
+~~~~~~~~~~~~~~~~~~
+You may want to add this too to `local_settings.py`, in order to speed up the testing by 25%-30%:
+
+.. code-block:: python
+
+	import sys
+	if 'test' in sys.argv:
+	    PASSWORD_HASHERS = (
+	        'django.contrib.auth.hashers.MD5PasswordHasher',
+	    ) 
+
+``--failfast``
+~~~~~~~~~~~~~~~~~~
+if you want the test suite to fail as soon as the first test does, add ``--failfast`` flag:
+
+.. code-block:: sh
+
+    python manage.py test --failfast
+
+alert
+~~~~~~~~~~~~~~~~~~
+In Ubuntu, you can add an ``alert`` after this command:
+
+.. code-block:: sh
+
+    python manage.py test --failfast; alert
+    
+This will pop up a notification when the test is finished.

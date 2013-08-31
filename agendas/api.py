@@ -1,6 +1,8 @@
 '''
 API for the agendas app
 '''
+from collections import defaultdict
+
 from django.utils.timezone import datetime
 
 import tastypie.fields as fields
@@ -10,8 +12,6 @@ from django.contrib.auth.models import User
 from models import Agenda, AgendaVote
 from apis.resources.base import BaseResource
 from mks.models import Member, Party
-
-from operator import itemgetter
 
 class UserResource(BaseResource):
     class Meta(BaseResource.Meta):
@@ -48,26 +48,20 @@ class AgendaTodoResource(BaseResource):
     votes_by_controversy = fields.ListField()
     votes_by_agendas = fields.ListField()
 
-    # TODO: Make this a parameter or setting or something
-    NUM_SUGGESTIONS = 10
-
     def dehydrate_votes_by_agendas(self, bundle):
-        votes = bundle.obj.get_suggested_votes_by_agendas(
-            AgendaTodoResource.NUM_SUGGESTIONS)
-        return self._dehydrate_votes(votes)
+        return self._dehydrate_votes(bundle.obj.get_suggested_votes_by_agendas)
 
     def dehydrate_votes_by_controversy(self, bundle):
-        votes = bundle.obj.get_suggested_votes_by_controversy(
-            AgendaTodoResource.NUM_SUGGESTIONS)
-        return self._dehydrate_votes(votes)
+        return self._dehydrate_votes(bundle.obj.get_suggested_votes_by_controversy)
 
-    def _dehydrate_votes(self, votes):
-        def dehydrate_vote(vote):
-            return dict(id=vote.id,
-                        url=vote.get_absolute_url(),
-                        title=vote.title,
-                        score=vote.score)
-        return [dehydrate_vote(v) for v in votes]
+    # TODO: Make this a parameter or setting or something
+    NUM_SUGGESTIONS = 10
+    def _dehydrate_votes(self, select):
+        return [{'id':vote.id,
+                'url':vote.get_absolute_url(),
+                'title':vote.title,
+                'score':vote.score}
+                for vote in select(AgendaTodoResource.NUM_SUGGESTIONS)]
 
 
 class AgendaResource(BaseResource):
@@ -87,77 +81,66 @@ class AgendaResource(BaseResource):
         excludes = ['is_public']
         list_fields = ['name', 'id', 'description', 'public_owner_name']
 
-    def dehydrate_members(self, bundle):
-        rangesString = bundle.request.GET.get('ranges',None)
-        fullRange = rangesString is None
-        if not fullRange:
-            ranges = map(   lambda rangeString:[datetime.strptime(val,"%Y%m") if val else None for val in rangeString.split('-')],
-                            rangesString.split(','))
-            mks_values = dict(bundle.obj.get_mks_values(ranges))
-        else:
-            mks_values = dict(bundle.obj.get_mks_values())
-        members = []
-        for mk in Member.objects.filter(pk__in=mks_values.keys(),
-                                        current_party__isnull=False).select_related('current_party'):
-            # TODO: this sucks, performance wise
-            current_party = mk.current_party
-            mk_data = mks_values[mk.id]
-            members.append(dict(
-                id=mk.id,
-                name=mk.name,
-                score=map(itemgetter('score'),mk_data) if isinstance(mk_data,list) else mk_data['score'],
-                rank=map(itemgetter('rank'),mk_data) if isinstance(mk_data,list) else mk_data['rank'],
-                volume=map(itemgetter('volume'),mk_data) if isinstance(mk_data,list) else mk_data['volume'],
-                numvotes=map(itemgetter('numvotes'),mk_data) if isinstance(mk_data,list) else mk_data['numvotes'],
-                absolute_url=mk.get_absolute_url(),
-                party=current_party.name,
-                party_url=current_party.get_absolute_url(),
-                party_id=current_party.pk
-            ))
-
-        return members
-
-    def dehydrate_parties(self, bundle):
-        party_values = dict(map(lambda party_data:(party_data[0],(party_data[1],party_data[2])),
-                            bundle.obj.get_party_values()))
-        parties = []
-        for party in Party.objects.all():
-            if party.pk in party_values:
-                parties.append(dict(name=party.name, 
-                                    score=party_values[party.pk][0], 
-                                    volume=party_values[party.pk][1],
-                                    absolute_url=party.get_absolute_url()))
-            else:
-                parties.append(dict(name=party.name,
-                                    score=0,
-                                    volume=0,
-                                    absolute_url=party.get_absolute_url()))
-        return parties
-
-    def dehydrate_votes(self, bundle):
-        return [
-            dict(title=v.vote.title, id=v.vote_id, importance=v.importance,
-                 score=v.score, reasoning=v.reasoning)
-            for v in bundle.obj.agendavotes.select_related()
-        ]
-
-    def dehydrate_editors(self, bundle):
-        return [
-            dict(absolute_url=e.get_absolute_url(), username=e.username,
-                 avatar=avatar_url(e, 48))
-            for e in bundle.obj.editors.all()
-        ]
-
     def dehydrate_ranges(self, bundle):
-        rangesString = bundle.request.GET.get('ranges','-')
-        ranges = map(   lambda rangeString:[int(val) if val else None for val in rangeString.split('-')],
-                        rangesString.split(','))
-        results = []
-        for start,end in ranges:
+        for rangeString in bundle.request.GET.get('ranges', '-').split(','):
+            start, end = rangeString.split('-')
             rangeResult = {}
             if start:
-                rangeResult['from']=datetime(year=start/100,month=start%100,day=1)
+                rangeResult['from'] = _gettime(start)
             if end:
-                rangeResult['to']=datetime(year=end/100,month=end%100,day=1)
-            results.append(rangeResult)
-        return results
+                rangeResult['to'] = _gettime(end)
+            yield rangeResult
+        
+    def dehydrate_members(self, bundle):
+        ranges = [
+                    tuple(datetime.strptime(val, "%Y%m") if val else None for val in rangeString.split('-'))
+                      for rangeString in bundle.request.GET.get('ranges', '-').split(',')]
+        mks_values = dict(bundle.obj.get_mks_values(ranges))
+        mks_list = Member.objects.filter(pk__in=set(mks_values.keys()),
+                                            current_party__isnull=False).select_related('current_party')
+        for mk in mks_list:
+            yield dict( id=mk.id,
+                        name=mk.name,
+                        absolute_url=mk.get_absolute_url(),
+                        party= mk.current_party.name,
+                        party_url= mk.current_party.get_absolute_url(),
+                        party_id= mk.current_party.pk,
+                        **self._get_points(mks_values[mk.id]))
+
+    @staticmethod                                   
+    def _get_points(mk_data):
+        # TODO: this sucks, performance wise
+        if not isinstance(mk_data, list):
+            mk_data = [mk_data]
+        #zip(*matrix) is transpose(matrix)
+        score, rank, volume, numvotes = zip(*[(x['score'], x['rank'], x['volume'], x['numvotes']) for x in mk_data])
+        return {'score': score,
+                'rank': rank,
+                'volume': volume,
+                'numvotes': numvotes}
+
+    def dehydrate_parties(self, bundle):
+        party_values = defaultdict(dict, {party_data[0]:{'score':party_data[1],'volume':party_data[2]}
+                         for party_data in bundle.obj.get_party_values()})
+        for party in Party.objects.all():
+            yield dict(name=party.name,
+                     absolute_url=party.get_absolute_url(),
+                     **party_values[party.pk])
+
+    def dehydrate_votes(self, bundle):
+        for v in bundle.obj.agendavotes.select_related():
+            yield {'title':v.vote.title,
+                   'id':v.vote_id,
+                   'importance':v.importance,
+                   'score':v.score,
+                   'reasoning':v.reasoning}
+
+    def dehydrate_editors(self, bundle):
+        for e in bundle.obj.editors.all():
+            yield {'absolute_url':e.get_absolute_url(),
+                  'username':e.username,
+                  'avatar':avatar_url(e, 48)}
+
+def _gettime(at):
+    year, month = divmod(int(at), 100)
+    return datetime(year=year, month=month, day=1)

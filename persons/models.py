@@ -2,13 +2,23 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
-from django.forms.fields import IntegerField
-from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.contrib.auth.models import User
+from planet.models import Blog
 
-from mks.models import Member, GENDER_CHOICES
 from .managers import PersonManager
 
+
+class PersonAlias(models.Model):
+    name = models.CharField(max_length=64)
+    person = models.ForeignKey('Person', related_name='aliases')
+
+    def __unicode__(self):
+        return u'{} -> {}'.format(self.name, self.person.name)
+
+GENDER_CHOICES = (
+    (u'M', _('Male')),
+    (u'F', _('Female')),
+)
 
 class Title(models.Model):
     name = models.CharField(max_length=64)
@@ -16,29 +26,24 @@ class Title(models.Model):
     def __unicode__(self):
         return self.name
 
-class PersonAlias(models.Model):
+class AbstractPerson(models.Model):
     name = models.CharField(max_length=64)
-    person = models.ForeignKey('Person', related_name='aliases')
 
-    def __unicode__(self):
-        return "%s -> %s" % (self.name, self.person.name)
-
-GENDER_CHOICES = (
-    (u'M', _('Male')),
-    (u'F', _('Female')),
-)
-
-class Person(models.Model):
-    name = models.CharField(max_length=64)
-    mk = models.ForeignKey('mks.Member', blank=True, null=True, related_name='person')
-    titles = models.ManyToManyField(Title, blank=True, null=True, related_name='persons')
     # TODO: change to an ImageField
     img_url = models.URLField(blank=True)
+    
+    #contact detail
     phone = models.CharField(blank=True, null=True, max_length=20)
     fax = models.CharField(blank=True, null=True, max_length=20)
     email = models.EmailField(blank=True, null=True)
+    website = models.URLField(blank=True, null=True)
+    blog = models.OneToOneField(Blog, blank=True, null=True)
+    
+    user = models.ForeignKey(User, blank=True, null=True)
+        
     family_status = models.CharField(blank=True, null=True,max_length=10)
     number_of_children = models.IntegerField(blank=True, null=True)
+    
     date_of_birth  = models.DateField(blank=True, null=True)
     place_of_birth = models.CharField(blank=True, null=True, max_length=100)
     date_of_death  = models.DateField(blank=True, null=True)
@@ -47,17 +52,28 @@ class Person(models.Model):
     area_of_residence = models.CharField(blank=True, null=True, max_length=100, help_text = _('a general area of residence (for example, "the negev"'))
     place_of_residence_lat = models.CharField(blank=True, null=True, max_length=16)
     place_of_residence_lon = models.CharField(blank=True, null=True, max_length=16)
+    
+    #TODO: should move to a placeStatistics model
     residence_centrality = models.IntegerField(blank=True, null=True)
     residence_economy = models.IntegerField(blank=True, null=True)
+    
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
 
+    class Meta:
+        abstract = True
+        ordering = ['name']
+        
+# from mks.models import Member
+
+class Person(AbstractPerson):
+    mk = models.ForeignKey('mks.Member', blank=True, null=True, related_name='person')
+    titles = models.ManyToManyField(Title, blank=True, null=True, related_name='persons')
     objects = PersonManager()
 
     def __unicode__(self):
         return self.name
 
     class Meta:
-        ordering = ('name',)
         verbose_name = _('Person')
         verbose_name_plural = _('Persons')
 
@@ -93,17 +109,6 @@ class Person(models.Model):
             part.save()
         other.delete()
         self.save()
-
-
-@receiver(post_save, sender=Member)
-def member_post_save(sender, **kwargs):
-    instance = kwargs['instance']
-    person = Person.objects.get_or_create(mk=instance)[0]
-    for field in instance._meta.fields:
-        if field.name != 'id' and hasattr(person, field.name):
-            setattr(person, field.name, getattr(instance, field.name))
-
-    person.save()
 
 
 class Role(models.Model):

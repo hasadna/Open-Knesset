@@ -1,4 +1,4 @@
-import os
+from os import path as os_path
 
 from django.db import models
 from django.contrib.contenttypes import generic
@@ -9,14 +9,7 @@ from django.conf import settings
 
 from managers import LinksManager
 
-link_file_storage = FileSystemStorage(os.path.join(settings.DATA_ROOT, 'link_files_storage'))
-
-_default_linktype = False
-def get_default_linktype():
-    global _default_linktype
-    if not _default_linktype:
-        _default_linktype = LinkType.objects.get(title='default')
-    return _default_linktype
+link_file_storage = FileSystemStorage(os_path.join(settings.DATA_ROOT, 'link_files_storage'))
 
 class LinkType(models.Model):
     title = models.CharField(max_length=200, verbose_name=_('title'))
@@ -28,6 +21,12 @@ class LinkType(models.Model):
 
     def __unicode__(self):
         return self.title
+    
+    @staticmethod
+    def get_default():
+        if not hasattr(LinkType, '_default_linktype'):
+            LinkType._default_linktype = LinkType.objects.get(title='default')
+        return LinkType._default_linktype        
 
 class Link(models.Model):
     url = models.URLField(verbose_name='URL', max_length=1000)
@@ -36,8 +35,8 @@ class Link(models.Model):
             verbose_name=_('content type'),
             related_name="content_type_set_for_%(class)s")
     object_pk      = models.TextField(_('object ID'))
-    content_object = generic.GenericForeignKey(ct_field="content_type", fk_field="object_pk")
-    link_type = models.ForeignKey(LinkType, default=get_default_linktype, null=True, blank=True)
+    content_object = generic.GenericForeignKey(ct_field="content_type", fk_field="object_pk") 
+    link_type = models.ForeignKey(LinkType, default=LinkType.get_default, null=True, blank=True)
     active = models.BooleanField(default=True)
     objects = LinksManager()
 
@@ -46,7 +45,7 @@ class Link(models.Model):
         verbose_name_plural = _('links')
 
     def __unicode__(self):
-        return "%s: %s" % (self.title, self.url)
+        return u"{}: {}".format(self.title, self.url)
 
 class LinkedFile(models.Model):
     link = models.ForeignKey(Link, null=True, blank=True, default=None)
@@ -57,9 +56,11 @@ class LinkedFile(models.Model):
 class ModelWithLinks():
     ''' This is a mixin to be used by classes that have alot of links '''
     def add_link(self, url, title, link_type=None):
+        #TODO: this is not tested. 
         if not link_type:
-            link_type = get_default_linktype()
-        Links.objects.create(content_object=self, url=url, title=title,
+            link_type = LinkType.get_default()
+        Link.objects.create(content_object=self, url=url, title=title,
                              link_type=link_type)
     def get_links(self):
-        return Links.objects.filter(active=True, content_object=self)
+        #TODO: this is not tested. 
+        return Link.objects.filter(active=True, content_object=self)

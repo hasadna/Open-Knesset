@@ -17,6 +17,10 @@ from views import AgendaMeetingsMoreView
 from views import agenda_add_view
 from views import update_editors_agendas
 
+from django.views.decorators.cache import cache_page
+
+cached = cache_page(60 * 15)
+
 agenda_list_view            = AgendaListView(queryset = Agenda.objects.all(),paginate_by=0, extra_context={'title':ugettext('Agendas')})
 agenda_detail_view          = AgendaDetailView.as_view()
 agenda_mk_detail_view       = AgendaMkDetailView.as_view()
@@ -27,12 +31,12 @@ agenda_meeting_detail_view  = AgendaMeetingDetailView.as_view()
 
 
 urlpatterns = patterns('',
-    url(r'^$', agenda_list_view, name='agenda-list'),
-    url(r'^(?P<pk>\d+)/$', agenda_detail_view, name='agenda-detail'),
+    url(r'^$', cached(agenda_list_view), name='agenda-list'),
+    url(r'^(?P<pk>\d+)/$', cached(agenda_detail_view), name='agenda-detail'),
     url(r'^(?P<pk>\d+)/more-votes/$', AgendaVotesMoreView.as_view(), name='agenda-detail-more-votes'),
     url(r'^(?P<pk>\d+)/more-bills/$', AgendaBillsMoreView.as_view(), name='agenda-detail-more-bills'),
     url(r'^(?P<pk>\d+)/more-meetings/$', AgendaMeetingsMoreView.as_view(), name='agenda-detail-more-meetings'),
-    url(r'^(?P<pk>\d+)/member/(?P<member_id>\d+)/$', agenda_mk_detail_view, name='mk-agenda-detail'),
+    url(r'^(?P<pk>\d+)/member/(?P<member_id>\d+)/$', cached(agenda_mk_detail_view), name='mk-agenda-detail'),
     url(r'^(?P<pk>\d+)/edit/$', agenda_detail_edit_view, name='agenda-detail-edit'),
     url(r'^vote/(?P<pk>\d+)/$', agenda_vote_detail_view, name='agenda-vote-detail'),
     url(r'^bill/(?P<pk>\d+)/$', agenda_bill_detail_view, name='agenda-bill-detail'),

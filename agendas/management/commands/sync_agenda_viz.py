@@ -55,9 +55,8 @@ class Command(NoArgsCommand):
             _, base_dir = os.path.split(dir_name)
 
             if file_name == self._html_file:
-                source = zip_file.open(member)
-                content = source.read()
-                source.close()
+                with zip_file.open(member) as source:
+                    content = source.read()
 
             if base_dir == 'dist':
                 js_with_version = file_name
@@ -73,13 +72,9 @@ class Command(NoArgsCommand):
                 except OSError:
                     pass
 
-                source = zip_file.open(member)
-                target = file(os.path.join(target_dir, file_name), "wb")
-
-                shutil.copyfileobj(source, target)
-
-                source.close()
-                target.close()
+                with zip_file.open(member) as source,  \
+                    file(os.path.join(target_dir, file_name), "wb") as target: 
+                    shutil.copyfileobj(source, target)
 
         if is_verbose:
             print "Adopting ", self._html_file

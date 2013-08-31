@@ -2,7 +2,10 @@
 from django.conf.urls import url, patterns
 from django.utils.translation import ugettext
 from django.views.generic import RedirectView
-from hashnav import ListView
+from django.views.decorators.cache import cache_page
+
+cached = cache_page(60 * 15)
+
 from models import Vote, Bill
 from views import VoteListView, VoteCsvView, VoteDetailView, VoteTagsView
 from views import BillListView, BillCsvView, BillDetailView, BillTagsView
@@ -18,7 +21,7 @@ vote_list_view = VoteListView(queryset = Vote.objects.all(),paginate_by=20, extr
 vote_detail_view = VoteDetailView.as_view()
 
 lawsurlpatterns = patterns ('',
-    url(r'^bill/$', bill_list_view, name='bill-list'),
+    url(r'^bill/$', cached(bill_list_view), name='bill-list'),
     url(r'^bill/tag/$', bill_tags_cloud, name='bill-tags-cloud'),
     url(r'^bill/rss/$', feeds.Bills(), name='bills-feed'),
     url(r'^bill/csv/$', BillCsvView.as_view()),
@@ -31,7 +34,8 @@ lawsurlpatterns = patterns ('',
         bill_unbind_vote, name='bill-unbind-vote'),
     url(r'^bill/auto_complete/$', bill_auto_complete, name='bill-auto-complete'),
     url(r'^bill/(?P<slug>[\w\-\"]+)/(?P<pk>\d+)/$', bill_detail_view, name='bill-detail-with-slug'),
-    url(r'^vote/$', vote_list_view, name='vote-list'),
+    
+    url(r'^vote/$', cached(vote_list_view), name='vote-list'),
     url(r'^vote/csv/$', VoteCsvView.as_view()),
     url(r'^vote/tag/$', vote_tags_cloud, name='vote-tags-cloud'),
     url(r'^vote/rss/$', feeds.Votes(), name='votes-feed'),

@@ -2,7 +2,6 @@ from __future__ import division
 
 from django.core.management.base import NoArgsCommand
 from django.db import transaction
-from django.utils.timezone import now
 
 from agendas.models import SummaryAgenda,AgendaVote
 

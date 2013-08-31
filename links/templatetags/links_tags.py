@@ -7,8 +7,8 @@ register = template.Library()
 
 
 @register.inclusion_tag('links/_object_links.html')
-def object_links(object):
-    l = Link.objects.for_model(object)
+def object_links(obj):
+    l = Link.objects.for_model(obj)
     return {'links': l, 'MEDIA_URL': settings.MEDIA_URL}
 
 

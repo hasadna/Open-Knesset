@@ -1,0 +1,18 @@
+{% extends "mks/parties_members_base.html" %}
+{% load i18n %}
+
+{% block other_type_link %}{% url 'parties-members-list' knesset_number %}{% endblock %}
+{% block other_type_name %}{% trans "With pictures" %}{% endblock %}
+
+{% block other_knesset %}
+     <a href="{{kn.get_absolute_url}}raw">{{kn}}</a>
+{% endblock %}
+
+{% block actual_content %}
+	<h5><a href="{{party.get_absolute_url}}">{{party.name}}</a>   ({{party.current_members.count}}{#{% trans "MKs" %}#})</h5>
+	<p>
+    {% for member in party.current_members %}
+    	<a href="{{member.get_absolute_url}}">{{member.name}}</a>{% if forloop.last %}.{% else %}, {% endif %}
+    {% endfor %}
+    </p>
+{% endblock %}

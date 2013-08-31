@@ -9,19 +9,17 @@ import voting
 from actstream import action
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.files.storage import default_storage
 from django.core.urlresolvers import reverse
 from django.http import (HttpResponseRedirect, HttpResponse, Http404,
-                         HttpResponseBadRequest)
+                         HttpResponseBadRequest, HttpResponseForbidden)
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.utils import simplejson as json
+from django.db.utils import DatabaseError
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy, ugettext as _
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.views.generic import ListView
 from tagging.models import Tag, TaggedItem
-from tagging.utils import get_tag
 
 from agendas.models import Agenda, UserSuggestedVote
 from auxiliary.views import CsvView, BaseTagMemberListView
@@ -29,7 +27,7 @@ from forms import VoteSelectForm, BillSelectForm, BudgetEstimateForm
 from hashnav import DetailView, ListView as HashnavListView
 from knesset.utils import notify_responsible_adult
 from mks.models import Member
-from models import Bill, BillBudgetEstimation, Vote
+from models import Bill, BillBudgetEstimation, Vote, VoteAction
 from models import BILL_STAGE_CHOICES
 
 
@@ -326,8 +324,9 @@ class BillCsvView(CsvView):
                                                        'pre_votes',
                                                        'first_committee_meetings',
                                                        'second_committee_meetings')
-        except DatabaseError: # sqlite can't prefetch this query, because it has
-                              # too many objects
+        except DatabaseError: 
+            # sqlite can't prefetch this query, because it has
+            # too many objects
             return self.model.objects.all()
 
     def community_meeting_gen(self, obj, attr):
@@ -445,7 +444,7 @@ class BillDetailView (DetailView):
         context['tags'] = list(bill.tags)
         context['budget_ests'] = list(bill.budget_ests.all())
         if self.request.user:
-            context['user_has_be'] = bill.budget_ests.filter(estimator__username=str(self.request.user)).count()
+            context['user_has_be'] = bill.budget_ests.filter(estimator__username=unicode(self.request.user)).count()
         if 'budget_ests_form' in kwargs:
             context['budget_ests_form'] = kwargs['budget_ests_form']
         else:
@@ -509,9 +508,8 @@ class BillDetailView (DetailView):
             if request.user.has_perm('laws.change_bill') and 'bill_name' in request.POST.keys():
                 new_title = request.POST.get('bill_name')
                 new_popular_name = request.POST.get('popular_name')
-                logger.info('user %d is updating bill %s. new_title=%s, new_popular_name=%s' %
-                                (request.user.id,object_id, new_title,
-                                 new_popular_name))
+                logger.info(u'user {} is updating bill {}. new_title={}, new_popular_name={}'.format(
+                              request.user.id, object_id, new_title,       new_popular_name))
                 Bill.objects.filter(pk=object_id).update(title=new_title, full_title=new_title,
                                                          popular_name=new_popular_name)
             else:
@@ -531,28 +529,28 @@ def bill_unbind_vote(request, object_id, vote_id):
         vote = Vote.objects.get(pk=vote_id)
     except ObjectDoesNotExist:
         raise Http404
-    if request.method == 'POST': # actually unbind
-        explanation = request.POST.get('explanation','')
-        msg = u'%s is unbinding vote %s from bill %s. explanation: %s' % \
-                (str(request.user).decode('utf8'),
-                 vote_id,
-                 object_id,
-                 explanation)
-        notify_responsible_adult(msg)
-
-        logger.info(msg)
-        if vote in bill.pre_votes.all():
-            bill.pre_votes.remove(vote)
-        if vote == bill.first_vote:
-            bill.first_vote = None
-        if vote == bill.approval_vote:
-            bill.approval_vote = None
-        bill.update_stage(force_update=True)
-        return HttpResponseRedirect(reverse('bill-detail', args=[object_id]))
-    else: # approve unbind
-        context = RequestContext (request,
-                                  {'object': bill, 'vote':vote})
+    if request.method != 'POST':
+        context = RequestContext (request, {'object': bill, 'vote':vote})
         return render_to_response("laws/bill_unbind_vote.html", context)
+    
+    # actually unbind
+    explanation = request.POST.get('explanation','')
+    msg = u'{} is unbinding vote {} from bill {}. explanation: {}'.format(
+            request.user, #str(request.user).decode('utf8'),
+             vote_id,
+             object_id,
+             explanation)
+    notify_responsible_adult(msg)
+
+    logger.info(msg)
+    if vote in bill.pre_votes.all():
+        bill.pre_votes.remove(vote)
+    if vote == bill.first_vote:
+        bill.first_vote = None
+    if vote == bill.approval_vote:
+        bill.approval_vote = None
+    bill.update_stage(force_update=True)
+    return HttpResponseRedirect(reverse('bill-detail', args=[object_id]))
 
 
 
@@ -602,25 +600,25 @@ class BillListView (BillListMixin, HashnavListView):
 
     def get_context(self):
         context = super(BillListView, self).get_context()
-        r = [['?%s=%s'% (x[0],x[1]),x[2],False,x[1]] for x in self.friend_pages]
+        r = [['?{}={}'.format(x[0], x[1]), x[2], False, x[1]] for x in self.friend_pages]
         stage = self.request.GET.get('stage', False)
         booklet = self.request.GET.get('booklet', False)
         member = self.request.GET.get('member', False)
-        if stage and stage!='all':
+        if stage and stage != 'all':
             for x in r:
-                if x[3]==stage:
+                if x[3] == stage:
                     x[2] = True
                     break
             if stage in self.bill_stages_names:
                 context['stage'] = self.bill_stages_names.get(stage)
                 context['title'] = _('Bills %(stage)s') % {'stage':context['stage']}
         elif booklet:
-            context['title']=_('Bills published in knesset booklet number %s') % booklet
+            context['title'] = _('Bills published in knesset booklet number %s') % booklet
         else:
             r[0][2] = True
         if member:
             context['member'] = get_object_or_404(Member, pk=member)
-            context['member_url'] = reverse('member-detail',args=[context['member'].id])
+            context['member_url'] = reverse('member-detail', args=[context['member'].id])
             if stage in self.bill_stages_names:
                 context['title'] = _('Bills %(stage)s by %(member)s') % {'stage': self.bill_stages_names[stage], 'member':context['member'].name}
             else:
