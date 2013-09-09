@@ -52,6 +52,11 @@ class IterJSONAndCSVSerializer(Serializer):
         #   if data contains an 'objects' key, refer to it's value as a list of objects.
         #   else, treat data as a single object itself
         objects = data.get('objects', [data])
+        #   Use the first row for getting the headers
+        first =  objects[0] if objects else None
+        if first:
+            writer.writerow( [unicode(key).encode("utf-8", "replace") for key in first.keys()])
+
         for item in objects:
             writer.writerow([unicode(item[key]).encode(
                 "utf-8", "replace") for key in item.keys()])
