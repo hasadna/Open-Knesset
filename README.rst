@@ -212,7 +212,7 @@ Get your branch updated with the changes done by others.
 Please do this every time before you start developing.
 
 - ``cd Open-Knesset``
-- ``git pull git@github.com:hasadna/Open-Knesset.git master``
+- ``git pull git@github.com:hasadna/Open-Knesset.git master``   Running this command requires having SSH keys registered with github. You can replace 'git@' with 'https://' instead.
 - ``pip install -r requirements.txt``  # only needed if the file requirements.txt was changed; but can't hurt you if you run it every time.
 - ``python manage.py migrate``              # do not create a superuser account
 - ``python manage.py test``                 # if there are any failures, contact the other developers to see if that's something you should worry about.
