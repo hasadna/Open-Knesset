@@ -4,7 +4,6 @@
 {% block keywords %}{% trans "Add Agenda"%}{% endblock %}
 {% block description %}{% trans "Add Agenda" %} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
 {% block nav-agendas %}class="active"{% endblock %}
-{% block extrajs %}<script type="text/javascript" src="{% static "js/tagging.js" %}"></script> {% endblock %}
 {% block header %}<h1>{% trans 'Add agenda' %}</h1>{% endblock %}
 {% block divcontent %}
     <form action="." method="post">{% csrf_token %}

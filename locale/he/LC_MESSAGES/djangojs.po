@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 20:19+0300\n"
+"POT-Creation-Date: 2013-09-20 11:12+0300\n"
 "PO-Revision-Date: 2013-08-26 20:21+0300\n"
 "Last-Translator: Ofri Raviv <ofri.raviv@gmail.com>\n"
 "Language-Team: \n"
@@ -104,6 +104,7 @@ msgid "Your Feedback message"
 msgstr "הודעת המשוב שלך"
 
 #: static/js/ok-suggest.js:143
+#, c-format
 msgid ""
 "Hello %s\n"
 "\n"
@@ -156,6 +157,25 @@ msgstr "הקודם"
 #: static/js/tagging.js:31
 msgid "next"
 msgstr "הבא"
+
+#: static/js/tagging.js:129 static/js/tagging.js.c:206
+msgid "tag is already attached to current object"
+msgstr "התגית כבר קיימת באובייקט הנוכחי"
+
+#: static/js/tagging.js:179
+msgid ""
+"the specified tag name does not exist and you do not have permission to add "
+"new tag names, only to attach existing tags"
+msgstr "התגית לא קיימת ואין לך הרשאות ליצירת תגיות חדשות. ניתן רק להוסיף תגיות קיימות."
+
+#: static/js/tagging.js:267 static/js/tagging.js.c:281
+#: static/js/tagging.js:321
+msgid "Delete"
+msgstr "מחק"
+
+#: static/js/tagging.js:330
+msgid "Undo Delete"
+msgstr "בטל מחיקה"
 
 #, fuzzy
 #~ msgid "Clear all"

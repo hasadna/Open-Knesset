@@ -1,0 +1,21 @@
+{% load i18n %}
+<header><h2>{% trans "Tags" %}</h2></header>
+<div id="tags">
+{% if tags %}
+    {% for t in tags %}
+    <a id="tag_{{t.id}}" href="{% url 'tag-detail' slug=t %}" class="tag label">{{ t }}</a>
+    {% endfor %}
+{% else %}
+    <span id="no-tags-yet">{% trans "No tags yet" %}</span>
+{% endif %}
+</div>
+{% if user.is_authenticated %}
+<h3 id='tags_addnew' style='display:none;'>
+    <input autocomplete='off' style='border:1px solid black;'/>
+    <a href='javascript:tags.add();'>{% trans "Add" %}</a>
+</h3>
+<h3 id='tags_edit'><a href='javascript:tags.edit();'>{% trans "Edit Tags" %}</a></h3>
+<h3 id='tags_doneedit' style='display:none;'><a href='javascript:tags.doneEdit();'>{% trans "Done Edit Tags" %}</a></h3>
+{% else %}
+<div class="alert alert-block"><a href="{% url 'login' %}?next={{request.get_full_path}}">{% trans 'Login to edit tags' %}</a></div>
+{% endif %}

@@ -69,6 +69,9 @@ class Feedback(models.Model):
         verbose_name = _('Feedback message')
         verbose_name_plural = _('Feedback messages')
 
+class TagSynonym(models.Model):
+    tag = models.ForeignKey(Tag, related_name='synonym_proper_tag')
+    synonym_tag = models.ForeignKey(Tag,related_name='synonym_synonym_tag',unique=True)
 
 def add_tags_to_related_objects(sender, instance, **kwargs):
     """

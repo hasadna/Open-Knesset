@@ -18,6 +18,7 @@ from django.shortcuts import get_object_or_404
 
 from laws.models import Vote, Bill
 from committees.models import CommitteeMeeting
+from auxiliary.models import TagSynonym
 
 from operator import attrgetter
 
@@ -66,13 +67,44 @@ class TagResource(BaseResource):
         allowed_methods = ['get']
         include_absolute_url = True
         list_fields = ['id', 'name']
+        filtering = {
+            'name': ALL,
+        }
+        _all_valid_tag_ids = None
 
     TAGGED_MODELS = (Vote, Bill, CommitteeMeeting)
 
-    def obj_get_list(self, filters=None, **kwargs):
+    def build_bundle(self, obj=None, data=None, request=None, objects_saved=None):
+        bundle=super(TagResource,self).build_bundle(obj,data,request,objects_saved)
+        if 'jquery_autocomplete' in request.GET and 'query' in request.GET:
+            bundle.request.GET=request.GET.copy()
+            bundle.request.GET['name__startswith']=request.GET['query']
+        return bundle
+
+    def create_response(self,request,data):
+        if 'jquery_autocomplete' in request.GET and 'query' in request.GET:
+            tags=[o.obj for o in data['objects']]
+            vals=TagSynonym.objects.filter(synonym_tag__in=tags).values('tag__name','synonym_tag__name')
+            synonyms=dict([(val['synonym_tag__name'],val['tag__name']) for val in vals])
+            suggestions=[]
+            for obj in data['objects']:
+                name=obj.obj.name
+                if name in synonyms:
+                    suggestions.append(name+' ['+synonyms[name]+']')
+                else:
+                    suggestions.append(name)
+            data={
+              "query":request.GET['query'],
+              'suggestions':suggestions,
+              'data':[],
+            }
+        return super(TagResource,self).create_response(request,data)
+
+    def build_filters(self, filters=None):
+        filters=super(TagResource,self).build_filters(filters)
         all_tags = list(set().union(*[Tag.objects.usage_for_model(model) for model in self.TAGGED_MODELS]))
-        all_tags.sort(key=attrgetter('name'))
-        return all_tags
+        filters['id__in']=[tag.id for tag in all_tags]+[o['tag_id'] for o in TagSynonym.objects.all().values('tag_id')]
+        return filters
 
     def dehydrate_absolute_url(self, bundle):
         return reverse('tag-detail', kwargs={'slug': bundle.obj.name})

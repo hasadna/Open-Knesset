@@ -9,7 +9,7 @@ from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.http import (
     HttpResponseForbidden, HttpResponseRedirect, HttpResponse,
-    HttpResponseNotAllowed, HttpResponseBadRequest, Http404)
+    HttpResponseNotAllowed, HttpResponseBadRequest, Http404, HttpResponsePermanentRedirect)
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.utils import simplejson as json
@@ -27,6 +27,7 @@ from knesset.utils import notify_responsible_adult
 from laws.models import Vote, Bill
 from mks.models import Member
 from tagging.utils import get_tag
+from auxiliary.models import TagSynonym
 
 
 class BaseTagMemberListView(ListView):
@@ -418,6 +419,16 @@ class TagDetail(DetailView):
             mk.count = d[mk]
         mks = tagging.utils.calculate_cloud(mks)
         return mks
+
+    def get(self,*args,**kwargs):
+        tag=self.get_object()
+        ts=TagSynonym.objects.filter(synonym_tag=tag)
+        if len(ts)>0:
+            proper=ts[0].tag
+            url = reverse('tag-detail', kwargs={'slug': proper.name})
+            return HttpResponsePermanentRedirect(url)
+        else:
+            return super(TagDetail, self).get(*args, **kwargs);
 
     def get_context_data(self, **kwargs):
         context = super(TagDetail, self).get_context_data(**kwargs)

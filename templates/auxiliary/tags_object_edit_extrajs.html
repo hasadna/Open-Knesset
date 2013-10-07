@@ -1,0 +1,17 @@
+{% load static from staticfiles %}
+{% if user.is_authenticated %}
+    <link href="{% static "css/jquery.autocomplete.css" %}" rel="stylesheet" type="text/css" media="screen" />
+    <script type="text/javascript" src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.autocomplete.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/tagging.js" %}"> </script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            tags.init({
+                'app_label':"{{app_label}}",
+                'object_type':"{{object_type}}",
+                'object_id':"{{object_id}}",
+                'csrf':$('input[name="csrfmiddlewaretoken"]').val()
+            });
+        });
+    </script>
+{% endif %}

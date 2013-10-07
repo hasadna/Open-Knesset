@@ -10,7 +10,6 @@
     <link href="{% static "css/jquery.autocomplete.css" %}" rel="stylesheet" type="text/css" media="screen" />
 {% endblock %}
 {% block extrajs %}
-    <script type="text/javascript" src="{% static "js/tagging.js" %}"></script>
     <script type="text/javascript" src="{% static "annotatetext/annotate.js" %}?v=1"></script>
     <script type="text/javascript" src="{% static "js/jquery.colorPicker.js" %}"></script>
     <script type="text/javascript" src="{% static "js/jquery.autocomplete.js" %}"></script>
@@ -21,6 +20,7 @@
     });
     // current hit count = {% get_hit_count for object %}
 </script>
+{% include "auxiliary/tags_object_edit_extrajs.html" with app_label="committees" object_type="committeemeeting" object_id=object.id %}
 {% endblock %}
 
 
@@ -201,28 +201,7 @@
 
         <div class="span3">
             <aside class="sidebar sidebar-agendas">
-                <header><h2>{% trans "Tags" %}</h2></header>
-                <div id="tagging-container">
-                    <div id="tags">
-                        {% if object.tags %}
-                            {% for t in object.tags %}
-                                <a id="tag_{{t.id}}" href="{% url 'tag-detail' slug=t %}" class="tag label">{{ t }}</a>
-                            {% endfor %}
-                        {% else %}
-                            <span id="no-tags-yet">{% trans "No tags yet" %}</span>
-                        {% endif %}
-                    </div>
-                </div>
-                {% if user.is_authenticated %}
-                    <div id="add_tags" data-app-label="committees" data-object-type="committeemeeting" data-id="{{object.id}}">
-                    <div id="add_tags">
-                        <h3>{% trans "Edit Tags" %}</h3>
-                        <span id="possible_tags"></span><br>
-                        <a href="javascript:get_tags_list('{% url 'related-tags' resource_name='tag' api_name='v2' app_label='committees' object_type='committee' object_id=object.committee.id related_name='meetings' %}');">{% trans "Click here for tags related to this committee" %}</a><br><a href="javascript:get_tags_list();">{% trans "Click here to see all available tags" %}</a>
-                    </div>
-                {% else %}
-                    <div class="alert alert-block"><a href="{% url 'login' %}?next={{request.get_full_path}}">{% trans "Login to edit tags" %}</a></div>
-                {% endif %}
+                {% include "auxiliary/tags_object_edit.html" with tags=object.tags %}
             </aside>
 
             <aside class="sidebar">
