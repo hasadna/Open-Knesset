@@ -7,7 +7,7 @@
 {% block description %}{{ vote.title }} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
 {% block nav-votes %}class="active"{% endblock %}
 {% block extrajs %}
-    <script type="text/javascript" src="{% static "js/tagging.js" %}"></script>
+    {% include "auxiliary/tags_object_edit_extrajs.html" with app_label="laws" object_type="vote" object_id=vote.id %}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -111,25 +111,7 @@
 
         <div class="span4">
             <aside class="sidebar">
-                <header><h2>{% trans "Tags" %}</h2></header>
-                <div id="tags">
-                {% if tags %}
-                    {% for t in tags %}
-                    <a id="tag_{{t.id}}" href="{% url 'vote-tag' tag=t %}" class="tag">{{ t }}</a>
-                    {% endfor %}
-                {% else %}
-                    <span id="no-tags-yet">{% trans "No tags yet" %}</span>
-                {% endif %}
-                </div>
-                {% if user.is_authenticated %}
-                <div id="add_tags" data-app-label="laws" data-object-type="vote" data-id="{{vote.id}}">
-                    <span>{% trans "Edit Tags" %}</span>
-                    <span id="possible_tags"><a href="javascript:get_tags_list();">{% trans "Click here" %}</a>
-                    </span>
-                </div>
-                {% else %}
-                <div class="alert alert-block"><a href="{% url 'login' %}?next={{request.get_full_path}}">{% trans 'Login to edit tags' %}</a></div>
-                {% endif %}
+                {% include "auxiliary/tags_object_edit.html" %}
             </aside> <!-- tagging -->
 
             <aside class="sidebar">

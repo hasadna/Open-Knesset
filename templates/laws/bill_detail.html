@@ -5,10 +5,10 @@
     <link href="{% static "css/jquery.autocomplete.css" %}" rel="stylesheet" type="text/css" media="screen" />
 {% endblock %}
 {% block extrajs %}
-    <script type="text/javascript" src="{% static "js/tagging.js" %}"></script>
     <script type="text/javascript" src="{% static "js/jquery.autocomplete.js" %}"></script>
     <script type="text/javascript" src="{% static "js/ok-watch.js" %}?v=1"></script>
     <script type="text/javascript" src="{% static "js/raphael-min.js" %}"></script>
+    {% include "auxiliary/tags_object_edit_extrajs.html" with app_label="laws" object_type="bill" object_id=object.id %}
     <script type="text/javascript">
         function show_only_vote_stage_div( div ) {
                 $("#visible-bill-stage").html($("#"+div).html());
@@ -538,24 +538,8 @@
                 </div>
             </aside>
 	 		<aside class="sidebar" id="tagging-container">
-                <header><h2>{% trans "Tags" %}</h2></header>
-                <p id="tags">
-                    {% if tags %}
-                        {% for t in tags %}
-                            <a class="label" id="tag_{{t.id}}" href="{% url 'bill-tag' tag=t %}" class="tag">{{ t }}</a>
-                        {% endfor %}
-                    {% else %}
-                        <span id="no-tags-yet">{% trans "No tags yet" %}</span>
-                    {% endif %}
-                </p>
-                {% if user.is_authenticated %}
-                <div id="add_tags" data-app-label="laws" data-object-type="bill" data-id="{{object.id}}">
-                    <h3>{% trans "Edit Tags" %}</h3>
-                    <span id="possible_tags"><a href="javascript:get_tags_list();">{% trans "Click here" %}</a>
-                    </span>
-                </div>
-                {% endif %}
-            </aside> <!-- tags -->
+                {% include "auxiliary/tags_object_edit.html" with tags=tags %}
+            </aside>
             <aside class="sidebar">
                 <header><h2>{% trans "Links" %}</h2></header>
                 {% object_links object %}
