@@ -38,7 +38,7 @@
                 alt="Tidbit photo">
             <strong class="tidbit-icon-{{tidbit.icon}}">{{tidbit.title}}</strong>
             <div>{{tidbit.content|safe}}</div>
-            <a class="btn btn-more" href="{{tidbit.button_link}}">{{tidbit.button_text}}</a>
+            <a class="btn btn-more hidden-phone" href="{{tidbit.button_link}}">{{tidbit.button_text}}</a>
         </div>
         {% empty %}
         <div class="item active">
