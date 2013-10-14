@@ -35,8 +35,9 @@ Enter the `Open-Knesset` directory, and run:
 .. note::
 
     Running this command requires having SSH keys registered with github. If you don't have these, or
-    if you don't understand what this means and do not want to look it up, you can replace 'git@' with
-    'https://' and everything should work properly.
+    if you don't understand what this means and do not want to look it up, you can use:
+    
+    git pull https://github.com/hasadna/Open-Knesset.git master
 
 If `requirements.txt` was modified, make sure all of them are installed (no harm
 running this command event in case of no changes):
