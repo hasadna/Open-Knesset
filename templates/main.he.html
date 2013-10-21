@@ -23,7 +23,6 @@
 {% block divcontent %}
 
 <div id="tidbitCarousel" class="carousel slide card card-main" style="margin-top:20px">
-    {% include "auxiliary/_suggestion_button.html" with suggest_for="tidbit" %}
     <!--ol class="carousel-indicators">
     {% for tidbit in tidbits  %}
         <li {% if forloop.first %} class="active"{% endif %} data-slide-to="{{forloop.counter0}}" data-target="#tidbitCarousel"> </li>
@@ -33,11 +32,14 @@
     <div class="carousel-inner">
         {% for tidbit in tidbits  %}
         <div class="item {% if forloop.first %}active{% endif %}">
-            <img class="tidbit-pic"
+            <img class="pull-left tidbit-pic"
                 src="{% if tidbit.photo %}{{tidbit.photo.url}}{% else %}{{STATIC_URL}}img/tidbits/{{tidbit.icon}}.png{% endif %}"
-                alt="Tidbit photo">
+                alt="Tidbit photo">            
+            <div class='pull-right'>
+                {% include "auxiliary/_suggestion_button.html" with suggest_for="tidbit" %}
+            </div>
             <strong class="tidbit-icon-{{tidbit.icon}}">{{tidbit.title}}</strong>
-            <div>{{tidbit.content|safe}}</div>
+            <div class='tidbit-content'>{{tidbit.content|safe}}</div>
             <a class="btn btn-more" href="{{tidbit.button_link}}">{{tidbit.button_text}}</a>
         </div>
         {% empty %}

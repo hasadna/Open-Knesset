@@ -4,17 +4,19 @@ div#tidbitCarousel {
     display: none;
   }
 
-  .item {
-    height: 200px;
-    padding: 30px 220px 0 30px;
+  .carousel-inner {
     background: url("../img/graphy.png");
+  }
 
+  .item {
+    padding: 30px 30px 0 30px;
+    
     img{
       width: 200px;
       height: auto;
+      margin-left:20px;
+      margin-bottom:20px;
       .rotate(5deg);
-      position: absolute;
-      right: 10px; top: 0;
       .box-shadow(2px 3px 6px rgba(112,168,220,.5));
     }
 
@@ -30,27 +32,19 @@ div#tidbitCarousel {
         //&.tidbit-icon-hand { background-image: url("../img/tidbits/hand.png"); }
     }
 
-    & div {
+    & div.tidbit-content {
       padding-right: 0px;
       font-size: 30px;
       line-height: 35px;
-      max-width: 900px;
     }
   }
 
   .btn {
-    position: absolute;
-    left: 0;
-    bottom: 10px;
     font-size: 120%;
     padding: 15px 40px;
   }
 
-  .btn-suggest { 
-    float:none; 
-    position:absolute;
-    top:15px;
-    left:15px;
+  .btn-suggest {
     font-size: inherit;
     padding: 5px;
     background: transparent;
