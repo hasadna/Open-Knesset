@@ -16,6 +16,8 @@ from django.utils import simplejson as json
 from auxiliary.views import CsvView
 from django.core import cache
 
+from tag_suggestions.tests import TestApprove, TestForm
+
 class TagResourceTest(TestCase):
 
     def setUp(self):

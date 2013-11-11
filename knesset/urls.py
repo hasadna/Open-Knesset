@@ -27,7 +27,7 @@ from auxiliary.views import (
     main, post_annotation, post_details, post_feedback,
     RobotsView, AboutView, CommentsView, add_tag_to_object,
     remove_tag_from_object, create_tag_and_add_to_item, help_page,
-    TagList, TagDetail)
+    TagList, TagDetail, suggest_tag_post)
 
 admin.autodiscover()
 
@@ -86,6 +86,7 @@ urlpatterns = patterns('',
     #url(r'^tags/(?P<app>\w+)/(?P<object_type>\w+)/(?P<object_id>\d+)/create-tag/$', create_tag_and_add_to_item, name='create-tag'),
     url(r'^tags/$', TagList.as_view(), name='tags-list'),
     url(r'^tags/(?P<slug>.*)/$', TagDetail.as_view(), name='tag-detail'),
+    url(r'^suggest-tag-post/$', suggest_tag_post, name='suggest-tag-post'),
     url(r'^uservote/bill/(?P<object_id>\d+)/(?P<direction>\-?\d+)/?$',
         vote_on_object, dict(
             model=Bill, template_object_name='bill',

@@ -17,12 +17,12 @@ window.tags={
         var _this=this;
         var name=_this._view.getAddTagName();
         if (name.length>0 && _this._view.lock()) {
-            _this._model.addByName(name,function(tmp,id,name){
+            _this._model.addByName(name,function(tmp, id, name){
                 if (tmp===true) {
                     _this._view.add(name,id);
                     _this._view.clearAddTagName();
                 } else {
-                    _this._view.error(tmp);
+                    _this._view.error(tmp, _this._model.getObjectType(), _this._model.getObjectId(), _this._model.getAppLabel());
                 };
                 _this._view.unlock();
             },function(id){
@@ -63,7 +63,7 @@ window.tags={
                 {'format':'json','name':name},
                 function(data){
                     if (data.objects.length!=1) {
-                        callback(gettext('the specified tag name does not exist and you do not have permission to add new tag names, only to attach existing tags'));
+                        callback('TAG_DOES_NOT_EXIST');
                     } else {
                         callback(true,data.objects[0].id);
                     };
@@ -83,6 +83,15 @@ window.tags={
             this._app_label=app_label;
             this._object_type=object_type;
             this._object_id=object_id;
+        },
+        getObjectType:function(){
+            return this._object_type;
+        },
+        getObjectId:function(){
+            return this._object_id;
+        },
+        getAppLabel:function(){
+            return this._app_label;
         },
         del:function(id,callback){
             $.post(
@@ -105,7 +114,7 @@ window.tags={
             this._getTagId(name,function(tmp,id){
                 if (tmp===true) {
                     if (isTagIdExists(id)) {
-                        callback(gettext('tag is already attached to current object'));
+                        callback('TAG_ALREADY_ATTACHED');
                     } else {
                         self.add(id,function(tmp){
                             callback(tmp,id,name);
@@ -118,6 +127,10 @@ window.tags={
         }
     },
     _view:{
+        _errorMsgs:{
+            TAG_DOES_NOT_EXIST:gettext('the specified tag name does not exist and you do not have permission to add new tag names, only to attach existing tags'),
+            TAG_ALREADY_ATTACHED:gettext('tag is already attached to current object')
+        },
         _onDelButtonClick:function(elt){
             if ($(elt).data('isDeleted')=='yes') {
                 tags.unDel($(elt).data('tagid'));
@@ -129,6 +142,7 @@ window.tags={
             return ($('#tag_'+id).length>0);
         },
         lock:function(){
+            this.clearError();
             $("body").css("cursor", "wait");
             $('.tagdelbutton').css('cursor','wait');
             $('.tag').css('cursor','wait');
@@ -238,8 +252,20 @@ window.tags={
             $('#deltag_'+id).html(gettext('Undo Delete')+'<br/>');
             $('#deltag_'+id).data('isDeleted','yes');
         },
-        error:function(msg){
-            alert(msg);
+        clearError:function(){
+            $('#tags_notexist').hide();
+        },
+        error:function(code, object_type, object_id, app_label){
+            if (code=='TAG_DOES_NOT_EXIST') {
+                $('#tags_notexist').show();
+                $('#suggest-tag-modal #id_name').val(this.getAddTagName());
+                $('#suggest-tag-modal #id_object_type').val(object_type);
+                $('#suggest-tag-modal #id_app_label').val(app_label);
+                $('#suggest-tag-modal #id_object_id').val(object_id);
+            } else {
+                msg=this._errorMsgs[code];
+                alert(msg);
+            };
         }
     }
 };

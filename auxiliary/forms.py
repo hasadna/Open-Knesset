@@ -1,7 +1,8 @@
 from django import forms
+from django.forms.widgets import HiddenInput
 from django.utils.translation import ugettext_lazy as _
 
-from .models import ICON_CHOICES, Tidbit, Feedback
+from .models import ICON_CHOICES, Tidbit, Feedback, TagSuggestion
 from suggestions.forms import InstanceCreateSuggestionForm
 
 
@@ -28,6 +29,25 @@ class TidbitSuggestionForm(InstanceCreateSuggestionForm):
         data = super(TidbitSuggestionForm, self).get_data(request)
         data['suggested_by'] = request.user
 
+        return data
+
+class TagSuggestionForm(InstanceCreateSuggestionForm):
+    name = forms.CharField(label=_('Name'))
+    app_label = forms.CharField(widget=HiddenInput)
+    object_type = forms.CharField(widget=HiddenInput)
+    object_id = forms.CharField(widget=HiddenInput)
+
+    class Meta:
+        model = TagSuggestion
+        caption = _('Suggest Tag')
+
+    def __init__(self, *args, **kwargs):
+        super(TagSuggestionForm, self).__init__(*args, **kwargs)
+        self.helper.form_action = 'suggest-tag-post'
+
+    def get_data(self, request):
+        data = super(TagSuggestionForm, self).get_data(request)
+        data['suggested_by'] = request.user
         return data
 
 

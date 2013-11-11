@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load tags %}
 <header><h2>{% trans "Tags" %}</h2></header>
 <div id="tags">
 {% if tags %}
@@ -10,12 +11,17 @@
 {% endif %}
 </div>
 {% if user.is_authenticated %}
-<h3 id='tags_addnew' style='display:none;'>
+<div id='tags_addnew' style='display:none;'>
     <input autocomplete='off' style='border:1px solid black;'/>
-    <a href='javascript:tags.add();'>{% trans "Add" %}</a>
-</h3>
+    <div id='tags_notexist' class='alert' style='display:none;'>
+        <div>{% trans "The tag does not exist" %}</div>
+        <a href='#suggest-tag-modal' data-role="button" data-toggle="modal">{% trans "Click here to suggest the tag" %}</a>
+    </div>
+    <div><a href='javascript:tags.add();'>{% trans "Add" %}</a></div>
+</div>
 <h3 id='tags_edit'><a href='javascript:tags.edit();'>{% trans "Edit Tags" %}</a></h3>
 <h3 id='tags_doneedit' style='display:none;'><a href='javascript:tags.doneEdit();'>{% trans "Done Edit Tags" %}</a></h3>
 {% else %}
 <div class="alert alert-block"><a href="{% url 'login' %}?next={{request.get_full_path}}">{% trans 'Login to edit tags' %}</a></div>
 {% endif %}
+{% add_tag_suggestion_form %}

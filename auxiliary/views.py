@@ -19,8 +19,8 @@ from django.views.generic.list import BaseListView
 from django.views.decorators.http import require_http_methods
 from tagging.models import Tag, TaggedItem
 
-from .forms import TidbitSuggestionForm, FeedbackSuggestionForm
-from .models import Tidbit
+from .forms import TidbitSuggestionForm, FeedbackSuggestionForm, TagSuggestionForm
+from .models import Tidbit, TagSuggestion
 from committees.models import CommitteeMeeting
 from events.models import Event
 from knesset.utils import notify_responsible_adult
@@ -214,6 +214,24 @@ def post_feedback(request):
 
     return form.get_response()
 
+@require_http_methods(['POST'])
+def suggest_tag_post(request):
+    "Post a tag suggestion form"
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden()
+
+    form = TagSuggestionForm(request.POST)
+    if form.is_valid():
+        content_type = ContentType.objects.get_by_natural_key(form.cleaned_data['app_label'], form.cleaned_data['object_type'])
+        object = content_type.get_object_for_this_type(pk=form.cleaned_data['object_id'])
+        ts = TagSuggestion(
+            name=form.cleaned_data['name'],
+            suggested_by=request.user,
+            object=object
+        )
+        ts.save()
+
+    return form.get_response()
 
 def post_annotation(request):
     if request.user.has_perm('annotatetext.add_annotation'):
