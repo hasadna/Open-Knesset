@@ -1,0 +1,29 @@
+{% load i18n comments annotatetags hashtag mks_tags agendas_tags hitcount_tags pagination_tags  %}
+<div class="speech-{{ object.id }} speech-container row" id="speech-{{ object.id }}-{{ speech_part.order }}">
+    <div class="text-speaker span9" {% if speech_part.header %}style="background-color:{{ colors|hash:speech_part.header }}" {% endif %}>
+        {% firstof speech_part.header "&nbsp;" %}
+        {% ifnotequal speech_part.order 1 %}
+            <a href="#speech-{{ object.id }}-{{ speech_part.order }}" class="permalink">¶</a>
+        {% endifnotequal %}
+    </div>
+
+    <div class="text-content span6" id="annotations-{{ speech_part.id }}_content">
+        <blockquote cite="{{ session.document_url }}" id="annotationtext_{{ speech_part.id }}" class="entry-content" style="background-color:{{colors|hash:speech_part.header}}">{{ speech_part.body|simple_formatting }}</blockquote>
+    </div>
+    <div class="span3">
+        <div style="display:none" class="annotationtoolbox annotating form-inline" id="annotationtoolbox-{{ speech_part.id }}">
+            <label for="markall-{{ speech_part.id }}">{% trans "View all" %}</label>
+            <input type="checkbox" class="markall" name="markall-{{ speech_part.id }}" id="markall-{{ speech_part.id }}"/>
+        </div>
+        <p class="tool-links">
+            <a href="#annotationform-{{ speech_part.id }}" class="annotationform-link annotating" id="selectable-{{ speech_part.id }}">{% trans "Annotate"%}</a>
+        </p>
+        <div class="annotating annotation-content" id="annotations-{{ speech_part.id }}">
+            {% with annotation_obj.annotations as annotations %}
+            {% for annotation in annotations %}
+            {% include "annotatetext/_annotation.html" %}
+            {% endfor %}
+            {% endwith %}
+        </div>
+    </div>
+</div>

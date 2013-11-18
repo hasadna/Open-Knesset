@@ -1,0 +1,38 @@
+{% load hashtag i18n %}
+<script type="text/html" id="annotationform">
+    <div class="annotation-form" id="annotationform-<%=speech_part.id%>">
+        <form action="{% url 'annotatetext-post_annotation' %}" method="post" accept-charset="utf-8" id="annotationrealform-<%=speech_part.id%>" class="annotationrealform">{% csrf_token %}
+        {% with annotation_obj|hash:"form" as annotation_form %}
+            <div class="annotationselection">
+              <span class="arrowhint">&#8658;</span>
+              <span class="selectionempty" id="selectionempty-<%=speech_part.id%>"> {% trans "Please Mark Passage" %}</span>
+              <span class="selectionhint" id="selectionhint-<%=speech_part.id%>"> </span>
+              <span class="hideme">
+              <label for="selection_start-<%=speech_part.id%>">{% trans "Beginning with" %}</label>
+              <input type="text" size="3" value="" name="selection_start" id="selection_start-<%=speech_part.id%>"/>
+              <label for="selection_end-<%=speech_part.id%>">{% trans "Ending with" %}</label>
+              <input type="text" size="3" value="" name="selection_end" id="selection_end-<%=speech_part.id%>"/>
+              </span>
+            </div>
+            <p class="annotationfields">
+               <label>{% trans "Type your note" %}:</label>
+               {{ annotation_form.flags }}
+                <br />
+                <label>{% trans "Color" %}:</label>
+                <input type="text" size="6" name="color" id="annotationcolor-<%=speech_part.id%>" value="#99ccff"/>
+                <input type="hidden" name="object_id" value="<%=speech_part.id%>"/>
+                {{ annotation_form.content_type }}
+            </p>
+            {{ annotation_form.comment }}
+            <div>
+                <input type="hidden" name="lengthcheck" value="<%=speech_part.length%>"/>
+                <input type="submit" value="{% trans "Save note" %}"/>
+                <a href="#annotationform-<%=speech_part.id%>" class="annotationform-cancel" id="cancelable-<%=speech_part.id%>">{% trans "Cancel" %}</a>
+            </div>
+            <p class="annotationlicensing">
+                {% trans "Your note will be published under"%}&nbsp; <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.he">cc-by-sa-3.0</a>
+            </p>
+        {% endwith %}
+        </form>
+        </div>
+</script>

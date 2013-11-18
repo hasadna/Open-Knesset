@@ -1,0 +1,12 @@
+{% load annotatetags hashtag %}
+{% get_annotations_for parts as annotation_dict %}
+{% for speech_part in parts %}
+    {% with speech_part.id as spid %}
+    {% with annotation_dict|hash:spid as annotation_obj %}
+        {% if forloop.first %}
+            {% include "committees/committeemeeting_detail/protocol_anotationform.html" %}
+        {% endif %}
+        {% include "committees/committeemeeting_detail/protocol_part.html" %}
+    {% endwith %}
+    {% endwith %}
+{% endfor %}
