@@ -1,0 +1,71 @@
+{% extends "site_base.html" %}
+{% load i18n i18ninclude laws_tags bills_tags committees_tags %}
+{% block extratitle %}{{ tag }}{% endblock %}
+{% block keywords %}{{ tag }}{% endblock %}
+{% block description %}{% trans 'Untagged Objects' %} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
+{% block nav-tags %}class="selected"{% endblock %}
+{% block breadcrumbs %}
+        <li><a href="{% url 'tags-list' %}">{% trans "Tags" %}</a> <span class="divider">/</span></li>
+        <li class="active">{% trans 'Untagged Objects' %}</li>
+{% endblock %}
+{% block divcontent %}
+    <div class="card card-main">
+      <div class="row">
+        <div class="span12" style="min-height:auto;">
+          <div class="spacer">
+            {% i18ninclude "auxiliary/untagged_header.html" LANGUAGE_CODE %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+        <div class="span4">
+            <div class="cards">
+                <div class="card card-list compact">
+                    <header><h2>{% blocktrans with count=bill_count %}{{ count }} Bills{% endblocktrans %}</h2></header>
+                    <ul>
+                    {% for o in bills %}
+                        {% bill_list_item bill=o show_tags=False %}
+                    {% empty %}
+                        <li>{% trans "No results found" %}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="span4">
+            <div class="cards">
+                <div class="card card-list compact">
+                    <header><h2>{% blocktrans with count=vote_count %}{{ count }} Votes{% endblocktrans %}</h2></header>
+                    <ul>
+                    {% for o in votes %}
+                        {% vote_list_item vote=o show_tags=False %}
+                    {% empty %}
+                        <li>{% trans "no results found" %}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="span4">
+            <div class="cards">
+                <div class="card card-list compact">
+                    <header><h2>{% blocktrans with count=cms_count %}{{ count }} Committee Meetings{% endblocktrans %}</h2></header>
+                    <ul>
+                    {% for o in cms %}
+                        {% committee_meeting_list_item o %}
+                    {% empty %}
+                        <li>{% trans "no results found" %}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+

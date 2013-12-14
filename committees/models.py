@@ -13,7 +13,7 @@ from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
-from tagging.models import Tag
+from tagging.models import Tag, TaggedItem
 from djangoratings.fields import RatingField
 from annotatetext.models import Annotation
 from events.models import Event
@@ -145,6 +145,27 @@ def legitimate_header(line):
         return False
     return True
 
+class CommitteeMeetingManager(models.Manager):
+
+    def filter_and_order(self, *args, **kwargs):
+        qs = self.all()
+        # In dealing with 'tagged' we use an ugly workaround for the fact that generic relations
+        # don't work as expected with annotations.
+        # please read http://code.djangoproject.com/ticket/10461 before trying to change this code
+        if kwargs.get('tagged'):
+            if kwargs['tagged'] == ['false']:
+                qs = qs.exclude(tagged_items__isnull=False)
+            elif kwargs['tagged'] != ['all']:
+                qs = qs.filter(tagged_items__tag__name__in=kwargs['tagged'])
+
+        if kwargs.get('to_date'):
+            qs = qs.filter(time__lte=kwargs['to_date']+timedelta(days=1))
+
+        if kwargs.get('from_date'):
+            qs = qs.filter(time__gte=kwargs['from_date'])
+
+        return qs.select_related('committee')
+
 class CommitteeMeeting(models.Model):
     committee = models.ForeignKey(Committee, related_name='meetings')
     date_string = models.CharField(max_length=256)
@@ -154,6 +175,10 @@ class CommitteeMeeting(models.Model):
     protocol_text = models.TextField(null=True,blank=True)
     topics = models.TextField(null=True,blank=True)
     src_url  = models.URLField(max_length=1024,null=True,blank=True)
+    tagged_items = generic.GenericRelation(TaggedItem,
+                                           object_id_field="object_id",
+                                           content_type_field="content_type")
+    objects = CommitteeMeetingManager()
 
     class Meta:
         ordering = ('-date',)

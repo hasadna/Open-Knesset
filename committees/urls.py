@@ -10,14 +10,15 @@ from views import (
     edit_topic)
 
 
-meetings_list = MeetingsListView.as_view(
-    queryset=CommitteeMeeting.objects.all(), paginate_by=20)
+meetings_list = MeetingsListView.as_view()
 
 committeesurlpatterns = patterns('',
     url(r'^committee/$', CommitteeListView.as_view(), name='committee-list'),
     url(r'^committee/more-topics/$', TopicsMoreView.as_view(), name='committee-topics-more'),
     url(r'^committee/(?P<pk>\d+)/$', CommitteeDetailView.as_view(), name='committee-detail'),
+    url(r'^committee/all_meetings/$', meetings_list, name='committee-all-meetings'),
     url(r'^committee/(?P<committee_id>\d+)/all_meetings/$', meetings_list, name='committee-all-meetings'),
+    url(r'^committee/date/(?P<date>[\d\-]+)/$', meeting_list_by_date, name='committee-meetings-by-date'),
     url(r'^committee/(?P<committee_id>\d+)/date/(?P<date>[\d\-]+)/$', meeting_list_by_date, name='committee-meetings-by-date'),
     url(r'^committee/(?P<committee_id>\d+)/date/$', meeting_list_by_date, name='committee-meetings-by-date'),
     url(r'^committee/(?P<committee_id>\d+)/topic/$', TopicListView.as_view(), name='committee-topic-list'),

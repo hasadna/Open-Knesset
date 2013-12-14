@@ -577,3 +577,15 @@ class GetMoreView(ListView):
 
         return HttpResponse(json.dumps(result, ensure_ascii=False),
                             content_type='application/json')
+
+def untagged_objects(request):
+    return render_to_response('auxiliary/untagged_objects.html', {
+            'cms': CommitteeMeeting.objects.filter_and_order(tagged=['false'])[:100],
+            'cms_count': CommitteeMeeting.objects.filter_and_order(tagged=['false']).count(),
+            'bills': Bill.objects.filter_and_order(tagged='false')[:100],
+            'bill_count': Bill.objects.filter_and_order(tagged='false').count(),
+            'votes': Vote.objects.filter_and_order(tagged='false')[:100],
+            'vote_count': Vote.objects.filter_and_order(tagged='false').count(),
+            },
+            context_instance=RequestContext(request))
+

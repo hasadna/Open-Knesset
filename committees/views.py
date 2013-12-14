@@ -32,7 +32,6 @@ from knesset.utils import clean_string
 from laws.models import Bill, PrivateProposal
 from links.models import Link
 from mks.models import Member
-from mks.utils import get_all_mk_names
 
 
 logger = logging.getLogger("open-knesset.committees.views")
@@ -193,15 +192,6 @@ class MeetingDetailView(DetailView):
                         target=mk,
                         timestamp=datetime.datetime.now())
 
-        if user_input_type == "protocol":
-            print "protocol"
-            if not cm.protocol_text:  # don't override existing protocols
-                cm.protocol_text = request.POST.get('protocol_text')
-                cm.save()
-                cm.create_protocol_parts()
-                mks, mk_names = get_all_mk_names()
-                cm.find_attending_members(mks, mk_names)
-
         return HttpResponseRedirect(".")
 
 _('added-bill-to-cm')
@@ -319,51 +309,61 @@ def delete_topic(request, pk):
 class MeetingsListView(ListView):
 
     allow_empty = False
+    paginate_by = 20
 
     def get_context_data(self, *args, **kwargs):
         context = super(MeetingsListView, self).get_context_data(*args,
                                                                  **kwargs)
-        items = context['object_list']
-        committee = items[0].committee
+        committee_id = self.kwargs.get('committee_id')
+        if committee_id:
+            items = context['object_list']
+            committee = items[0].committee
 
-        if committee.type == 'plenum':
-            committee_name = _('Knesset Plenum')
+            if committee.type == 'plenum':
+                committee_name = _('Knesset Plenum')
+            else:
+                committee_name = committee.name
+            context['title'] = _('All meetings by %(committee)s') % {
+                'committee': committee_name}
+            context['committee'] = committee
         else:
-            committee_name = committee.name
+            context['title'] = _('Parliamentary committees meetings')
+        context['committee_id'] = committee_id
 
-        context['title'] = _('All meetings by %(committee)s') % {
-            'committee': committee_name}
         context['none'] = _('No %(object_type)s found') % {
             'object_type': CommitteeMeeting._meta.verbose_name_plural}
-        context['committee'] = committee
-        context['committee_id'] = self.kwargs['committee_id']
 
         return context
 
     def get_queryset(self):
         c_id = self.kwargs.get('committee_id', None)
+        qs = CommitteeMeeting.objects.filter_and_order(**dict(self.request.GET))
         if c_id:
-            return CommitteeMeeting.objects.filter(committee__id=c_id)
-        else:
-            return CommitteeMeeting.objects.all()
-
+            qs = qs.filter(committee__id=c_id)
+        return qs
 
 def meeting_list_by_date(request, *args, **kwargs):
-    committee_id = kwargs.get('committee_id', None)
-    date_string = kwargs.get('date', None)
-
+    committee_id = kwargs.get('committee_id')
+    date_string = kwargs.get('date')
     try:
         date = datetime.datetime.strptime(date_string, '%Y-%m-%d').date()
     except:
         raise Http404()
 
-    committee = get_object_or_404(Committee, pk=committee_id)
-    object_list = committee.meetings.filter(date=date)
+    context = {}
+    if committee_id:
+        qs = CommitteeMeeting.objects.filter(comittee_id=committee_id)
+        committee = qs[0].committee.name
+        context['committee'] = committee
+        context['title'] = _('Meetings by %(committee)s on date %(date)s') % {'committee': committee, 'date': date}
+        context['committee_id'] = committee_id
+    else:
+        context['title'] = _('Parliamentary committees meetings on date %(date)s') % {'date': date}
+        qs = CommitteeMeeting.objects.all()
+    qs = qs.filter(date=date)
 
-    context = {'object_list': object_list, 'committee_id': committee_id}
-    context['title'] = _('Meetings by %(committee)s on date %(date)s') % {'committee': committee.name, 'date': date}
+    context['object_list'] = qs
     context['none'] = _('No %(object_type)s found') % {'object_type': CommitteeMeeting._meta.verbose_name_plural}
-    context['committee'] = committee
 
     return render_to_response("committees/committeemeeting_list.html",
                               context, context_instance=RequestContext(request))

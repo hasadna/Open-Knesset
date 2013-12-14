@@ -41,7 +41,7 @@
                 {% endblocktrans %}</span>
         {% endif %}
     </p>
-    {% if vote.tags %}
+    {% if show_tags and vote.tags %}
     <p class="item-context">
        {% item_tags vote.tags %}
     </p>

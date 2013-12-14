@@ -7,7 +7,11 @@
         $('#datelookup_submit').click(function(){
             var d = $('#datelookup_input').val();
             if (d){
+              {% if committee_id %}
                 window.location = '{% url 'committee-meetings-by-date' committee_id "1970-1-1" %}'.replace('1970-1-1', d);
+              {% else %}
+                window.location = '{% url 'committee-meetings-by-date' "1970-1-1" %}'.replace('1970-1-1', d);
+              {% endif %}
             }
         });
     </script>

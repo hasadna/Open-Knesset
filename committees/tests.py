@@ -25,12 +25,14 @@ class CommitteeMeetingDetailViewTest(TestCase):
         self.committee_1 = Committee.objects.create(name='c1')
         self.committee_2 = Committee.objects.create(name='c2')
         self.meeting_1 = self.committee_1.meetings.create(date=datetime.now(),
+                                 topics = "django",
                                  protocol_text='''jacob:
 I am a perfectionist
 adrian:
 I have a deadline''')
         self.meeting_1.create_protocol_parts()
         self.meeting_2 = self.committee_1.meetings.create(date=datetime.now(),
+                                                         topics = "python",
                                                          protocol_text='m2')
         self.meeting_2.create_protocol_parts()
         self.jacob = User.objects.create_user('jacob', 'jacob@example.com',
@@ -255,6 +257,11 @@ I have a deadline''')
         self.assertIn(self.new_tag, self.meeting_1.tags)
 
     def test_committeemeeting_by_tag(self):
+        res = self.client.get('%s?tagged=false' % reverse('committee-all-meetings'))
+        self.assertQuerysetEqual(res.context['object_list'],
+                                 ['<CommitteeMeeting: c1 - python>',
+                                  '<CommitteeMeeting: c1 - django>'],
+                                 )
         self.ti = TaggedItem._default_manager.create(
             tag=self.tag_1,
             content_type=ContentType.objects.get_for_model(CommitteeMeeting),
@@ -265,7 +272,10 @@ I have a deadline''')
         tag = res.context['tag']
         self.assertEqual(tag, self.tag_1)
         self.assertQuerysetEqual(res.context['object_list'],
-                                 ['<CommitteeMeeting: c1 - None>'])
+                                 ['<CommitteeMeeting: c1 - django>'])
+        res = self.client.get('%s?tagged=false' % reverse('committee-all-meetings'))
+        self.assertQuerysetEqual(res.context['object_list'],
+                                 ['<CommitteeMeeting: c1 - python>'])
         # cleanup
         self.ti.delete()
 

@@ -100,7 +100,9 @@ def pagination(page_obj, paginator, request):
     return locals()
 
 @register.inclusion_tag('laws/vote_list_item.html')
-def vote_list_item(vote, watched_members=[]):
+def vote_list_item(vote, watched_members=[], show_tags=True):
     return {'vote': vote,
             'tags': vote.tags,
-            'watched_members': watched_members}
+            'watched_members': watched_members,
+            'show_tags': show_tags,
+           }

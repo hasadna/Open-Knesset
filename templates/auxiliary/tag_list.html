@@ -20,6 +20,9 @@
 </div>
 <div class="card card-main">
     <div class="spacer">
+        <div class="pull-left">
+          <a href="{% url 'untagged-objects' %}">עזרו לנו לתייג</a>
+        </div>
         <h1>{% trans 'Tags' %}</h1>
         <div class="text-center">
             {% for tag in tags_cloud %}
