@@ -187,18 +187,20 @@ $(function(){
         var _curPage = null;
         var _baseUrl = null;
         var _getNextPageUrl = function() {
+            // remove everything after and including #
+            _baseUrl = window.location.href.split('#')[0];
             if (_curPage == null) {
                 var re = /page=([0-9]*)/;
-                var matches = window.location.href.match(re);
+                var matches = _baseUrl.match(re);
                 if (matches != null && matches.length == 2) {
                     _curPage = parseInt(matches[1]);
-                    _baseUrl = window.location.href.replace(re, 'page=((PAGE))');
+                    _baseUrl = _baseUrl.replace(re, 'page=((PAGE))');
                 } else {
                     _curPage = 1;
-                    if (window.location.href.indexOf('?')>-1) {
-                        _baseUrl = window.location.href + '&page=((PAGE))';
+                    if (_baseUrl.indexOf('?')>-1) {
+                        _baseUrl = _baseUrl + '&page=((PAGE))';
                     } else {
-                        _baseUrl = window.location.href + '?page=((PAGE))';
+                        _baseUrl = _baseUrl + '?page=((PAGE))';
                     };
                 };
             };
