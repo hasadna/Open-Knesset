@@ -172,6 +172,8 @@ INSTALLED_APPS = (
     'plenum',
     'tinymce',
     'suggestions',
+    'okscraper_django',
+    'lobbyists',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

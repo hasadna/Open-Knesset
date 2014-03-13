@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xml:base="http://online.knesset.gov.il/WsinternetSps/KnessetDataService/LobbyistData.svc/" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">
+  <id>http://online.knesset.gov.il/WsinternetSps/KnessetDataService/LobbyistData.svc/View_lobbyist(220)</id>
+  <title type="text"></title>
+  <updated>2013-12-21T20:57:40Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="edit" title="View_lobbyist" href="View_lobbyist(220)" />
+  <link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/lobbist_type" type="application/atom+xml;type=feed" title="lobbist_type" href="View_lobbyist(220)/lobbist_type" />
+  <category term="sponsorshipModel.View_lobbyist" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme" />
+  <content type="application/xml">
+    <m:properties>
+      <d:lobbyist_id m:type="Edm.Int32">220</d:lobbyist_id>
+      <d:first_name>יותם</d:first_name>
+      <d:family_name>אביזוהר</d:family_name>
+      <d:profession m:null="true" />
+      <d:corporation_name m:null="true" />
+      <d:corporation_id m:null="true" />
+      <d:faction_member>לא</d:faction_member>
+      <d:faction_name m:null="true" />
+      <d:lobyst_permit_type>קבוע</d:lobyst_permit_type>
+    </m:properties>
+  </content>
+</entry>

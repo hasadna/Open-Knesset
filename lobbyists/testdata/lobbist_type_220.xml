@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<feed xml:base="http://online.knesset.gov.il/WsinternetSps/KnessetDataService/LobbyistData.svc/" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">
+  <title type="text">lobbist_type</title>
+  <id>http://online.knesset.gov.il/WsinternetSps/KnessetDataService/LobbyistData.svc/View_lobbyist(220)/lobbist_type</id>
+  <updated>2013-12-21T20:58:16Z</updated>
+  <link rel="self" title="lobbist_type" href="lobbist_type" />
+  <entry>
+    <id>http://online.knesset.gov.il/WsinternetSps/KnessetDataService/LobbyistData.svc/View_lobbyist_represent(6954817)</id>
+    <title type="text"></title>
+    <updated>2013-12-21T20:58:16Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit" title="View_lobbyist_represent" href="View_lobbyist_represent(6954817)" />
+    <link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/lobbist" type="application/atom+xml;type=entry" title="lobbist" href="View_lobbyist_represent(6954817)/lobbist" />
+    <category term="sponsorshipModel.View_lobbyist_represent" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme" />
+    <content type="application/xml">
+      <m:properties>
+        <d:lobbyist_represent_id m:type="Edm.Int32">6954817</d:lobbyist_represent_id>
+        <d:lobbyist_id m:type="Edm.Int32">220</d:lobbyist_id>
+        <d:lobbyist_represent_name>ישראל בשביל אופניים</d:lobbyist_represent_name>
+        <d:lobbyist_represent_domain>איכות הסביבה, בריאות הציבור, בטיחות בדרכים</d:lobbyist_represent_domain>
+        <d:lobbyist_represent_type>קבוע</d:lobbyist_represent_type>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>http://online.knesset.gov.il/WsinternetSps/KnessetDataService/LobbyistData.svc/View_lobbyist_represent(6954818)</id>
+    <title type="text"></title>
+    <updated>2013-12-21T20:58:16Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit" title="View_lobbyist_represent" href="View_lobbyist_represent(6954818)" />
+    <link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/lobbist" type="application/atom+xml;type=entry" title="lobbist" href="View_lobbyist_represent(6954818)/lobbist" />
+    <category term="sponsorshipModel.View_lobbyist_represent" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme" />
+    <content type="application/xml">
+      <m:properties>
+        <d:lobbyist_represent_id m:type="Edm.Int32">6954818</d:lobbyist_represent_id>
+        <d:lobbyist_id m:type="Edm.Int32">220</d:lobbyist_id>
+        <d:lobbyist_represent_name>אופנים בשביל ירושלים</d:lobbyist_represent_name>
+        <d:lobbyist_represent_domain xml:space="preserve">תחבורה, התחדשות עירונית, בטיחות בדרכים </d:lobbyist_represent_domain>
+        <d:lobbyist_represent_type>קבוע</d:lobbyist_represent_type>
+      </m:properties>
+    </content>
+  </entry>
+</feed>
