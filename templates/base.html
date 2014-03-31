@@ -271,11 +271,28 @@
           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
+
+        //HASADNA PIWIK ANALYTICS
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+          var u=(("https:" == document.location.protocol) ? "https" : "http") + "://visitors.hasadna.org.il/";
+          _paq.push(['setTrackerUrl', u+'piwik.php']);
+          _paq.push(['setSiteId', 2]);
+          var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+          g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+
     {% endif %}
     </script>
     {% block extrajs %}{% endblock %}
     {% block footer %}
     {% endblock %}
+
+    <!--HASADNA PIWIK ANALYTICS-->
+    <noscript><p><img src="http://visitors.hasadna.org.il/piwik.php?idsite=2" style="border:0;" alt="" /></p></noscript>
+
     </body>
 </html>
 
