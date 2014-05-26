@@ -157,6 +157,7 @@ class MemberVotingStatistics(models.Model):
 class VoteAction(models.Model):
     type   = models.CharField(max_length=10, choices=VOTE_ACTION_TYPE_CHOICES)
     member = models.ForeignKey('mks.Member')
+    party  = models.ForeignKey('mks.Party')
     vote   = models.ForeignKey('Vote')
     against_party = models.BooleanField(default=False)
     against_coalition = models.BooleanField(default=False)
@@ -166,6 +167,10 @@ class VoteAction(models.Model):
     def __unicode__(self):
         return u"{} {} {}".format(self.member.name, self.type, self.vote.title)
 
+    def save(self, **kwargs):
+        if not self.party and not self.party_id:
+            self.party_id = self.member.party_at(self.vote.time)
+        super(VoteAction,self).save(**kwargs)
 
 class VoteManager(models.Manager):
     # TODO: add i18n to the types so we'd have
