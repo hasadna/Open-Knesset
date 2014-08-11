@@ -1,7 +1,8 @@
 from django.db import connection, transaction
 from itertools import groupby
 from operator import itemgetter
-
+from datetime import datetime, timedelta
+#,datetime(g[4]),datetime(g[5])
 def getAllAgendaPartyVotes():
     cursor = connection.cursor()
     cursor.execute(PARTY_QUERY)
@@ -13,11 +14,12 @@ PARTY_QUERY = """
 SELECT a.agendaid,
        a.partyid,
        round(coalesce(cast(coalesce(v.totalvotevalue,0.0)/a.totalscore*100.0 as numeric),0.0),2) score,
-       round(coalesce(cast(coalesce(v.numvotes,0.0)/a.totalvolume*100.0 as numeric),0.0),2) volume
+       round(coalesce(cast(coalesce(v.numvotes,0.0)/a.totalvolume*100.0 as numeric),0.0),2) volume,
+       a.start_date, a.end_date
 FROM   (SELECT agid                   agendaid,
                m.id                   partyid,
                sc * m.number_of_seats totalscore,
-               numvotes * m.number_of_seats totalvolume
+               numvotes * m.number_of_seats totalvolume, m.start_date, m.end_date
         FROM   (SELECT agenda_id               agid,
                        SUM(abs(score * importance)) sc,
                        COUNT(*) numvotes
