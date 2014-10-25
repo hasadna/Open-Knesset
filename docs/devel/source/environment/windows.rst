@@ -87,8 +87,7 @@ Windows developers).
     easy_install Pillow==2.4.0
 
 
-* Download and run the exex install matching you architecture for 'ujson'_
-	(version 1.33)
+* Download and run the exe install matching you architecture for ujson_.
 
 .. _ujson: http://www.lfd.uci.edu/~gohlke/pythonlibs/#ujson
 
