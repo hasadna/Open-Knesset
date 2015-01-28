@@ -1,18 +1,7 @@
 {% autoescape off %}
-function generateMkFrameSet() {
+function generateMkFrameSet(selector) {
   var okURL = "http://{{ site_url }}",
       frameNum = 0;
-
-  // add our stylesheet
-  jQuery('.oknesset_mk').each(function() {
-      var id = this.getAttribute('mk_id');
-      if (id) {
-          var frame = createMkFrame(id);
-          frame.style.display = "none";
-          jQuery(this).after(frame)
-          jQuery(this).tooltip({position: "bottom center", delay: 500} );
-      }
-    });
 
   function createMkFrame( mkId, width ){
     var mkFrame = document.createElement("iframe");
@@ -28,20 +17,24 @@ function generateMkFrameSet() {
     frameNum++;
     return mkFrame;
   }
-}
-jQuery(document).ready( function () {
-  var re = RegExp("{{ re }}", "g"),
-      mks_by_name = {{ mks_by_name }};
+  jQuery(document).ready( function () {
+    var re = RegExp("{{ re }}", "g"),
+        mks_by_name = {{ mks_by_name }};
 
-  // a two pass modifier - first create the span than add the mk_id
-  $('body>[type!="text/javascript"]').each(function (i, el) {
-    $(el).html($(el).html().replace(re, '<span class="oknesset_mk">$&</span>'));
-  })
-  $('span.oknesset_mk').each(function (i, el) {
-    $(el).attr('mk_id', mks_by_name[$(el).html()])
-})
-  generateMkFrameSet();
-});
+    // a two pass modifier - first create the span than add the mk_id
+    $(selector).each(function (i, el) {
+      $(el).html($(el).html().replace(re, '<span class="oknesset_mk">$&</span>'));
+    })
+    $('span.oknesset_mk').each(function (i, el) {
+      var id = mks_by_name[$(el).html()]
+      $(el).attr('mk_id', id)
+      var frame = createMkFrame(id);
+      frame.style.display = "none";
+      jQuery(this).after(frame)
+      jQuery(this).tooltip({position: "bottom center", delay: 500} );
+    })
+  });
+}
 
 (function(f){function p(a,b,c){var h=c.relative?a.position().top:a.offset().top,d=c.relative?a.position().left:a.offset().left,i=c.position[0];h-=b.outerHeight()-c.offset[0];d+=a.outerWidth()+c.offset[1];if(/iPad/i.test(navigator.userAgent))h-=f(window).scrollTop();var j=b.outerHeight()+a.outerHeight();if(i=="center")h+=j/2;if(i=="bottom")h+=j;i=c.position[1];a=b.outerWidth()+a.outerWidth();if(i=="center")d-=a/2;if(i=="left")d-=a;return{top:h,left:d}}function u(a,b){var c=this,h=a.add(c),d,i=0,j=
 0,m=a.attr("title"),q=a.attr("data-tooltip"),r=o[b.effect],l,s=a.is(":input"),v=s&&a.is(":checkbox, :radio, select, :button, :submit"),t=a.attr("type"),k=b.events[t]||b.events[s?v?"widget":"input":"def"];if(!r)throw'Nonexistent effect "'+b.effect+'"';k=k.split(/,\s*/);if(k.length!=2)throw"Tooltip: bad events configuration for "+t;a.bind(k[0],function(e){clearTimeout(i);if(b.predelay)j=setTimeout(function(){c.show(e)},b.predelay);else c.show(e)}).bind(k[1],function(e){clearTimeout(j);if(b.delay)i=

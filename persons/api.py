@@ -12,12 +12,23 @@ class RoleResource(BaseResource):
         allowed_methods = ['get']
         excludes = ["id"]
         include_resource_uri = False
-
+        filtering = {
+                'org': ALL,
+                'text': ALL,
+                }
 
 class PersonResource(BaseResource):
+
+    roles = fields.ToManyField(RoleResource, 'roles', full=True)
+    mk = fields.ToOneField('mks.api.MemberResource', 'mk', null=True, full=True)
+
     class Meta(BaseResource.Meta):
         queryset = Person.objects.all()
         allowed_methods = ['get']
+        filtering = {
+                'roles': ALL_WITH_RELATIONS,
+                'roles__org': ALL,
+                }
 
     def get_object_list(self, request):
         persons = super(PersonResource, self).get_object_list(request)
