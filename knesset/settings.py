@@ -309,17 +309,21 @@ CORS_ORIGIN_ALLOW_ALL = True
 JWT_EXPIRATION_DELTA = timedelta(hours=48)
 JWT_ALGORITHM = 'HS256'
 
-LOGIN_REDIRECT_TARGETS = {
-    'opensubs': {
-        'parent_location_href': 'http://localhost:9000/',
-        'redirect_to_url': 'http://localhost:9000/#/login/',
-    }
-}
+# called after the user authenticated from the frontend app. The auth token aill be appended at the end.
+OPENSUBS_LOGIN_URL = 'https://localhost:9000/#/login/'
+# called after the user authenticated from facebook canvas. The auth token will be appended at the end. When this is called you are inside the facebook canvas app iframe.
+OPENSUBS_FACEBOOK_CANVAS_LOGIN_URL = 'https://localhost:9000/#/facebook/login/'
+# called from inside the canvas iframe - should display the splash screen for facebook canvas
+OPENSUBS_FACEBOOK_CANVAS_SPLASH_URL = 'https://localhost:9000/#/facebook/splash'
+# should be set in local_settings: the url to the facebook app page e.g. https://apps.facebook.com/opensubs/
+OPENSUBS_FACEBOOK_CANVAS_APP_URL = ''
 
 # if you add a local_settings.py file, it will override settings here
 # but please, don't commit it to git.
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 try:
     from local_settings import *
+    if 'EXTRA_INSTALLED_APPS' in globals():
+        INSTALLED_APPS += EXTRA_INSTALLED_APPS
 except ImportError:
     pass

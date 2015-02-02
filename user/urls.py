@@ -1,5 +1,5 @@
 from django.conf.urls import url, patterns, include
-from views import PublicUserProfile, ProfileListView, login_view, login_redirect
+from views import PublicUserProfile, ProfileListView, login_view, login_redirect, login_redirect_facebook_canvas, login_redirect_facebook_canvas_complete, login_redirect_facebook_canvas_start
 
 profile_list = ProfileListView.as_view()
 user_public_profile = PublicUserProfile.as_view(
@@ -44,6 +44,9 @@ urlpatterns += patterns(
     url(r'^login/$', login_view,
         {'template_name': 'user/login.html'}, name='login'),
     url(r'^login-redirect/(?P<target>[0-9A-Za-z]+)/$', login_redirect),
+    url(r'^login-redirect-facebook-canvas/(?P<target>[0-9A-Za-z]+)/$', login_redirect_facebook_canvas),
+    url(r'^login-redirect-facebook-canvas-start/(?P<target>[0-9A-Za-z]+)/$', login_redirect_facebook_canvas_start),
+    url(r'^login-redirect-facebook-canvas-complete/(?P<target>[0-9A-Za-z]+)/$', login_redirect_facebook_canvas_complete),
     (r'^registration/', include('accounts.urls')),
     url(r'^(?P<pk>\d+)/$', user_public_profile, name='public-profile'),
     url(r'^(?P<pk>\d+)/topic/$', user_followed_topics,

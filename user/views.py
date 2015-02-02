@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import json
+import base64, hmac, hashlib, time
 
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, \
                         HttpResponseServerError, HttpResponseBadRequest, HttpResponseNotAllowed
@@ -19,6 +20,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.http import require_http_methods
 from django.conf import settings
 import jwt
+from django.views.decorators.csrf import csrf_exempt
 
 from annotatetext.models import Annotation
 from actstream import unfollow, follow
@@ -233,8 +235,7 @@ def login_view(request, *args, **kwargs):
     }
     return authlogin(request, *args, **kwargs)
 
-def login_redirect(request, target):
-    target_settings = settings.LOGIN_REDIRECT_TARGETS[target]
+def _get_jwt_token(request):
     if request.user.is_authenticated() and not request.user.is_anonymous():
         payload = {
             'user_id': request.user.pk,
@@ -245,4 +246,55 @@ def login_redirect(request, target):
         token = jwt.encode(payload, settings.SECRET_KEY, settings.JWT_ALGORITHM).decode('utf-8')
     else:
         token = ''
-    return HttpResponse('<script>if (parent == window) {window.location.href = "'+target_settings['parent_location_href']+token+'"} else {parent.postMessage("'+token+'", "'+target_settings['redirect_to_url']+'");};</script>')
+    return token
+
+@csrf_exempt
+def login_redirect(request, target):
+    """
+    this url is called after the user finished the login process from inside the frontend app
+    if the user is authenticated, we redirect to the frontend app login page with the auth token
+    """
+    token = _get_jwt_token(request)
+    if token == '':
+        raise Exception('Failed to authenticate')
+    else:
+        return HttpResponseRedirect(getattr(settings, '%s_LOGIN_URL'%target.upper())+token)
+
+@csrf_exempt
+def login_redirect_facebook_canvas(request, target):
+    """
+    This view is the first view called when using facebook canvas - this view is displayed inside the canvas iframe
+    if the user is not authenticated - redirect to frontend facebook splash screen
+    otherwise - it redirects to the frontend facebook login url with the auth token
+    """
+    token = _get_jwt_token(request)
+    if token == '':
+        return HttpResponseRedirect(getattr(settings, '%s_FACEBOOK_CANVAS_SPLASH_URL'%target.upper()))
+    else:
+        return HttpResponseRedirect(getattr(settings, '%s_FACEBOOK_CANVAS_LOGIN_URL'%target.upper())+token)
+
+@csrf_exempt
+def login_redirect_facebook_canvas_start(request, target):
+    """
+    this is called from the frontend app - when the user needs to authenticate - this view is displayed inside the canvas iframe
+    if the user is not authenticated - exit the iframe and start the facebook social login process with next=/users/login-redirect-facebook-canvas-complete/(target)/
+    otherwise - it redirects to the frontend facebook login url with the auth token
+    """
+    token = _get_jwt_token(request)
+    if token == '':
+        return HttpResponse('<script>top.location.href = "%s?next=/users/login-redirect-facebook-canvas-complete/%s/"</script>' % (reverse('social:begin', args=['facebook']), target))
+    else:
+        return HttpResponseRedirect(getattr(settings, '%s_FACEBOOK_CANVAS_LOGIN_URL'%target.upper())+token)
+
+@csrf_exempt
+def login_redirect_facebook_canvas_complete(request, target):
+    """
+    This is called after the user finished authenticating with facebook for the canvas app
+    in this situation we are out of the Iframe - so we can't just redirect to the frontend - we need to get back into the iframe
+    so we make sure the user is authenticated, then redirect to the facebook canvas app url
+    """
+    token = _get_jwt_token(request)
+    if token == '':
+        raise Exception('Failed to authenticate')
+    else:
+        return HttpResponseRedirect(getattr(settings, '%s_FACEBOOK_CANVAS_APP_URL'%target.upper()))
