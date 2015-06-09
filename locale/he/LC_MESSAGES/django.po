@@ -1738,6 +1738,14 @@ msgstr "פרטים בקישור"
 msgid "Feedback"
 msgstr "משוב"
 
+#: templates/site_base.html:191
+msgid "IncText"
+msgstr "א+"
+
+#: templates/site_base.html:192
+msgid "DecText"
+msgstr "א-"
+
 #: templates/accounts/email_validation.html:2
 #: templates/accounts/email_validation_subject.html:1
 msgid "email validation for"

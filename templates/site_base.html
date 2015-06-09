@@ -188,7 +188,15 @@
     <!-- END #footer -->
     {% add_feedback_suggestion_form %}
     {% trans "Feedback" as feedback_button_text %}
-    {% include "auxiliary/_suggestion_button.html" with suggest_for="feedback" button_text=feedback_button_text %}
+    {% trans "IncText" as inc_text %}
+    {% trans "DecText" as dec_text %}
+
+    <div class="floating-menu">
+        {% include "auxiliary/_suggestion_button.html" with suggest_for="feedback" button_text=feedback_button_text %}
+        {% include "auxiliary/_floating_button.html" with button_text=dec_text btn_class="btn-dec" %}
+        {% include "auxiliary/_floating_button.html" with button_text=inc_text btn_class="btn-inc" %}
+    </div>
+    
 {% comment %} Suggestion forms {% endcomment %}
 {% if suggestion_forms %}{% include "auxiliary/_suggestion_forms.html" %}{% endif %}
 <!-- JS Placed at the end of the document so the pages load faster -->

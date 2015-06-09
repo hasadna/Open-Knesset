@@ -7,6 +7,13 @@
     $(this).each (function() { this.reset(); });
   }
 
+	
+	$('.btn-inc').click(modifyZoomBy.bind(undefined,0.3));
+	$('.btn-dec').click(modifyZoomBy.bind(undefined,-0.3));
+
+	function modifyZoomBy(multiplier) {
+		document.body.style.zoom = parseFloat(document.body.style.zoom || 100) * (1+ multiplier) + "%";
+	}
   /***************************************************************
    * handle submission event of suggestion forms
    ***************************************************************/

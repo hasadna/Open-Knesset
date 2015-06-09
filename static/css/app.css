@@ -7637,6 +7637,7 @@ ol {
 .btn-primary:hover {
   background: #5c8696;
 }
+.btn-floating,
 .btn-question,
 .btn-suggest {
   float: left;
@@ -7654,23 +7655,28 @@ ol {
   font-size: 15px;
   text-align: center;
 }
+.btn-floating:before,
 .btn-question:before,
 .btn-suggest:before,
+.btn-floating:after,
 .btn-question:after,
 .btn-suggest:after {
   display: table;
   content: "";
   line-height: 0;
 }
+.btn-floating:after,
 .btn-question:after,
 .btn-suggest:after {
   clear: both;
 }
+.btn-floating:hover,
 .btn-question:hover,
 .btn-suggest:hover {
   color: #ffffff;
   background: #464545;
 }
+ul .btn-floating,
 ul .btn-question,
 ul .btn-suggest {
   float: none;
@@ -8016,24 +8022,36 @@ div#tidbitCarousel .btn-suggest:hover {
 #suggest-viewDetails-modal li ul li:last-child {
   border-bottom: none;
 }
-#sugget-feedback-button {
+.floating-menu {
   position: fixed;
-  right: 0;
-  top: 50%;
   display: block;
+  right: -77px;
   transform: rotate(-90deg);
   -ms-transform: rotate(-90deg);
   -moz-transform: rotate(-90deg);
   -o-transform: rotate(-90deg);
   -webkit-transform: rotate(-90deg);
-  height: 40px;
-  right: -25px;
   padding-top: 3px;
-  font-size: 120%;
   opacity: 0.7;
+  top: 50%;
+  height: 2em;
 }
-#sugget-feedback-button:hover {
+.floating-menu:hover {
   opacity: 1;
+}
+.btn-floating {
+  padding-bottom: 0.2em;
+  padding-right: 0.3em;
+  margin-right: 0.5em;
+  font-size: 120%;
+}
+.btn-floating.btn-inc {
+  border-radius: 20%;
+  width: 1.5em;
+}
+.btn-floating.btn-dec {
+  border-radius: 20%;
+  width: 1.5em;
 }
 .vote_input {
   width: 75%;
@@ -8104,3 +8122,4 @@ body.infinity-protocol #content-main > div > div.row > div.span3 {
   position: fixed;
   overflow: auto;
 }
+/*# sourceMappingURL=app.css.map */
