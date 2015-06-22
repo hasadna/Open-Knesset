@@ -11,18 +11,13 @@ class Migration(SchemaMigration):
         # Deleting field 'SummaryAgenda.party'
         db.delete_column(u'agendas_summaryagenda', 'party_id')
 
-        # Adding field 'Agenda.title_infogram'
-        db.add_column(u'agendas_agenda', 'title_infogram',
-                      self.gf('django.db.models.fields.CharField')(default=None, max_length=300, null=True, blank=True),
-                      keep_default=False)
-
         # Adding field 'Agenda.src_infogram'
         db.add_column(u'agendas_agenda', 'src_infogram',
                       self.gf('django.db.models.fields.CharField')(default=None, max_length=300, null=True, blank=True),
                       keep_default=False)
 
-        # Adding field 'Agenda.href_infogram'
-        db.add_column(u'agendas_agenda', 'href_infogram',
+        # Adding field 'Agenda.id_infogram'
+        db.add_column(u'agendas_agenda', 'id_infogram',
                       self.gf('django.db.models.fields.CharField')(default=None, max_length=300, null=True, blank=True),
                       keep_default=False)
 
@@ -33,14 +28,11 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.related.ForeignKey')(related_name='agenda_summaries', null=True, to=orm['mks.Party'], blank=True),
                       keep_default=False)
 
-        # Deleting field 'Agenda.title_infogram'
-        db.delete_column(u'agendas_agenda', 'title_infogram')
-
         # Deleting field 'Agenda.src_infogram'
         db.delete_column(u'agendas_agenda', 'src_infogram')
 
-        # Deleting field 'Agenda.href_infogram'
-        db.delete_column(u'agendas_agenda', 'href_infogram')
+        # Deleting field 'Agenda.id_infogram'
+        db.delete_column(u'agendas_agenda', 'id_infogram')
 
 
     models = {
@@ -48,15 +40,14 @@ class Migration(SchemaMigration):
             'Meta': {'unique_together': "(('name', 'public_owner_name'),)", 'object_name': 'Agenda'},
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'editors': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'agendas'", 'symmetrical': 'False', 'to': u"orm['auth.User']"}),
-            'href_infogram': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '300', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id_infogram': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '300', 'null': 'True', 'blank': 'True'}),
             'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'num_followers': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'public_owner_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'src_infogram': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '300', 'null': 'True', 'blank': 'True'}),
-            'title_infogram': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '300', 'null': 'True', 'blank': 'True'}),
             'votes': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['laws.Vote']", 'through': u"orm['agendas.AgendaVote']", 'symmetrical': 'False'})
         },
         u'agendas.agendabill': {

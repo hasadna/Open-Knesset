@@ -103,9 +103,8 @@ I have a deadline''')
         self.domain = 'http://' + Site.objects.get_current().domain
 
         self.agenda_infogram = Agenda.objects.create()
-        self.agenda_infogram.set_title_infogram("nameAgendaInfogram")
         self.agenda_infogram.set_src_infogram("www.AGENDA.com")
-        self.agenda_infogram.set_href_infogram("https://agenda.com")
+        self.agenda_infogram.set_id_infogram("https://agenda.com")
 
     def testAgendaList(self):
         translation.activate(settings.LANGUAGE_CODE)
@@ -414,7 +413,6 @@ I have a deadline''')
         self.agenda_3.delete()
 
     def test_infogram(self):
-        self.assertEqual(self.agenda_infogram.title_infogram, 'nameAgendaInfogram')
         self.assertEqual(self.agenda_infogram.src_infogram, 'www.AGENDA.com')
-        self.assertEqual(self.agenda_infogram.href_infogram, 'https://agenda.com')
+        self.assertEqual(self.agenda_infogram.id_infogram, 'https://agenda.com')
 

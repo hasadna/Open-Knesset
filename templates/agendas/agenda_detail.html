@@ -57,11 +57,8 @@
             <section class="card card-list">
                 <div class="spacer text-center">
                 {% if object.is_public %}
-                    {% if object.src_infogram|length > 1 and object.href_infogram|length > 1 %}
-                        <iframe src={{ object.src_infogram }} width="550" height="871" scrolling="no" frameborder="0" style="border:none;"></iframe>
-					    <div style="width:100%;border-top:1px solid #acacac;padding-top:3px;font-family:Arial;font-size:10px;text-align:center;"><a target="_blank" href={{ object.href_infogram }} style="color:#acacac;text-decoration:none;"{{ object.title_infogram }}></a></div>
-                    {% else %}
-                        <frame width="550" ><frameset row=100%></frameset></frame>
+                    {% if object.src_infogram|length > 1 and object.id_infogram|length > 1 %}
+					    <script id={{ object.id_infogram }} src={{ object.src_infogram }} type="text/javascript"></script>
                     {% endif %}
                 {%else%}
                   <p>

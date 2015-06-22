@@ -327,9 +327,8 @@ class Agenda(models.Model):
     is_public = models.BooleanField(default=False)
     num_followers = models.IntegerField(default=0)
     image = models.ImageField(blank=True, null=True, upload_to='agendas')
-    title_infogram = models.CharField(max_length=300, default=None, blank=True, null=True)
     src_infogram = models.CharField(max_length=300, default=None, blank=True, null=True)
-    href_infogram = models.CharField(max_length=300, default=None, blank=True, null=True)
+    id_infogram = models.CharField(max_length=300, default=None, blank=True, null=True)
 
     objects = AgendaManager()
 
@@ -605,13 +604,10 @@ class Agenda(models.Model):
         votes = votes.extra(select=dict(score = 'controversy'))
         return votes.order_by('-score')[:num]
 
-    def set_title_infogram(self, title_infogram):
-        self.title_infogram = title_infogram
-
     def set_src_infogram(self, src_infogram):
         self.src_infogram = src_infogram
 
-    def set_href_infogram(self, href_infogram):
+    def set_id_infogram(self, href_infogram):
         self.href_infogram = href_infogram
 
 
