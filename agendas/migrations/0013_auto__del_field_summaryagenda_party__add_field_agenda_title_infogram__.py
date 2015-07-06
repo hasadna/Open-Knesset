@@ -21,6 +21,16 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.CharField')(default=None, max_length=300, null=True, blank=True),
                       keep_default=False)
 
+        # Adding field 'Agenda.tag'
+        db.add_column(u'agendas_agenda', 'tag',
+                      self.gf('django.db.models.fields.related.ForeignKey')(default=None, related_name='agendas', null=True, blank=True, to=orm['tagging.Tag']),
+                      keep_default=False)
+
+        # Adding field 'Agenda.number_knesset'
+        db.add_column(u'agendas_agenda', 'number_knesset',
+                      self.gf('django.db.models.fields.related.ForeignKey')(default=None, related_name='agendas', null=True, blank=True, to=orm['mks.Knesset']),
+                      keep_default=False)
+
 
     def backwards(self, orm):
         # Adding field 'SummaryAgenda.party'
@@ -34,6 +44,12 @@ class Migration(SchemaMigration):
         # Deleting field 'Agenda.id_infogram'
         db.delete_column(u'agendas_agenda', 'id_infogram')
 
+        # Deleting field 'Agenda.tag'
+        db.delete_column(u'agendas_agenda', 'tag_id')
+
+        # Deleting field 'Agenda.number_knesset'
+        db.delete_column(u'agendas_agenda', 'number_knesset_id')
+
 
     models = {
         u'agendas.agenda': {
@@ -46,8 +62,10 @@ class Migration(SchemaMigration):
             'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'num_followers': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'number_knesset': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'related_name': "'agendas'", 'null': 'True', 'blank': 'True', 'to': u"orm['mks.Knesset']"}),
             'public_owner_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'src_infogram': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '300', 'null': 'True', 'blank': 'True'}),
+            'tag': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'related_name': "'agendas'", 'null': 'True', 'blank': 'True', 'to': u"orm['tagging.Tag']"}),
             'votes': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['laws.Vote']", 'through': u"orm['agendas.AgendaVote']", 'symmetrical': 'False'})
         },
         u'agendas.agendabill': {
@@ -344,6 +362,11 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '255', 'blank': 'True'}),
             'url': ('django.db.models.fields.URLField', [], {'unique': 'True', 'max_length': '1024', 'db_index': 'True'})
+        },
+        u'tagging.tag': {
+            'Meta': {'ordering': "('name',)", 'object_name': 'Tag'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '50', 'db_index': 'True'})
         }
     }
 
