@@ -27,7 +27,6 @@ class SimpleTest(TestCase):
                                           start_date=datetime.date(2010,1,1),
                                           current_party=self.party_1)
 
-
         Membership.objects.create(member=self.mk_1, party=self.party_1)
         Membership.objects.create(member=self.mk_2, party=self.party_1)
 
@@ -51,6 +50,7 @@ class SimpleTest(TestCase):
                                               description='a bloody good agenda 3',
                                               public_owner_name='Hidden One',
                                               is_public=False)
+
         self.agenda_1.editors = [self.user_1]
         self.agenda_2.editors = [self.user_1, self.user_2]
         self.agenda_3.editors = [self.user_2]
@@ -101,6 +101,10 @@ I have a deadline''')
         self.committee_1 = Committee.objects.create(name='c1')
 
         self.domain = 'http://' + Site.objects.get_current().domain
+
+        self.agenda_infogram = Agenda.objects.create()
+        self.agenda_infogram.set_src_infogram("www.AGENDA.com")
+        self.agenda_infogram.set_id_infogram("https://agenda.com")
 
     def testAgendaList(self):
         translation.activate(settings.LANGUAGE_CODE)
@@ -242,7 +246,6 @@ I have a deadline''')
                               )
         self.assertEqual(res.status_code, 403)
 
-
     def test_agenda_ascribe_meeting(self):
         self.assertTrue(self.client.login(username='jacob',
                                           password='JKM'))
@@ -356,8 +359,6 @@ I have a deadline''')
         self.assertIn('title', vote, "Got vote with no title in agenda-todo")
         self.assertIn('score', vote, "Got vote with no importance in agenda-todo")
 
-
-
     def test_suggest_votes_for_new_agenda(self):
         new_agenda = Agenda.objects.create(name='new agenda',
                                            description='a brand new agenda',
@@ -410,3 +411,8 @@ I have a deadline''')
         self.agenda_1.delete()
         self.agenda_2.delete()
         self.agenda_3.delete()
+
+    def test_infogram(self):
+        self.assertEqual(self.agenda_infogram.src_infogram, 'www.AGENDA.com')
+        self.assertEqual(self.agenda_infogram.id_infogram, 'https://agenda.com')
+

@@ -19,6 +19,8 @@ from laws.models import VoteAction, Vote
 from mks.models import Party, Member, Knesset, Membership
 import queries
 
+from tagging.models import TaggedItem, Tag
+
 AGENDAVOTE_SCORE_CHOICES = (
     ('',_("Not selected")),
     (-1.0, _("Opposes fully")),
@@ -318,6 +320,7 @@ class AgendaManager(models.Manager):
         return queries.getAllAgendaPartyVotes()
 
 class Agenda(models.Model):
+
     name = models.CharField(max_length=200)
     description = models.TextField(null=True,blank=True)
     editors = models.ManyToManyField('auth.User', related_name='agendas')
@@ -326,6 +329,10 @@ class Agenda(models.Model):
     is_public = models.BooleanField(default=False)
     num_followers = models.IntegerField(default=0)
     image = models.ImageField(blank=True, null=True, upload_to='agendas')
+    src_infogram = models.CharField(max_length=300, default=None, blank=True, null=True)
+    id_infogram = models.CharField(max_length=300, default=None, blank=True, null=True)
+    tag = models.ForeignKey(Tag, related_name='agendas', default=None, blank=True, null=True)
+    number_knesset = models.ForeignKey(Knesset, related_name='agendas', default=None, blank=True, null=True)
 
     objects = AgendaManager()
 
@@ -552,7 +559,6 @@ class Agenda(models.Model):
 
     def get_mks_values_old(self, knesset_number=None):
         """Return mks values.
-
         :param knesset_number: The knesset numer of the mks. ``None`` will
                                return current knesset (default: ``None``).
         """
@@ -601,6 +607,13 @@ class Agenda(models.Model):
         votes = Vote.objects.filter(~Q(agendavotes__agenda=self))
         votes = votes.extra(select=dict(score = 'controversy'))
         return votes.order_by('-score')[:num]
+
+    def set_src_infogram(self, src_infogram):
+        self.src_infogram = src_infogram
+
+    def set_id_infogram(self, href_infogram):
+        self.href_infogram = href_infogram
+
 
 SUMMARY_TYPES = (
     ('AG','Agenda Votes'),

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import logging
 from operator import itemgetter
 from itertools import chain
@@ -346,7 +347,6 @@ class AgendaDetailEditView (DetailView):
         else:
             self.form = form
             return super(AgendaDetailEditView, self).get(request, *args, **kwargs)
-
 
 @login_required
 def agenda_add_view(request):

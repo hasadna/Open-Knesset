@@ -57,11 +57,13 @@
             <section class="card card-list">
                 <div class="spacer text-center">
                 {% if object.is_public %}
-                    <iframe width="600" height="400" frameborder="0" src="{% url 'agenda-embed' %}?agenda_id={{object.id}}"></iframe>
-                {% else %}
+                    {% if object.src_infogram|length > 1 and object.id_infogram|length > 1 %}
+					    <script id={{ object.id_infogram }} src={{ object.src_infogram }} type="text/javascript"></script>
+                    {% endif %}
+                {%else%}
                   <p>
-                    {% trans 'Note: This agenda is private. It is only viewable by its editors. If you feel this agenda should be made public, contact us at' %}
-                    <a href="mailto:mail@oknesset.org">mail@oknesset.org</a>
+					{% trans 'Note: This agenda is private. It is only viewable by its editors. If you feel this agenda should be made public, contact us at' %}
+					<a href="mailto:mail@oknesset.org">mail@oknesset.org</a>
                   </p>
                 {% endif %}
                 </div>
@@ -172,5 +174,3 @@
     });
 --></script>
 {% endblock %}
-
-
