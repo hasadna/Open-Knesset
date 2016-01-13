@@ -27,7 +27,7 @@ import parse_presence, parse_laws, mk_roles_parser, parse_remote
 from parse_gov_legislation_comm import ParseGLC
 
 from syncdata_globals import p_explanation,strong_explanation,explanation
-from simple.management.utils import antiword
+from simple.management.committee_protocol import CommitteProtocolImporter
 
 import socket
 
@@ -907,7 +907,7 @@ class Command(NoArgsDbLogCommand):
                 updated_protocol = False
                 try:
                     if not cm.protocol_text:
-                        cm.protocol_text = self.get_committee_protocol_text(link)
+                        cm.protocol_text = CommitteProtocolImporter(link).get_text()
                         # check if the protocol is from the wrong commitee
                         for i in committees_aliases:
                             if i[1] in cm.protocol_text[:300]:
@@ -943,56 +943,6 @@ class Command(NoArgsDbLogCommand):
                     num_exceptions += 1
                     logger.error(traceback.format_exc())
         socket.setdefaulttimeout(default_timeout)
-
-    def get_committee_protocol_text(self, url):
-        logger.debug('get_committee_protocol_text. url=%s' % url)
-        if url.find('html') >= 0:
-            url = url.replace('html','rtf')
-        file_str = StringIO()
-        count = 0
-        flag = True
-        while count<10 and flag:
-            try:
-                file_str.write(urllib2.urlopen(url).read())
-                flag = False
-            except Exception:
-                count += 1
-        if flag:
-            logger.error("can't open url %s. tried %d times" % (url, count))
-
-        if url.find(".rtf") >= 0:
-            return self.handle_rtf_protocol(file_str)
-        if url.find(".doc") >= 0:
-            return self.handle_doc_protocol(file_str)
-
-    def handle_doc_protocol(self, file_str):
-        directory = os.path.join(DATA_ROOT, 'comm_p')
-        if not os.path.exists(directory): os.makedirs(directory)
-        fname = os.path.join(directory, 'comm_p.doc')
-        f = open(fname, 'wb')
-        file_str.seek(0)
-        f.write(file_str.read())
-        f.close()
-        x = antiword(fname)
-        return re.sub('[\n ]{2,}', '\n\n', re.sub('<.*?>','',x))
-
-    def handle_rtf_protocol(self, file_str):
-        try:
-            doc = Rtf15Reader.read(file_str)
-        except Exception:
-            return ''
-        text = []
-        attended_list = False
-        for paragraph in doc.content:
-            for sentence in paragraph.content:
-                if 'bold' in sentence.properties and attended_list:
-                    attended_list = False
-                    text.append('')
-                if 'מוזמנים'.decode('utf8') in sentence.content[0] and 'bold' in sentence.properties:
-                    attended_list = True
-                text.append(sentence.content[0])
-        all_text = '\n'.join(text)
-        return re.sub(r'\n:\n',r':\n',all_text)
 
     def get_bg_material(self,cm):
         links = cm.get_bg_material()

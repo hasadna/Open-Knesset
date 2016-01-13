@@ -298,7 +298,9 @@ class CommitteeMeeting(models.Model):
 
         # now create the sections
         for line in protocol_text:
-            if legitimate_header(line):
+            if line.strip() == '–':
+                pass
+            elif legitimate_header(line):
                 if (i>1)or(section):
                     ProtocolPart(meeting=self, order=i,
                         header=header, body='\n'.join(section)).save()
@@ -307,7 +309,6 @@ class CommitteeMeeting(models.Model):
                 section = []
             else:
                 section.append(line)
-
         # don't forget the last section
         ProtocolPart(meeting=self, order=i, header=header, body='\n'.join(section)).save()
 
@@ -316,8 +317,8 @@ class CommitteeMeeting(models.Model):
             from plenum.management.commands.parse_plenum_protocols_subcommands.download import download_for_existing_meeting
             download_for_existing_meeting(self)
         else:
-            from simple.management.commands.syncdata import Command as SyncdataCommand
-            self.protocol_text = SyncdataCommand().get_committee_protocol_text(self.src_url)
+            from simple.management.committee_protocol import CommitteProtocolImporter
+            self.protocol_text = CommitteProtocolImporter(self.src_url).get_text()
             self.save()
 
     def reparse_protocol(self, redownload=True):
