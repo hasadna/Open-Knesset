@@ -19,7 +19,7 @@ class TestProfile(TestCase):
                                               'JKM')
         self.adrian = User.objects.create_user('adrian', 'adrian@example.com',
                                               'adrian')
-        profile = self.adrian.get_profile()
+        profile = self.adrian.profiles.get()
         profile.public_profile = False
         profile.save()
 
@@ -49,7 +49,7 @@ class TestProfile(TestCase):
                         follow = True)
         self.assertEqual(res.redirect_chain, [('http://testserver/users/edit-profile/', 302)])
         new = User.objects.get(username='john')
-        new_profile = new.get_profile()
+        new_profile = new.profiles.get()
         self.assertEqual(new_profile.email_notification, 'D')
 
     def test_no_double_signup(self):
@@ -106,7 +106,7 @@ class TestFollowing(TestCase):
 
     def testUnfollowMeeting(self):
         follow(self.jacob, self.meeting_1)
-        p = self.jacob.get_profile()
+        p = self.jacob.profiles.get()
         self.assertEquals(len(p.meetings), 1)
         loggedin = self.client.login(username='jacob', password='JKM')
         self.assertTrue(loggedin)
@@ -120,7 +120,7 @@ class TestFollowing(TestCase):
         """Test the following and unfollowing members using the
            generic follow method.
         """
-        p = self.jacob.get_profile()
+        p = self.jacob.profiles.get()
         loggedin = self.client.login(username='jacob', password='JKM')
         self.assertTrue(loggedin)
         response = self.client.post(reverse('user-follow-unfollow'),
@@ -151,7 +151,7 @@ class TestFollowing(TestCase):
         """Test the following and unfollowing a bill using the
            generic follow method.
         """
-        p = self.jacob.get_profile()
+        p = self.jacob.profiles.get()
         loggedin = self.client.login(username='jacob', password='JKM')
         self.assertTrue(loggedin)
         response = self.client.post(reverse('user-follow-unfollow'),
@@ -170,7 +170,7 @@ class TestFollowing(TestCase):
     def test_is_following(self):
         """Test the is-following query"""
 
-        p = self.jacob.get_profile()
+        p = self.jacob.profiles.get()
         loggedin = self.client.login(username='jacob', password='JKM')
         self.assertTrue(loggedin)
 

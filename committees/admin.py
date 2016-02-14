@@ -6,6 +6,7 @@ from video.models import Video
 from models import Committee, CommitteeMeeting, Topic
 from links.models import Link
 
+
 class CommitteeRelatedVideosInline(generic.GenericTabularInline):
     model = Video
     ct_fk_field = 'object_pk'
@@ -22,16 +23,18 @@ class CommitteeRelatedVideosInline(generic.GenericTabularInline):
 
 
 class CommitteeAdmin(admin.ModelAdmin):
-    ordering = ('name', )
-    filter_horizontal = ('members','chairpersons','replacements')
-    inlines = (CommitteeRelatedVideosInline, )
+    ordering = ('name',)
+    filter_horizontal = ('members', 'chairpersons', 'replacements')
+    inlines = (CommitteeRelatedVideosInline,)
 
 
 admin.site.register(Committee, CommitteeAdmin)
 
 
 class CommitteeMeetingAdmin(admin.ModelAdmin):
-    ordering = ('-date', )
+    ordering = ('-date',)
+    list_display = ('__unicode__', 'date')
+    list_filter = ('committee',)
 
 
 admin.site.register(CommitteeMeeting, CommitteeMeetingAdmin)
@@ -44,11 +47,12 @@ class LinksTable(GenericTabularInline):
 
 
 class TopicAdmin(admin.ModelAdmin):
-    ordering = ('-created', )
+    ordering = ('-created',)
     list_select_related = True
-    exclude = ('meetings', )
+    exclude = ('meetings',)
     inlines = [
         LinksTable,
     ]
+
 
 admin.site.register(Topic, TopicAdmin)

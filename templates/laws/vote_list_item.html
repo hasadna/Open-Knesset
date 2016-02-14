@@ -5,6 +5,7 @@
     <p class="item-action">
       <span class="badge badge-success" title="{% trans "For" %}">{{ vote.for_votes_count }}</span>
       <span class="badge badge-important" title="{% trans "Against" %}">{{ vote.against_votes_count }}</span>
+      <span class="badge" title="{% trans "Abstain" %}">{{ vote.abstain_votes_count }}</span>
     </p>
     <p class="item-title"><a href="{{ vote.get_absolute_url  }}">{{vote.title}}</a></p>
     <p class="item-context">

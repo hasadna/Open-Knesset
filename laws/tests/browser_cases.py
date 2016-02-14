@@ -7,8 +7,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 
 from knesset.browser_test_case import BrowserTestCase, on_platforms
-from models import Vote, Bill
-from forms import LINK_ERRORS
+from laws.models import Vote, Bill
+from laws.forms import LINK_ERRORS
 
 # All browser test cases must inherit from BrowserTestCase which initializes the selenium framework
 # also, they must use the @on_platforms decorator. This decorator can run the test case several times - for different browser and platforms.

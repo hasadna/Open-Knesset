@@ -272,7 +272,7 @@ class MemberDetailView(DetailView):
             agenda.watched = False
             agenda.totals = agenda.get_mks_totals(member)
         if self.request.user.is_authenticated():
-            watched_agendas = self.request.user.get_profile().agendas
+            watched_agendas = self.request.user.profiles.get().agendas
             for watched_agenda in watched_agendas:
                 if watched_agenda in agendas:
                     agendas[agendas.index(watched_agenda)].watched = True
@@ -289,7 +289,7 @@ class MemberDetailView(DetailView):
         member = context['object']
         d = Knesset.objects.current_knesset().start_date
         if self.request.user.is_authenticated():
-            p = self.request.user.get_profile()
+            p = self.request.user.profiles.get()
             watched = member in p.members
             cached_context = None
         else:
@@ -731,7 +731,7 @@ class PartyDetailView(DetailView):
         for agenda in agendas:
             agenda.watched = False
         if self.request.user.is_authenticated():
-            watched_agendas = self.request.user.get_profile().agendas
+            watched_agendas = self.request.user.profiles.get().agendas
             for watched_agenda in watched_agendas:
                 if watched_agenda in agendas:
                     agendas[agendas.index(watched_agenda)].watched = True

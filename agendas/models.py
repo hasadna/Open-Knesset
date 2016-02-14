@@ -117,7 +117,7 @@ class AgendaVote(models.Model):
         if agendaSummary:
             newObjects.append(agendaSummary)
         voters = defaultdict(list)
-        for vote_action in self.vote.voteaction_set.all():
+        for vote_action in self.vote.actions.all():
             mkSummary = agendasByMk.get(vote_action.member_id, None)
             if not mkSummary:
                 mkSummary = SummaryAgenda(month=objMonth,
@@ -364,10 +364,10 @@ class Agenda(models.Model):
         # Since we're already calculating python side, no need to do 2 queries
         # with joins, select for and against, and calcualte the things
         qs = AgendaVote.objects.filter(
-            agenda=self, vote__voteaction__member__in=party.members.all(),
-            vote__voteaction__type__in=['against', 'for']).extra(
+            agenda=self, vote__actions__member__in=party.members.all(),
+            vote__actions__type__in=['against', 'for']).extra(
                 select={'weighted_score': 'agendas_agendavote.score*agendas_agendavote.importance'}
-            ).values_list('weighted_score', 'vote__voteaction__type')
+            ).values_list('weighted_score', 'vote__actions__type')
 
         for_score = 0
         against_score = 0
@@ -395,10 +395,10 @@ class Agenda(models.Model):
         # Since we're already calculating python side, no need to do 2 queries
         # with joins, select for and against, and calcualte the things
         qs = AgendaVote.objects.filter(
-            agenda=self, vote__voteaction__member__in=candidate_list.member_ids,
-            vote__voteaction__type__in=['against', 'for']).extra(
+            agenda=self, vote__actions__member__in=candidate_list.member_ids,
+            vote__actions__type__in=['against', 'for']).extra(
                 select={'weighted_score': 'agendas_agendavote.score*agendas_agendavote.importance'}
-            ).values_list('weighted_score', 'vote__voteaction__type')
+            ).values_list('weighted_score', 'vote__actions__type')
 
         for_score = 0
         against_score = 0
@@ -429,7 +429,7 @@ class Agenda(models.Model):
         # for_votes      = AgendaVote.objects.filter(agenda=self,vote__voteaction__member=member,vote__voteaction__type="for").distinct()
         #against_votes   = AgendaVote.objects.filter(agenda=self,vote__voteaction__member=member,vote__voteaction__type="against").distinct()
         vote_actions = VoteAction.objects.filter(member=member,vote__agendavotes__agenda=self)
-        all_votes = AgendaVote.objects.filter(agenda=self,vote__voteaction__member=member).distinct()
+        all_votes = AgendaVote.objects.filter(agenda=self,vote__actions__member=member).distinct()
         # TODO: improve ugly code below
         member_votes = list()
         for member_vote in all_votes:

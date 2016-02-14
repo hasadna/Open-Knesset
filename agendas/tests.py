@@ -12,21 +12,22 @@ from models import Agenda, AgendaVote, AgendaBill, AgendaMeeting
 from laws.models import Vote, VoteAction, Bill
 from mks.models import Party, Member, Membership, Knesset
 from committees.models import Committee, CommitteeMeeting
+
 just_id = lambda x: x.id
 
-class SimpleTest(TestCase):
+
+class AgendasTestCase(TestCase):
     def setUp(self):
         self.knesset = Knesset.objects.create(number=1,
-                            start_date=datetime.date(2010,1,1))
+                                              start_date=datetime.date(2010, 1, 1))
         self.party_1 = Party.objects.create(name='party 1', number_of_seats=1,
                                             knesset=self.knesset)
         self.mk_1 = Member.objects.create(name='mk_1',
-                                          start_date=datetime.date(2010,1,1),
+                                          start_date=datetime.date(2010, 1, 1),
                                           current_party=self.party_1)
         self.mk_2 = Member.objects.create(name='mk_2',
-                                          start_date=datetime.date(2010,1,1),
+                                          start_date=datetime.date(2010, 1, 1),
                                           current_party=self.party_1)
-
 
         Membership.objects.create(member=self.mk_1, party=self.party_1)
         Membership.objects.create(member=self.mk_2, party=self.party_1)
@@ -54,17 +55,20 @@ class SimpleTest(TestCase):
         self.agenda_1.editors = [self.user_1]
         self.agenda_2.editors = [self.user_1, self.user_2]
         self.agenda_3.editors = [self.user_2]
-        self.vote_1 = Vote.objects.create(title='vote 1',time=datetime.datetime.now())
-        self.vote_2 = Vote.objects.create(title='vote 2',time=datetime.datetime.now())
-        self.vote_3 = Vote.objects.create(title='vote 3',time=datetime.datetime.now())
+        self.vote_1 = Vote.objects.create(title='vote 1', time=datetime.datetime.now())
+        self.vote_2 = Vote.objects.create(title='vote 2', time=datetime.datetime.now())
+        self.vote_3 = Vote.objects.create(title='vote 3', time=datetime.datetime.now())
         self.bill_1 = Bill.objects.create(stage='1', title='bill 1', popular_name='kill bill')
-        self.voteaction_1 = VoteAction.objects.create(vote=self.vote_1, member=self.mk_1, type='for', party=self.mk_1.current_party)
-        self.voteaction_2 = VoteAction.objects.create(vote=self.vote_2, member=self.mk_1, type='for', party=self.mk_1.current_party)
-        self.voteaction_3 = VoteAction.objects.create(vote=self.vote_3, member=self.mk_2, type='for', party=self.mk_2.current_party)
+        self.voteaction_1 = VoteAction.objects.create(vote=self.vote_1, member=self.mk_1, type='for',
+                                                      party=self.mk_1.current_party)
+        self.voteaction_2 = VoteAction.objects.create(vote=self.vote_2, member=self.mk_1, type='for',
+                                                      party=self.mk_1.current_party)
+        self.voteaction_3 = VoteAction.objects.create(vote=self.vote_3, member=self.mk_2, type='for',
+                                                      party=self.mk_2.current_party)
 
-        self.vote_1. update_vote_properties()
-        self.vote_2. update_vote_properties()
-        self.vote_3. update_vote_properties()
+        self.vote_1.update_vote_properties()
+        self.vote_2.update_vote_properties()
+        self.vote_3.update_vote_properties()
 
         self.agendavote_1 = AgendaVote.objects.create(agenda=self.agenda_1,
                                                       vote=self.vote_1,
@@ -89,15 +93,15 @@ class SimpleTest(TestCase):
         self.committee_1 = Committee.objects.create(name='c1')
         self.committee_1 = Committee.objects.create(name='c1')
         self.meeting_1 = self.committee_1.meetings.create(topics='My Meeting', date=datetime.datetime.now(),
-                                 protocol_text='''jacob:
+                                                          protocol_text='''jacob:
 I am a perfectionist
 adrian:
 I have a deadline''')
         self.meeting_1.create_protocol_parts()
         self.agendabill_1 = AgendaMeeting.objects.create(agenda=self.agenda_1,
-                                                      meeting=self.meeting_1,
-                                                      score=0.5,
-                                                      reasoning="agenda meeting 1")
+                                                         meeting=self.meeting_1,
+                                                         score=0.5,
+                                                         reasoning="agenda meeting 1")
         self.committee_1 = Committee.objects.create(name='c1')
 
         self.domain = 'http://' + Site.objects.get_current().domain
@@ -110,7 +114,7 @@ I have a deadline''')
         self.assertTemplateUsed(res, 'agendas/agenda_list.html')
         object_list = res.context['object_list']
         self.assertEqual(map(just_id, object_list),
-                         [ self.agenda_1.id, self.agenda_2.id, ])
+                         [self.agenda_1.id, self.agenda_2.id, ])
 
         # test logged in user 1
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
@@ -119,7 +123,7 @@ I have a deadline''')
         self.assertTemplateUsed(res, 'agendas/agenda_list.html')
         object_list = res.context['object_list']
         self.assertEqual(map(just_id, object_list),
-                         [ self.agenda_1.id, self.agenda_2.id, ])
+                         [self.agenda_1.id, self.agenda_2.id, ])
 
         # test logged in user 2
         self.assertTrue(self.client.login(username='superman', password='CRP'))
@@ -128,7 +132,7 @@ I have a deadline''')
         self.assertTemplateUsed(res, 'agendas/agenda_list.html')
         object_list = res.context['object_list']
         self.assertEqual(map(just_id, object_list),
-                         [ self.agenda_1.id, self.agenda_2.id, self.agenda_3.id])
+                         [self.agenda_1.id, self.agenda_2.id, self.agenda_3.id])
 
         # test logged in as superuser
         self.assertTrue(self.client.login(username='john', password='LSD'))
@@ -138,15 +142,15 @@ I have a deadline''')
         object_list = res.context['object_list']
         self.assertEqual(map(just_id, object_list),
                          [self.agenda_1.id,
-                              self.agenda_2.id,
-                              self.agenda_3.id])
+                          self.agenda_2.id,
+                          self.agenda_3.id])
 
         translation.deactivate()
 
     def testAgendaDetail(self):
         # Access public agenda while not logged in
         res = self.client.get('%s?all_mks' % reverse('agenda-detail',
-                                      kwargs={'pk': self.agenda_1.id}))
+                                                     kwargs={'pk': self.agenda_1.id}))
         self.assertEqual(res.status_code, 200)
         self.assertTemplateUsed(res,
                                 'agendas/agenda_detail.html')
@@ -158,7 +162,7 @@ I have a deadline''')
 
     def testAgendaUnauthorized(self):
         # Access non-public agenda without authorization
-        res = self.client.get(reverse('agenda-detail',kwargs={'pk': self.agenda_3.id}))
+        res = self.client.get(reverse('agenda-detail', kwargs={'pk': self.agenda_3.id}))
         self.assertEqual(res.status_code, 403)
 
     def testAgendaVoteDetail(self):
@@ -178,7 +182,7 @@ I have a deadline''')
         res = self.client.get(reverse('agenda-detail-edit',
                                       kwargs={'pk': self.agenda_1.id}))
         self.assertRedirects(res, reverse('agenda-detail',
-                                          kwargs={'pk':self.agenda_1.id}))
+                                          kwargs={'pk': self.agenda_1.id}))
 
         # login as a user who's not the editor and try
         self.assertTrue(self.client.login(username='john',
@@ -186,7 +190,7 @@ I have a deadline''')
         res = self.client.get(reverse('agenda-detail-edit',
                                       kwargs={'pk': self.agenda_1.id}))
         self.assertRedirects(res, reverse('agenda-detail',
-                                          kwargs={'pk':self.agenda_1.id}))
+                                          kwargs={'pk': self.agenda_1.id}))
 
         # now login as the editor and try again
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
@@ -201,11 +205,11 @@ I have a deadline''')
 
         # try to edit
         res = self.client.post(reverse('agenda-detail-edit',
-                                       kwargs={'pk':self.agenda_1.id}),
-                               {'name':'test1',
-                                'public_owner_name':'test2',
+                                       kwargs={'pk': self.agenda_1.id}),
+                               {'name': 'test1',
+                                'public_owner_name': 'test2',
                                 'description': 'test3 description description' \
-                                +'description'})
+                                               + 'description'})
         self.assertEqual(res.status_code, 302)
         agenda = Agenda.objects.get(id=self.agenda_1.id)
         self.assertEqual(agenda.name, 'test1')
@@ -213,16 +217,16 @@ I have a deadline''')
     def test_agenda_ascribe_meeting_not_logged_in(self):
         url = reverse('update-editors-agendas')
         res = self.client.post(url,
-                               {'form-0-agenda_id':self.agenda_1.id,
-                                'form-0-object_type':'committeemeeting',
-                                'form-0-reasoning':'test reasoning',
-                                'form-0-obj_id':self.meeting_1.id,
-                                'form-0-weight':0.3,
-                                'form-INITIAL_FORMS':1,
-                                'form-MAX_NUM_FORMS':'',
-                                'form-TOTAL_FORMS':1,
-                               }
-                              )
+                               {'form-0-agenda_id': self.agenda_1.id,
+                                'form-0-object_type': 'committeemeeting',
+                                'form-0-reasoning': 'test reasoning',
+                                'form-0-obj_id': self.meeting_1.id,
+                                'form-0-weight': 0.3,
+                                'form-INITIAL_FORMS': 1,
+                                'form-MAX_NUM_FORMS': '',
+                                'form-TOTAL_FORMS': 1,
+                                }
+                               )
         self.assertRedirects(res, "%s?next=%s" % (settings.LOGIN_URL, url),
                              status_code=302)
 
@@ -230,36 +234,35 @@ I have a deadline''')
         self.assertTrue(self.client.login(username='john',
                                           password='LSD'))
         res = self.client.post(reverse('update-editors-agendas'),
-                               {'form-0-agenda_id':self.agenda_1.id,
-                                'form-0-object_type':'committeemeeting',
-                                'form-0-reasoning':'test reasoning',
-                                'form-0-obj_id':self.meeting_1.id,
-                                'form-0-weight':0.3,
-                                'form-INITIAL_FORMS':1,
-                                'form-MAX_NUM_FORMS':'',
-                                'form-TOTAL_FORMS':1,
-                               }
-                              )
+                               {'form-0-agenda_id': self.agenda_1.id,
+                                'form-0-object_type': 'committeemeeting',
+                                'form-0-reasoning': 'test reasoning',
+                                'form-0-obj_id': self.meeting_1.id,
+                                'form-0-weight': 0.3,
+                                'form-INITIAL_FORMS': 1,
+                                'form-MAX_NUM_FORMS': '',
+                                'form-TOTAL_FORMS': 1,
+                                }
+                               )
         self.assertEqual(res.status_code, 403)
-
 
     def test_agenda_ascribe_meeting(self):
         self.assertTrue(self.client.login(username='jacob',
                                           password='JKM'))
         res = self.client.post(reverse('update-editors-agendas'),
-                               {'form-0-agenda_id':self.agenda_1.id,
-                                'form-0-object_type':'committeemeeting',
-                                'form-0-reasoning':'test reasoning',
-                                'form-0-obj_id':self.meeting_1.id,
-                                'form-0-weight':0.3,
-                                'form-INITIAL_FORMS':1,
-                                'form-MAX_NUM_FORMS':'',
-                                'form-TOTAL_FORMS':1,
-                               }
-                              )
+                               {'form-0-agenda_id': self.agenda_1.id,
+                                'form-0-object_type': 'committeemeeting',
+                                'form-0-reasoning': 'test reasoning',
+                                'form-0-obj_id': self.meeting_1.id,
+                                'form-0-weight': 0.3,
+                                'form-INITIAL_FORMS': 1,
+                                'form-MAX_NUM_FORMS': '',
+                                'form-TOTAL_FORMS': 1,
+                                }
+                               )
         self.assertRedirects(res,
                              reverse('committee-meeting',
-                                         kwargs={'pk':self.meeting_1.id}),
+                                     kwargs={'pk': self.meeting_1.id}),
                              status_code=302)
         a = Agenda.objects.get(pk=self.agenda_1.id)
         self.assertEqual([am.meeting for am in a.agendameetings.all()],
@@ -268,16 +271,16 @@ I have a deadline''')
     def test_agenda_ascribe_vote_not_logged_in(self):
         url = reverse('update-editors-agendas')
         res = self.client.post(url,
-                               {'form-0-agenda_id':self.agenda_1.id,
-                                'form-0-object_type':'vote',
-                                'form-0-reasoning':'test reasoning',
-                                'form-0-obj_id':self.vote_1.id,
-                                'form-0-weight':1.0,
-                                'form-INITIAL_FORMS':1,
-                                'form-MAX_NUM_FORMS':'',
-                                'form-TOTAL_FORMS':1,
-                               }
-                              )
+                               {'form-0-agenda_id': self.agenda_1.id,
+                                'form-0-object_type': 'vote',
+                                'form-0-reasoning': 'test reasoning',
+                                'form-0-obj_id': self.vote_1.id,
+                                'form-0-weight': 1.0,
+                                'form-INITIAL_FORMS': 1,
+                                'form-MAX_NUM_FORMS': '',
+                                'form-TOTAL_FORMS': 1,
+                                }
+                               )
         self.assertRedirects(res, "%s?next=%s" % (settings.LOGIN_URL, url),
                              status_code=302)
 
@@ -285,37 +288,36 @@ I have a deadline''')
         self.assertTrue(self.client.login(username='john',
                                           password='LSD'))
         res = self.client.post(reverse('update-editors-agendas'),
-                               {'form-0-agenda_id':self.agenda_1.id,
-                                'form-0-object_type':'vote',
-                                'form-0-reasoning':'test reasoning',
-                                'form-0-obj_id':self.vote_1.id,
-                                'form-0-weight':1.0,
-                                'form-INITIAL_FORMS':1,
-                                'form-MAX_NUM_FORMS':'',
-                                'form-TOTAL_FORMS':1,
-                               }
-                              )
+                               {'form-0-agenda_id': self.agenda_1.id,
+                                'form-0-object_type': 'vote',
+                                'form-0-reasoning': 'test reasoning',
+                                'form-0-obj_id': self.vote_1.id,
+                                'form-0-weight': 1.0,
+                                'form-INITIAL_FORMS': 1,
+                                'form-MAX_NUM_FORMS': '',
+                                'form-TOTAL_FORMS': 1,
+                                }
+                               )
         self.assertEqual(res.status_code, 403)
-
 
     def test_agenda_ascribe_vote(self):
         self.assertTrue(self.client.login(username='jacob',
                                           password='JKM'))
         res = self.client.post(reverse('update-editors-agendas'),
-                               {'form-0-agenda_id':self.agenda_1.id,
-                                'form-0-object_type':'vote',
-                                'form-0-reasoning':'test reasoning',
-                                'form-0-obj_id':self.vote_1.id,
-                                'form-0-weight':1.0,
-                                'form-0-importance':0.3,
-                                'form-INITIAL_FORMS':1,
-                                'form-MAX_NUM_FORMS':'',
-                                'form-TOTAL_FORMS':1,
-                               }
-                              )
+                               {'form-0-agenda_id': self.agenda_1.id,
+                                'form-0-object_type': 'vote',
+                                'form-0-reasoning': 'test reasoning',
+                                'form-0-obj_id': self.vote_1.id,
+                                'form-0-weight': 1.0,
+                                'form-0-importance': 0.3,
+                                'form-INITIAL_FORMS': 1,
+                                'form-MAX_NUM_FORMS': '',
+                                'form-TOTAL_FORMS': 1,
+                                }
+                               )
         self.assertRedirects(res,
                              reverse('vote-detail',
-                                         kwargs={'object_id':self.vote_1.id}),
+                                     kwargs={'object_id': self.vote_1.id}),
                              status_code=302)
         av = AgendaVote.objects.get(agenda=self.agenda_1,
                                     vote=self.vote_1)
@@ -355,8 +357,6 @@ I have a deadline''')
         self.assertIn('url', vote, "Got vote with no url in agenda-todo")
         self.assertIn('title', vote, "Got vote with no title in agenda-todo")
         self.assertIn('score', vote, "Got vote with no importance in agenda-todo")
-
-
 
     def test_suggest_votes_for_new_agenda(self):
         new_agenda = Agenda.objects.create(name='new agenda',

@@ -3350,7 +3350,7 @@ msgstr "חושבים שיש טעות במידע?"
 
 #: templates/lobbyists/_suggest_change_section.html:7
 msgid "Click here to suggest a change"
-msgstr "ליחצו כאן להצעת שינויים ותיקונים"
+msgstr "לחצו כאן להצעת שינויים ותיקונים"
 
 #: templates/lobbyists/lobbyist_detail.html:10
 #: templates/lobbyists/lobbyistcorporation_detail.html:10

@@ -1074,7 +1074,7 @@ class Command(NoArgsDbLogCommand):
 
         f = open('votings.tsv','wt')
         for v in Vote.objects.filter(time__gte=datetime.date(2009,2,24)):
-            for va in v.voteaction_set.all():
+            for va in v.actions.all():
                 f.write("%d\t%d\t%s\n" % (v.id, va.member.id, va.type))
         f.close()
 

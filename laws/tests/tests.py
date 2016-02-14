@@ -1,4 +1,5 @@
 # encoding: utf-8
+#
 from datetime import date, datetime, timedelta
 import json
 import urllib
@@ -14,21 +15,21 @@ from actstream.models import Action
 from tagging.models import Tag, TaggedItem
 import unittest
 
-from laws.models import Vote,Law, Bill,KnessetProposal, BillBudgetEstimation
+from laws.models import Vote, Law, Bill, KnessetProposal, BillBudgetEstimation
 from mks.models import Member, Party, Membership, Knesset
 from agendas.models import Agenda, AgendaVote, AgendaBill
 
 just_id = lambda x: x.id
-APP='laws'
+APP = 'laws'
+
 
 class BillViewsTest(TestCase):
-
     def setUp(self):
 
         d = date.today()
         self.knesset = Knesset.objects.create(
-            number=1,
-            start_date=d - timedelta(10))
+                number=1,
+                start_date=d - timedelta(10))
         self.vote_1 = Vote.objects.create(time=datetime.now(),
                                           title='vote 1')
         self.vote_2 = Vote.objects.create(time=datetime.now(),
@@ -36,7 +37,7 @@ class BillViewsTest(TestCase):
         self.jacob = User.objects.create_user('jacob', 'jacob@example.com',
                                               'JKM')
         self.adrian = User.objects.create_user('adrian', 'adrian@example.com',
-                                              'ADRIAN')
+                                               'ADRIAN')
         g, created = Group.objects.get_or_create(name='Valid Email')
         ct = ContentType.objects.get_for_model(Tag)
         p = Permission.objects.get(codename='add_tag', content_type=ct)
@@ -58,12 +59,13 @@ class BillViewsTest(TestCase):
         self.assertTemplateUsed(res, 'laws/bill_list.html')
         object_list = res.context['object_list']
         self.assertEqual(map(just_id, object_list),
-                         [ self.bill_3.id, self.bill_2.id, self.bill_1.id ])
+                         [self.bill_3.id, self.bill_2.id, self.bill_1.id])
+
     def testBillListByStage(self):
         res = self.client.get(reverse('bill-list'), {'stage': 'all'})
         object_list = res.context['object_list']
         self.assertEqual(map(just_id, object_list),
-                         [ self.bill_3.id, self.bill_2.id, self.bill_1.id])
+                         [self.bill_3.id, self.bill_2.id, self.bill_1.id])
         res = self.client.get(reverse('bill-list'), {'stage': '1'})
         object_list = res.context['object_list']
         self.assertEqual(map(just_id, object_list), [self.bill_1.id])
@@ -73,18 +75,18 @@ class BillViewsTest(TestCase):
 
     def test_bill_list_with_member(self):
         "Test the view of bills proposed by specific MK"
-        res = self.client.get(reverse('bill-list'), {'member':self.mk_1.id})
-        self.assertEqual(res.status_code,200)
+        res = self.client.get(reverse('bill-list'), {'member': self.mk_1.id})
+        self.assertEqual(res.status_code, 200)
 
     def test_bill_list_with_invalid_member(self):
         "test the view of bills proposed by specific mk, with invalid parameter"
-        res = self.client.get(reverse('bill-list'), {'member':'qwertyuiop'})
-        self.assertEqual(res.status_code,404)
+        res = self.client.get(reverse('bill-list'), {'member': 'qwertyuiop'})
+        self.assertEqual(res.status_code, 404)
 
     def test_bill_list_with_nonexisting_member(self):
         "test the view of bills proposed by specific mk, with nonexisting parameter"
-        res = self.client.get(reverse('bill-list'), {'member':'0'})
-        self.assertEqual(res.status_code,404)
+        res = self.client.get(reverse('bill-list'), {'member': '0'})
+        self.assertEqual(res.status_code, 404)
 
     def testBillListByKnessetBooklet(self):
         res = self.client.get(reverse('bill-list'), {'knesset_booklet': '2'})
@@ -93,7 +95,7 @@ class BillViewsTest(TestCase):
 
     def testBillDetail(self):
         res = self.client.get(reverse('bill-detail',
-                                 kwargs={'pk': self.bill_1.id}))
+                                      kwargs={'pk': self.bill_1.id}))
         self.assertEqual(res.status_code, 200)
         self.assertTemplateUsed(res,
                                 'laws/bill_detail.html')
@@ -101,25 +103,26 @@ class BillViewsTest(TestCase):
 
     def test_bill_detail_by_slug(self):
         res = self.client.get(reverse('bill-detail-with-slug',
-                                 kwargs={'slug': self.bill_1.slug,
-                                         'pk': self.bill_1.id}))
+                                      kwargs={'slug': self.bill_1.slug,
+                                              'pk': self.bill_1.id}))
         self.assertEqual(res.status_code, 200)
         self.assertTemplateUsed(res,
                                 'laws/bill_detail.html')
         self.assertEqual(res.context['object'].id, self.bill_1.id)
 
     def test_bill_popular_name(self):
-        res = self.client.get('/bill/'+self.bill_1.popular_name+'/')
+        res = self.client.get('/bill/' + self.bill_1.popular_name + '/')
         self.assertEqual(res.status_code, 404)
 
     def test_bill_popular_name_by_slug(self):
         res = self.client.get(reverse('bill-detail-with-slug',
-                                 kwargs={'slug': self.bill_1.popular_name_slug,
-                                         'pk': self.bill_1.id}))
+                                      kwargs={'slug': self.bill_1.popular_name_slug,
+                                              'pk': self.bill_1.id}))
         self.assertEqual(res.status_code, 200)
         self.assertTemplateUsed(res,
                                 'laws/bill_detail.html')
         self.assertEqual(res.context['object'].id, self.bill_1.id)
+
     '''
     def test_bill_detail_hebrew_name_by_slug(self):
         res = self.client.get(reverse('bill-detail',
@@ -129,17 +132,18 @@ class BillViewsTest(TestCase):
                                 'laws/bill_detail.html')
         self.assertEqual(res.context['object'].id, self.bill_1.id)
     '''
+
     def testLoginRequired(self):
         res = self.client.post(reverse('bill-detail',
-                           kwargs={'pk': self.bill_1.id}))
+                                       kwargs={'pk': self.bill_1.id}))
         self.assertEqual(res.status_code, 302)
-        self.assertTrue(res['location'].startswith('%s%s'  %
-                                       ('http://testserver', settings.LOGIN_URL)))
+        self.assertTrue(res['location'].startswith('%s%s' %
+                                                   ('http://testserver', settings.LOGIN_URL)))
 
     def testPOSTApprovalVote(self):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         res = self.client.post(reverse('bill-detail',
-                           kwargs={'pk': self.bill_1.id}),
+                                       kwargs={'pk': self.bill_1.id}),
                                {'user_input_type': 'approval vote',
                                 'vote_id': self.vote_1.id})
         self.assertEqual(res.status_code, 302)
@@ -155,7 +159,7 @@ class BillViewsTest(TestCase):
     def testPOSTFirstVote(self):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         res = self.client.post(reverse('bill-detail',
-                           kwargs={'pk': self.bill_1.id}),
+                                       kwargs={'pk': self.bill_1.id}),
                                {'user_input_type': 'first vote',
                                 'vote_id': self.vote_2.id})
         self.assertEqual(res.status_code, 302)
@@ -171,7 +175,7 @@ class BillViewsTest(TestCase):
     def testPOSTPreVote(self):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         res = self.client.post(reverse('bill-detail',
-                           kwargs={'pk': self.bill_1.id}),
+                                       kwargs={'pk': self.bill_1.id}),
                                {'user_input_type': 'pre vote',
                                 'vote_id': self.vote_2.id})
         self.assertEqual(res.status_code, 302)
@@ -189,17 +193,18 @@ class BillViewsTest(TestCase):
         self.assertEqual(res.status_code, 200)
         ...use feedparser to analyze res
     '''
+
     def test_add_tag_to_bill_login_required(self):
         url = reverse('add-tag-to-object',
-                                 kwargs={'app':APP,'object_type':'bill','object_id': self.bill_1.id})
-        res = self.client.post(url, {'tag_id':self.tag_1})
+                      kwargs={'app': APP, 'object_type': 'bill', 'object_id': self.bill_1.id})
+        res = self.client.post(url, {'tag_id': self.tag_1})
         self.assertRedirects(res, "%s?next=%s" % (settings.LOGIN_URL, url), status_code=302)
 
     def test_add_tag_to_bill(self):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         url = reverse('add-tag-to-object',
-                                 kwargs={'app':APP, 'object_type':'bill','object_id': self.bill_1.id})
-        res = self.client.post(url, {'tag_id':self.tag_1.id})
+                      kwargs={'app': APP, 'object_type': 'bill', 'object_id': self.bill_1.id})
+        res = self.client.post(url, {'tag_id': self.tag_1.id})
         self.assertEqual(res.status_code, 200)
         self.assertIn(self.tag_1, self.bill_1.tags)
 
@@ -207,16 +212,16 @@ class BillViewsTest(TestCase):
     def test_create_tag_permission_required(self):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         url = reverse('create-tag',
-                                 kwargs={'app':APP,'object_type':'bill','object_id': self.bill_1.id})
-        res = self.client.post(url, {'tag':'new tag'})
+                      kwargs={'app': APP, 'object_type': 'bill', 'object_id': self.bill_1.id})
+        res = self.client.post(url, {'tag': 'new tag'})
         self.assertRedirects(res, "%s?next=%s" % (settings.LOGIN_URL, url), status_code=302)
 
     @unittest.skip("creating tags currently disabled")
     def test_create_tag(self):
         self.assertTrue(self.client.login(username='adrian', password='ADRIAN'))
         url = reverse('create-tag',
-                                 kwargs={'app':APP,'object_type':'bill','object_id': self.bill_1.id})
-        res = self.client.post(url, {'tag':'new tag'})
+                      kwargs={'app': APP, 'object_type': 'bill', 'object_id': self.bill_1.id})
+        res = self.client.post(url, {'tag': 'new tag'})
         self.assertEqual(res.status_code, 200)
         self.new_tag = Tag.objects.get(name='new tag')
         self.assertIn(self.new_tag, self.bill_1.tags)
@@ -224,20 +229,20 @@ class BillViewsTest(TestCase):
     def test_add_budget_est(self):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         res = self.client.post(reverse('bill-detail',
-                           kwargs={'pk': self.bill_1.id}),
+                                       kwargs={'pk': self.bill_1.id}),
                                {'user_input_type': 'budget_est',
                                 'be_one_time_gov': 1,
                                 'be_yearly_gov': 2,
                                 'be_one_time_ext': 3,
-                                #explicitly missing: 'be_yearly_ext': 4,
+                                # explicitly missing: 'be_yearly_ext': 4,
                                 'be_summary': 'Trust me.'})
         self.assertEqual(res.status_code, 302)
         budget_est = self.bill_1.budget_ests.get(estimator__username='jacob')
-        self.assertEqual(budget_est.one_time_gov,1)
-        self.assertEqual(budget_est.yearly_gov,2)
-        self.assertEqual(budget_est.one_time_ext,3)
-        self.assertEqual(budget_est.yearly_ext,None)
-        self.assertEqual(budget_est.summary,'Trust me.')
+        self.assertEqual(budget_est.one_time_gov, 1)
+        self.assertEqual(budget_est.yearly_gov, 2)
+        self.assertEqual(budget_est.one_time_ext, 3)
+        self.assertEqual(budget_est.yearly_ext, None)
+        self.assertEqual(budget_est.summary, 'Trust me.')
         # cleanup
         budget_est.delete()
         self.client.logout()
@@ -246,36 +251,36 @@ class BillViewsTest(TestCase):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         # add
         res = self.client.post(reverse('bill-detail',
-                           kwargs={'pk': self.bill_1.id}),
+                                       kwargs={'pk': self.bill_1.id}),
                                {'user_input_type': 'budget_est',
                                 'be_one_time_gov': 1,
                                 'be_yearly_gov': 2,
                                 'be_one_time_ext': 3,
-                                #explicitly missing: 'be_yearly_ext': 4,
+                                # explicitly missing: 'be_yearly_ext': 4,
                                 'be_summary': 'Trust me.'})
         self.assertEqual(res.status_code, 302)
         budget_est = self.bill_1.budget_ests.get(estimator__username='jacob')
-        self.assertEqual(budget_est.one_time_gov,1)
-        self.assertEqual(budget_est.yearly_gov,2)
-        self.assertEqual(budget_est.one_time_ext,3)
-        self.assertEqual(budget_est.yearly_ext,None)
-        self.assertEqual(budget_est.summary,'Trust me.')
+        self.assertEqual(budget_est.one_time_gov, 1)
+        self.assertEqual(budget_est.yearly_gov, 2)
+        self.assertEqual(budget_est.one_time_ext, 3)
+        self.assertEqual(budget_est.yearly_ext, None)
+        self.assertEqual(budget_est.summary, 'Trust me.')
         # now update
         res = self.client.post(reverse('bill-detail',
-                           kwargs={'pk': self.bill_1.id}),
+                                       kwargs={'pk': self.bill_1.id}),
                                {'user_input_type': 'budget_est',
-                                #explicitly missing: 'be_one_time_gov': 4,
+                                # explicitly missing: 'be_one_time_gov': 4,
                                 'be_yearly_gov': 3,
                                 'be_one_time_ext': 2,
                                 'be_yearly_ext': 1,
                                 'be_summary': 'Trust him.'})
         self.assertEqual(res.status_code, 302)
         budget_est = self.bill_1.budget_ests.get(estimator__username='jacob')
-        self.assertEqual(budget_est.one_time_gov,None)
-        self.assertEqual(budget_est.yearly_gov,3)
-        self.assertEqual(budget_est.one_time_ext,2)
-        self.assertEqual(budget_est.yearly_ext,1)
-        self.assertEqual(budget_est.summary,'Trust him.')
+        self.assertEqual(budget_est.one_time_gov, None)
+        self.assertEqual(budget_est.yearly_gov, 3)
+        self.assertEqual(budget_est.one_time_ext, 2)
+        self.assertEqual(budget_est.yearly_ext, 1)
+        self.assertEqual(budget_est.summary, 'Trust him.')
         # cleanup
         budget_est.delete()
         self.client.logout()
@@ -283,7 +288,7 @@ class BillViewsTest(TestCase):
     def test_bad_add_budget_est(self):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         res = self.client.post(reverse('bill-detail',
-                           kwargs={'pk': self.bill_1.id}),
+                                       kwargs={'pk': self.bill_1.id}),
                                {'user_input_type': 'budget_est',
                                 'be_one_time_gov': 'aaa',
                                 'be_yearly_gov': 2,
@@ -304,27 +309,27 @@ class BillViewsTest(TestCase):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         # add
         res = self.client.post(reverse('bill-detail',
-                           kwargs={'pk': self.bill_1.id}),
+                                       kwargs={'pk': self.bill_1.id}),
                                {'user_input_type': 'budget_est',
                                 'be_one_time_gov': 1,
                                 'be_yearly_gov': 2,
                                 'be_one_time_ext': 3,
-                                #explicitly missing: 'be_yearly_ext': 4,
+                                # explicitly missing: 'be_yearly_ext': 4,
                                 'be_summary': 'Trust me.'})
         self.assertEqual(res.status_code, 302)
         budget_est = self.bill_1.budget_ests.get(estimator__username='jacob')
-        self.assertEqual(budget_est.one_time_gov,1)
-        self.assertEqual(budget_est.yearly_gov,2)
-        self.assertEqual(budget_est.one_time_ext,3)
-        self.assertEqual(budget_est.yearly_ext,None)
-        self.assertEqual(budget_est.summary,'Trust me.')
+        self.assertEqual(budget_est.one_time_gov, 1)
+        self.assertEqual(budget_est.yearly_gov, 2)
+        self.assertEqual(budget_est.one_time_ext, 3)
+        self.assertEqual(budget_est.yearly_ext, None)
+        self.assertEqual(budget_est.summary, 'Trust me.')
         self.client.logout()
         # now add with other user.
         self.assertTrue(self.client.login(username='adrian', password='ADRIAN'))
         res = self.client.post(reverse('bill-detail',
-                           kwargs={'pk': self.bill_1.id}),
+                                       kwargs={'pk': self.bill_1.id}),
                                {'user_input_type': 'budget_est',
-                                #explicitly missing: 'be_one_time_gov': 4,
+                                # explicitly missing: 'be_one_time_gov': 4,
                                 'be_yearly_gov': 3,
                                 'be_one_time_ext': 2,
                                 'be_yearly_ext': 1,
@@ -332,18 +337,18 @@ class BillViewsTest(TestCase):
         self.assertEqual(res.status_code, 302)
         # check first user, should give same result.
         budget_est = self.bill_1.budget_ests.get(estimator__username='jacob')
-        self.assertEqual(budget_est.one_time_gov,1)
-        self.assertEqual(budget_est.yearly_gov,2)
-        self.assertEqual(budget_est.one_time_ext,3)
-        self.assertEqual(budget_est.yearly_ext,None)
-        self.assertEqual(budget_est.summary,'Trust me.')
+        self.assertEqual(budget_est.one_time_gov, 1)
+        self.assertEqual(budget_est.yearly_gov, 2)
+        self.assertEqual(budget_est.one_time_ext, 3)
+        self.assertEqual(budget_est.yearly_ext, None)
+        self.assertEqual(budget_est.summary, 'Trust me.')
         self.client.logout()
         # now add with first user, different bill.
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         res = self.client.post(reverse('bill-detail',
-                           kwargs={'pk': self.bill_2.id}),
+                                       kwargs={'pk': self.bill_2.id}),
                                {'user_input_type': 'budget_est',
-                                #explicitly missing: 'be_one_time_gov': 4,
+                                # explicitly missing: 'be_one_time_gov': 4,
                                 'be_yearly_gov': 3,
                                 'be_one_time_ext': 2,
                                 'be_yearly_ext': 1,
@@ -351,11 +356,11 @@ class BillViewsTest(TestCase):
         self.assertEqual(res.status_code, 302)
         # check first bill, should give same result.
         budget_est = self.bill_1.budget_ests.get(estimator__username='jacob')
-        self.assertEqual(budget_est.one_time_gov,1)
-        self.assertEqual(budget_est.yearly_gov,2)
-        self.assertEqual(budget_est.one_time_ext,3)
-        self.assertEqual(budget_est.yearly_ext,None)
-        self.assertEqual(budget_est.summary,'Trust me.')
+        self.assertEqual(budget_est.one_time_gov, 1)
+        self.assertEqual(budget_est.yearly_gov, 2)
+        self.assertEqual(budget_est.one_time_ext, 3)
+        self.assertEqual(budget_est.yearly_ext, None)
+        self.assertEqual(budget_est.summary, 'Trust me.')
         # cleanup
         budget_est.delete()
         self.bill_1.budget_ests.get(estimator__username='adrian').delete()
@@ -372,13 +377,13 @@ class BillViewsTest(TestCase):
         self.mk_1.delete()
         self.tag_1.delete()
 
-class VoteViewsTest(TestCase):
 
+class VoteViewsTest(TestCase):
     def setUp(self):
         self.jacob = User.objects.create_user('jacob', 'jacob@example.com',
                                               'JKM')
         self.adrian = User.objects.create_user('adrian', 'adrian@example.com',
-                                              'ADRIAN')
+                                               'ADRIAN')
         g, created = Group.objects.get_or_create(name='Valid Email')
         self.jacob.groups.add(g)
 
@@ -403,27 +408,26 @@ class VoteViewsTest(TestCase):
         self.assertTemplateUsed(res, 'laws/vote_list.html')
         object_list = res.context['object_list']
         self.assertEqual(map(just_id, object_list),
-                         [ self.vote_2.id, self.vote_1.id, ])
+                         [self.vote_2.id, self.vote_1.id, ])
 
     def testVoteDetail(self):
         res = self.client.get(reverse('vote-detail',
-                                 kwargs={'pk': self.vote_1.id}))
+                                      kwargs={'pk': self.vote_1.id}))
         self.assertEqual(res.status_code, 200)
         self.assertTemplateUsed(res,
                                 'laws/vote_detail.html')
         self.assertEqual(res.context['vote'].id, self.vote_1.id)
 
-
     def test_attach_bill_as_pre(self):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         res = self.client.post(reverse('vote-detail',
-                                       kwargs={ 'pk' : self.vote_1.id, }
+                                       kwargs={'pk': self.vote_1.id,}
                                        ),
                                {
-                                   'user_input_type' : 'add-bill',
-                                   'vote_model'      : self.vote_1.id,
-                                   'vote_type'       : 'pre vote',
-                                   'bill_model'      : self.bill_1.id,
+                                   'user_input_type': 'add-bill',
+                                   'vote_model': self.vote_1.id,
+                                   'vote_type': 'pre vote',
+                                   'bill_model': self.bill_1.id,
                                })
         self.assertEqual(res.status_code, 302)
 
@@ -435,17 +439,16 @@ class VoteViewsTest(TestCase):
         self.bill_1.update_stage()
         self.client.logout()
 
-
     def test_attach_bill_as_first(self):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         res = self.client.post(reverse('vote-detail',
-                                       kwargs={ 'pk' : self.vote_1.id, }
+                                       kwargs={'pk': self.vote_1.id,}
                                        ),
                                {
-                                   'user_input_type' : 'add-bill',
-                                   'vote_model'      : self.vote_1.id,
-                                   'vote_type'       : 'first vote',
-                                   'bill_model'      : self.bill_1.id,
+                                   'user_input_type': 'add-bill',
+                                   'vote_model': self.vote_1.id,
+                                   'vote_type': 'first vote',
+                                   'bill_model': self.bill_1.id,
                                })
         self.assertEqual(res.status_code, 302)
 
@@ -459,17 +462,16 @@ class VoteViewsTest(TestCase):
         self.bill_1.update_stage()
         self.client.logout()
 
-
     def test_attach_bill_as_approval(self):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         res = self.client.post(reverse('vote-detail',
-                                       kwargs={ 'pk' : self.vote_1.id, }
+                                       kwargs={'pk': self.vote_1.id,}
                                        ),
                                {
-                                   'user_input_type' : 'add-bill',
-                                   'vote_model'      : self.vote_1.id,
-                                   'vote_type'       : 'approve vote',
-                                   'bill_model'      : self.bill_1.id,
+                                   'user_input_type': 'add-bill',
+                                   'vote_model': self.vote_1.id,
+                                   'vote_type': 'approve vote',
+                                   'bill_model': self.bill_1.id,
                                })
         self.assertEqual(res.status_code, 302)
 
@@ -483,7 +485,6 @@ class VoteViewsTest(TestCase):
         self.bill_1.update_stage()
         self.client.logout()
 
-
     def test_illegal_attach_bill_as_first(self):
         # Attach a vote to a bill as first vote
         self.bill_1.first_vote = self.vote_2
@@ -492,13 +493,13 @@ class VoteViewsTest(TestCase):
         # Try to attach another vote as first to same bill using form
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         res = self.client.post(reverse('vote-detail',
-                                       kwargs={ 'pk' : self.vote_1.id, }
+                                       kwargs={'pk': self.vote_1.id,}
                                        ),
                                {
-                                   'user_input_type' : 'add-bill',
-                                   'vote_model'      : self.vote_1.id,
-                                   'vote_type'       : 'first vote',
-                                   'bill_model'      : self.bill_1.id,
+                                   'user_input_type': 'add-bill',
+                                   'vote_model': self.vote_1.id,
+                                   'vote_type': 'first vote',
+                                   'bill_model': self.bill_1.id,
                                })
         self.assertEqual(res.status_code, 200)
 
@@ -517,7 +518,6 @@ class VoteViewsTest(TestCase):
         self.bill_1.update_stage()
         self.client.logout()
 
-
     def test_illegal_attach_bill_as_approval(self):
         # Attach a vote to a bill as approval vote
         self.bill_1.approval_vote = self.vote_2
@@ -526,13 +526,13 @@ class VoteViewsTest(TestCase):
         # Try to attach another vote as approval to same bill using form
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         res = self.client.post(reverse('vote-detail',
-                                       kwargs={ 'pk' : self.vote_1.id, }
+                                       kwargs={'pk': self.vote_1.id,}
                                        ),
                                {
-                                   'user_input_type' : 'add-bill',
-                                   'vote_model'      : self.vote_1.id,
-                                   'vote_type'       : 'approve vote',
-                                   'bill_model'      : self.bill_1.id,
+                                   'user_input_type': 'add-bill',
+                                   'vote_model': self.vote_1.id,
+                                   'vote_type': 'approve vote',
+                                   'bill_model': self.bill_1.id,
                                })
         self.assertEqual(res.status_code, 200)
 
@@ -551,7 +551,6 @@ class VoteViewsTest(TestCase):
         self.bill_1.update_stage()
         self.client.logout()
 
-
     def test_illegal_attach_same_vote_as_approval_twice(self):
         # Attach a vote to a bill as approval vote
         self.bill_1.approval_vote = self.vote_1
@@ -560,13 +559,13 @@ class VoteViewsTest(TestCase):
         # Try to attach the same vote as approval to another bill using form
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         res = self.client.post(reverse('vote-detail',
-                                       kwargs={ 'pk' : self.vote_1.id, }
+                                       kwargs={'pk': self.vote_1.id,}
                                        ),
                                {
-                                   'user_input_type' : 'add-bill',
-                                   'vote_model'      : self.vote_1.id,
-                                   'vote_type'       : 'approve vote',
-                                   'bill_model'      : self.bill_2.id,
+                                   'user_input_type': 'add-bill',
+                                   'vote_model': self.vote_1.id,
+                                   'vote_type': 'approve vote',
+                                   'bill_model': self.bill_2.id,
                                })
         self.assertEqual(res.status_code, 200)
 
@@ -598,15 +597,15 @@ class VoteViewsTest(TestCase):
 
     def test_add_tag_to_vote_login_required(self):
         url = reverse('add-tag-to-object',
-                                 kwargs={'app':APP,'object_type':'vote','object_id': self.vote_2.id})
-        res = self.client.post(url, {'tag_id':self.tag_1})
+                      kwargs={'app': APP, 'object_type': 'vote', 'object_id': self.vote_2.id})
+        res = self.client.post(url, {'tag_id': self.tag_1})
         self.assertRedirects(res, "%s?next=%s" % (settings.LOGIN_URL, url), status_code=302)
 
     def test_add_tag_to_vote(self):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         url = reverse('add-tag-to-object',
-                                 kwargs={'app':APP, 'object_type':'vote','object_id': self.vote_2.id})
-        res = self.client.post(url, {'tag_id':self.tag_1.id})
+                      kwargs={'app': APP, 'object_type': 'vote', 'object_id': self.vote_2.id})
+        res = self.client.post(url, {'tag_id': self.tag_1.id})
         self.assertEqual(res.status_code, 200)
         self.assertIn(self.tag_1, self.vote_2.tags)
 
@@ -614,16 +613,16 @@ class VoteViewsTest(TestCase):
     def test_create_tag_permission_required(self):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         url = reverse('create-tag',
-                                 kwargs={'app':APP,'object_type':'vote','object_id': self.vote_2.id})
-        res = self.client.post(url, {'tag':'new tag'})
+                      kwargs={'app': APP, 'object_type': 'vote', 'object_id': self.vote_2.id})
+        res = self.client.post(url, {'tag': 'new tag'})
         self.assertRedirects(res, "%s?next=%s" % (settings.LOGIN_URL, url), status_code=302)
 
     @unittest.skip("creating tags currently disabled")
     def test_create_tag(self):
         self.assertTrue(self.client.login(username='adrian', password='ADRIAN'))
         url = reverse('create-tag',
-                                 kwargs={'app':APP,'object_type':'vote','object_id': self.vote_2.id})
-        res = self.client.post(url, {'tag':'new tag'})
+                      kwargs={'app': APP, 'object_type': 'vote', 'object_id': self.vote_2.id})
+        res = self.client.post(url, {'tag': 'new tag'})
         self.assertEqual(res.status_code, 200)
         self.new_tag = Tag.objects.get(name='new tag')
         self.assertIn(self.new_tag, self.vote_2.tags)
@@ -649,7 +648,7 @@ class BillStreamTest(TestCase):
     def testGenerate(self):
         self.bill.generate_activity_stream()
         s = Action.objects.stream_for_actor(self.bill)
-        self.assertEqual(s.count(),3)
+        self.assertEqual(s.count(), 3)
 
     def tearDown(self):
         self.bill.pre_votes.all().delete()
@@ -658,13 +657,14 @@ class BillStreamTest(TestCase):
         self.kp_1.delete()
         self.bill.delete()
 
+
 class ProposalModelTest(TestCase):
     def setUp(self):
         self.bill = Bill.objects.create(stage='1', title='bill 1', popular_name="The Bill")
         self.kp_1 = KnessetProposal.objects.create(booklet_number=2,
                                                    bill=self.bill,
                                                    date=datetime(2005, 1, 22),
-                                                )
+                                                   )
 
     def testContent(self):
         self.assertEqual(self.kp_1.get_explanation(), '')
@@ -680,13 +680,13 @@ class ProposalModelTest(TestCase):
         self.kp_1.delete()
         self.bill.delete()
 
-class APIv2Test(TestCase):
 
+class APIv2Test(TestCase):
     def setUp(self):
         d = date.today()
         self.knesset = Knesset.objects.create(
-            number=1,
-            start_date=d - timedelta(10))
+                number=1,
+                start_date=d - timedelta(10))
         self.url_prefix = '/api/v2'
         self.vote_1 = Vote.objects.create(time=datetime.now(),
                                           title='vote 1')
@@ -694,47 +694,47 @@ class APIv2Test(TestCase):
                                           title='vote 2')
         self.party_1 = Party.objects.create(name='party 1')
         self.mk_1 = Member.objects.create(name='mk 2',
-                current_party=self.party_1)
+                                          current_party=self.party_1)
         # Membership.objects.create(member=self.mk_1, party=self.party_1)
         self.bill_1 = Bill.objects.create(stage='1', title='bill 1',
                                           popular_name="The Bill")
         self.bill_1.proposers.add(self.mk_1)
         self.bill_2 = Bill.objects.create(stage='2', title='bill 2',
-                popular_name="Another Bill")
+                                          popular_name="Another Bill")
         self.kp_1 = KnessetProposal.objects.create(booklet_number=2,
                                                    bill=self.bill_1,
                                                    date=date.today())
         self.law_1 = Law.objects.create(title='law 1')
         self.tag_1 = Tag.objects.create(name='tag1')
-        
+
         self.agenda_1 = Agenda.objects.create(name='agenda 1',
-                                          public_owner_name='owner name')
+                                              public_owner_name='owner name')
         self.agenda_vote = AgendaVote.objects.create(agenda=self.agenda_1,
                                                      vote=self.vote_1)
-                                                     
+
         self.agenda_2 = Agenda.objects.create(name='agenda 2',
-                                          public_owner_name='owner name 2')
+                                              public_owner_name='owner name 2')
         self.agenda_bill_1 = AgendaBill.objects.create(agenda=self.agenda_2,
-                                                     bill=self.bill_1)
-                                                     
+                                                       bill=self.bill_1)
+
         self.agenda_3 = Agenda.objects.create(name='agenda 3',
-                                          public_owner_name='owner name 3', is_public = True)
+                                              public_owner_name='owner name 3', is_public=True)
         self.agenda_bill_2 = AgendaBill.objects.create(agenda=self.agenda_3,
-                                                     bill=self.bill_1)
-                                                     
+                                                       bill=self.bill_1)
+
         self.agenda_4 = Agenda.objects.create(name='agenda 4',
-                                          public_owner_name='owner name 4', is_public = False)
+                                              public_owner_name='owner name 4', is_public=False)
         self.agenda_bill_3 = AgendaBill.objects.create(agenda=self.agenda_4,
-                                                     bill=self.bill_1)
-                                                     
+                                                       bill=self.bill_1)
+
         self.adrian = User.objects.create_user('adrian', 'adrian@example.com',
-                                              'ADRIAN')
+                                               'ADRIAN')
         self.adrian.agendas.add(self.agenda_2)
-        
+
     def test_law_resource(self):
         uri = '%s/law/%s/' % (self.url_prefix, self.law_1.id)
         res = self.client.get(uri, format='json')
-        self.assertEqual(res.status_code,200)
+        self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)
         self.assertEqual(data['resource_uri'], uri)
         self.assertEqual(int(data['id']), self.law_1.id)
@@ -744,36 +744,37 @@ class APIv2Test(TestCase):
         p = self.adrian.get_profile()
         loggedin = self.client.login(username='adrian', password='ADRIAN')
         self.assertTrue(loggedin)
-        
+
         uri = '%s/bill/%s/' % (self.url_prefix, self.bill_1.id)
-        
+
         res = self.client.get(uri, format='json')
-        self.assertEqual(res.status_code,200)
+        self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)
-        
+
         agendas = data['agendas']
-        
+
         self.assertEqual(len(agendas['agenda_list']), 2)
         self.assertEqual(agendas['agenda_list'][0]['name'], self.agenda_2.name)
         self.assertEqual(agendas['agenda_list'][0]['public_owner_name'], self.agenda_2.public_owner_name)
-        self.assertEqual(agendas['agenda_list'][0]['resource_uri'], '%s/agenda/%s/' % (self.url_prefix, self.agenda_2.id))
+        self.assertEqual(agendas['agenda_list'][0]['resource_uri'],
+                         '%s/agenda/%s/' % (self.url_prefix, self.agenda_2.id))
 
     def test_bill_agenda_unlogged(self):
         uri = '%s/bill/%s/' % (self.url_prefix, self.bill_1.id)
-        
+
         res = self.client.get(uri, format='json')
-        self.assertEqual(res.status_code,200)
+        self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)
-        
+
         agendas = data['agendas']
         print data
-        
+
         self.assertEqual(len(agendas['agenda_list']), 1)
-        
+
     def test_bill_resource(self):
         uri = '%s/bill/%s/' % (self.url_prefix, self.bill_1.id)
         res = self.client.get(uri, format='json')
-        self.assertEqual(res.status_code,200)
+        self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)
         self.assertEqual(data['resource_uri'], uri)
         self.assertEqual(int(data['id']), self.bill_1.id)
@@ -782,27 +783,32 @@ class APIv2Test(TestCase):
     def test_vote_resource(self):
         uri = '%s/vote/%s/' % (self.url_prefix, self.vote_1.id)
         res = self.client.get(uri, format='json')
-        self.assertEqual(res.status_code,200)
+        self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)
         self.assertEqual(data['resource_uri'], uri)
         self.assertEqual(int(data['id']), self.vote_1.id)
         self.assertEqual(data['title'], "vote 1")
         self.assertEqual(data["agendas"][0]['name'], "agenda 1")
 
+    def test_vote_exports_does_not_break_on_missing_date_from_filter(self):
+        uri = '/api/v2/vote/?vtype=second-call&order=time&from_date=&to_date=2016-02-13'
+        res = self.client.get(uri, format='json')
+        self.assertEqual(res.status_code, 200)
+
     def test_bill_list(self):
         uri = reverse('api_dispatch_list', kwargs={'resource_name': 'bill',
-                                                    'api_name': 'v2'})
+                                                   'api_name': 'v2'})
         res = self.client.get(uri, format='json')
-        self.assertEqual(res.status_code,200)
+        self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)
         self.assertEqual(data['meta']['total_count'], 2)
         self.assertEqual(len(data['objects']), 2)
 
     def test_bill_list_for_proposer(self):
         uri = reverse('api_dispatch_list', kwargs={'resource_name': 'bill',
-                                                    'api_name': 'v2'})
+                                                   'api_name': 'v2'})
         res = self.client.get(uri, dict(proposer=self.mk_1.id, format='json'))
-        self.assertEqual(res.status_code,200)
+        self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)
         self.assertEqual(data['meta']['total_count'], 1)
         self.assertEqual(len(data['objects']), 1)

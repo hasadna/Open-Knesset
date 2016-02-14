@@ -61,7 +61,7 @@ class AgendaListView(ListView):
             cache.set('AllAgendaPartyVotes', allAgendaPartyVotes, 1800)
 
         if self.request.user.is_authenticated():
-            p = self.request.user.get_profile()
+            p = self.request.user.profiles.get()
             watched = p.agendas
         else:
             watched = None
@@ -114,9 +114,9 @@ class AgendaDetailView(DetailView):
             context['title'] = _('None')
 
         if self.request.user.is_authenticated():
-            p = self.request.user.get_profile()
+            p = self.request.user.profiles.get()
             watched = agenda in p.agendas
-            watched_members = self.request.user.get_profile().members
+            watched_members = self.request.user.profiles.get().members
         else:
             watched = False
             watched_members = False
@@ -193,7 +193,7 @@ class AgendaVotesMoreView(GetMoreView):
         ctx = super(AgendaVotesMoreView, self).get_context_data(*args, **kwargs)
 
         if self.request.user.is_authenticated():
-            p = self.request.user.get_profile()
+            p = self.request.user.profiles.get()
             watched_members = p.members
         else:
             watched_members = False
@@ -299,7 +299,7 @@ class AgendaMkDetailView (DetailView):
         related_mk_votes = agenda.related_mk_votes(member)
 
         if self.request.user.is_authenticated():
-            p = self.request.user.get_profile()
+            p = self.request.user.profiles.get()
             watched = agenda in p.agendas
         else:
             watched = False

@@ -74,6 +74,12 @@
                     {% include "laws/vote_member_photos.html" with votes=against_votes %}
                 </div>
             </div>
+            <div class="span6">
+                <div class="spacer">
+                    <h2>{% trans "Abstain" %} <span class="badge">{{vote.abstain_votes_count}}</span></h2>
+                    {% include "laws/vote_member_photos.html" with votes=abstain_votes %}
+                </div>
+            </div>
         </div>
     </section>
 

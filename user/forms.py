@@ -27,7 +27,7 @@ class RegistrationForm(UserCreationForm):
         user.email = self.cleaned_data['email']
         if commit:
             user.save()
-            profile = user.get_profile()
+            profile = user.profiles.get()
             profile.email_notification = self.cleaned_data['email_notification']
             profile.party = self.cleaned_data['party']
             profile.save()
@@ -72,7 +72,7 @@ class EditProfileForm(forms.Form):
     def __init__(self, user=None, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
         self.user = user
-        self.userprofile = user.get_profile()
+        self.userprofile = user.profiles.get()
         if self.user:
             self.initial = {'username': user.username,
                         'first_name':user.first_name,

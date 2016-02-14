@@ -105,7 +105,7 @@
             <section class="card card-list card-list-latest">
                 <header><h2><i class="fa fa-clock-o"></i>{% trans 'Last Meetings' %}</h2></header>
                 <ul>
-                {% for o in meetings_list %}
+                {% for o in meetings_list|dictsortreversed:"date" %}
                     {% include "committees/_meeting_li.html" with add_li=1 %}
                 {% empty %}
                     <li>{% trans "None" %}</li>
