@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
+from tagging.models import TaggedItem
 
 from .models import Tidbit, TagSuggestion, TagSynonym, TagKeyphrase, Tag
 from auxiliary.tag_suggestions import approve as tag_suggestions_approve
@@ -13,7 +14,6 @@ from django.contrib.flatpages.admin import FlatPage, FlatPageAdmin as DjangoFlat
 
 
 class TidibitAdmin(admin.ModelAdmin):
-
     model = Tidbit
     list_display = ('title', 'content', 'ordering', 'is_active')
     list_display_links = ('title', 'content')
@@ -21,7 +21,6 @@ class TidibitAdmin(admin.ModelAdmin):
 
 
 class TagSuggestionAdmin(admin.ModelAdmin):
-
     model = TagSuggestion
     list_display = ('name', 'suggested_by', 'object')
     actions = [tag_suggestions_approve]
@@ -37,11 +36,13 @@ class TagSynonymAdmin(admin.ModelAdmin):
     raw_id_fields = ('tag', 'synonym_tag')
     ordering = ('tag', 'synonym_tag')
 
+
 admin.site.register(TagSynonym, TagSynonymAdmin)
 
 
 class TagKeyphraseAdmin(admin.ModelAdmin):
     model = TagKeyphrase
+
 
 admin.site.register(TagKeyphrase, TagKeyphraseAdmin)
 
@@ -65,7 +66,7 @@ class TagTagSynonymListFilter(SimpleListFilter):
     def queryset(self, request, queryset):
         if self.value() == 'parents':
             return queryset.filter(synonym_synonym_tag=None)
-        elif self.value() ==  'synonyms':
+        elif self.value() == 'synonyms':
             return queryset.exclude(synonym_synonym_tag=None)
         elif self.value() == 'parentswithsynonyms':
             return queryset.filter(synonym_synonym_tag=None).exclude(synonym_proper_tag=None)
@@ -73,8 +74,18 @@ class TagTagSynonymListFilter(SimpleListFilter):
             return queryset
 
 
+class TaggedItemAdmin(admin.ModelAdmin):
+    model = TaggedItem
+    list_display = ('tag', 'object')
+    list_filter = ('content_type',)
+
+
+admin.site.unregister(TaggedItem)
+admin.site.register(TaggedItem, TaggedItemAdmin)
+
+
 class TagAdmin(admin.ModelAdmin):
-    model=Tag
+    model = Tag
     inlines = (TagSynonymInline,)
     list_filter = (TagTagSynonymListFilter,)
     list_display = ('name', 'synonyms',)
@@ -83,9 +94,13 @@ class TagAdmin(admin.ModelAdmin):
         synonyms = []
         if tag.synonym_synonym_tag.count() == 0:
             #  parent tag
-            synonyms = [escape(synonym) for synonym in tag.synonym_proper_tag.values_list('synonym_tag__name', flat=True)]
-        synonyms.append(u'<span class="tag_synonym_msg"></span><a href="javascript:tag_admin.tag_synonym_click(%s, \'%s\');" class="tag_synonym_action">( הוספת תג נרדף )</a><a href="javascript:tag_admin.tag_synonym_secondary_click(%s);" class="tag_synonym_secondary_action"></a>'%(tag.pk,escapejs(tag), tag.pk,))
+            synonyms = [escape(synonym) for synonym in
+                        tag.synonym_proper_tag.values_list('synonym_tag__name', flat=True)]
+        synonyms.append(
+            u'<span class="tag_synonym_msg"></span><a href="javascript:tag_admin.tag_synonym_click(%s, \'%s\');" class="tag_synonym_action">( הוספת תג נרדף )</a><a href="javascript:tag_admin.tag_synonym_secondary_click(%s);" class="tag_synonym_secondary_action"></a>' % (
+                tag.pk, escapejs(tag), tag.pk,))
         return ', '.join(synonyms)
+
     synonyms.allow_tags = True
 
     class Media:
@@ -97,11 +112,11 @@ admin.site.register(Tag, TagAdmin)
 
 
 class FlatPageAdmin(DjangoFlatPageAdmin):
-
     def save_model(self, request, obj, form, change):
         super(FlatPageAdmin, self).save_model(request, obj, form, change)
         from django.core.cache import cache
-        cache.delete('flatpage_block_%s'%obj.url)
+        cache.delete('flatpage_block_%s' % obj.url)
+
 
 admin.site.unregister(FlatPage)
 admin.site.register(FlatPage, FlatPageAdmin)
