@@ -1,7 +1,7 @@
 {% load cache i18n common_visual_elements laws_tags bills_tags %}{% get_current_language as LANGUAGE_CODE %}
 <li>
 {% cache 3600 vote_list_item vote.pk LANGUAGE_CODE %}
-    <p class="item-context">{{vote.time}}</p>
+    <p class="item-context">{% if vote.src_type == "hamishmar" %}{{ vote.time|date:"N j, Y" }}{% else %}{{ vote.time }}{% endif %}</p>
     <p class="item-action">
       <span class="badge badge-success" title="{% trans "For" %}">{{ vote.for_votes_count }}</span>
       <span class="badge badge-important" title="{% trans "Against" %}">{{ vote.against_votes_count }}</span>
@@ -13,6 +13,9 @@
         {% if vote.summary %}<span class="label">{% trans "Summary is available" %}</span>{% endif %}
     </p>
     <p class="item-context">
+        {% if vote.src_type == "hamishmar" %}
+            <span class="label label-info"><b>{% trans "Data Source" %}:</b> {% trans "The Social Guard (Hamishmar)" %}</span>
+        {% endif %}
         {% if vote.against_party %}<span class="label label-warning">
                 {% blocktrans count vote.against_party as counter %}
                 {{ counter }} MK voted differently than the majority of his party

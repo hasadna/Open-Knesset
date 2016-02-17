@@ -57,4 +57,6 @@ lawsurlpatterns = patterns(
     # TODO:the next url is hardcoded in a js file
     url(r'^vote/auto_complete/$',
         vote_auto_complete, name='vote-auto-complete'),
+
+    url(r'admin/bulk-import-hamishmar-votes/$', 'laws.bulk_import_hamishmar_votes.views.main', name='bulk-import-hamishmar-votes'),
 )

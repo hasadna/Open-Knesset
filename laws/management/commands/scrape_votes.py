@@ -21,11 +21,12 @@ class Command(BaseKnessetDataserviceCollectionCommand):
     help = "Scrape latest votes data from the knesset"
 
     def _has_existing_object(self, dataservice_vote):
-        qs = Vote.objects.filter(src_id=dataservice_vote.id)
+        qs = Vote.objects.filter(src_type='knesset', src_id=dataservice_vote.id)
         return qs.exists()
 
     def _create_new_object(self, dataservice_vote):
         vote = Vote.objects.create(
+                src_type='knesset',
                 src_id=dataservice_vote.id,
                 title=u'{vote} - {sess}'.format(vote=dataservice_vote.item_dscr, sess=dataservice_vote.sess_item_dscr),
                 time_string=u'יום ' + hebrew_strftime(dataservice_vote.datetime),
@@ -69,6 +70,7 @@ class Command(BaseKnessetDataserviceCollectionCommand):
 
     def _recreate_object(self, vote_id):
         vote = Vote.objects.get(id=int(vote_id))
+        if vote.src_type != 'knesset': raise NotImplementedError()
         vote_src_id = vote.src_id
         dataservice_vote = self.DATASERVICE_CLASS.get(vote_src_id)
         VoteAction.objects.filter(vote=vote).delete()

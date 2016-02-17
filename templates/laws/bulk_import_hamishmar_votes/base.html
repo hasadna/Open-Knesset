@@ -1,0 +1,43 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block bodyclass %}bulk-import-hamishmar-votes{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+        &#8207;&rsaquo; <a href="{% url 'admin:app_list' app_label="laws" %}">{{ "laws"|capfirst|escape }}</a>
+        &#8207;&rsaquo; {% trans 'Bulk Import Hamishmar Votes' %}
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div id="content-main" dir="ltr">
+        <h3>{{ msg }}</h3><br/>
+        {% block bulk_import_hamishmar_votes_content %}{% endblock %}
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+        <script type="text/javascript">
+            jQuery.noConflict();
+            (function() {
+                {% if votes_data_json %}var votesData = {{ votes_data_json }};{% endif %}
+                window.bulkImportHamishmarVotes = {
+                    addVotes: function() {
+                        jQuery('body').append(jQuery('<form/>')
+                            .attr({'action': '{% url "bulk-import-hamishmar-votes" %}', 'method': 'post', 'id':'bulkImportHamishmarVotesApproveForm'})
+                            .append(jQuery('<input/>')
+                                .attr({'type': 'hidden', 'name': 'votesData', 'value': JSON.stringify(votesData)})
+                            )
+                            .append(jQuery('<input/>')
+                                .attr({'type': 'hidden', 'name': 'csrfmiddlewaretoken', 'value': '{{ csrf_token }}'})
+                            )
+                        ).find('#bulkImportHamishmarVotesApproveForm').submit();
+                    },
+                    goBack: function() {
+                        window.location.href = window.location.href;
+                    }
+                }
+            })();
+        </script>
+{% endblock %}

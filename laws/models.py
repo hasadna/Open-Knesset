@@ -240,6 +240,7 @@ class Vote(models.Model):
     meeting_number = models.IntegerField(null=True, blank=True)
     vote_number = models.IntegerField(null=True, blank=True)
     src_id = models.IntegerField(null=True, blank=True)
+    src_type = models.CharField(max_length=10, choices=(('hamishmar', _('Hamishmar')), ('knesset', _('Knesset'))))
     src_url = models.URLField(max_length=1024, null=True, blank=True)
     title = models.CharField(max_length=1000)
     vote_type = models.CharField(max_length=32, choices=TYPE_CHOICES,
@@ -260,7 +261,9 @@ class Vote(models.Model):
     summary = models.TextField(null=True, blank=True)
     full_text = models.TextField(null=True, blank=True)
     full_text_url = models.URLField(max_length=1024, null=True, blank=True)
-
+    hamishmar_law_id = models.IntegerField(null=True, blank=True)
+    hamishmar_vote_stage = models.CharField(max_length=1000, null=True, blank=True)
+    hamishmar_protocol_url = models.CharField(max_length=1000, null=True, blank=True)
     tagged_items = generic.GenericRelation(TaggedItem,
                                            object_id_field="object_id",
                                            content_type_field="content_type")
@@ -459,6 +462,7 @@ class Vote(models.Model):
         self.save()
 
     def redownload_votes_page(self):
+        if self.src_type != 'knesset': raise NotImplementedError()
         from simple.management.commands.syncdata import Command as SyncdataCommand
         (page, vote_src_url) = SyncdataCommand().read_votes_page(self.src_id)
         return page

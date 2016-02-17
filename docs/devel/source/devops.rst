@@ -19,6 +19,8 @@ small2
 Configuration
 =============
 
+You can find some configuration files in https://github.com/hasadna/Open-Knesset/blob/master/deploy/
+
 web app servers
   Runs supervisor service which includes oknesset app
   

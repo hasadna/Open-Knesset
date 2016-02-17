@@ -1,0 +1,34 @@
+{% extends "laws/bulk_import_hamishmar_votes/base.html" %}
+
+{% block bulk_import_hamishmar_votes_content %}
+    <table>
+        <tr>
+            <td>Vote Date</td>
+            <td>Protocol URL</td>
+            <td>Voted For</td>
+            <td>Voted Against</td>
+            <td>Errors</td>
+        </tr>
+        {% for vote in approve_votes %}
+            <tr>
+                <td>{{ vote.date|date:"d/m/Y" }}</td>
+                <td><a href="{{ vote.protocol_url }}">{{ vote.protocol_url }}</a></td>
+                <td>{{ vote.num_voted_for }}</td>
+                <td>{{ vote.num_voted_against }}</td>
+                <td>{% if vote.errors %}
+                    {% for error in vote.errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                {% else %}
+                    No Errors ʘ‿ʘ
+                {% endif %}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <h3>
+        <button onclick="bulkImportHamishmarVotes.addVotes()">Add the votes</button>
+        <button onclick="bulkImportHamishmarVotes.goBack()">Go back</button>
+    </h3>
+
+    {% if votes_data_json %}<script type="text/javascript">window.hamishmarVotesData = {{ votes_data_json }};</script>{% endif %}
+{% endblock %}

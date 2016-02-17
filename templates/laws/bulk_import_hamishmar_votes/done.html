@@ -1,0 +1,26 @@
+{% extends "laws/bulk_import_hamishmar_votes/base.html" %}
+
+{% block bulk_import_hamishmar_votes_content %}
+    {% if errors %}
+        <h4>Errors encountered:</h4>
+        <ul>
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if oknesset_votes %}
+        <h4>Votes Added:</h4>
+        <ul dir="rtl">
+            {% for vote in oknesset_votes %}
+                <li>{{ vote }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <h3>
+        {% if errors %}
+            <button onclick="bulkImportHamishmarVotes.addVotes()">Try again</button>
+        {% endif %}
+        <button onclick="bulkImportHamishmarVotes.goBack()">Go back</button>
+    </h3>
+{% endblock %}

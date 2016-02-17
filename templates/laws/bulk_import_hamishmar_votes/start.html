@@ -1,0 +1,9 @@
+{% extends "laws/bulk_import_hamishmar_votes/base.html" %}
+
+{% block bulk_import_hamishmar_votes_content %}
+    <form action="{% url "bulk-import-hamishmar-votes" %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit"/>
+    </form>
+{% endblock %}

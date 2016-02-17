@@ -9,7 +9,7 @@ class VoteAdmin(admin.ModelAdmin):
         '__unicode__', 'short_summary', 'full_text_link', 'votes_count', 'for_votes_count', 'against_votes_count',
         'abstain_votes_count')
 
-    search_fields = ('summary', 'full_text')
+    search_fields = ('summary', 'full_text', 'src_id')
 
     def update_vote(self, request, queryset):
         vote_count = queryset.count() if queryset else 0

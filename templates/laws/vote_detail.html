@@ -50,6 +50,11 @@
                 <div class="spacer">
                     <h1>{{ vote.title }}</h1>
                     <p>{{ vote.time_string }}</p>
+                    {% if vote.src_type == "hamishmar" %}
+                        <div class="alert alert-info">
+                            <p><b>{% trans "Data Source" %}:</b> {% include "laws/_hamishmar_votes_data_source_explanation.html" %}</p>
+                        </div>
+                    {% endif %}
                     <div class="alert alert-info">
                         {% i18ninclude "laws/vote_detail_help.html" LANGUAGE_CODE %}
                     </div>
