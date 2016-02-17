@@ -7104,6 +7104,18 @@ ol {
   unicode-bidi: -moz-isolate;
   unicode-bidi: isolate;
 }
+.no-underline:focus {
+  text-decoration: none;
+}
+.no-underline:hover {
+  text-decoration: none;
+}
+.underline:focus {
+  text-decoration: underline;
+}
+.underline:hover {
+  text-decoration: underline;
+}
 .card-main {
   margin-bottom: 60px;
 }
@@ -7501,6 +7513,9 @@ ol {
 }
 .sidebar-lobbyists ul li {
   margin: 5px 0;
+}
+.hidden {
+  display: none;
 }
 .sidebar-agendas {
   padding: 10px 10px 40px;
