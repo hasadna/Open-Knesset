@@ -1,4 +1,3 @@
-
 import csv, random, tagging, logging
 import json
 from actstream import action
@@ -19,11 +18,12 @@ from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView, DetailView, ListView
 from django.views.generic.list import BaseListView
 from django.views.decorators.http import require_http_methods
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from tagging.models import Tag, TaggedItem
 from django.utils import timezone
 from datetime import timedelta
 
+from auxiliary import utils
 from .forms import TidbitSuggestionForm, FeedbackSuggestionForm, TagSuggestionForm
 from .models import Tidbit, TagSuggestion
 from committees.models import CommitteeMeeting
@@ -42,7 +42,8 @@ class BaseTagMemberListView(ListView):
     operations. Shoud be inherited by others"""
 
     url_to_reverse = None  # override in inherited for reversing tag_url
-                           # in context
+
+    # in context
 
     @property
     def tag_instance(self):
@@ -96,14 +97,15 @@ class BaseTagMemberListView(ListView):
 
 
 class MainScraperStatusView(ListView):
-    queryset = ScraperRun.objects.all().filter(start_time__gt=timezone.now()-timedelta(days=30)).order_by('-start_time')
+    queryset = ScraperRun.objects.all().filter(start_time__gt=timezone.now() - timedelta(days=30)).order_by(
+        '-start_time')
     template_name = 'auxiliary/main_scraper_status.html'
 
     def get_context_data(self, *args, **kwargs):
         context = super(ListView, self).get_context_data(*args, **kwargs)
         for object in context['object_list']:
             status = 'SUCCESS'
-            failedLogs = object.logs.exclude(status = 'INFO')
+            failedLogs = object.logs.exclude(status='INFO')
             if failedLogs.count() > 0:
                 status = failedLogs.order_by('-id')[0].status
             object.status = status
@@ -117,6 +119,7 @@ class ScraperRunDetailView(DetailView):
 
 logger = logging.getLogger("open-knesset.auxiliary.views")
 
+
 def help_page(request):
     context = cache.get('help_page_context')
     if not context:
@@ -129,16 +132,17 @@ def help_page(request):
 
         tags_cloud = cache.get('tags_cloud', None)
         if not tags_cloud:
-            tags_cloud = calculate_cloud_from_models(Vote,Bill,CommitteeMeeting)
-            tags_cloud.sort(key=lambda x:x.name)
+            tags_cloud = calculate_cloud_from_models(Vote, Bill, CommitteeMeeting)
+            tags_cloud.sort(key=lambda x: x.name)
             cache.set('tags_cloud', tags_cloud, settings.LONG_CACHE_TIME)
         context['tags'] = random.sample(tags_cloud,
-                                        min(len(tags_cloud),8)
-                                       ) if tags_cloud else None
-        context['has_search'] = False # enable the base template search
-        cache.set('help_page_context', context, 300) # 5 Minutes
+                                        min(len(tags_cloud), 8)
+                                        ) if tags_cloud else None
+        context['has_search'] = False  # enable the base template search
+        cache.set('help_page_context', context, 300)  # 5 Minutes
     template_name = '%s.%s%s' % ('help_page', settings.LANGUAGE_CODE, '.html')
     return render_to_response(template_name, context, context_instance=RequestContext(request))
+
 
 def add_previous_comments(comments):
     previous_comments = set()
@@ -152,13 +156,15 @@ def add_previous_comments(comments):
     comments = [c for c in comments if c not in previous_comments]
     return comments
 
+
 def get_annotations(comments, annotations):
     for a in annotations:
         a.submit_date = a.timestamp
     comments = add_previous_comments(comments)
     annotations.extend(comments)
-    annotations.sort(key=lambda x:x.submit_date,reverse=True)
+    annotations.sort(key=lambda x: x.submit_date, reverse=True)
     return annotations
+
 
 def main(request):
     """
@@ -174,8 +180,8 @@ def main(request):
          annotation-added (to meeting), ignore annotated (by user)
          comment-added
     """
-    #context = cache.get('main_page_context')
-    #if not context:
+    # context = cache.get('main_page_context')
+    # if not context:
     #    context = {
     #        'title': _('Home'),
     #        'hide_crumbs': True,
@@ -263,6 +269,7 @@ def post_feedback(request):
 
     return form.get_response()
 
+
 @require_http_methods(['POST'])
 def suggest_tag_post(request):
     "Post a tag suggestion form"
@@ -271,7 +278,8 @@ def suggest_tag_post(request):
 
     form = TagSuggestionForm(request.POST)
     if form.is_valid():
-        content_type = ContentType.objects.get_by_natural_key(form.cleaned_data['app_label'], form.cleaned_data['object_type'])
+        content_type = ContentType.objects.get_by_natural_key(form.cleaned_data['app_label'],
+                                                              form.cleaned_data['object_type'])
         object = content_type.get_object_for_this_type(pk=form.cleaned_data['object_id'])
         ts = TagSuggestion(
             name=form.cleaned_data['name'],
@@ -282,14 +290,15 @@ def suggest_tag_post(request):
 
     return form.get_response()
 
+
 def post_annotation(request):
     if request.user.has_perm('annotatetext.add_annotation'):
         return annotatetext_post_annotation(request)
     else:
         return HttpResponseForbidden(_("Sorry, you do not have the permission to annotate."))
 
-def search(request, lang='he'):
 
+def search(request, lang='he'):
     # remove the 'cof' get variable from the query string so that the page
     # linked to by the javascript fallback doesn't think its inside an iframe.
     mutable_get = request.GET.copy()
@@ -316,7 +325,7 @@ def post_details(request, post_id):
     # update the it count
     ctype = ContentType.objects.get(app_label="planet", model="post")
     hitcount, created = HitCount.objects.get_or_create(content_type=ctype,
-                                                  object_pk=post_id)
+                                                       object_pk=post_id)
     result = _update_hit_count(request, hitcount)
     post = get_object_or_404(Post, pk=post_id)
     return HttpResponseRedirect(post.url)
@@ -329,7 +338,7 @@ class RobotsView(TemplateView):
 
     def render_to_response(self, context, **kwargs):
         return super(RobotsView, self).render_to_response(context,
-                        content_type='text/plain', **kwargs)
+                                                          content_type='text/plain', **kwargs)
 
 
 class AboutView(TemplateView):
@@ -360,30 +369,32 @@ def _add_tag_to_object(user, app, object_type, object_id, tag):
                                                                 url))
 
 
-
 @login_required
 def add_tag_to_object(request, app, object_type, object_id):
     """add a POSTed tag_id to object_type object_id by the current user"""
-    if request.method == 'POST' and 'tag_id' in request.POST: # If the form has been submitted...
-        tag = get_object_or_404(Tag,pk=request.POST['tag_id'])
+    if request.method == 'POST' and 'tag_id' in request.POST:  # If the form has been submitted...
+        tag = get_object_or_404(Tag, pk=request.POST['tag_id'])
         return _add_tag_to_object(request.user, app, object_type, object_id, tag)
 
     return HttpResponseNotAllowed(['POST'])
+
 
 @login_required
 def remove_tag_from_object(request, app, object_type, object_id):
     """remove a POSTed tag_id from object_type object_id"""
     ctype = ContentType.objects.get_by_natural_key(app, object_type)
-    if request.method == 'POST' and 'tag_id' in request.POST: # If the form has been submitted...
-        tag = get_object_or_404(Tag,pk=request.POST['tag_id'])
+    if request.method == 'POST' and 'tag_id' in request.POST:  # If the form has been submitted...
+        tag = get_object_or_404(Tag, pk=request.POST['tag_id'])
         ti = TaggedItem._default_manager.filter(tag=tag, content_type=ctype, object_id=object_id)
-        if len(ti)==1:
+        if len(ti) == 1:
             logger.debug('user %s is deleting tagged item %d' % (request.user.username, ti[0].id))
             ti[0].delete()
-            action.send(request.user,verb='removed-tag', target=ti[0], description='%s' % (tag.name))
+            action.send(request.user, verb='removed-tag', target=ti[0], description='%s' % (tag.name))
         else:
-            logger.debug('user %s tried removing tag %d from object, but failed, because len(tagged_items)!=1' % (request.user.username, tag.id))
-    return HttpResponse("{'id':%d,'name':'%s'}" % (tag.id,tag.name))
+            logger.debug('user %s tried removing tag %d from object, but failed, because len(tagged_items)!=1' % (
+                request.user.username, tag.id))
+    return HttpResponse("{'id':%d,'name':'%s'}" % (tag.id, tag.name))
+
 
 @permission_required('tagging.add_tag')
 def create_tag_and_add_to_item(request, app, object_type, object_id):
@@ -394,10 +405,11 @@ def create_tag_and_add_to_item(request, app, object_type, object_id):
     """
     if request.method == 'POST' and 'tag' in request.POST:
         tag = request.POST['tag'].strip()
-        msg = "user %s is creating tag %s on object_type %s and object_id %s".encode('utf8') % (request.user.username, tag, object_type, object_id)
+        msg = "user %s is creating tag %s on object_type %s and object_id %s".encode('utf8') % (
+            request.user.username, tag, object_type, object_id)
         logger.info(msg)
         notify_responsible_adult(msg)
-        if len(tag)<3:
+        if len(tag) < 3:
             return HttpResponseBadRequest()
         tags = Tag.objects.filter(name=tag)
         if not tags:
@@ -406,9 +418,9 @@ def create_tag_and_add_to_item(request, app, object_type, object_id):
             except Exception:
                 logger.warn("can't create tag %s" % tag)
                 return HttpResponseBadRequest()
-        if len(tags)==1:
+        if len(tags) == 1:
             tag = tags[0]
-        if len(tags)>1:
+        if len(tags) > 1:
             logger.warn("More than 1 tag: %s" % tag)
             return HttpResponseBadRequest()
         return _add_tag_to_object(request.user, app, object_type, object_id, tag)
@@ -422,7 +434,7 @@ def add_tag_synonym(request, parent_tag_id, synonym_tag_id):
     synonym_tag = Tag.objects.get(pk=synonym_tag_id)
     assert parent_tag.synonym_synonym_tag.count() == 0
     assert synonym_tag != parent_tag
-    TagSynonym.objects.create(tag_id = parent_tag_id, synonym_tag_id=synonym_tag_id)
+    TagSynonym.objects.create(tag_id=parent_tag_id, synonym_tag_id=synonym_tag_id)
     return HttpResponse('ok')
 
 
@@ -432,10 +444,11 @@ def calculate_cloud_from_models(*args):
     for model in args[1:]:
         for tag in Tag._default_manager.cloud_for_model(model):
             if tag in cloud:
-                cloud[cloud.index(tag)].count+=tag.count
+                cloud[cloud.index(tag)].count += tag.count
             else:
                 cloud.append(tag)
     return tagging.utils.calculate_cloud(cloud)
+
 
 class TagList(ListView):
     """Tags index view"""
@@ -450,15 +463,17 @@ class TagList(ListView):
         context = super(TagList, self).get_context_data(**kwargs)
         tags_cloud = cache.get('tags_cloud', None)
         if not tags_cloud:
-            tags_cloud = calculate_cloud_from_models(Vote,Bill,CommitteeMeeting)
-            tags_cloud.sort(key=lambda x:x.name)
+            tags_cloud = calculate_cloud_from_models(Vote, Bill, CommitteeMeeting)
+            tags_cloud.sort(key=lambda x: x.name)
             cache.set('tags_cloud', tags_cloud, settings.LONG_CACHE_TIME)
         context['tags_cloud'] = tags_cloud
         return context
 
-class SelectorPaginator(Paginator): 
-    def __init__(self, knessets):
-        super(SelectorPaginator, self).__init__(sorted(list(knessets)), 1)
+
+class SelectorPaginator(Paginator):
+    def __init__(self, knesset_ids):
+        super(SelectorPaginator, self).__init__(sorted(list(knesset_ids)), 1)
+
     def validate_number(self, number):
         try:
             number = int(number)
@@ -470,14 +485,17 @@ class SelectorPaginator(Paginator):
 
     def page(self, number):
         number = self.validate_number(number)
-        return self._get_page([number,], self.object_list.index(number), self)
+        return self._get_page([number, ], self.object_list.index(number), self)
 
     def _get_count(self):
         return len(self.object_list)
+
     def _get_num_pages(self):
         return len(self.object_list)
+
     def _get_page_range(self):
         return self.object_list
+
 
 class TagDetail(DetailView):
     """Tags index view"""
@@ -497,13 +515,13 @@ class TagDetail(DetailView):
         except ValueError:
             mk_limit = limit
         if bills is None:
-            bills = TaggedItem.objects.get_by_model(Bill, tag)\
+            bills = TaggedItem.objects.get_by_model(Bill, tag) \
                 .prefetch_related('proposers')
         if votes is None:
-            votes = TaggedItem.objects.get_by_model(Vote, tag)\
+            votes = TaggedItem.objects.get_by_model(Vote, tag) \
                 .prefetch_related('votes')
         if cms is None:
-            cms = TaggedItem.objects.get_by_model(CommitteeMeeting, tag)\
+            cms = TaggedItem.objects.get_by_model(CommitteeMeeting, tag) \
                 .prefetch_related('mks_attended')
         mk_taggeds = [(b.proposers.all(), b.stage_date) for b in bills]
         mk_taggeds += [(v.votes.all(), v.time.date()) for v in votes]
@@ -546,12 +564,66 @@ class TagDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(TagDetail, self).get_context_data(**kwargs)
-        knesset_id = self.get_knesset_id()
-        context['knesset_id'] = knesset_id
+        knesset = self.get_knesset()
+        context['knesset_id'] = knesset
         tag = context['object']
-        
-        knesset_end_date = knesset_id.end_date
-        knesset_start_date = knesset_id.start_date
+
+        cms_date_filter, proposal_date_filter, vote_date_filter = self._resolve_date_filters(knesset)
+
+        votes = Vote.objects.filter(vote_date_filter)
+        cms = CommitteeMeeting.objects.get_only_commitees().filter(cms_date_filter)
+
+        context['bills'] = self._get_relevant_bills_by_tag(cms, proposal_date_filter, tag, votes)
+
+        context['votes'] = self._get_relevant_votes_by_tag(tag, votes)
+
+        context['cms'] = self._get_relevant_committee_meetings_by_tag(cms, tag)
+
+        (context['members'],
+         context['past_members']) = self.create_tag_cloud(tag)
+
+        context['paginator'] = paginator = SelectorPaginator(Knesset.objects.values_list('number', flat=True))
+        context['page_obj'] = paginator.page(knesset.number)
+        context['request'] = None
+
+        return context
+
+    def _get_relevant_committee_meetings_by_tag(self, cms, tag):
+        cm_ct = ContentType.objects.get_for_model(CommitteeMeeting)
+        cm_ids = TaggedItem.objects.filter(
+            tag=tag, content_type=cm_ct).values_list('object_id', flat=True)
+        cms = cms.filter(id__in=cm_ids)
+        return cms
+
+    def _get_relevant_votes_by_tag(self, tag, votes):
+        votes_ct = ContentType.objects.get_for_model(Vote)
+        vote_ids = TaggedItem.objects.filter(
+            tag=tag, content_type=votes_ct).values_list('object_id', flat=True)
+        votes = votes.filter(id__in=vote_ids).order_by('-time')
+        return_all_committee_meetings = utils.parse_boolean(self.request.GET.get('all_committees', False))
+        if not return_all_committee_meetings:
+            votes = votes[:10]
+        return votes
+
+    def _get_relevant_bills_by_tag(self, cms, proposal_date_filter, tag, votes):
+        knesset_bills = Bill.objects.filter(
+            Q(pre_votes__in=votes)
+            | Q(first_committee_meetings__in=cms)
+            | Q(first_vote__in=votes)
+            | Q(second_committee_meetings__in=cms)
+            | Q(approval_vote__in=votes)
+            | proposal_date_filter
+        ).distinct()
+        bills_ct = ContentType.objects.get_for_model(Bill)
+        bill_ids = TaggedItem.objects.filter(
+            tag=tag,
+            content_type=bills_ct).values_list('object_id', flat=True)
+        bills = knesset_bills.filter(id__in=bill_ids)
+        return bills
+
+    def _resolve_date_filters(self, knesset):
+        knesset_end_date = knesset.end_date
+        knesset_start_date = knesset.start_date
         if knesset_end_date is not None:
             cms_date_filter = Q(date__gte=knesset_start_date, date__lte=knesset_end_date)
             vote_date_filter = Q(time__gte=knesset_start_date, time__lte=knesset_end_date)
@@ -560,58 +632,19 @@ class TagDetail(DetailView):
             cms_date_filter = Q(date__gte=knesset_start_date)
             vote_date_filter = Q(time__gte=knesset_start_date)
             proposal_date_filter = Q(proposals__date__gte=knesset_start_date)
+        return cms_date_filter, proposal_date_filter, vote_date_filter
 
-        votes = Vote.objects.filter(vote_date_filter)
-        cms = CommitteeMeeting.objects.filter(cms_date_filter)
-        
-        knesset_bills = Bill.objects.filter(
-            Q(pre_votes__in = votes)
-            | Q(first_committee_meetings__in = cms)
-            | Q(first_vote__in = votes)
-            | Q(second_committee_meetings__in = cms)
-            | Q(approval_vote__in = votes)
-            | proposal_date_filter
-        ).distinct()
-        
-        bills_ct = ContentType.objects.get_for_model(Bill)
-        bill_ids = TaggedItem.objects.filter(
-            tag=tag, 
-            content_type=bills_ct).values_list('object_id', flat=True)
-        bills = knesset_bills.filter(id__in=bill_ids)
-    
-        context['bills'] = bills
-        
-        votes_ct = ContentType.objects.get_for_model(Vote)
-        vote_ids = TaggedItem.objects.filter(
-            tag=tag, content_type=votes_ct).values_list('object_id', flat=True)
-        votes = votes.filter(id__in=vote_ids)
-        context['votes'] = votes
-        
-        cm_ct = ContentType.objects.get_for_model(CommitteeMeeting)
-        cm_ids = TaggedItem.objects.filter(
-            tag=tag, content_type=cm_ct).values_list('object_id', flat=True)
-        cms = cms.filter(id__in=cm_ids)
-        context['cms'] = cms
-        
-        (context['members'],
-         context['past_members']) = self.create_tag_cloud(tag)
-
-        context['paginator'] = paginator = SelectorPaginator(Knesset.objects.values_list('number', flat=True))
-        context['page_obj'] = paginator.page(knesset_id.number)
-        context['request'] = None
-
-        return context
-
-    def get_knesset_id(self):
+    def get_knesset(self):
         try:
             needed_knesset_id = self.request.GET['page']
             try:
-                knesset_id = Knesset.objects.filter(number = needed_knesset_id)[0]
-            except IndexError, e:
+                knesset = Knesset.objects.filter(number=needed_knesset_id)[0]
+            except IndexError as e:
                 raise Http404('Invalid knesset number (page=%s)' % (needed_knesset_id,))
-        except KeyError, e:
-            knesset_id = Knesset.objects.current_knesset()
-        return knesset_id
+        except KeyError as e:
+            knesset = Knesset.objects.current_knesset()
+        return knesset
+
 
 class CsvView(BaseListView):
     """A view which generates CSV files with information for a model queryset.
@@ -652,10 +685,10 @@ class CsvView(BaseListView):
 
     def get_display_attr(self, obj, attr):
         """Return the display string for an attr, calling it if necessary."""
-        display_attr =  getattr(self, attr, None)
+        display_attr = getattr(self, attr, None)
         if display_attr is not None:
             if callable(display_attr):
-                display_attr = display_attr(obj,attr)
+                display_attr = display_attr(obj, attr)
         else:
             display_attr = getattr(obj, attr)
             if callable(display_attr):
@@ -721,14 +754,14 @@ class GetMoreView(ListView):
         return HttpResponse(json.dumps(result, ensure_ascii=False),
                             content_type='application/json')
 
+
 def untagged_objects(request):
     return render_to_response('auxiliary/untagged_objects.html', {
-            'cms': CommitteeMeeting.objects.filter_and_order(tagged=['false'])[:100],
-            'cms_count': CommitteeMeeting.objects.filter_and_order(tagged=['false']).count(),
-            'bills': Bill.objects.filter_and_order(tagged='false')[:100],
-            'bill_count': Bill.objects.filter_and_order(tagged='false').count(),
-            'votes': Vote.objects.filter_and_order(tagged='false')[:100],
-            'vote_count': Vote.objects.filter_and_order(tagged='false').count(),
-            },
-            context_instance=RequestContext(request))
-
+        'cms': CommitteeMeeting.objects.filter_and_order(tagged=['false'])[:100],
+        'cms_count': CommitteeMeeting.objects.filter_and_order(tagged=['false']).count(),
+        'bills': Bill.objects.filter_and_order(tagged='false')[:100],
+        'bill_count': Bill.objects.filter_and_order(tagged='false').count(),
+        'votes': Vote.objects.filter_and_order(tagged='false')[:100],
+        'vote_count': Vote.objects.filter_and_order(tagged='false').count(),
+    },
+                              context_instance=RequestContext(request))

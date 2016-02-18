@@ -17,6 +17,8 @@ from django.conf import settings
 from tagging.models import Tag, TaggedItem
 from djangoratings.fields import RatingField
 from annotatetext.models import Annotation
+
+from committees.enums import CommitteeTypes
 from events.models import Event
 from links.models import Link
 from plenum.create_protocol_parts import create_plenum_protocol_parts
@@ -42,7 +44,8 @@ class Committee(models.Model):
                                      object_id_field="which_pk")
     description = models.TextField(null=True, blank=True)
     portal_knesset_broadcasts_url = models.URLField(max_length=1000, blank=True)
-    type = models.CharField(max_length=10, default='committee')
+    type = models.CharField(max_length=10, default=CommitteeTypes.committee, choices=CommitteeTypes.as_choices(),
+                            db_index=True)
     hide = models.BooleanField(default=False)
     protocol_not_published = models.BooleanField(default=False)
     knesset_id = models.IntegerField(null=True, blank=True)
@@ -180,6 +183,12 @@ class CommitteeMeetingManager(models.Manager):
 
         return qs.select_related('committee')
 
+    def get_only_commitees(self):
+        return super(CommitteeMeetingManager, self).get_queryset().exclude(committee__type=CommitteeTypes.plenum)
+
+    def get_only_plenum(self):
+        return super(CommitteeMeetingManager, self).get_queryset().filter(committee__type=CommitteeTypes.plenum)
+
 
 class CommitteeMeeting(models.Model):
     committee = models.ForeignKey(Committee, related_name='meetings')
@@ -257,7 +266,7 @@ class CommitteeMeeting(models.Model):
             annotations = Annotation.objects.filter(content_type=ppct, object_id__in=self.parts.all)
             logger.debug(
                 'deleting %d annotations, because I was asked to delete the relevant protocol parts on cm.id=%d' % (
-                annotations.count(), self.id))
+                    annotations.count(), self.id))
             annotations.delete()
             self.parts.all().delete()
         else:
