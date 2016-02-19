@@ -451,6 +451,7 @@ class Vote(models.Model):
         self.votes_count = VoteAction.objects.filter(vote=self).count()
         self.for_votes_count = VoteAction.objects.filter(vote=self, type='for').count()
         self.against_votes_count = VoteAction.objects.filter(vote=self, type='against').count()
+        self.abstain_votes_count = VoteAction.objects.filter(vote=self, type='abstain').count()
         self.controversy = min(self.for_votes_count or 0,
                                self.against_votes_count or 0)
         self.vote_type = self._vote_type()

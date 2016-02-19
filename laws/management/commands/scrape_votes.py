@@ -67,11 +67,14 @@ class Command(BaseKnessetDataserviceCollectionCommand):
             'did not vote': u'no-vote',
         }[vote_result_code]
 
-    def _recreate_object(self, vote_id):
-        vote = Vote.objects.get(id=int(vote_id))
-        vote_src_id = vote.src_id
-        dataservice_vote = self.DATASERVICE_CLASS.get(vote_src_id)
-        VoteAction.objects.filter(vote=vote).delete()
-        Link.objects.filter(content_type=ContentType.objects.get_for_model(vote), object_pk=vote.id).delete()
-        vote.delete()
-        return self._create_new_object(dataservice_vote)
+    def recreate_objects(self, vote_ids):
+        recreated_votes = []
+        for vote_id in vote_ids:
+            vote = Vote.objects.get(id=int(vote_id))
+            vote_src_id = vote.src_id
+            dataservice_vote = self.DATASERVICE_CLASS.get(vote_src_id)
+            VoteAction.objects.filter(vote=vote).delete()
+            Link.objects.filter(content_type=ContentType.objects.get_for_model(vote), object_pk=vote.id).delete()
+            vote.delete()
+            recreated_votes.append(self._create_new_object(dataservice_vote))
+        return recreated_votes

@@ -52,6 +52,7 @@ Contents:
     tips
     browsertests
     scraping/index
+    devops
 
 Indices and tables
 ==================

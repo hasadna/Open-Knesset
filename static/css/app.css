@@ -8142,3 +8142,29 @@ body.infinity-protocol #content-main > div > div.row > div.span3 {
   position: fixed;
   overflow: auto;
 }
+.btn-expand-fb {
+  font-size: 13px;
+  width: 190px;
+  height: 20px;
+  -webkit-border-radius: 0 0 4px 4px;
+  -moz-border-radius: 0 0 4px 4px;
+  border-radius: 0 0 4px 4px;
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
+  display: block;
+  /*bottom: -22px;*/
+  left: 50%;
+  /*margin-left: -95px;*/
+  background: #eee;
+  color: #797878;
+  border: none;
+}
+.btn-expand-fb:hover {
+  background: #dfdede;
+  color: #464545;
+}
+#loading-statuses-symbol {
+  text-align: center;
+  display: none;
+}

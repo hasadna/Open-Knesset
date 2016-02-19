@@ -13,7 +13,7 @@ class BaseKnessetDataserviceCommand(NoArgsDbLogCommand):
     def _create_new_object(self, dataservice_object):
         raise NotImplementedError()
 
-    def _recreate_object(self, recreate_param):
+    def recreate_objects(self, object_ids):
         raise NotImplementedError()
 
 
@@ -26,7 +26,7 @@ class BaseKnessetDataserviceCollectionCommand(BaseKnessetDataserviceCommand):
     option_list = BaseKnessetDataserviceCommand.option_list + (
         make_option('--page-range', dest='pagerange', default='1-10', help="range of page number to scrape (e.g. --page-range=5-12), default is 1-10"),
         make_option('--max-items', dest='maxitems', default='0', help='maximum number of items to process'),
-        make_option('--re-create', dest='recreate', default='', help='item id to delete and then re-create'),
+        make_option('--re-create', dest='recreate', default='', help='comma-separated item ids to delete and then re-create'),
     )
 
     def _handle_page(self, page_num):
@@ -41,9 +41,9 @@ class BaseKnessetDataserviceCollectionCommand(BaseKnessetDataserviceCommand):
 
     def _handle_noargs(self, **options):
         if (options['recreate'] != ''):
-            self._log_info('recreating object %s'%options['recreate'])
-            vote = self._recreate_object(options['recreate'])
-            self._log_info('created as object %s'%vote.pk)
+            self._log_info('recreating objects %s'%options['recreate'])
+            recreated_objects = self.recreate_objects([int(id) for id in options['recreate'].split(',')])
+            self._log_info('created as objects %s'%(','.join([str(o.pk) for o in recreated_objects]),))
         else:
             page_range = options['pagerange']
             first, last = map(int, page_range.split('-'))
