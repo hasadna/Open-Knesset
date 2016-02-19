@@ -19,18 +19,17 @@ from actstream import actor_stream
 from actstream.models import Follow
 from hashnav.detail import DetailView
 from models import Member, Party, Knesset
-from polyorg.models import CandidateList
 from utils import percentile
 from laws.models import MemberVotingStatistics, Bill, VoteAction
 from agendas.models import Agenda
-from auxiliary.views import CsvView
+
 from persons.models import PersonAlias, Person
 
 from video.utils import get_videos_queryset
 from datetime import date, timedelta
 
 import logging
-from auxiliary.views import GetMoreView
+from auxiliary.mixins import GetMoreView, CsvView
 from auxiliary.serializers import PromiseAwareJSONEncoder
 
 from actstream import Action

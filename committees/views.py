@@ -25,7 +25,8 @@ from django.views.generic import DetailView, ListView
 from tagging.models import TaggedItem, Tag
 import models
 from models import Committee, CommitteeMeeting, Topic
-from auxiliary.views import GetMoreView, BaseTagMemberListView
+from ok_tag.views import BaseTagMemberListView
+from auxiliary.mixins import GetMoreView
 from forms import EditTopicForm, LinksFormset
 from hashnav import method_decorator as hashnav_method_decorator
 from knesset.utils import clean_string

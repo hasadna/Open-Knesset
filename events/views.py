@@ -6,7 +6,7 @@ import vobject
 from django.conf import settings
 from django.http import HttpResponse
 
-from auxiliary.views import GetMoreView
+from auxiliary.mixins import GetMoreView
 from hashnav.detail import DetailView
 
 from models import Event
