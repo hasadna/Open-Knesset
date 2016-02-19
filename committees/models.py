@@ -183,11 +183,10 @@ class CommitteeMeetingManager(models.Manager):
 
         return qs.select_related('committee')
 
-    def get_only_commitees(self):
-        return super(CommitteeMeetingManager, self).get_queryset().exclude(committee__type=CommitteeTypes.plenum)
 
-    def get_only_plenum(self):
-        return super(CommitteeMeetingManager, self).get_queryset().filter(committee__type=CommitteeTypes.plenum)
+class CommitteesMeetingsOnlyManager(CommitteeMeetingManager):
+    def get_queryset(self):
+        return super(CommitteesMeetingsOnlyManager, self).get_queryset().exclude(committee__type=CommitteeTypes.plenum)
 
 
 class CommitteeMeeting(models.Model):
@@ -209,6 +208,8 @@ class CommitteeMeeting(models.Model):
     knesset_id = models.IntegerField(null=True, blank=True)
 
     objects = CommitteeMeetingManager()
+
+    committees_only = CommitteesMeetingsOnlyManager()
 
     class Meta:
         ordering = ('-date',)
