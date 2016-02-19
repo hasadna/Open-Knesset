@@ -14,30 +14,29 @@
 	}
 
 	OKMore.prototype = {
-		constructor: OKMore
+		constructor: OKMore,
+		getMore: function() {
+            var that = this;
 
-		, getMore: function() {
-        var that = this;
+            this.$source.button('loading');
 
-        this.$source.button('loading');
-        
-        $.ajax({
-          url: this.options.url,
-          data:{initial: this.initial, page:this.page+1},
-          context:this
-        }).done(function(data) {
-          $(data.content).appendTo(this.$element);
-          this.page = data.current;
-          this.total = data.total;
-          this.initial = null;
+            $.ajax({
+              url: this.options.url,
+              data:{initial: this.initial, page:this.page+1},
+              context:this
+            }).done(function(data) {
+              $(data.content).appendTo(this.$element);
+              this.page = data.current;
+              this.total = data.total;
+              this.initial = null;
 
-          if (data.has_next) {
-            this.$source.button('reset');
-          }
-          else {this.$source.remove()}
+              if (data.has_next) {
+                this.$source.button('reset');
+              }
+              else {this.$source.remove()}
 
-		  if (this.callback) this.callback();
-        });
+              if (this.callback) this.callback();
+            });
 
 		}
 	}
