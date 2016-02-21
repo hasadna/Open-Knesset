@@ -1,25 +1,25 @@
-.card{
-	background: @white;
-	border: 1px solid @borderColor;
-	margin: -1px;
-	.border-radius(5px);
-	.box-shadow(@shadow);
-	position: relative;
+.card {
+  background: @white;
+  border: 1px solid @borderColor;
+  margin: -1px;
+  .border-radius(5px);
+  .box-shadow(@shadow);
+  position: relative;
 }
 
-.card-list{
-	margin-bottom: 55px;
+.card-list {
+  margin-bottom: 55px;
 
-	header {
-		.clearfix;
-		h1, h2{
-			float: right;
-			padding: 5px 30px 5px 15px;
-			background: @textColor;
-			color: #fff;
-			margin: 0;
-			padding: 2px 78px 2px 25px;
-			.border-radius(0 4px 0 0);
+  header {
+    .clearfix;
+    h1, h2 {
+      float: right;
+      padding: 5px 30px 5px 15px;
+      background: @textColor;
+      color: #fff;
+      margin: 0;
+      padding: 2px 78px 2px 25px;
+      .border-radius(0 4px 0 0);
       position: relative;
 
       .fa:first-child {
@@ -37,57 +37,84 @@
         border-right: 1px solid white;
         border-left: 0 none;
       }
-		}
+    }
 
-    h1 { font-size: 22px; }
-		.btn-question{
-			margin: 12px;
-		}
-	}
-	ul{
-		margin: 0 20px;
-		list-style: none;
-		li{
+    h1 {
+      font-size: 22px;
+    }
+    .btn-question {
+      margin: 12px;
+    }
+  }
+  ul {
+    margin: 0 20px;
+    list-style: none;
+    li {
       padding: 15px;
 
       @media (min-width: 768px) {
-			  padding: 25px 58px 15px 15px;
+        padding: 25px 58px 15px 15px;
       }
 
-			border-bottom: 1px solid @borderColor;
+      border-bottom: 1px solid @borderColor;
 
-			&:last-child{
-				border-bottom: none;
-			}
-      .progress { margin-bottom:0;  }
-		}
-	}
+      &:last-child {
+        border-bottom: none;
+      }
+      .progress {
+        margin-bottom: 0;
+      }
+    }
+  }
 
   &.compact {
-    ul li { padding: 20px 0 15px 0;  }
+    ul li {
+      padding: 20px 0 15px 0;
+    }
     header {
-      h1, h2 { padding: 5px 20px 5px 15px;  }
+      h1, h2 {
+        padding: 5px 20px 5px 15px;
+      }
     }
   }
 }
 
-.item-action{
+.item-action {
   font-size: 14px;
 }
 
-.item-title{
+.item-title {
   font-size: 16px;
   font-weight: bold;
-  a{
+  a {
     color: @darkgray;
   }
 }
 
-.item-context{
+.item-context {
   font-size: 12px;
   a {
     unicode-bidi: -webkit-isolate;
     unicode-bidi: -moz-isolate;
     unicode-bidi: isolate;
+
+  }
+
+}
+
+.no-underline {
+  &:focus {
+    text-decoration: none;
+  }
+  &:hover {
+    text-decoration: none;
+  }
+}
+.underline {
+  &:focus {
+    text-decoration: underline;
+  }
+  &:hover {
+    text-decoration: underline;
   }
 }

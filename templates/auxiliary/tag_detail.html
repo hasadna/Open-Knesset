@@ -1,49 +1,51 @@
 {% extends "site_base.html" %}
-{% load i18n laws_tags bills_tags committees_tags %}
+{% load i18n laws_tags bills_tags committees_tags knesset_selection %}
 {% block extratitle %}{{ tag }}{% endblock %}
 {% block keywords %}{{ tag }}{% endblock %}
 {% block description %}{{ tag }} - {% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}
 {% block nav-tags %}class="selected"{% endblock %}
 {% block breadcrumbs %}
-        <li><a href="{% url 'tags-list' %}">{% trans "Tags" %}</a> <span class="divider">/</span></li>
-        <li class="active">{{tag}} ({{knesset_id}})</li>
+    <li><a href="{% url 'tags-list' %}">{% trans "Tags" %}</a> <span class="divider">/</span></li>
+    <li class="active">{{ tag }} ({{ knesset_id }})</li>
 {% endblock %}
 {% block divcontent %}
     <div class="row">
         <div class="span4">
-            {% blocktrans %}Choose Knesset{% endblocktrans %}{% selection page_obj paginator request %}
+            {% blocktrans %}Choose Knesset{% endblocktrans %}{% knesset_selection page_obj paginator request %}
         </div>
     </div>
-{% if members %}
-    <div class="card card-main">
-        <div class="row">
-            <div class="span12">
-                <div class="spacer">
-                    <h1>{% blocktrans with number=knesset_id.number %}Active members for tag {{ tag }} in Knesset {{number}}{% endblocktrans %}</h1>
-                    <div class="text-center">
-                    {% for mk in members %}
-                        <a href="{% url 'member-detail' pk=mk.pk %}" class="label level{{ mk.font_size }}">{{ mk }}</a>
-                    {% endfor %}
+    {% if members %}
+        <div class="card card-main">
+            <div class="row">
+                <div class="span12">
+                    <div class="spacer">
+                        <h1>{% blocktrans with number=knesset_id.number %}Active members for tag {{ tag }} in Knesset
+                            {{ number }}{% endblocktrans %}</h1>
+                        <div class="text-center">
+                            {% for mk in members %}
+                                <a href="{% url 'member-detail' pk=mk.pk %}"
+                                   class="label level{{ mk.font_size }}">{{ mk }}</a>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-{% endif %}
+    {% endif %}
 
     <div class="row">
         <div class="span4">
             <div class="cards">
                 <div class="card card-list compact">
-                {% with bills|length as count %}
-                    <header><h2>{% blocktrans %}{{ count }} Bills{% endblocktrans %}({{knesset_id}})</h2></header>
-                {% endwith %}
+                    {% with bills|length as count %}
+                        <header><h2>{% blocktrans %}{{ count }} Bills{% endblocktrans %}({{ knesset_id }})</h2></header>
+                    {% endwith %}
                     <ul>
-                    {% for o in bills %}
-                        {% bill_list_item o %}
-                    {% empty %}
-                        <li>{% trans "No results found" %}</li>
-                    {% endfor %}
+                        {% for o in bills %}
+                            {% bill_list_item o %}
+                        {% empty %}
+                            <li>{% trans "No results found" %}</li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
@@ -52,15 +54,15 @@
         <div class="span4">
             <div class="cards">
                 <div class="card card-list compact">
-                {% with votes|length as count %}
-                    <header><h2>{% blocktrans %}{{ count }} Votes{% endblocktrans %}({{knesset_id}})</h2></header>
-                {% endwith %}
+                    {% with votes|length as count %}
+                        <header><h2>{% blocktrans %}{{ count }} Votes{% endblocktrans %}({{ knesset_id }})</h2></header>
+                    {% endwith %}
                     <ul>
-                    {% for o in votes %}
-                        {% vote_list_item o %}
-                    {% empty %}
-                        <li>{% trans "no results found" %}</li>
-                    {% endfor %}
+                        {% for o in votes %}
+                            {% vote_list_item o %}
+                        {% empty %}
+                            <li>{% trans "no results found" %}</li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
@@ -70,15 +72,27 @@
             <div class="cards">
                 <div class="card card-list compact">
                     {% with cms|length as count %}
-                    <header><h2>{% blocktrans %}{{ count }} Committee Meetings{% endblocktrans %}({{knesset_id}})</h2></header>
+                        <header>
+                            <h2>
+                                {% blocktrans %}{{ count }} Committee Meetings{% endblocktrans %}({{ knesset_id }})
+                            </h2>
+                        </header>
                     {% endwith %}
-                    <ul>
-                    {% for o in cms %}
-                        {% committee_meeting_list_item o show_committee_name=True show_present=True %}
-                    {% empty %}
-                        <li>{% trans "no results found" %}</li>
-                    {% endfor %}
+                    <ul id="tagged_committee_meetings">
+                        {% for o in cms %}
+                            {% committee_meeting_list_item o show_committee_name=True show_present=True %}
+                        {% empty %}
+                            <li>{% trans "no results found" %}</li>
+                        {% endfor %}
                     </ul>
+                    {% if more_committee_meetings %}
+                        <button class="btn btn-mini btn-expand" data-provide="okmore"
+                                data-loading-text="{% trans "Loading" %} ..."
+                                autocomplete="off" data-target="#tagged_committee_meetings"
+                                data-url="{% url 'tag-detail-more-committees' object.pk %}?knesset={{ knesset_id.number }}"
+                                data-initial=5>{% trans "More" %} +
+                        </button>
+                    {% endif %}
                 </div>
             </div>
         </div>

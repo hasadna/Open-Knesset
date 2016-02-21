@@ -215,7 +215,7 @@ class Command(NoArgsCommand):
                                         profiles__isnull=False)\
                                 .exclude(email=''):
             try:
-                user_profile = user.get_profile()
+                user_profile = user.profiles.get()
             except UserProfile.DoesNotExist:
                 logger.warn('can\'t access user %d userprofile' % user.id)
                 continue

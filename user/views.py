@@ -272,5 +272,5 @@ def fbstore(request, target):
         else:
             email = fbuser['email']
             user, is_created = User.objects.get_or_create(email=email)
-            user.get_profile().custom_metadata.add(UserCustomMetadata(app_id=target, k=k, v=v))
+            user.profiles.get().custom_metadata.add(UserCustomMetadata(app_id=target, k=k, v=v))
             return HttpResponse('%s: OK'%target)

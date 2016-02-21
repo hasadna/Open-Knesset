@@ -92,7 +92,7 @@ class PendingSuggestionsView(PendingSuggestionsCountView):
                     'reject_url': can_apply and reverse(
                         'suggestions_reject', kwargs={'pk': x.pk}),
                     'by': unicode(x.suggested_by),
-                    'by_url': x.suggested_by.get_profile().get_absolute_url(),
+                    'by_url': x.suggested_by.profiles.get().get_absolute_url(),
                     'by_email': can_apply and x.suggested_by.email,
                     'suggested_at': x.suggested_at.strftime('%Y-%m-%d %H:%M'),
                 }

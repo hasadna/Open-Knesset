@@ -1,8 +1,9 @@
-#encoding: utf-8
+# encoding: utf-8
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 
 from actstream.models import Follow
@@ -11,8 +12,7 @@ from mks.models import Party, Member
 from persons.models import GENDER_CHOICES
 from laws.models import Bill
 from agendas.models import Agenda
-from committees.models import CommitteeMeeting,Topic
-
+from committees.models import CommitteeMeeting, Topic
 
 NOTIFICATION_PERIOD_CHOICES = (
     (u'N', _('No Email')),
@@ -56,16 +56,16 @@ class UserProfile(models.Model):
 
     '''
 
-    user = models.ForeignKey(User, unique=True, related_name='profiles')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, unique=True, related_name='profiles')
     public_profile = models.BooleanField(default=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
-    description = models.TextField(null=True,blank=True)
+    description = models.TextField(null=True, blank=True)
     email_notification = models.CharField(max_length=1, choices=NOTIFICATION_PERIOD_CHOICES, blank=True, null=True)
     party = models.ForeignKey('mks.Party', null=True, blank=True)
 
     def get_actors(self, model, *related):
         lst = Follow.objects.filter(user=self.user,
-                       content_type=ContentType.objects.get_for_model(model))
+                                    content_type=ContentType.objects.get_for_model(model))
         if related:
             lst = lst.prefetch_related(*related)
         return [x.actor for x in lst]
@@ -80,7 +80,7 @@ class UserProfile(models.Model):
 
     @property
     def parties(self):
-        #TODO: ther has to be a faster way
+        # TODO: ther has to be a faster way
         return self.get_actors(Party)
 
     @property
@@ -100,12 +100,16 @@ class UserProfile(models.Model):
         return ('public-profile', (), {'pk': self.user.id})
 
     def has(self, badge_type):
-        return self.badges.filter(badge_type=badge_type).count()>0
+        return self.badges.filter(badge_type=badge_type).count() > 0
 
     def __unicode__(self):
         return self.user.get_full_name() or self.user.username
 
+
 def handle_user_save(sender, created, instance, **kwargs):
-    if created and instance._state.db=='default':
+    if created and instance._state.db == 'default':
         UserProfile.objects.create(user=instance)
-post_save.connect(handle_user_save, sender=User)
+
+
+user_model = get_user_model()
+post_save.connect(handle_user_save, sender=user_model)

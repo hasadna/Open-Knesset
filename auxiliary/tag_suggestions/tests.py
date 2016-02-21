@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from laws.models import Bill, Law
 from tagging.models import Tag
 from django.contrib.contenttypes.models import ContentType
-from auxiliary.views import suggest_tag_post
+from ok_tag.views import suggest_tag_post
 from django.http.request import HttpRequest
 from committees.models import CommitteeMeeting, Committee
 from datetime import datetime

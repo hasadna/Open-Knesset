@@ -154,7 +154,7 @@ class BillSelectForm(forms.Form):
         ('all', _('All')),
         ('knesset', _('Knesset Proposal')),
         ('government', _('Government Proposal')),
-    ))
+    ), required=False)
     tagged = forms.ChoiceField(label=_('Tags'), choices=BILL_TAGGED_CHOICES,
             required=False, initial='all')
     changed_after = forms.DateField(label=_('Stage Changed After:'), required=False,

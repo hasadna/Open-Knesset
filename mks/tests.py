@@ -6,13 +6,13 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.sites.models import Site
 from tastypie.test import ResourceTestCase
-from actstream import follow,action
+from actstream import follow, action
 from actstream.models import Action
 from mks.models import Member, Party, Membership, MemberAltname, Knesset
 from mks.views import MemberListView
 from mks.managers import KnessetManager
-from laws.models import Law,Bill,PrivateProposal,Vote,VoteAction
-from committees.models import CommitteeMeeting,Committee
+from laws.models import Law, Bill, PrivateProposal, Vote, VoteAction
+from committees.models import CommitteeMeeting, Committee
 from knesset.utils import RequestFactory
 import datetime
 import feedparser
@@ -31,8 +31,8 @@ TRACKBACK_CONTENT_TYPE = 'application/x-www-form-urlencoded; charset=utf-8'
 
 just_id = lambda x: x.id
 
-class MemberViewsTest(TestCase):
 
+class MemberViewsTest(TestCase):
     def setUp(self):
         # make sure cache is clean, to prevent some failing tests with
         # unexpected caches
@@ -44,31 +44,32 @@ class MemberViewsTest(TestCase):
 
         self.knesset = Knesset.objects.create(
             number=1,
-            start_date=d-datetime.timedelta(10))
+            start_date=d - datetime.timedelta(10))
         self.party_1 = Party.objects.create(name='party 1',
                                             knesset=self.knesset)
         self.party_2 = Party.objects.create(name='party 2',
                                             knesset=self.knesset)
         self.mk_1 = Member.objects.create(name='mk_1',
-                                          start_date=datetime.date(2010,1,1),
+                                          start_date=datetime.date(2010, 1, 1),
                                           current_party=self.party_1,
                                           backlinks_enabled=True)
         self.mk_2 = Member.objects.create(name='mk_2',
-                                          start_date=datetime.date(2010,1,1),
-                                           current_party=self.party_1,
-                                           backlinks_enabled = False)
+                                          start_date=datetime.date(2010, 1, 1),
+                                          current_party=self.party_1,
+                                          backlinks_enabled=False)
         self.jacob = User.objects.create_user('jacob', 'jacob@jacobian.org',
                                               'JKM')
 
         self.committee_1 = Committee.objects.create(name='c1')
         self.meeting_1 = self.committee_1.meetings.create(
-            date=d-datetime.timedelta(1),
+            date=d - datetime.timedelta(1),
             protocol_text='jacob:\nI am a perfectionist\nadrian:\nI have a deadline')
         self.meeting_2 = self.committee_1.meetings.create(
-            date=d-datetime.timedelta(2),
+            date=d - datetime.timedelta(2),
             protocol_text='adrian:\nYou are a perfectionist\njacob:\nYou have a deadline')
         self.law = Law.objects.create(title='law 1')
-        self.pp = PrivateProposal.objects.create(title='private proposal 1', date=datetime.date.today()-datetime.timedelta(3))
+        self.pp = PrivateProposal.objects.create(title='private proposal 1',
+                                                 date=datetime.date.today() - datetime.timedelta(3))
         self.pp.proposers.add(self.mk_1)
         self.bill_1 = Bill.objects.create(stage='1', title='bill 1', law=self.law)
         self.bill_1.proposals.add(self.pp)
@@ -77,8 +78,9 @@ class MemberViewsTest(TestCase):
         self.meeting_1.save()
         self.meeting_2.mks_attended.add(self.mk_1)
         self.meeting_2.save()
-        self.vote = Vote.objects.create(title='vote 1',time=datetime.datetime.now())
-        self.vote_action = VoteAction.objects.create(member=self.mk_1, vote=self.vote, type='for', party=self.mk_1.current_party)
+        self.vote = Vote.objects.create(title='vote 1', time=datetime.datetime.now())
+        self.vote_action = VoteAction.objects.create(member=self.mk_1, vote=self.vote, type='for',
+                                                     party=self.mk_1.current_party)
         self.domain = 'http://' + Site.objects.get_current().domain
 
     def testMemberList(self):
@@ -111,19 +113,18 @@ class MemberViewsTest(TestCase):
         res = self.client.get(reverse('party-list'))
         self.assertRedirects(res, reverse('party-stats', kwargs={'stat_type': 'seats'}), 301)
 
-        #self.assertTemplateUsed(res, 'mks/party_list.html')
-        #object_list = res.context['object_list']
-        #self.assertEqual(map(just_id, object_list),
+        # self.assertTemplateUsed(res, 'mks/party_list.html')
+        # object_list = res.context['object_list']
+        # self.assertEqual(map(just_id, object_list),
         #                 [ self.party_1.id, self.party_2.id, ])
 
     def testPartyDetail(self):
         res = self.client.get(reverse('party-detail',
-                              args=[self.party_1.id]))
+                                      args=[self.party_1.id]))
         self.assertTemplateUsed(res, 'mks/party_detail.html')
         self.assertEqual(res.context['object'].id, self.party_1.id)
 
     def testMemberDetailsContext(self):
-
         # test anonymous user
         mk_1_url = self.mk_1.get_absolute_url()
         res = self.client.get(mk_1_url)
@@ -140,58 +141,57 @@ class MemberViewsTest(TestCase):
     def testMemberActivityFeed(self):
         res = self.client.get(reverse('member-activity-feed',
                                       args=[self.mk_1.id]))
-        self.assertEqual(res.status_code,200)
+        self.assertEqual(res.status_code, 200)
         parsed = feedparser.parse(res.content)
         # self.assertEqual(len(parsed['entries']),4)
         self.assertEqual(parsed['entries'][0]['link'], self.domain +
-                self.vote.get_absolute_url())
+                         self.vote.get_absolute_url())
         self.assertEqual(parsed['entries'][1]['link'], self.domain +
-                self.meeting_1.get_absolute_url())
+                         self.meeting_1.get_absolute_url())
         self.assertEqual(parsed['entries'][2]['link'], self.domain +
-                self.meeting_2.get_absolute_url())
+                         self.meeting_2.get_absolute_url())
         self.assertEqual(parsed['entries'][3]['link'], self.domain +
-                self.bill_1.get_absolute_url())
+                         self.bill_1.get_absolute_url())
 
     def testMemberActivityFeedWithVerbProposed(self):
         res = self.client.get(reverse('member-activity-feed',
-                                      kwargs={'object_id': self.mk_1.id}),{'verbs':'proposed'})
-        self.assertEqual(res.status_code,200)
+                                      kwargs={'object_id': self.mk_1.id}), {'verbs': 'proposed'})
+        self.assertEqual(res.status_code, 200)
         parsed = feedparser.parse(res.content)
-        self.assertEqual(len(parsed['entries']),1)
+        self.assertEqual(len(parsed['entries']), 1)
 
         res = self.client.get(reverse('member-activity-feed',
-                                      kwargs={'object_id': self.mk_2.id}),{'verbs':'proposed'})
-        self.assertEqual(res.status_code,200)
+                                      kwargs={'object_id': self.mk_2.id}), {'verbs': 'proposed'})
+        self.assertEqual(res.status_code, 200)
         parsed = feedparser.parse(res.content)
-        self.assertEqual(len(parsed['entries']),0)
+        self.assertEqual(len(parsed['entries']), 0)
 
     def testMemberActivityFeedWithVerbAttended(self):
         res = self.client.get(reverse('member-activity-feed',
-                                      kwargs={'object_id': self.mk_1.id}),{'verbs':'attended'})
-        self.assertEqual(res.status_code,200)
+                                      kwargs={'object_id': self.mk_1.id}), {'verbs': 'attended'})
+        self.assertEqual(res.status_code, 200)
         parsed = feedparser.parse(res.content)
-        self.assertEqual(len(parsed['entries']),2)
+        self.assertEqual(len(parsed['entries']), 2)
 
         res = self.client.get(reverse('member-activity-feed',
-                                      kwargs={'object_id': self.mk_2.id}),{'verbs':'attended'})
-        self.assertEqual(res.status_code,200)
+                                      kwargs={'object_id': self.mk_2.id}), {'verbs': 'attended'})
+        self.assertEqual(res.status_code, 200)
         parsed = feedparser.parse(res.content)
-        self.assertEqual(len(parsed['entries']),0)
+        self.assertEqual(len(parsed['entries']), 0)
 
     def testMemberActivityFeedWithVerbJoined(self):
         res = self.client.get(reverse('member-activity-feed',
-                                      kwargs={'object_id': self.mk_1.id}),{'verbs':'joined'})
-        self.assertEqual(res.status_code,200)
+                                      kwargs={'object_id': self.mk_1.id}), {'verbs': 'joined'})
+        self.assertEqual(res.status_code, 200)
         parsed = feedparser.parse(res.content)
-        self.assertEqual(len(parsed['entries']),0)
-
+        self.assertEqual(len(parsed['entries']), 0)
 
     def testMemberActivityFeedWithVerbPosted(self):
         res = self.client.get(reverse('member-activity-feed',
-                                      kwargs={'object_id': self.mk_1.id}),{'verbs':'posted'})
-        self.assertEqual(res.status_code,200)
+                                      kwargs={'object_id': self.mk_1.id}), {'verbs': 'posted'})
+        self.assertEqual(res.status_code, 200)
         parsed = feedparser.parse(res.content)
-        self.assertEqual(len(parsed['entries']),0)
+        self.assertEqual(len(parsed['entries']), 0)
 
     def tearDown(self):
         self.party_1.delete()
@@ -200,6 +200,7 @@ class MemberViewsTest(TestCase):
         self.mk_2.delete()
         self.jacob.delete()
 
+
 class MemberBacklinksViewsTest(TestCase):
     urls = 'mks.server_urls'
 
@@ -207,13 +208,13 @@ class MemberBacklinksViewsTest(TestCase):
         self.party_1 = Party.objects.create(name='party 1')
         self.party_2 = Party.objects.create(name='party 2')
         self.mk_1 = Member.objects.create(name='mk_1',
-                                          start_date=datetime.date(2010,1,1),
+                                          start_date=datetime.date(2010, 1, 1),
                                           current_party=self.party_1,
                                           backlinks_enabled=True)
         self.mk_2 = Member.objects.create(name='mk_2',
-                                          start_date=datetime.date(2010,1,1),
-                                           current_party=self.party_1,
-                                           backlinks_enabled = False)
+                                          start_date=datetime.date(2010, 1, 1),
+                                          current_party=self.party_1,
+                                          backlinks_enabled=False)
         self.jacob = User.objects.create_user('jacob', 'jacob@jacobian.org',
                                               'JKM')
 
@@ -221,12 +222,13 @@ class MemberBacklinksViewsTest(TestCase):
         self.mk_2.save()
 
         self.committee_1 = Committee.objects.create(name='c1')
-        self.meeting_1 = self.committee_1.meetings.create(date=datetime.date.today()-datetime.timedelta(1),
-                                 protocol_text='jacob:\nI am a perfectionist\nadrian:\nI have a deadline')
-        self.meeting_2 = self.committee_1.meetings.create(date=datetime.date.today()-datetime.timedelta(2),
-                                 protocol_text='adrian:\nYou are a perfectionist\njacob:\nYou have a deadline')
+        self.meeting_1 = self.committee_1.meetings.create(date=datetime.date.today() - datetime.timedelta(1),
+                                                          protocol_text='jacob:\nI am a perfectionist\nadrian:\nI have a deadline')
+        self.meeting_2 = self.committee_1.meetings.create(date=datetime.date.today() - datetime.timedelta(2),
+                                                          protocol_text='adrian:\nYou are a perfectionist\njacob:\nYou have a deadline')
         self.law = Law.objects.create(title='law 1')
-        self.pp = PrivateProposal.objects.create(title='private proposal 1', date=datetime.date.today()-datetime.timedelta(3))
+        self.pp = PrivateProposal.objects.create(title='private proposal 1',
+                                                 date=datetime.date.today() - datetime.timedelta(3))
         self.pp.proposers.add(self.mk_1)
         self.bill_1 = Bill.objects.create(stage='1', title='bill 1', law=self.law)
         self.bill_1.proposals.add(self.pp)
@@ -235,8 +237,9 @@ class MemberBacklinksViewsTest(TestCase):
         self.meeting_1.save()
         self.meeting_2.mks_attended.add(self.mk_1)
         self.meeting_2.save()
-        self.vote = Vote.objects.create(title='vote 1',time=datetime.datetime.now())
-        self.vote_action = VoteAction.objects.create(member=self.mk_1, vote=self.vote, type='for', party=self.mk_1.current_party)
+        self.vote = Vote.objects.create(title='vote 1', time=datetime.datetime.now())
+        self.vote_action = VoteAction.objects.create(member=self.mk_1, vote=self.vote, type='for',
+                                                     party=self.mk_1.current_party)
 
         self.client = Client(SERVER_NAME='example.com')
         self.xmlrpc_client = TestClientServerProxy('/pingback/')
@@ -269,19 +272,21 @@ class MemberBacklinksViewsTest(TestCase):
                           'TrackBack RDF did not contain a TrackBack server URI')
 
     '''
+
     def testPingNonLinkingSourceURI(self):
         self.assertRaises(Fault,
                           self.xmlrpc_client.pingback.ping,
                           'http://example.com/bad-source-document/',
-                          'http://example.com/member/'+PINGABLE_MEMBER_ID+'/')
+                          'http://example.com/member/' + PINGABLE_MEMBER_ID + '/')
 
         try:
             self.xmlrpc_client.pingback.ping('http://example.com/bad-source-document/',
-                                             'http://example.com/member/'+PINGABLE_MEMBER_ID+'/')
+                                             'http://example.com/member/' + PINGABLE_MEMBER_ID + '/')
         except Fault, f:
             self.assertEquals(f.faultCode,
                               17,
-                             'Server did not return "source URI does not link" response')
+                              'Server did not return "source URI does not link" response')
+
     def testDisallowedMethod(self):
         response = self.client.get('/pingback/')
         self.assertEquals(response.status_code,
@@ -291,10 +296,9 @@ class MemberBacklinksViewsTest(TestCase):
     def testNonExistentRPCMethod(self):
         self.assertRaises(Fault, self.xmlrpc_client.foo)
 
-
     def testBadPostData(self):
         post_data = urlencode({'sourceURI': 'http://example.com/good-source-document/',
-                               'targetURI': 'http://example.com/member/'+PINGABLE_MEMBER_ID+'/'})
+                               'targetURI': 'http://example.com/member/' + PINGABLE_MEMBER_ID + '/'})
         response = self.client.post('/pingback/', post_data, TRACKBACK_CONTENT_TYPE)
         self.assertRaises(Fault,
                           loads,
@@ -313,18 +317,17 @@ class MemberBacklinksViewsTest(TestCase):
                               32,
                               'Server did not return "target does not exist" error')
 
-
     def testPingAlreadyRegistered(self):
         self.xmlrpc_client.pingback.ping('http://example.com/another-good-source-document/',
-                                             'http://example.com/member/'+PINGABLE_MEMBER_ID+'/')
+                                         'http://example.com/member/' + PINGABLE_MEMBER_ID + '/')
         self.assertRaises(Fault,
                           self.xmlrpc_client.pingback.ping,
                           'http://example.com/another-good-source-document/',
-                          'http://example.com/member/'+PINGABLE_MEMBER_ID+'/')
+                          'http://example.com/member/' + PINGABLE_MEMBER_ID + '/')
 
         try:
             self.xmlrpc_client.pingback.ping('http://example.com/another-good-source-document/',
-                                             'http://example.com/member/'+PINGABLE_MEMBER_ID+'/')
+                                             'http://example.com/member/' + PINGABLE_MEMBER_ID + '/')
         except Fault, f:
             self.assertEqual(f.faultCode,
                              48,
@@ -344,10 +347,10 @@ class MemberBacklinksViewsTest(TestCase):
         self.assertRaises(Fault,
                           self.xmlrpc_client.pingback.ping,
                           'http://example.com/member/non-existent-resource/',
-                          'http://example.com/member/'+str(self.NON_PINGABLE_MEMBER_ID)+'/')
+                          'http://example.com/member/' + str(self.NON_PINGABLE_MEMBER_ID) + '/')
         try:
             self.xmlrpc_client.pingback.ping('http://example.com/member/non-existent-resource/',
-                                             'http://example.com/member/'+str(self.NON_PINGABLE_MEMBER_ID)+'/')
+                                             'http://example.com/member/' + str(self.NON_PINGABLE_MEMBER_ID) + '/')
         except Fault, f:
             self.assertEquals(f.faultCode,
                               33,
@@ -355,27 +358,27 @@ class MemberBacklinksViewsTest(TestCase):
 
     def testPingSourceURILinks(self):
         r = self.xmlrpc_client.pingback.ping('http://example.com/good-source-document/',
-                                             'http://example.com/member/'+self.PINGABLE_MEMBER_ID+'/')
+                                             'http://example.com/member/' + self.PINGABLE_MEMBER_ID + '/')
 
         self.assertEquals(r,
                           "Ping from http://example.com/good-source-document/ to http://example.com/member/1/ registered",
                           "Failed registering ping")
 
         registered_ping = InboundBacklink.objects.get(source_url='http://example.com/good-source-document/',
-                                                      target_url='http://example.com/member/'+self.PINGABLE_MEMBER_ID+'/')
+                                                      target_url='http://example.com/member/' + self.PINGABLE_MEMBER_ID + '/')
         self.assertEquals(str(registered_ping.target_object.id),
-                              PINGABLE_MEMBER_ID,
-                              'Server did not return "target not pingable" error')
+                          PINGABLE_MEMBER_ID,
+                          'Server did not return "target not pingable" error')
 
     def testDisallowedTrackbackMethod(self):
-        response = self.client.get('/trackback/member/'+PINGABLE_MEMBER_ID+'/')
+        response = self.client.get('/trackback/member/' + PINGABLE_MEMBER_ID + '/')
         self.assertEquals(response.status_code,
                           405,
                           'Server returned incorrect status code for disallowed HTTP method')
 
     def testPingNoURLParameter(self):
         params = {'title': 'Example', 'excerpt': 'Example'}
-        response = self.trackbackPOSTRequest('/trackback/member/'+self.PINGABLE_MEMBER_ID+'/',
+        response = self.trackbackPOSTRequest('/trackback/member/' + self.PINGABLE_MEMBER_ID + '/',
                                              params)
         self.assertTrackBackErrorResponse(response,
                                           'Server did not return error response'
@@ -383,7 +386,7 @@ class MemberBacklinksViewsTest(TestCase):
 
     def testPingBadURLParameter(self):
         params = {'url': 'bad url'}
-        response = self.trackbackPOSTRequest('http://example.com/trackback/member/'+self.PINGABLE_MEMBER_ID+'/',
+        response = self.trackbackPOSTRequest('http://example.com/trackback/member/' + self.PINGABLE_MEMBER_ID + '/',
                                              params)
         self.assertTrackBackErrorResponse(response,
                                           'Server did not return error response for ping with bad URL parameter')
@@ -396,8 +399,8 @@ class MemberBacklinksViewsTest(TestCase):
                                           'Server did not return error response for ping against non-existent resource')
 
     def testPingNonPingableTarget(self):
-        params = {'url': 'http://example.com/member/'+PINGABLE_MEMBER_ID+'/'}
-        response = self.trackbackPOSTRequest('/trackback/member/'+self.NON_PINGABLE_MEMBER_ID+'/',
+        params = {'url': 'http://example.com/member/' + PINGABLE_MEMBER_ID + '/'}
+        response = self.trackbackPOSTRequest('/trackback/member/' + self.NON_PINGABLE_MEMBER_ID + '/',
                                              params)
         self.assertTrackBackErrorResponse(response,
                                           'Server did not return error response for ping against non-pingable resource')
@@ -406,20 +409,19 @@ class MemberBacklinksViewsTest(TestCase):
         title = 'Backlinks Test - Test Good Source Document'
         excerpt = 'This is a summary of the good source document'
         params = {'url': 'http://example.com/good-source-document/', 'title': title, 'excerpt': excerpt}
-        track_target = '/trackback/member/'+self.PINGABLE_MEMBER_ID+'/'
+        track_target = '/trackback/member/' + self.PINGABLE_MEMBER_ID + '/'
         response = self.trackbackPOSTRequest(track_target,
                                              params)
         self.assertTrue(response.content.find('<error>0</error>') > -1,
                         'Server did not return success response for a valid ping request')
         registered_ping = InboundBacklink.objects.get(source_url='http://example.com/good-source-document/',
-                                                      target_url='http://example.com'+self.mk_1.get_absolute_url())
+                                                      target_url='http://example.com' + self.mk_1.get_absolute_url())
         self.assertEquals(registered_ping.title,
                           title,
                           'Server did not use title from ping request when registering')
         self.assertEquals(registered_ping.excerpt,
                           excerpt,
                           'Server did not use excerpt from ping request when registering')
-
 
     def tearDown(self):
         self.party_1.delete()
@@ -428,6 +430,7 @@ class MemberBacklinksViewsTest(TestCase):
         self.mk_2.delete()
         self.jacob.delete()
 
+
 class MemberAPITests(ResourceTestCase):
     def setUp(self):
         super(MemberAPITests, self).setUp()
@@ -435,50 +438,47 @@ class MemberAPITests(ResourceTestCase):
         d = datetime.date.today()
         self.knesset = Knesset.objects.create(
             number=1,
-            start_date=d-datetime.timedelta(10))
+            start_date=d - datetime.timedelta(10))
         KnessetManager._current_knesset = self.knesset
         self.party_1 = Party.objects.create(name='party 1',
                                             knesset=self.knesset)
 
-        matches = [ {
-            "entity_id": 10012 + i,
-            "docid": "m00079",
-            "entity_name": "bbbb",
-            "entity_type": "COMM",
-            "url": "http://knesset.gov.il/mmm/data/pdf/m00079.pdf" + str(i),
-            "title": "aaaaaa" + str(i),
-            "authors": [
-              "mk_1"
-            ],
-            "pub_date": "2000-01-01",
-            "session_date": None,
-            "heading": "bbbb",
-          } for i in xrange(10)]
+        matches = [{
+                       "entity_id": 10012 + i,
+                       "docid": "m00079",
+                       "entity_name": "bbbb",
+                       "entity_type": "COMM",
+                       "url": "http://knesset.gov.il/mmm/data/pdf/m00079.pdf" + str(i),
+                       "title": "aaaaaa" + str(i),
+                       "authors": [
+                           "mk_1"
+                       ],
+                       "pub_date": "2000-01-01",
+                       "session_date": None,
+                       "heading": "bbbb",
+                   } for i in xrange(10)]
 
-	for match in matches:
+        for match in matches:
             match['date'] = datetime.datetime.strptime(match['pub_date'], '%Y-%m-%d').date()
 
         self.mmm_docs = [Document.objects.create(
-            url = match['url'],
-            title = match['title'],
-            publication_date = match['pub_date'],
-            author_names = match['authors'],
+            url=match['url'],
+            title=match['title'],
+            publication_date=match['pub_date'],
+            author_names=match['authors'],
         ) for match in matches]
 
-
-
         self.mk_1 = Member.objects.create(name='mk_1',
-                                          start_date=datetime.date(2010,1,1),
+                                          start_date=datetime.date(2010, 1, 1),
                                           current_party=self.party_1,
                                           backlinks_enabled=True,
-                                          bills_stats_first = 2,
-                                          bills_stats_proposed = 5,
-                                          average_weekly_presence_hours = 3.141)
+                                          bills_stats_first=2,
+                                          bills_stats_proposed=5,
+                                          average_weekly_presence_hours=3.141)
         for mmm_doc in self.mmm_docs:
             mmm_doc.req_mks = [self.mk_1, ]
         PersonAlias.objects.create(name="mk_1_alias",
                                    person=Person.objects.get(mk=self.mk_1))
-
 
     def testSimpleGet(self):
         res1 = self.api_client.get('/api/v2/member/', data={'name': 'mk_1'})
@@ -494,7 +494,7 @@ class MemberAPITests(ResourceTestCase):
         self.assertEqual(self.deserialize(res1), self.deserialize(res2))
 
     def testMemberList(self):
-        res1 = self.api_client.get('/api/v2/member/', format = 'json')
+        res1 = self.api_client.get('/api/v2/member/', format='json')
         self.assertEqual(res1.status_code, 200)
         data = json.loads(res1.content)
 
@@ -511,19 +511,20 @@ class MemberAPITests(ResourceTestCase):
         self.mk_1.delete()
         KnessetManager._current_knesset = None
 
-class MemberModelsTests(TestCase):
 
+class MemberModelsTests(TestCase):
     def testNames(self):
-        m=Member(name='test member')
+        m = Member(name='test member')
         self.assertEqual(m.names, ['test member'])
         m.save()
-        MemberAltname(member=m,name='test2').save()
-        self.assertEqual(m.names, ['test member','test2'])
+        MemberAltname(member=m, name='test2').save()
+        self.assertEqual(m.names, ['test member', 'test2'])
+
 
 from agendas.models import Agenda, AgendaVote
 
-class MKAgendasTest(TestCase):
 
+class MKAgendasTest(TestCase):
     def setUp(self):
         self.knesset = Knesset.objects.create(
             number=1,
@@ -533,15 +534,15 @@ class MKAgendasTest(TestCase):
             number_of_seats=1,
             knesset=self.knesset)
         self.mk_1 = Member.objects.create(name='mk_1',
-                                          start_date=datetime.date(2010,1,1),
+                                          start_date=datetime.date(2010, 1, 1),
                                           current_party=self.party_1)
 
         self.mk_2 = Member.objects.create(name='mk_2',
-                                          start_date=datetime.date(2010,1,1),
+                                          start_date=datetime.date(2010, 1, 1),
                                           current_party=self.party_1)
 
         self.mk_3 = Member.objects.create(name='mk_3',
-                                          start_date=datetime.date(2010,1,1),
+                                          start_date=datetime.date(2010, 1, 1),
                                           current_party=self.party_1)
 
         self.agenda_1 = Agenda.objects.create(name='agenda 1',
@@ -556,17 +557,17 @@ class MKAgendasTest(TestCase):
                                               description='a bloody good agenda 3',
                                               public_owner_name='Hidden One',
                                               is_public=False)
-        self.vote_1 = Vote.objects.create(title='vote 1',time=datetime.datetime.now())
-        self.vote_2 = Vote.objects.create(title='vote 2',time=datetime.datetime.now())
-        self.voteactions = [ VoteAction.objects.create(vote=self.vote_1,
-                                member=self.mk_1, type='for', party=self.mk_1.current_party),
-                             VoteAction.objects.create(vote=self.vote_2,
-                                member=self.mk_1, type='for', party=self.mk_1.current_party),
-                             VoteAction.objects.create(vote=self.vote_1,
-                                member=self.mk_2, type='against', party=self.mk_2.current_party),
-                             VoteAction.objects.create(vote=self.vote_2,
-                                member=self.mk_2, type='against', party=self.mk_2.current_party)
-                             ]
+        self.vote_1 = Vote.objects.create(title='vote 1', time=datetime.datetime.now())
+        self.vote_2 = Vote.objects.create(title='vote 2', time=datetime.datetime.now())
+        self.voteactions = [VoteAction.objects.create(vote=self.vote_1,
+                                                      member=self.mk_1, type='for', party=self.mk_1.current_party),
+                            VoteAction.objects.create(vote=self.vote_2,
+                                                      member=self.mk_1, type='for', party=self.mk_1.current_party),
+                            VoteAction.objects.create(vote=self.vote_1,
+                                                      member=self.mk_2, type='against', party=self.mk_2.current_party),
+                            VoteAction.objects.create(vote=self.vote_2,
+                                                      member=self.mk_2, type='against', party=self.mk_2.current_party)
+                            ]
         self.agendavotes = [AgendaVote.objects.create(agenda=self.agenda_1,
                                                       vote=self.vote_1,
                                                       score=-1,
@@ -589,11 +590,11 @@ class MKAgendasTest(TestCase):
         agenda_values2 = self.mk_2.get_agendas_values()
         self.assertEqual(len(agenda_values2), 2)
         self.assertEqual(agenda_values1,
-                {1: {'numvotes': 2, 'rank': 2, 'score': -33.33, 'volume': 100.0},
-                 2: {'numvotes': 1, 'rank': 1, 'score': 100.0, 'volume': 100.0}})
+                         {1: {'numvotes': 2, 'rank': 2, 'score': -33.33, 'volume': 100.0},
+                          2: {'numvotes': 1, 'rank': 1, 'score': 100.0, 'volume': 100.0}})
         self.assertEqual(agenda_values2,
-                {1: {'numvotes': 2, 'rank': 1, 'score': 33.33, 'volume': 100.0},
-                 2: {'numvotes': 1, 'rank': 2, 'score': -100.0, 'volume': 100.0}})
+                         {1: {'numvotes': 2, 'rank': 1, 'score': 33.33, 'volume': 100.0},
+                          2: {'numvotes': 1, 'rank': 2, 'score': -100.0, 'volume': 100.0}})
         agenda_values = self.mk_3.get_agendas_values()
         self.assertFalse(agenda_values)
 
@@ -607,19 +608,19 @@ class MKAgendasTest(TestCase):
         agendas_uri = data['agendas_uri']
         expected_agendas_uri = '/api/v2/member-agendas/%s/' % self.mk_1.id
         self.assertEqual(agendas_uri, expected_agendas_uri, "Wrong agendas URI returned for member")
-        res2 = self.client.get(expected_agendas_uri+'?format=json')
+        res2 = self.client.get(expected_agendas_uri + '?format=json')
         agendas = json.loads(res2.content)
         self.assertEqual(agendas['agendas'], [
             {'id': 1, 'owner': 'Dr. Jacob', 'absolute_url': '/agenda/1/',
              'score': -33.33, 'name': 'agenda 1', 'rank': 2,
              'min': -33.33, 'max': 33.33,
              'party_min': -33.33, 'party_max': 33.33,
-            },
+             },
             {'id': 2, 'owner': 'Greenpeace', 'absolute_url': '/agenda/2/',
              'score': 100.0, 'name': 'agenda 2', 'rank': 1,
              'min': -100.0, 'max': 100.0,
              'party_min': -100.0, 'party_max': 100.0,
-            }])
+             }])
 
     def tearDown(self):
         for av in self.agendavotes:
@@ -634,3 +635,65 @@ class MKAgendasTest(TestCase):
         self.agenda_1.delete()
         self.agenda_2.delete()
         self.agenda_3.delete()
+
+
+ten_days_ago = datetime.datetime.today() - datetime.timedelta(days=10)
+two_days_ago = datetime.datetime.today() - datetime.timedelta(days=2)
+
+def date_to_datetime(start_date):
+    if start_date:
+        timetuple = start_date.timetuple()
+        return datetime.datetime(year=timetuple[0], month=timetuple[1], day=timetuple[2])
+
+
+class TestMember(TestCase):
+    def setUp(self):
+        super(TestMember, self).setUp()
+
+
+        self.previous_knesset = Knesset.objects.create(number=1,
+                                                       start_date=ten_days_ago,
+                                                       end_date=two_days_ago)
+        self.current_knesset = Knesset.objects.create(number=2,
+                                                      start_date=two_days_ago)
+        self.previous_party = self.given_party_exists_in_knesset('a_party', self.previous_knesset)
+        self.current_party = self.given_party_exists_in_knesset('a_party', self.current_knesset)
+        self.member = self.given_member_exists_in_knesset('member_1', self.previous_party)
+        self.member = self.given_member_exists_in_knesset('member_1', self.current_party)
+
+    def tearDown(self):
+        super(TestMember, self).tearDown()
+
+    def test_party_at_calculates_correct_party_by_date_when_no_end_date_for_two_periods(self):
+        five_days_ago = datetime.datetime.today() - datetime.timedelta(days=5)
+        party_at = self.member.party_at(five_days_ago.date())
+        self.assertEqual(party_at, self.previous_party)
+
+        today = datetime.datetime.today()
+        party_at = self.member.party_at(today.date())
+        self.assertEqual(party_at, self.current_party)
+
+    def test_party_at_calculates_correct_party_by_date_when_given_end_date(self):
+        self.given_member_exists_in_knesset(self.member.name, self.previous_party, end_date=two_days_ago.date())
+        five_days_ago = datetime.datetime.today() - datetime.timedelta(days=5)
+        party_at = self.member.party_at(five_days_ago.date())
+        self.assertEqual(party_at, self.previous_party)
+
+        today = datetime.datetime.today()
+        party_at = self.member.party_at(today.date())
+        self.assertEqual(party_at, self.current_party)
+
+    def given_party_exists_in_knesset(self, party_name, knesset):
+        party, create = Party.objects.get_or_create(name='{0}_{1}'.format(party_name, knesset.number),
+                                                    knesset=knesset,
+                                                    start_date=knesset.start_date,
+                                                    end_date=knesset.end_date)
+        return party
+
+    def given_member_exists_in_knesset(self, member_name, party, end_date=None):
+        member, create = Member.objects.get_or_create(name=member_name, start_date=ten_days_ago.date())
+        membership, create = Membership.objects.get_or_create(member=member, party=party, start_date=party.knesset.start_date)
+        if end_date:
+            membership.end_date = end_date
+            membership.save()
+        return member

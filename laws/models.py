@@ -1,5 +1,5 @@
 # encoding: utf-8
-import re, itertools, logging, random, sys, traceback
+import re, logging, random, sys, traceback
 from datetime import date, timedelta
 
 from django.db import models, IntegrityError
@@ -11,25 +11,23 @@ from django.utils.html import escape
 from django.core.cache import cache
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.contrib.comments.models import Comment
-from django.db.models import Q
 
 from tagging.models import Tag, TaggedItem
 from tagging.forms import TagField
 import voting
 from tagging.utils import get_tag
 from actstream import Action
-from actstream.models import action, Follow
+from actstream.models import Follow
 
 from laws import constants
 from mks.models import Party, Knesset
 from tagvotes.models import TagVote
-from knesset.utils import slugify_name, trans_clean
+from knesset.utils import slugify_name
 from laws.vote_choices import (TYPE_CHOICES, BILL_STAGE_CHOICES,
                                BILL_AGRR_STAGES, BILL_STAGES)
 
-from auxiliary.models import add_tags_to_related_objects
-from django.db.models.signals import post_save, post_delete
+from ok_tag.models import add_tags_to_related_objects
+from django.db.models.signals import post_save
 
 logger = logging.getLogger("open-knesset.laws.models")
 VOTE_ACTION_TYPE_CHOICES = (
@@ -373,19 +371,19 @@ class Vote(models.Model):
              for x in Party.objects.all()]
         ))
 
-        def party_at_or_error(member):
-            party = member.party_at(d)
+        def party_at_or_error(member, vote_date):
+            party = member.party_at(vote_date)
             if party:
                 return party
             else:
                 raise Exception(
                     'could not find which party member %s belonged to during vote %s' % (member.pk, self.pk))
 
-        for_party_ids = [party_at_or_error(va.member).id for va in self.for_votes()]
-        party_for_votes = [sum([x == id for x in for_party_ids]) for id in party_ids]
+        for_party_ids = [party_at_or_error(va.member, vote_date=d).id for va in self.for_votes()]
+        party_for_votes = [sum([x == party_id for x in for_party_ids]) for party_id in party_ids]
 
-        against_party_ids = [party_at_or_error(va.member).id for va in self.against_votes()]
-        party_against_votes = [sum([x == id for x in against_party_ids]) for id in party_ids]
+        against_party_ids = [party_at_or_error(va.member, vote_date=d).id for va in self.against_votes()]
+        party_against_votes = [sum([x == party_id for x in against_party_ids]) for party_id in party_ids]
 
         party_stands_for = [float(fv) > constants.STANDS_FOR_THRESHOLD * (fv + av) for (fv, av) in
                             zip(party_for_votes, party_against_votes)]
@@ -425,13 +423,15 @@ class Vote(models.Model):
             va.against_coalition = False
             va.against_opposition = False
             va.against_own_bill = False
-            if party_stands_for[party_at_or_error(va.member).id] and va.type == 'against':
+            voting_member_party_at_vote = party_at_or_error(va.member, vote_date=d)
+            vote_action_member_party_id = voting_member_party_at_vote.id
+            if party_stands_for[vote_action_member_party_id] and va.type == 'against':
                 va.against_party = True
                 against_party_count += 1
-            if party_stands_against[party_at_or_error(va.member).id] and va.type == 'for':
+            if party_stands_against[vote_action_member_party_id] and va.type == 'for':
                 va.against_party = True
                 against_party_count += 1
-            if party_at_or_error(va.member).is_coalition_at(self.time.date()):
+            if voting_member_party_at_vote.is_coalition_at(self.time.date()):
                 if (coalition_stands_for and va.type == 'against') or (coalition_stands_against and va.type == 'for'):
                     va.against_coalition = True
                     against_coalition_count += 1

@@ -267,7 +267,7 @@ class Member(models.Model):
     def party_at(self, date):
         """Returns the party this memeber was at given date
         """
-        memberships = Membership.objects.filter(member=self)
+        memberships = Membership.objects.filter(member=self).order_by('-start_date')
         for membership in memberships:
             if (not membership.start_date or membership.start_date <= date) and\
                (not membership.end_date or membership.end_date >= date):

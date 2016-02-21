@@ -21,3 +21,4 @@ data/committee_mms_videos
 /data/plenum_protocols
 /node_modules
 notebooks/
+npm-debug.log

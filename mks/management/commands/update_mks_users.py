@@ -41,7 +41,7 @@ class Command(NoArgsCommand):
             content = ContentFile(image_url.read())
             avatar.avatar.save(user.username, content)
             try:
-                profile = user.get_profile()
+                profile = user.profiles.get()
             except:
                 profile = user.profiles.create()
 

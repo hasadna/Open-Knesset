@@ -183,6 +183,7 @@ INSTALLED_APPS = (
     'okscraper_django',
     'lobbyists',
     'kikar',
+    'ok_tag'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -219,7 +220,7 @@ LOG_FILENAME = os.path.join(PROJECT_ROOT, 'open-knesset.log')
 file_logger = logging.getLogger("open-knesset")
 file_logger.setLevel(logging.DEBUG)  # override this in prod server to logging.ERROR
 h = logging.FileHandler(LOG_FILENAME)
-h.setLevel(logging.DEBUG)
+h.setLevel(logging.INFO)
 formatter = logging.Formatter("%(asctime)s\t%(name)s:%(lineno)d\t%(levelname)s\t%(message)s")
 h.setFormatter(formatter)
 file_logger.addHandler(h)
@@ -228,7 +229,7 @@ file_logger.addHandler(h)
 # See 12 factor app http://12factor.net/logs
 # Todo refactor this to support stderr and out and more dynamic config supporting sentry etc
 console_logger = logging.getLogger('') #root logger
-console_logger.setLevel(logging.INFO)
+console_logger.setLevel(logging.WARNING)
 stdout_handler = logging.StreamHandler(stream=sys.stdout)
 
 stdout_handler.setFormatter(formatter)

@@ -23,7 +23,8 @@ from django.db.models import Q
 from tagging.models import Tag, TaggedItem
 
 from agendas.models import Agenda, UserSuggestedVote
-from auxiliary.views import CsvView, BaseTagMemberListView
+from ok_tag.views import BaseTagMemberListView
+from auxiliary.mixins import CsvView
 from forms import VoteSelectForm, BillSelectForm, BudgetEstimateForm
 from forms import AttachBillFromVoteForm
 from hashnav import DetailView, ListView as HashnavListView
@@ -391,7 +392,7 @@ class BillDetailView(DetailView):
         if bill.popular_name:
             context["keywords"] = bill.popular_name
         if self.request.user.is_authenticated():
-            userprofile = self.request.user.get_profile()
+            userprofile = self.request.user.profiles.get()
             context['watched'] = bill in userprofile.bills
         else:
             context['watched'] = False

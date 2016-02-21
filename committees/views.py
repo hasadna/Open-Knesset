@@ -25,7 +25,8 @@ from django.views.generic import DetailView, ListView
 from tagging.models import TaggedItem, Tag
 import models
 from models import Committee, CommitteeMeeting, Topic
-from auxiliary.views import GetMoreView, BaseTagMemberListView
+from ok_tag.views import BaseTagMemberListView
+from auxiliary.mixins import GetMoreView
 from forms import EditTopicForm, LinksFormset
 from hashnav import method_decorator as hashnav_method_decorator
 from knesset.utils import clean_string
@@ -257,7 +258,7 @@ class TopicDetailView(DetailView):
         context = super(TopicDetailView, self).get_context_data(**kwargs)
         topic = context['object']
         if self.request.user.is_authenticated():
-            p = self.request.user.get_profile()
+            p = self.request.user.profiles.get()
             watched = topic in p.topics
         else:
             watched = False

@@ -33,8 +33,11 @@ admin.site.register(Committee, CommitteeAdmin)
 
 class CommitteeMeetingAdmin(admin.ModelAdmin):
     ordering = ('-date',)
-    list_display = ('__unicode__', 'date')
-    list_filter = ('committee',)
+    list_display = ('__unicode__', 'date', 'committee_type')
+    list_filter = ('committee', 'committee__type')
+
+    def committee_type(self, obj):
+        return obj.committee.type
 
 
 admin.site.register(CommitteeMeeting, CommitteeMeetingAdmin)
