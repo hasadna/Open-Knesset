@@ -23,7 +23,8 @@ from django.db.models import Q
 from tagging.models import Tag, TaggedItem
 
 from agendas.models import Agenda, UserSuggestedVote
-from auxiliary.views import CsvView, BaseTagMemberListView
+from ok_tag.views import BaseTagMemberListView
+from auxiliary.mixins import CsvView
 from forms import VoteSelectForm, BillSelectForm, BudgetEstimateForm
 from forms import AttachBillFromVoteForm
 from hashnav import DetailView, ListView as HashnavListView

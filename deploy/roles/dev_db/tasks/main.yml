@@ -1,0 +1,30 @@
+- name: create dev db
+  become: yes
+  become_user: oknesset
+  django_manage: app_path="/oknesset_data/oknesset/Open-Knesset" virtualenv="/oknesset_data/oknesset/" command="sync_dev"
+
+- name: Bzip the created dev.db
+  become: yes
+  become_user: oknesset
+  command: bzip dev.db -fk chdir="/oknesset_data/oknesset/Open-Knesset"
+
+- name: zip the created dev.db
+  become: yes
+  become_user: oknesset
+  command: zip dev.db.zip dev.db chdir="/oknesset_data/oknesset/Open-Knesset"
+
+- name: Upload to s3 bucket
+  become: yes
+  become_user: oknesset
+  s3: bucket=oknesset-devdb src="/oknesset_data/oknesset/Open-Knesset/{{ item }}" mode=put permission=public-read
+  with_items:
+  - dev.db.bz2
+  - dev.db.zip
+
+- name: remove created files
+  become: yes
+  become_user: oknesset
+  file: path="/oknesset_data/oknesset/Open-Knesset/{{ item }}" state=absent
+  with_items:
+  - dev.db.bz2
+  - dev.db.zip

@@ -17,19 +17,20 @@ from knesset.sitemap import sitemaps as sitemaps_dict
 from mks.urls import mksurlpatterns
 from laws.urls import lawsurlpatterns
 from committees.urls import committeesurlpatterns
+from ok_tag.views import TagList, TagDetail, suggest_tag_post, add_tag_synonym, remove_tag_from_object, \
+    add_tag_to_object, untagged_objects
 from plenum.urls import plenumurlpatterns
 from persons.urls import personsurlpatterns
 from mks.views import get_mk_entry, mk_is_backlinkable
 from laws.models import Bill
-from polyorg.urls import polyorgurlpatterns
+
 from lobbyists.urls import lobbyistpatterns
 from auxiliary.urls import auxiliarysurlpatterns
 
 from auxiliary.views import (
     main, post_annotation, post_details, post_feedback,
-    RobotsView, AboutView, CommentsView, add_tag_to_object,
-    remove_tag_from_object, create_tag_and_add_to_item, help_page,
-    TagList, TagDetail, suggest_tag_post, untagged_objects, add_tag_synonym)
+    RobotsView, AboutView, CommentsView, help_page)
+from ok_tag.urls import ok_tag_patterns
 
 admin.autodiscover()
 
@@ -81,15 +82,7 @@ urlpatterns = patterns('',
     url(r'^pingback/', default_server, name='pingback-server'),
     url(r'^trackback/member/(?P<object_id>\d+)/$', TrackBackServer(get_mk_entry, mk_is_backlinkable), name='member-trackback'),
     (r'^act/', include('actstream.urls')),
-    url(r'^tags/(?P<app>\w+)/(?P<object_type>\w+)/(?P<object_id>\d+)/add-tag/$', add_tag_to_object, name='add-tag-to-object'),
-    url(r'^tags/(?P<app>\w+)/(?P<object_type>\w+)/(?P<object_id>\d+)/remove-tag/$', remove_tag_from_object),
-    # disabled for now, because we don't want users to add more tags.
-    # will be added back in the future, but for editors only.
-    #url(r'^tags/(?P<app>\w+)/(?P<object_type>\w+)/(?P<object_id>\d+)/create-tag/$', create_tag_and_add_to_item, name='create-tag'),
-    url(r'^add_tag_synonym/(?P<parent_tag_id>\d+)/(?P<synonym_tag_id>\d+)/$', add_tag_synonym),
-    url(r'^tags/$', TagList.as_view(), name='tags-list'),
-    url(r'^tags/(?P<slug>.*?)/$', TagDetail.as_view(), name='tag-detail'),
-    url(r'^suggest-tag-post/$', suggest_tag_post, name='suggest-tag-post'),
+
     url(r'^uservote/bill/(?P<object_id>\d+)/(?P<direction>\-?\d+)/?$',
         vote_on_object, dict(
             model=Bill, template_object_name='bill',
@@ -102,10 +95,11 @@ urlpatterns = patterns('',
     (r'^tinymce/', include('tinymce.urls')),
     (r'^suggestions/', include('suggestions.urls')),
     url(r'^feedback/', post_feedback, name="feedback-post"),
-    url(r'^untagged/$', untagged_objects, name="untagged-objects"),
+    # url(r'^untagged/$', untagged_objects, name="untagged-objects"),
 )
 
 
+urlpatterns += ok_tag_patterns
 urlpatterns += mksurlpatterns + lawsurlpatterns + committeesurlpatterns + plenumurlpatterns + lobbyistpatterns
 urlpatterns += staticfiles_urlpatterns() + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # polyorg patterns are removed right now, the cache handling on it's views
@@ -113,10 +107,10 @@ urlpatterns += staticfiles_urlpatterns() + static(settings.MEDIA_URL, document_r
 # urlpatterns += polyorgurlpatterns + personsurlpatterns
 urlpatterns += personsurlpatterns
 urlpatterns += auxiliarysurlpatterns
+
 if settings.DEBUG:
     import debug_toolbar
+
     urlpatterns += patterns('',
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-    )
-
-
+                            url(r'^__debug__/', include(debug_toolbar.urls)),
+                            )

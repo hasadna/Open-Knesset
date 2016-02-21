@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from django.test import TestCase
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User,Group,Permission
+from django.contrib.auth.models import User, Group, Permission
 from django.contrib.contenttypes.models import ContentType
 import unittest
 from annotatetext.models import Annotation
@@ -17,28 +17,28 @@ from models import TOPIC_REJECTED
 just_id = lambda x: x.id
 APP = 'committees'
 
-class CommitteeMeetingDetailViewTest(TestCase):
 
+class CommitteeMeetingDetailViewTest(TestCase):
     def setUp(self):
         self.knesset = Knesset.objects.create(number=1,
-                            start_date=datetime.today()-timedelta(days=1))
+                                              start_date=datetime.today() - timedelta(days=1))
         self.committee_1 = Committee.objects.create(name='c1')
         self.committee_2 = Committee.objects.create(name='c2')
         self.meeting_1 = self.committee_1.meetings.create(date=datetime.now(),
-                                 topics = "django",
-                                 protocol_text='''jacob:
+                                                          topics="django",
+                                                          protocol_text='''jacob:
 I am a perfectionist
 adrian:
 I have a deadline''')
         self.meeting_1.create_protocol_parts()
         self.meeting_2 = self.committee_1.meetings.create(date=datetime.now(),
-                                                         topics = "python",
-                                                         protocol_text='m2')
+                                                          topics="python",
+                                                          protocol_text='m2')
         self.meeting_2.create_protocol_parts()
         self.jacob = User.objects.create_user('jacob', 'jacob@example.com',
                                               'JKM')
         self.adrian = User.objects.create_user('adrian', 'adrian@example.com',
-                                              'ADRIAN')
+                                               'ADRIAN')
         (self.group, created) = Group.objects.get_or_create(name='Valid Email')
         if created:
             self.group.save()
@@ -51,7 +51,7 @@ I have a deadline''')
         self.bill_1 = Bill.objects.create(stage='1', title='bill 1')
         self.mk_1 = Member.objects.create(name='mk 1')
         self.topic = self.committee_1.topic_set.create(creator=self.jacob,
-                                                title="hello", description="hello world")
+                                                       title="hello", description="hello world")
         self.tag_1 = Tag.objects.create(name='tag1')
         self.meeting_1.mks_attended.add(self.mk_1)
 
@@ -68,18 +68,18 @@ I have a deadline''')
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         part = self.meeting_1.parts.list()[0]
         res = self.client.post(reverse('annotatetext-post_annotation'),
-                        {'selection_start': 7,
-                         'selection_end': 14,
-                         'flags': 0,
-                         'color': '#000',
-                         'lengthcheck': len(part.body),
-                         'comment' : 'just perfect',
-                         'object_id': part.id,
-                         'content_type': ContentType.objects.get_for_model(part).id,
-                        })
+                               {'selection_start': 7,
+                                'selection_end': 14,
+                                'flags': 0,
+                                'color': '#000',
+                                'lengthcheck': len(part.body),
+                                'comment': 'just perfect',
+                                'object_id': part.id,
+                                'content_type': ContentType.objects.get_for_model(part).id,
+                                })
         self.assertEqual(res.status_code, 302)
         annotation = Annotation.objects.get(object_id=part.id,
-                         content_type=ContentType.objects.get_for_model(part).id)
+                                            content_type=ContentType.objects.get_for_model(part).id)
         self.assertEqual(annotation.selection, 'perfect')
         # ensure the activity has been recorded
         stream = Action.objects.stream_for_actor(self.jacob)
@@ -102,30 +102,30 @@ I have a deadline''')
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         part = self.meeting_1.parts.list()[0]
         res = self.client.post(reverse('annotatetext-post_annotation'),
-                        {'selection_start': 7,
-                         'selection_end': 14,
-                         'flags': 0,
-                         'color': '#000',
-                         'lengthcheck': len(part.body),
-                         'comment' : 'just perfect',
-                         'object_id': part.id,
-                         'content_type': ContentType.objects.get_for_model(part).id,
-                        })
+                               {'selection_start': 7,
+                                'selection_end': 14,
+                                'flags': 0,
+                                'color': '#000',
+                                'lengthcheck': len(part.body),
+                                'comment': 'just perfect',
+                                'object_id': part.id,
+                                'content_type': ContentType.objects.get_for_model(part).id,
+                                })
         self.assertEqual(res.status_code, 302)
         res = self.client.post(reverse('annotatetext-post_annotation'),
-                        {'selection_start': 8,
-                         'selection_end': 15,
-                         'flags': 0,
-                         'color': '#000',
-                         'lengthcheck': len(part.body),
-                         'comment' : 'not quite',
-                         'object_id': part.id,
-                         'content_type': ContentType.objects.get_for_model(part).id,
-                        })
+                               {'selection_start': 8,
+                                'selection_end': 15,
+                                'flags': 0,
+                                'color': '#000',
+                                'lengthcheck': len(part.body),
+                                'comment': 'not quite',
+                                'object_id': part.id,
+                                'content_type': ContentType.objects.get_for_model(part).id,
+                                })
         self.assertEqual(res.status_code, 302)
 
         annotations = Annotation.objects.filter(object_id=part.id,
-                         content_type=ContentType.objects.get_for_model(part).id)
+                                                content_type=ContentType.objects.get_for_model(part).id)
         self.assertEqual(annotations.count(), 2)
         # ensure we will see it on the committee page
         c_annotations = self.committee_1.annotations
@@ -138,20 +138,21 @@ I have a deadline''')
         self.assertEqual(c_annotations.count(), 1)
 
     def testAnnotationForbidden(self):
-        self.jacob.groups.clear() # invalidate this user's email
+        self.jacob.groups.clear()  # invalidate this user's email
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         part = self.meeting_1.parts.list()[0]
         res = self.client.post(reverse('annotatetext-post_annotation'),
-                        {'selection_start': 7,
-                         'selection_end': 14,
-                         'flags': 0,
-                         'color': '#000',
-                         'lengthcheck': len(part.body),
-                         'comment' : 'just perfect',
-                         'object_id': part.id,
-                         'content_type': ContentType.objects.get_for_model(part).id,
-                        })
-        self.assertEqual(res.status_code, 403) # 403 Forbidden. 302 means a user with unverified email has posted an annotation.
+                               {'selection_start': 7,
+                                'selection_end': 14,
+                                'flags': 0,
+                                'color': '#000',
+                                'lengthcheck': len(part.body),
+                                'comment': 'just perfect',
+                                'object_id': part.id,
+                                'content_type': ContentType.objects.get_for_model(part).id,
+                                })
+        self.assertEqual(res.status_code,
+                         403)  # 403 Forbidden. 302 means a user with unverified email has posted an annotation.
 
     def testCommitteeList(self):
         res = self.client.get(reverse('committee-list'))
@@ -159,7 +160,7 @@ I have a deadline''')
         self.assertTemplateUsed(res, 'committees/committee_list.html')
         committees = res.context['committees']
         self.assertEqual(map(just_id, committees),
-                         [ self.committee_1.id, self.committee_2.id, ])
+                         [self.committee_1.id, self.committee_2.id, ])
         self.assertQuerysetEqual(res.context['topics'],
                                  ["<Topic: hello>"])
 
@@ -185,16 +186,16 @@ I have a deadline''')
 
     def testLoginRequired(self):
         res = self.client.post(reverse('committee-meeting',
-                           kwargs={'pk': self.meeting_1.id}))
+                                       kwargs={'pk': self.meeting_1.id}))
         self.assertFalse(self.bill_1 in self.meeting_1.bills_first.all())
         self.assertEqual(res.status_code, 302)
-        self.assertTrue(res['location'].startswith('%s%s'  %
-                                       ('http://testserver', settings.LOGIN_URL)))
+        self.assertTrue(res['location'].startswith('%s%s' %
+                                                   ('http://testserver', settings.LOGIN_URL)))
 
     def testConnectToMK(self):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         res = self.client.post(reverse('committee-meeting',
-                           kwargs={'pk': self.meeting_1.id}),
+                                       kwargs={'pk': self.meeting_1.id}),
                                {'user_input_type': 'mk',
                                 'mk_name': self.mk_1.name})
         self.assertEqual(res.status_code, 302)
@@ -205,14 +206,14 @@ I have a deadline''')
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         res = self.client.post(reverse('committee-meeting',
                                        kwargs={'pk':
-                                               self.meeting_1.id}),
+                                                   self.meeting_1.id}),
                                {'user_input_type': 'bill',
                                 'bill_id': self.bill_1.id})
         self.assertEqual(res.status_code, 302)
         self.assertTrue(self.bill_1 in self.meeting_1.bills_first.all())
         self.client.logout()
 
-    def test_add_tag_login_required(self):
+    def test_add_tag_committee_login_required(self):
         url = reverse('add-tag-to-object',
                                  kwargs={'app':APP,
                                          'object_type':'committeemeeting',
@@ -224,10 +225,10 @@ I have a deadline''')
     def test_add_tag(self):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         url = reverse('add-tag-to-object',
-                                 kwargs={'app':APP,
-                                         'object_type': 'committeemeeting',
-                                         'object_id': self.meeting_1.id})
-        res = self.client.post(url, {'tag_id':self.tag_1.id})
+                      kwargs={'app': APP,
+                              'object_type': 'committeemeeting',
+                              'object_id': self.meeting_1.id})
+        res = self.client.post(url, {'tag_id': self.tag_1.id})
         self.assertEqual(res.status_code, 200)
         self.assertIn(self.tag_1, self.meeting_1.tags)
 
@@ -235,10 +236,10 @@ I have a deadline''')
     def test_create_tag_permission_required(self):
         self.assertTrue(self.client.login(username='jacob', password='JKM'))
         url = reverse('create-tag',
-                                 kwargs={'app':APP,
-                                         'object_type': 'committeemeeting',
-                                         'object_id': self.meeting_1.id})
-        res = self.client.post(url, {'tag':'new tag'})
+                      kwargs={'app': APP,
+                              'object_type': 'committeemeeting',
+                              'object_id': self.meeting_1.id})
+        res = self.client.post(url, {'tag': 'new tag'})
         self.assertRedirects(res, "%s?next=%s" % (settings.LOGIN_URL, url),
                              status_code=302)
 
@@ -247,10 +248,10 @@ I have a deadline''')
         self.assertTrue(self.client.login(username='adrian',
                                           password='ADRIAN'))
         url = reverse('create-tag',
-                                 kwargs={'app':APP,
-                                         'object_type': 'committeemeeting',
-                                         'object_id': self.meeting_1.id})
-        res = self.client.post(url, {'tag':'new tag'})
+                      kwargs={'app': APP,
+                              'object_type': 'committeemeeting',
+                              'object_id': self.meeting_1.id})
+        res = self.client.post(url, {'tag': 'new tag'})
         self.assertEqual(res.status_code, 200)
         self.new_tag = Tag.objects.get(name='new tag')
         self.assertIn(self.new_tag, self.meeting_1.tags)
@@ -289,24 +290,24 @@ I have a deadline''')
         self.mk_1.delete()
         self.topic.delete()
 
-class TopicsTest(TestCase):
 
+class TopicsTest(TestCase):
     def setUp(self):
         self.committee_1 = Committee.objects.create(name='c1')
         self.committee_2 = Committee.objects.create(name='c2')
         self.meeting_1 = self.committee_1.meetings.create(date=datetime.now(),
-                                 protocol_text='''jacob:
+                                                          protocol_text='''jacob:
 I am a perfectionist
 adrian:
 I have a deadline''')
         self.meeting_1.create_protocol_parts()
         self.meeting_2 = self.committee_1.meetings.create(date=datetime.now(),
-                                                         protocol_text='m2')
+                                                          protocol_text='m2')
         self.meeting_2.create_protocol_parts()
         self.jacob = User.objects.create_user('jacob', 'jacob@example.com',
                                               'JKM')
         self.ofri = User.objects.create_user('ofri', 'ofri@example.com',
-                                              'ofri')
+                                             'ofri')
         (self.group, created) = Group.objects.get_or_create(name='Valid Email')
         if created:
             self.group.save()
@@ -314,11 +315,10 @@ I have a deadline''')
         self.jacob.groups.add(self.group)
         self.mk_1 = Member.objects.create(name='mk 1')
         self.topic = self.committee_1.topic_set.create(creator=self.jacob,
-                                                title="hello", description="hello world")
+                                                       title="hello", description="hello world")
         self.topic2 = self.committee_1.topic_set.create(creator=self.ofri,
-                                                title="bye", description="goodbye")
+                                                        title="bye", description="goodbye")
         self.linktype = LinkType.objects.create(title='default')
-
 
     def testBasic(self):
         self.topic2.set_status(TOPIC_REJECTED, "just because")
@@ -334,81 +334,80 @@ I have a deadline''')
         self.assertTrue(self.topic.can_edit(self.ofri))
         self.topic.editors.remove(self.ofri)
 
-
     def test_edit_topic_form(self):
         res = self.client.get(reverse('edit-committee-topic',
-                                 kwargs={'committee_id': self.committee_1.id,
-                                         'topic_id': self.topic.id}))
-        self.assertEqual(res.status_code, 302) # login required
+                                      kwargs={'committee_id': self.committee_1.id,
+                                              'topic_id': self.topic.id}))
+        self.assertEqual(res.status_code, 302)  # login required
         self.assertTrue(self.client.login(username='ofri',
                                           password='ofri'))
         res = self.client.get(reverse('edit-committee-topic',
-                                 kwargs={'committee_id': self.committee_1.id,
-                                         'topic_id': self.topic.id}))
-        self.assertEqual(res.status_code, 403) # user is not an editor
+                                      kwargs={'committee_id': self.committee_1.id,
+                                              'topic_id': self.topic.id}))
+        self.assertEqual(res.status_code, 403)  # user is not an editor
         self.assertTrue(self.client.login(username='jacob',
                                           password='JKM'))
         res = self.client.get(reverse('edit-committee-topic',
-                                 kwargs={'committee_id': self.committee_1.id,
-                                         'topic_id': self.topic.id}))
-        self.assertEqual(res.status_code, 200) # user is an editor
+                                      kwargs={'committee_id': self.committee_1.id,
+                                              'topic_id': self.topic.id}))
+        self.assertEqual(res.status_code, 200)  # user is an editor
         self.assertTemplateUsed(res, 'committees/edit_topic.html')
 
     def test_edit_topic_logged_required(self):
         res = self.client.post(reverse('edit-committee-topic',
-                                 kwargs={'committee_id': self.committee_1.id,
-                                         'topic_id': self.topic.id}),
-                               {'title':'test topic title',
+                                       kwargs={'committee_id': self.committee_1.id,
+                                               'topic_id': self.topic.id}),
+                               {'title': 'test topic title',
                                 'description': 'test topic description',
-                                'committees':self.committee_1.id,
-                                'form-INITIAL_FORMS':0,
-                                'form-MAX_NUM_FORMS':'',
-                                'form-TOTAL_FORMS':3})
-        self.assertEqual(res.status_code, 302) # redirect to login
-        self.assertTrue(res['location'].startswith('%s%s'  %
-                                       ('http://testserver', settings.LOGIN_URL)))
+                                'committees': self.committee_1.id,
+                                'form-INITIAL_FORMS': 0,
+                                'form-MAX_NUM_FORMS': '',
+                                'form-TOTAL_FORMS': 3})
+        self.assertEqual(res.status_code, 302)  # redirect to login
+        self.assertTrue(res['location'].startswith('%s%s' %
+                                                   ('http://testserver', settings.LOGIN_URL)))
 
     def test_edit_topic(self):
         self.assertTrue(self.client.login(username='jacob',
                                           password='JKM'))
         res = self.client.post(reverse('edit-committee-topic',
-                                 kwargs={'committee_id': self.committee_1.id,
-                                         'topic_id': self.topic.id}),
-                               {'title':'test topic title',
+                                       kwargs={'committee_id': self.committee_1.id,
+                                               'topic_id': self.topic.id}),
+                               {'title': 'test topic title',
                                 'description': 'test topic description',
-                                'committees':self.committee_1.id,
-                                'form-INITIAL_FORMS':0,
-                                'form-MAX_NUM_FORMS':'',
-                                'form-TOTAL_FORMS':3})
-        self.assertEqual(res.status_code, 302) # redirect after POST
+                                'committees': self.committee_1.id,
+                                'form-INITIAL_FORMS': 0,
+                                'form-MAX_NUM_FORMS': '',
+                                'form-TOTAL_FORMS': 3})
+        self.assertEqual(res.status_code, 302)  # redirect after POST
         t = Topic.objects.get(pk=self.topic.id)
         self.assertEqual(t.title, 'test topic title')
         self.assertEqual(t.description, 'test topic description')
-        self.assertEqual(Topic.objects.count(), 2) # make sure we didn't create
-                                                   # a new topic
+        self.assertEqual(Topic.objects.count(), 2)  # make sure we didn't create
+        # a new topic
 
     def test_add_topic(self):
         self.assertTrue(self.client.login(username='jacob',
                                           password='JKM'))
         res = self.client.post(reverse('edit-committee-topic',
-                                 kwargs={'committee_id': self.committee_1.id}),
-                               {'title':'test topic title',
+                                       kwargs={'committee_id': self.committee_1.id}),
+                               {'title': 'test topic title',
                                 'description': 'test topic description',
-                                'committees':self.committee_1.id,
-                                'form-INITIAL_FORMS':0,
-                                'form-MAX_NUM_FORMS':'',
-                                'form-TOTAL_FORMS':3})
-        self.assertEqual(res.status_code, 302) # redirect after POST
-        topic_id = res['location'].split('/')[-2] # id of the new topic
+                                'committees': self.committee_1.id,
+                                'form-INITIAL_FORMS': 0,
+                                'form-MAX_NUM_FORMS': '',
+                                'form-TOTAL_FORMS': 3})
+        self.assertEqual(res.status_code, 302)  # redirect after POST
+        topic_id = res['location'].split('/')[-2]  # id of the new topic
         t = Topic.objects.get(pk=topic_id)
         self.assertEqual(t.title, 'test topic title')
         self.assertEqual(t.description, 'test topic description')
-        self.assertEqual(Topic.objects.count(), 3) # make sure we created
-                                                   # a new topic
+        self.assertEqual(Topic.objects.count(), 3)  # make sure we created
+        # a new topic
         # cleanup
         t.delete()
 
-    def testListView (self):
+    def testListView(self):
         res = self.client.get(reverse('topic-list'))
         self.assertEqual(res.status_code, 200)
         self.assertTemplateUsed(res, 'committees/topic_list.html')

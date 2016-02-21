@@ -1,0 +1,5 @@
+---
+- hosts: db
+
+  roles:
+   - role: dev_db

@@ -1,5 +1,5 @@
 # encoding: utf-8
-import re, itertools, logging, random, sys, traceback
+import re, logging, random, sys, traceback
 from datetime import date, timedelta
 
 from django.db import models, IntegrityError
@@ -11,25 +11,23 @@ from django.utils.html import escape
 from django.core.cache import cache
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.contrib.comments.models import Comment
-from django.db.models import Q
 
 from tagging.models import Tag, TaggedItem
 from tagging.forms import TagField
 import voting
 from tagging.utils import get_tag
 from actstream import Action
-from actstream.models import action, Follow
+from actstream.models import Follow
 
 from laws import constants
 from mks.models import Party, Knesset
 from tagvotes.models import TagVote
-from knesset.utils import slugify_name, trans_clean
+from knesset.utils import slugify_name
 from laws.vote_choices import (TYPE_CHOICES, BILL_STAGE_CHOICES,
                                BILL_AGRR_STAGES, BILL_STAGES)
 
-from auxiliary.models import add_tags_to_related_objects
-from django.db.models.signals import post_save, post_delete
+from ok_tag.models import add_tags_to_related_objects
+from django.db.models.signals import post_save
 
 logger = logging.getLogger("open-knesset.laws.models")
 VOTE_ACTION_TYPE_CHOICES = (

@@ -1,0 +1,6 @@
+{% load i18n committees_tags %}
+{% for o in object_list %}
+    {% committee_meeting_list_item o show_committee_name=True show_present=True %}
+
+{% endfor %}
+{#{% committee_meeting_list_item o show_committee_name=True show_present=True %}#}

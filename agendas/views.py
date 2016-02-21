@@ -24,8 +24,7 @@ from models import Agenda, AgendaVote, AgendaMeeting, AgendaBill
 
 import queries
 
-from auxiliary.views import GetMoreView
-
+from auxiliary.mixins import GetMoreView
 
 logger = logging.getLogger("open-knesset.agendas.views")
 
