@@ -42,7 +42,7 @@ class Command(BaseKnessetDataserviceCommand):
             Committee.objects.create(**fetched_committee)
 
     def _update_active_committees(self):
-        for ds_committee in DataserviceCommittee.get_all_active_committees():
+        for ds_committee in DataserviceCommittee.get_all_active_committees(has_portal_link=False):
             committee = dict(self._translate_ds_to_model(ds_committee))
             self._update_or_create(committee)
 
