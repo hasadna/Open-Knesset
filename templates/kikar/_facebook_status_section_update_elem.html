@@ -1,0 +1,64 @@
+{% load i18n %}
+{% verbatim %}
+<script id="facebook-status-template" type="text/x-handlebars-template">
+    <li class="agenda-mini clearfix">
+        <p>
+            <span class="label">{{member}}, {{party}}</span><span> {{published_str}}:</span>
+        </p>
+        <p>{{story}}</p>
+        <div>{{{content_snippet}}}</div>
+        {{#if attachment}}
+        <div class="fb-attachment-container">
+            <br>
+            {{!attachment.type}}
+            {{#if attachment.is_photo}}
+            <img src="{{attachment.source}}" class="img-rounded img-fb-status-attachment"/>
+            {{/if}}
+
+            {{#if attachment.is_video}}
+            {{#if attachment.is_youtube_video}}
+            <div class="youtube-attachment-container">
+                <div class='embed-container'>
+                    <iframe src='{{attachment.source_clean}}' frameborder='0' allowfullscreen></iframe>
+                </div>
+            </div>
+            {{else}}
+            <video width="auto" height="auto" controls class="video-fb-attachment-elem">
+                <source src="{{attachment.source}}" type="video/mp4">
+                <source src="{{attachment.source}}" type="video/ogg">
+                {% endverbatim %}
+                {% trans 'Apologies, your browser does not support displaying videos.' %}
+                {% verbatim %}
+            </video>
+            {{/if}}
+            {{/if}}
+            {{#if attachment.is_link}}
+            <div class="link-fb-attachment-container">
+                <a href="{{attachment.link}}">
+                    <div class="panel-body">
+                        <div>
+                            <img src="{{attachment.picture}}"
+                                 class="img-responsive center-block img-rounded img-fb-status-attachment">
+                        </div>
+                    </div>
+                </a>
+                <div class="link-fb-attachment-panel-footer">
+                    <h3>{{attachment.name}}</h3>
+
+                    <div class="link-fb-attachment-caption pull-left" >{{attachment.caption}}
+                    </div>
+                    <p>{{attachment.description}}<br></p>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+        {{/if}}
+        <div>
+            <br>
+            <a class="btn btn-more" href="http://www.kikar.org/status_permalink/{{status_id}}" target="_blank">
+                {% endverbatim %}{% trans 'More' %}{% verbatim %}</a>
+        </div>
+
+    </li>
+</script>
+{% endverbatim %}

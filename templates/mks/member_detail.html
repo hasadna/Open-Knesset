@@ -8,26 +8,26 @@
     <script src="{% static "js/d3.js" %}"></script>
     <script src="{% static "js/mk-pie.js" %}?v=2"></script>
     <script type="text/javascript">
-        $(function() {
-            var MKPieChart= window.MKPieChart;
+        $(function () {
+            var MKPieChart = window.MKPieChart;
 
             // init agenda-pie charts
             $('.agenda-pie').each(function () {
                 var data = $(this).data(),
-                    pie_order = ['for', 'noVote', 'abstain', 'against'],
-                    pie_data = [], k;
+                        pie_order = ['for', 'noVote', 'abstain', 'against'],
+                        pie_data = [], k;
 
-                for ( k in data ) {
-                    pie_data.push({type : k, votes : data[k]});
+                for (k in data) {
+                    pie_data.push({type: k, votes: data[k]});
                 }
                 pie_data.sort(function (a, b) {
                     return pie_order.indexOf(a.type) - pie_order.indexOf(b.type);
                 });
                 new MKPieChart(this, {
-                    width       : 90,
-                    height      : 89,
-                    padding     : 0,
-                    line_width  : 6
+                    width: 90,
+                    height: 89,
+                    padding: 0,
+                    line_width: 6
                 }).render(pie_data);
             });
 
@@ -38,381 +38,438 @@
 {% endblock %}
 {% block extrahead %}
     <meta property="og:image" content="{{ object.img_url }}"/>
-    <meta name="thumbnail" content="{{ object.img_url }}" />
-{% if object.backlinks_enabled %}{% url 'pingback-server' as pingback_url %}{% pingback_link pingback_url %}{% endif %}
-{% if object.backlinks_enabled %}
-    {% url 'member-trackback' object_id=object.id as trackback_url %}
-    {% trackback_rdf object.get_absolute_url object.title trackback_url True %}
-{% endif %}
+    <meta name="thumbnail" content="{{ object.img_url }}"/>
+    {% if object.backlinks_enabled %}{% url 'pingback-server' as pingback_url %}
+        {% pingback_link pingback_url %}{% endif %}
+    {% if object.backlinks_enabled %}
+        {% url 'member-trackback' object_id=object.id as trackback_url %}
+        {% trackback_rdf object.get_absolute_url object.title trackback_url True %}
+    {% endif %}
     <link rel="alternate" type="application/rss+xml" title="RSS" href="{% url 'member-activity-feed' object.id %}">
 {% endblock %}
-{% block description %} {% with object.name as name %} {% blocktrans %} Up to date information about {{ name }} in the knesset: votes, bills, committees, attendance and more.   Information about {{ name }} for journalists, researchers, students and citizens by Open Knesset - Opening the Knesset to the public. {% endblocktrans %} {% endwith %} {% endblock %}
+{% block description %} {% with object.name as name %} {% blocktrans %} Up to date information about {{ name }} in the
+    knesset: votes, bills, committees, attendance and more.   Information about {{ name }} for journalists, researchers,
+    students and citizens by Open Knesset - Opening the Knesset to the public. {% endblocktrans %}
+{% endwith %} {% endblock %}
 {% block nav-parties %}class="active"{% endblock %}
 
- {% block breadcrumbs %}
+{% block breadcrumbs %}
     {% with object.current_party as party %}
-<li><a href="{{party.knesset.get_absolute_url}}">{{party.knesset}}</a> <span class="divider">/</span></li>
-            <li><a href="{% url 'party-detail' object.current_party.id %}">{{ object.current_party }}</a> <span class="divider">/</span></li>
-            <li class="active">{{ object.name }}</li>
+        <li><a href="{{ party.knesset.get_absolute_url }}">{{ party.knesset }}</a> <span class="divider">/</span></li>
+        <li><a href="{% url 'party-detail' object.current_party.id %}">{{ object.current_party }}</a> <span
+                class="divider">/</span></li>
+        <li class="active">{{ object.name }}</li>
     {% endwith %}
- {% endblock %}
+{% endblock %}
 
 
 
 {% block divcontent %}
-{% cache 14400 mks_detail object.id request.page request.get_full_path %}
-    <section class="card card-main with-min-height">
-      <div class="row">
-        <div class="span2">
-            <div class="spacer"><img src="{{ object.highres_img_url }}" alt="{{object.name}}"/></div>
-            {% if object.current_party.logo %}
-            <div class="spacer">
-                <img src="{{ object.current_party.logo.url }}">
-            </div>
-            {% endif %}
-        </div>
+    {% cache 14400 mks_detail object.id request.page request.get_full_path %}
+        <section class="card card-main with-min-height">
+            <div class="row">
+                <div class="span2">
+                    <div class="spacer"><img src="{{ object.highres_img_url }}" alt="{{ object.name }}"/></div>
+                    {% if object.current_party.logo %}
+                        <div class="spacer">
+                            <img src="{{ object.current_party.logo.url }}">
+                        </div>
+                    {% endif %}
+                </div>
 
-        <div class="span7 card-details">
-          <div class="spacer fill">
-            <header>
-            <h1>{{object}}</h1>
-            </header>
-            <p>
-                <a href="{% url 'party-detail' object.current_party.id %}">{{ object.current_party }}</a>
-                <strong>({{object.coalition_status|yesno:_("IN_COALITION,IN_OPPOSITION,PAST_MEMBER")}})</strong>
-                {% if previous_parties %}
-                <span id="member-previous-parties" style="display:none">
-                    {% for p in previous_parties  %}
-                      | <a href="{% url 'party-detail' p.id %}">{{ p }}</a>
-                        ({{p.coalition_status|yesno:_("IN_COALITION,IN_OPPOSITION,PAST_MEMBER")}})
+                <div class="span7 card-details">
+                    <div class="spacer fill">
+                        <header>
+                            <h1>{{ object }}</h1>
+                        </header>
+                        <p>
+                            <a href="{% url 'party-detail' object.current_party.id %}">{{ object.current_party }}</a>
+                            <strong>({{ object.coalition_status|yesno:_("IN_COALITION,IN_OPPOSITION,PAST_MEMBER") }})</strong>
+                            {% if previous_parties %}
+                                <span id="member-previous-parties" style="display:none">
+                    {% for p in previous_parties %}
+                        | <a href="{% url 'party-detail' p.id %}">{{ p }}</a>
+                        ({{ p.coalition_status|yesno:_("IN_COALITION,IN_OPPOSITION,PAST_MEMBER") }})
                     {% endfor %}
                 </span>
-                | <a href="#" data-target="#member-previous-parties" data-toggle="oktoggle" data-text="{% trans "Previous Parties" %} +|{% trans "Less" %} -">{% trans "Previous Parties" %} +</a>
-                {% endif %}
-            </p>
-            <p>
-                {% for role in object.roles|slice:":2" %}
-                {% if not forloop.first %} | {% endif %} {{ role }}
-                {% endfor %}
-                {% if object.roles|length > 2 %}
-                <span id="member-extra-roles" style="display:none">
+                                |<a href="#" data-target="#member-previous-parties" data-toggle="oktoggle"
+                                    data-text="{% trans "Previous Parties" %} +|{% trans "Less" %} -">{% trans "Previous Parties" %}
+                                +</a>
+                            {% endif %}
+                        </p>
+                        <p>
+                            {% for role in object.roles|slice:":2" %}
+                                {% if not forloop.first %} | {% endif %} {{ role }}
+                            {% endfor %}
+                            {% if object.roles|length > 2 %}
+                                <span id="member-extra-roles" style="display:none">
                     {% for role in object.roles|slice:"2:" %} | {{ role }} {% endfor %}
                 </span>
-                | <a href="#" data-target="#member-extra-roles" data-toggle="oktoggle" data-text="{% trans "More" %} +|{% trans "Less" %} -">{% trans "More" %} +</a>
-                {% endif %}
-            </p>
-            <p>
-                {% if committee_presence|length > 0 %}
-                <strong>{% trans "Committees" %}:</strong>
-                {% for committee_presence in committees_presence %}
-                {% if not forloop.first %} | {% endif %}
-                <a href="{{ committee_presence.committee.get_absolute_url }}">
-                    {{committee_presence.committee}}
-                    ({% trans 'Presence:' %} {{committee_presence.presence}}%)
-                </a>
-                {% if committee_presence.committee.protocol_not_published %}*{% endif %}
-                {% endfor %}
-                {% endif %}
-            </p>
+                                |<a href="#" data-target="#member-extra-roles" data-toggle="oktoggle"
+                                    data-text="{% trans "More" %} +|{% trans "Less" %} -">{% trans "More" %} +</a>
+                            {% endif %}
+                        </p>
+                        <p>
+                            {% if committee_presence|length > 0 %}
+                                <strong>{% trans "Committees" %}:</strong>
+                                {% for committee_presence in committees_presence %}
+                                    {% if not forloop.first %} | {% endif %}
+                                    <a href="{{ committee_presence.committee.get_absolute_url }}">
+                                        {{ committee_presence.committee }}
+                                        ({% trans 'Presence:' %} {{ committee_presence.presence }}%)
+                                    </a>
+                                    {% if committee_presence.committee.protocol_not_published %}*{% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </p>
 
-          {% if has_protocols_not_published %} <p>* {% trans "Warning: presence data is not provided for this committee" %}</p> {% endif %}
-			<p>
-				{% if object.awards|length > 0 %}
-				<strong>{% trans "Awards" %}:</strong>
-				{% for award in object.awards|slice:":2" %}
-                    {% if not forloop.first %} | {% endif %}
-                    <a href="{{ award.reference }}">{{ award.award_type.name }} ({{ award.date_given }})</a>
-                {% endfor %}
-				{% if object.awards|length > 2 %}
-				<span id="member-extra-awards" style="display:none">
+                        {% if has_protocols_not_published %}
+                            <p>* {% trans "Warning: presence data is not provided for this committee" %}</p> {% endif %}
+                        <p>
+                            {% if object.awards|length > 0 %}
+                                <strong>{% trans "Awards" %}:</strong>
+                                {% for award in object.awards|slice:":2" %}
+                                    {% if not forloop.first %} | {% endif %}
+                                    <a href="{{ award.reference }}">{{ award.award_type.name }}
+                                        ({{ award.date_given }})</a>
+                                {% endfor %}
+                                {% if object.awards|length > 2 %}
+                                    <span id="member-extra-awards" style="display:none">
                     {% for award in object.awards|slice:"2:" %}
-					| <a href="{{ award.reference }}">{{ award.award_type.name }} ({{ award.date_given }})</a>
-					{% endfor %}
-                </span>
-                | <a href="#" data-target="#member-extra-awards" data-toggle="oktoggle" data-text="{% trans "More" %} +|{% trans "Less" %} -">{% trans "More" %} +</a>
-                {% endif %} {% endif %}
-			</p>
-			<p>
-				{% if object.convictions|length > 0 %}
-				<strong>{% trans "Convictions" %}:</strong>
-				{% for award in object.convictions|slice:":2" %}
-                    {% if not forloop.first %} | {% endif %}
-                    <a href="{{ award.reference }}">{{ award.award_type.name }} ({{ award.date_given }})</a>
-                {% endfor %}
-				{% if object.convictions|length > 2 %}
-				<span id="member-extra-convictions" style="display:none">
-                    {% for award in object.convictions|slice:"2:" %}
-					| <a href="{{ award.reference }}">{{ award.award_type.name }} ({{ award.date_given }})</a>
-					{% endfor %}
-                </span>
-                | <a href="#" data-target="#member-extra-convictions" data-toggle="oktoggle" data-text="{% trans "More" %} +|{% trans "Less" %} -">{% trans "More" %} +</a>
-                {% endif %} {% endif %}
-			</p>
-            <div id="member-details" style="display:none">
-                {% if object.date_of_death %}
-                <div>{% trans "date of death" %} - {{ object.date_of_death }}</div>
-                {% else %}
-                <div>{% trans "age" %} - {{ object.age.years }}</div>
-                {% endif %}
-                <div>{% trans "place of birth" %} - {{ object.place_of_birth }}</div>
-                {% if object.year_of_aliyah %}
-                <div>{% trans "year of aliyah" %} - {{ object.year_of_aliyah }}</div>
-                {% endif %}
-                {% if not object.date_of_death %}
-                <div>{% trans "family status" %} - {{ object.family_status }}</div>
-                <div>{% trans "place of residence" %} - {{ object.place_of_residence}}</div>
-                {% endif %}
-                {% if about_video_embed_link != '' and about_video_image_link != '' %}
-                <div>
-                    <h3>{% trans "MK video (knesset channel)" %}</h3>
-                    {% video_player 400 300 about_video_embed_link about_video_image_link %}
-                </div>
-                {% endif %}
-            </div>
-            <div class="social-links">
-              <h5>{% blocktrans with name=member.firstname %}{{name}} around the net{% endblocktrans %}:</h5>
-              <ul class="text-center">
-                {% object_icon_links member %}
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="span3 social-details">
-          <div class="spacer actions-panel">
-            {% include "auxiliary/_watch.html" with watched_id=object.id watched_type="member"%}
-            <a href="#embed-information-modal" class="btn btn-big" role="button" data-toggle="modal">{% trans "embed" %}</a>
-            {% if object.is_current %}
-            <a href="#contact-information-modal" class="btn btn-big btn-contact" role="button" data-toggle="modal">{% trans "Contact Information" %}</a>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      <a href="#" class="btn btn-mini btn-expand" data-target="#member-details"
-          data-toggle="oktoggle" data-text="{% trans "Personal Information" %} +|{% trans "Collapse" %} -">{% trans "Personal Information" %} +</a>
-    </section>
-
-    {% if object.is_current %}
-    <!-- Contact information modal -->
-    <div id="contact-information-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel" aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-            <h3 id="contactModalLabel">{% trans "Contact Information" %}</h3>
-        </div>
-        <div class="modal-body">
-             <p>{% trans "phone" %} - {{ object.phone }}</p>
-             {% if object.fax %}
-             <p>{% trans "fax" %} - {{ object.fax }}</p>
-             {% endif %}
-             <p>{% trans "e-mail address" %} - {{object.email|urlize}}</p>
-             <div class="alert alert-info">
-                <p>טיפים ליצירת קשר
-                    <ul>
-                        <li>מי שמטפל בפניות הציבור הם העוזרים הפרלמנטריים של הח"כים, ולא הח"כים עצמם.</li>
-                        <li>שיחות טלפון מומלץ לבצע בימים ב'-ד', בין השעות 8:00 בבוקר ועד 17:00. אלו השעות שבהן העוזרים נמצאים יותר בלשכה.</li>
-                        <li>אימיילים עדיף לשלוח בימים א' ו-ה'.</li>
-                        <li>הנחיות נוספות לכתיבת פנייה אפקטיבית לנבחרי ציבור ניתן למצוא ב<a href="http://www.shelly.org.il/node/1678" target="_blank">פוסט הזה של שלי יחימוביץ'</a>.</li>
-                    </ul>
-                </p>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
-        </div>
-    </div>
-    {% endif %}
-    <div class="row">
-        <div class="cards span9">
-            <section class="card card-list card-list-latest">
-                <header>
-                    <h2>
-                        <i class="fa fa-calendar"></i>
-                        {% trans "Recent actions" %}
-                    </h2>
-                    <!--a class="btn btn-mini btn-question" href="#">?</a-->
-                </header>
-                <ul id="recent-actions">
-                {% for action in actions %}{% display_action action %}{% endfor %}
-                </ul>
-                <footer>
-                {% if actions_more %}
-                <button class="btn btn-mini btn-expand" data-provide="okmore"
-                    data-loading-text="{% trans "Loading" %} ..."
-                    autocomplete="off" data-target="#recent-actions"
-                    data-url="{% url 'member-more-actions' object.pk %}"
-                    data-initial="{{INITIAL_DATA}}">{% trans "More" %} +</button>
-                {% endif %}
-                </footer>
-            </section>
-{% if not object.is_minister %}
-            <section class="card card-list card-list-latest">
-                <header>
-                    <h2>
-                        <i class="fa fa-gavel"></i>
-                        {% trans "Legislation" %}
-                    </h2>
-                    <!--a class="btn btn-mini btn-question" href="#">?</a-->
-                </header>
-                <ul id="recent-legislation">
-                {% for action in legislation_actions %}{% display_action action %}{% endfor %}
-                </ul>
-                <footer>
-                {% if legislation_actions_more %}
-                <button class="btn btn-mini btn-expand" data-provide="okmore"
-                    data-loading-text="{% trans "Loading" %} ..."
-                    autocomplete="off" data-target="#recent-legislation" 
-                    data-url="{% url 'member-more-legislation' object.pk %}"
-                    data-initial="{{INITIAL_DATA}}">{% trans "More" %} +</button>
-                {% endif %}
-                </footer>
-            </section>
-{% endif %}
-            {% if committee_actions %}
-            <section class="card card-list card-list-latest">
-                <header>
-                    <h2>
-                        <i class="fa fa-users"></i>
-                        {% trans "Committees" %}
-                    </h2>
-                    <!--a class="btn btn-mini btn-question" href="#">?</a-->
-                </header>
-                <ul id="recent-committees">
-                {% for action in committee_actions %}
-                    {% display_action action %}
-                {% endfor %}
-                </ul>
-                <footer>
-                {% if committee_actions_more %}
-                <button class="btn btn-mini btn-expand" data-provide="okmore"
-                    data-loading-text="{% trans "Loading" %} ..."
-                    autocomplete="off" data-target="#recent-committees"
-                    data-url="{% url 'member-more-committees' object.pk %}"
-                    data-initial="{{INITIAL_DATA}}">{% trans "More" %} +</button>
-                {% endif %}
-                </footer>
-            </section>
-            {% endif %}
-            {% if plenum_actions %}
-            <section class="card card-list card-list-latest">
-                <header>
-                    <h2>
-                        <i class="fa fa-users"></i>
-                        {% trans "Plenum" %}
-                    </h2>
-                    <!--a class="btn btn-mini btn-question" href="#">?</a-->
-                </header>
-                <ul id="recent-plenums">
-                {% for action in plenum_actions %}
-                    {% display_action action %}
-                {% endfor %}
-                </ul>
-                <footer>
-                {% if plenum_actions_more %}
-                <button class="btn btn-mini btn-expand" data-provide="okmore"
-                    data-loading-text="{% trans "Loading" %} ..."
-                    autocomplete="off" data-target="#recent-plenums"
-                    data-url="{% url 'member-more-plenums' object.pk %}"
-                    data-initial="{{INITIAL_DATA}}">{% trans "More" %} +</button>
-                {% endif %}
-                </footer>
-            </section>
-            {% endif %}
-            {% if mmm_documents %}
-            <section class="card card-list card-list-latest">
-                <header>
-                <h2>
-                    <i class="fa fa-file-text"></i>
-                    {% trans "M.M.M Documents" %}
-                </h2>
-                    <!--a class="btn btn-mini btn-question" href="#">?</a-->
-                </header>
-                <ul id="recent-mmm">
-                {% include "mks/mmm_partials.html" with object_list=mmm_documents %}
-                </ul>
-                <footer>
-                {% if mmm_documents_more %}
-                <button class="btn btn-mini btn-expand" data-provide="okmore"
-                    data-loading-text="{% trans "Loading" %} ..."
-                    autocomplete="off" data-target="#recent-mmm"
-                    data-url="{% url 'member-more-mmm' object.pk %}"
-                    data-initial="{{INITIAL_DATA}}">{% trans "More" %} +</button>
-                {% endif %}
-                </footer>
-                </footer>
-            </section>
-
-            {% endif %}
-
-            {% if num_related_videos > 0 %}
-            <section class="card card-list card-list-latest">
-                <header>
-                    <h2>
-                        <i class="fa fa-video-camera"></i>
-                        {% trans "Video" %}
-                    </h2>
-                </header>
-                <ul id="related_videos">
-                    {% video_playlist related_videos 'related_videos' %}
-                </ul>
-            </section>
-            {% endif %}
-
-            {% if protocol_part_annotation_actions %}
-            <section class="card card-list card-list-latest">
-                <header><h2><i class="fa fa-file-text"></i>{% trans "Protocol Parts With Annotations" %}</h2></header>
-                <ul>
-                    {% for action in protocol_part_annotation_actions %}
-                        <li>
-                            <p class="item-action">
-                                <a href="{{ action.target.get_absolute_url }}">{{ action.target.meeting }}</a>
-                            </p>
-                            <p class="item-title">
-                                {{ action.target.body }}
-                            </p>
-                            <p class="item-context">{{ action.timestamp }}</p>
-                        </li>
+                        | <a href="{{ award.reference }}">{{ award.award_type.name }} ({{ award.date_given }})</a>
                     {% endfor %}
-                </ul>
-            </section>
-            {% endif %}
-        </div> <!-- /span9 -->
-        <div class="span3">
-            <aside class="sidebar sidebar-stats">
-                <h2>{% trans "Votes" %}</h2>
-                <ul>
-                    <li>
-                        <label>{% trans "Number of votes" %}</label>
-                        <span class="numeric">{{object|knesset_votes_count}}</span>
-                    </li>
-                    <li class="agenda-mini">
-                        <label>{% trans "Last 30 days" %}</label>
-                        <span class="numeric">{{object|recent_votes_count}}</span>
-                    </li>
-                    <li>
-                        <label>
-                            {% trans "Factional discipline" %}
-                            {% if factional_discipline %}
-                                <a class="btn btn-mini btn-question" href="#factdiscp-modal" role="button" data-toggle="modal">?</a>
-                                <div id="factdiscp-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="factdiscpModalLabel" aria-hidden="true">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                                        <h3 id="factdiscpModalLabel">{% trans "factional discipline explained" %}</h3>
-                                    </div>
-                                    <div class="modal-body">
-                                    {% for voteaction in factional_discipline %}
-                                        <p>
-                                            {{ object.is_female|yesno:_("Voted (Female),Voted (Male)") }}
-                                            <b>{{ voteaction.get_type_display }}</b>:
-                                            <a href="{{ voteaction.vote.get_absolute_url }}">{{voteaction.vote.title}}</a>
-                                        </p>
-                                    {% endfor %}
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
-                                    </div>
+                </span>
+                                    |<a href="#" data-target="#member-extra-awards" data-toggle="oktoggle"
+                                        data-text="{% trans "More" %} +|{% trans "Less" %} -">{% trans "More" %} +</a>
+                                {% endif %} {% endif %}
+                        </p>
+                        <p>
+                            {% if object.convictions|length > 0 %}
+                                <strong>{% trans "Convictions" %}:</strong>
+                                {% for award in object.convictions|slice:":2" %}
+                                    {% if not forloop.first %} | {% endif %}
+                                    <a href="{{ award.reference }}">{{ award.award_type.name }}
+                                        ({{ award.date_given }})</a>
+                                {% endfor %}
+                                {% if object.convictions|length > 2 %}
+                                    <span id="member-extra-convictions" style="display:none">
+                    {% for award in object.convictions|slice:"2:" %}
+                        | <a href="{{ award.reference }}">{{ award.award_type.name }} ({{ award.date_given }})</a>
+                    {% endfor %}
+                </span>
+                                    |<a href="#" data-target="#member-extra-convictions" data-toggle="oktoggle"
+                                        data-text="{% trans "More" %} +|{% trans "Less" %} -">{% trans "More" %} +</a>
+                                {% endif %} {% endif %}
+                        </p>
+                        <div id="member-details" style="display:none">
+                            {% if object.date_of_death %}
+                                <div>{% trans "date of death" %} - {{ object.date_of_death }}</div>
+                            {% else %}
+                                <div>{% trans "age" %} - {{ object.age.years }}</div>
+                            {% endif %}
+                            <div>{% trans "place of birth" %} - {{ object.place_of_birth }}</div>
+                            {% if object.year_of_aliyah %}
+                                <div>{% trans "year of aliyah" %} - {{ object.year_of_aliyah }}</div>
+                            {% endif %}
+                            {% if not object.date_of_death %}
+                                <div>{% trans "family status" %} - {{ object.family_status }}</div>
+                                <div>{% trans "place of residence" %} - {{ object.place_of_residence }}</div>
+                            {% endif %}
+                            {% if about_video_embed_link != '' and about_video_image_link != '' %}
+                                <div>
+                                    <h3>{% trans "MK video (knesset channel)" %}</h3>
+                                    {% video_player 400 300 about_video_embed_link about_video_image_link %}
                                 </div>
                             {% endif %}
-                        </label>
+                        </div>
+                        <div class="social-links">
+                            <h5>{% blocktrans with name=member.firstname %}{{ name }} around the
+                                net{% endblocktrans %}:</h5>
+                            <ul class="text-center">
+                                {% object_icon_links member %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="span3 social-details">
+                    <div class="spacer actions-panel">
+                        {% include "auxiliary/_watch.html" with watched_id=object.id watched_type="member" %}
+                        <a href="#embed-information-modal" class="btn btn-big" role="button"
+                           data-toggle="modal">{% trans "embed" %}</a>
+                        {% if object.is_current %}
+                            <a href="#contact-information-modal" class="btn btn-big btn-contact" role="button"
+                               data-toggle="modal">{% trans "Contact Information" %}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="btn btn-mini btn-expand" data-target="#member-details"
+               data-toggle="oktoggle"
+               data-text="{% trans "Personal Information" %} +|{% trans "Collapse" %} -">{% trans "Personal Information" %}
+                +</a>
+        </section>
+
+        {% if object.is_current %}
+            <!-- Contact information modal -->
+            <div id="contact-information-modal" class="modal hide fade" tabindex="-1" role="dialog"
+                 aria-labelledby="contactModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h3 id="contactModalLabel">{% trans "Contact Information" %}</h3>
+                </div>
+                <div class="modal-body">
+                    <p>{% trans "phone" %} - {{ object.phone }}</p>
+                    {% if object.fax %}
+                        <p>{% trans "fax" %} - {{ object.fax }}</p>
+                    {% endif %}
+                    <p>{% trans "e-mail address" %} - {{ object.email|urlize }}</p>
+                    <div class="alert alert-info">
+                        <p>טיפים ליצירת קשר
+                        <ul>
+                            <li>מי שמטפל בפניות הציבור הם העוזרים הפרלמנטריים של הח"כים, ולא הח"כים עצמם.</li>
+                            <li>שיחות טלפון מומלץ לבצע בימים ב'-ד', בין השעות 8:00 בבוקר ועד 17:00. אלו השעות שבהן
+                                העוזרים נמצאים יותר בלשכה.
+                            </li>
+                            <li>אימיילים עדיף לשלוח בימים א' ו-ה'.</li>
+                            <li>הנחיות נוספות לכתיבת פנייה אפקטיבית לנבחרי ציבור ניתן למצוא ב<a
+                                    href="http://www.shelly.org.il/node/1678" target="_blank">פוסט הזה של שלי
+                                יחימוביץ'</a>.
+                            </li>
+                        </ul>
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
+                </div>
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="cards span9">
+                <section class="card card-list card-list-latest">
+                    <header>
+                        <h2>
+                            <i class="fa fa-calendar"></i>
+                            {% trans "Recent actions" %}
+                        </h2>
+                        <!--a class="btn btn-mini btn-question" href="#">?</a-->
+                    </header>
+                    <ul id="recent-actions">
+                        {% for action in actions %}{% display_action action %}{% endfor %}
+                    </ul>
+                    <footer>
+                        {% if actions_more %}
+                            <button class="btn btn-mini btn-expand" data-provide="okmore"
+                                    data-loading-text="{% trans "Loading" %} ..."
+                                    autocomplete="off" data-target="#recent-actions"
+                                    data-url="{% url 'member-more-actions' object.pk %}"
+                                    data-initial="{{ INITIAL_DATA }}">{% trans "More" %} +
+                            </button>
+                        {% endif %}
+                    </footer>
+                </section>
+                {% if not object.is_minister %}
+                    <section class="card card-list card-list-latest">
+                        <header>
+                            <h2>
+                                <i class="fa fa-gavel"></i>
+                                {% trans "Legislation" %}
+                            </h2>
+                            <!--a class="btn btn-mini btn-question" href="#">?</a-->
+                        </header>
+                        <ul id="recent-legislation">
+                            {% for action in legislation_actions %}{% display_action action %}{% endfor %}
+                        </ul>
+                        <footer>
+                            {% if legislation_actions_more %}
+                                <button class="btn btn-mini btn-expand" data-provide="okmore"
+                                        data-loading-text="{% trans "Loading" %} ..."
+                                        autocomplete="off" data-target="#recent-legislation"
+                                        data-url="{% url 'member-more-legislation' object.pk %}"
+                                        data-initial="{{ INITIAL_DATA }}">{% trans "More" %} +
+                                </button>
+                            {% endif %}
+                        </footer>
+                    </section>
+                {% endif %}
+                {% if committee_actions %}
+                    <section class="card card-list card-list-latest">
+                        <header>
+                            <h2>
+                                <i class="fa fa-users"></i>
+                                {% trans "Committees" %}
+                            </h2>
+                            <!--a class="btn btn-mini btn-question" href="#">?</a-->
+                        </header>
+                        <ul id="recent-committees">
+                            {% for action in committee_actions %}
+                                {% display_action action %}
+                            {% endfor %}
+                        </ul>
+                        <footer>
+                            {% if committee_actions_more %}
+                                <button class="btn btn-mini btn-expand" data-provide="okmore"
+                                        data-loading-text="{% trans "Loading" %} ..."
+                                        autocomplete="off" data-target="#recent-committees"
+                                        data-url="{% url 'member-more-committees' object.pk %}"
+                                        data-initial="{{ INITIAL_DATA }}">{% trans "More" %} +
+                                </button>
+                            {% endif %}
+                        </footer>
+                    </section>
+                {% endif %}
+                {% if plenum_actions %}
+                    <section class="card card-list card-list-latest">
+                        <header>
+                            <h2>
+                                <i class="fa fa-users"></i>
+                                {% trans "Plenum" %}
+                            </h2>
+                            <!--a class="btn btn-mini btn-question" href="#">?</a-->
+                        </header>
+                        <ul id="recent-plenums">
+                            {% for action in plenum_actions %}
+                                {% display_action action %}
+                            {% endfor %}
+                        </ul>
+                        <footer>
+                            {% if plenum_actions_more %}
+                                <button class="btn btn-mini btn-expand" data-provide="okmore"
+                                        data-loading-text="{% trans "Loading" %} ..."
+                                        autocomplete="off" data-target="#recent-plenums"
+                                        data-url="{% url 'member-more-plenums' object.pk %}"
+                                        data-initial="{{ INITIAL_DATA }}">{% trans "More" %} +
+                                </button>
+                            {% endif %}
+                        </footer>
+                    </section>
+                {% endif %}
+                {% if mmm_documents %}
+                    <section class="card card-list card-list-latest">
+                        <header>
+                            <h2>
+                                <i class="fa fa-file-text"></i>
+                                {% trans "M.M.M Documents" %}
+                            </h2>
+                            <!--a class="btn btn-mini btn-question" href="#">?</a-->
+                        </header>
+                        <ul id="recent-mmm">
+                            {% include "mks/mmm_partials.html" with object_list=mmm_documents %}
+                        </ul>
+                        <footer>
+                            {% if mmm_documents_more %}
+                                <button class="btn btn-mini btn-expand" data-provide="okmore"
+                                        data-loading-text="{% trans "Loading" %} ..."
+                                        autocomplete="off" data-target="#recent-mmm"
+                                        data-url="{% url 'member-more-mmm' object.pk %}"
+                                        data-initial="{{ INITIAL_DATA }}">{% trans "More" %} +
+                                </button>
+                            {% endif %}
+                        </footer>
+                        </footer>
+                    </section>
+
+                {% endif %}
+
+                <section class="card card-list card-list-latest" id="kikar-statuses-section" style="display: none"
+                         data-type="member" data-id="{{ object.id }}" data-test-name="{{ object.name }}">
+                    {% include 'kikar/_facebook_status_section_update_elem.html' %}
+                    <header>
+                        <h2>
+                            <i class="fa fa-facebook-square"></i>
+                            {% trans "Facebook Statuses" %}
+                        </h2>
+                        <!--a class="btn btn-mini btn-question" href="#">?</a-->
+                    </header>
+                    <ul id="kikar-facebook-updates-ul" data-filter="feed__persona__object_id={{ object.id }}">
+                    </ul>
+                    <footer style="text-align: center">
+                        <span id="loading-statuses-symbol"><i class="fa fa-2x fa-spinner fa-spin"></i> </span>
+                        <button id="statuses-more" class="btn btn-mini btn-expand-fb"
+                                data-target="#kikar-facebook-updates-ul"
+                                data-offset='0'>{% trans "More Facebook Statuses" %} +
+                        </button>
+                    </footer>
+                </section>
+
+
+                {% if num_related_videos > 0 %}
+                    <section class="card card-list card-list-latest">
+                        <header>
+                            <h2>
+                                <i class="fa fa-video-camera"></i>
+                                {% trans "Video" %}
+                            </h2>
+                        </header>
+                        <ul id="related_videos">
+                            {% video_playlist related_videos 'related_videos' %}
+                        </ul>
+                    </section>
+                {% endif %}
+
+                {% if protocol_part_annotation_actions %}
+                    <section class="card card-list card-list-latest">
+                        <header><h2><i class="fa fa-file-text"></i>{% trans "Protocol Parts With Annotations" %}</h2>
+                        </header>
+                        <ul>
+                            {% for action in protocol_part_annotation_actions %}
+                                <li>
+                                    <p class="item-action">
+                                        <a href="{{ action.target.get_absolute_url }}">{{ action.target.meeting }}</a>
+                                    </p>
+                                    <p class="item-title">
+                                        {{ action.target.body }}
+                                    </p>
+                                    <p class="item-context">{{ action.timestamp }}</p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </section>
+                {% endif %}
+            </div> <!-- /span9 -->
+            <div class="span3">
+                <aside class="sidebar sidebar-stats">
+                    <h2>{% trans "Votes" %}</h2>
+                    <ul>
+                        <li>
+                            <label>{% trans "Number of votes" %}</label>
+                            <span class="numeric">{{ object|knesset_votes_count }}</span>
+                        </li>
+                        <li class="agenda-mini">
+                            <label>{% trans "Last 30 days" %}</label>
+                            <span class="numeric">{{ object|recent_votes_count }}</span>
+                        </li>
+                        <li>
+                            <label>
+                                {% trans "Factional discipline" %}
+                                {% if factional_discipline %}
+                                    <a class="btn btn-mini btn-question" href="#factdiscp-modal" role="button"
+                                       data-toggle="modal">?</a>
+                                    <div id="factdiscp-modal" class="modal hide fade" tabindex="-1" role="dialog"
+                                         aria-labelledby="factdiscpModalLabel" aria-hidden="true">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                x
+                                            </button>
+                                            <h3 id="factdiscpModalLabel">{% trans "factional discipline explained" %}</h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            {% for voteaction in factional_discipline %}
+                                                <p>
+                                                    {{ object.is_female|yesno:_("Voted (Female),Voted (Male)") }}
+                                                    <b>{{ voteaction.get_type_display }}</b>:
+                                                    <a href="{{ voteaction.vote.get_absolute_url }}">{{ voteaction.vote.title }}</a>
+                                                </p>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn" data-dismiss="modal"
+                                                    aria-hidden="true">{% trans "Close" %}</button>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </label>
                         <span class="numeric">
                             {% if object.voting_statistics.discipline %}
                                 {{ object.voting_statistics.discipline }}%
@@ -420,46 +477,51 @@
                                 {% trans 'Not enough data' %}
                             {% endif %}
                         </span>
-                    </li>
-                    <li class="agenda-mini">
-                        <label>{% trans "Last 30 days" %}</label>
-                        <span class="numeric">{{object|recent_discipline}}</span>
-                    </li>
-                    <li>
-                        <label>
-                            {% if object.current_party.is_coalition %}
-                                {% trans "Coalition discipline" %}
-                            {% else %}
-                                {% trans 'Opposition discipline' %}
-                            {% endif %}
-                            {% if general_discipline %}
-                                <a class="btn btn-mini btn-question" href="#generaldiscp-modal" role="button" data-toggle="modal">?</a>
-                                <div id="generaldiscp-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="generaldiscpModalLabel" aria-hidden="true">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                                        <h3 id="generaldiscpModalLabel">
-                                        {% if object.current_party.is_coalition %}
-                                            {% trans "general discipline explained coalition" %}
-                                        {% else %}
-                                            {% trans 'general discipline explained opposition' %}
-                                        {% endif %}
-                                        </h3>
+                        </li>
+                        <li class="agenda-mini">
+                            <label>{% trans "Last 30 days" %}</label>
+                            <span class="numeric">{{ object|recent_discipline }}</span>
+                        </li>
+                        <li>
+                            <label>
+                                {% if object.current_party.is_coalition %}
+                                    {% trans "Coalition discipline" %}
+                                {% else %}
+                                    {% trans 'Opposition discipline' %}
+                                {% endif %}
+                                {% if general_discipline %}
+                                    <a class="btn btn-mini btn-question" href="#generaldiscp-modal" role="button"
+                                       data-toggle="modal">?</a>
+                                    <div id="generaldiscp-modal" class="modal hide fade" tabindex="-1" role="dialog"
+                                         aria-labelledby="generaldiscpModalLabel" aria-hidden="true">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                x
+                                            </button>
+                                            <h3 id="generaldiscpModalLabel">
+                                                {% if object.current_party.is_coalition %}
+                                                    {% trans "general discipline explained coalition" %}
+                                                {% else %}
+                                                    {% trans 'general discipline explained opposition' %}
+                                                {% endif %}
+                                            </h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            {% for voteaction in general_discipline %}
+                                                <p>
+                                                    {{ object.is_female|yesno:_("Voted (Female),Voted (Male)") }}
+                                                    <b>{{ voteaction.get_type_display }}</b>:
+                                                    <a href="{{ voteaction.vote.get_absolute_url }}">{{ voteaction.vote.title }}</a>
+                                                </p>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn" data-dismiss="modal"
+                                                    aria-hidden="true">{% trans "Close" %}</button>
+                                        </div>
                                     </div>
-                                    <div class="modal-body">
-                                    {% for voteaction in general_discipline %}
-                                        <p>
-                                            {{ object.is_female|yesno:_("Voted (Female),Voted (Male)") }}
-                                            <b>{{ voteaction.get_type_display }}</b>:
-                                            <a href="{{ voteaction.vote.get_absolute_url }}">{{voteaction.vote.title}}</a>
-                                        </p>
-                                    {% endfor %}
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        </label>
+                                {% endif %}
+                            </label>
                         <span class="numeric">
                             {% if object.voting_statistics.coalition_discipline %}
                                 {{ object.voting_statistics.coalition_discipline }}%
@@ -467,36 +529,41 @@
                                 {% trans 'Not enough data' %}
                             {% endif %}
                         </span>
-                    </li>
-                    <li class="agenda-mini">
-                        <label>{% trans "Last 30 days" %}</label>
-                        <span class="numeric">{{object|recent_coalition_discipline}}</span>
-                    </li>
-                    <li>
-                        <label>
-                            {% trans "Votes against own bills" %}
-                            {% if votes_against_own_bills %}
-                                <a class="btn btn-mini btn-question" href="#votesagains-modal" role="button" data-toggle="modal">?</a>
-                                <div id="votesagains-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="votesagainsModalLabel" aria-hidden="true">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                                        <h3 id="votesagainsModalLabel">{% trans "Votes against own bills" %}</h3>
+                        </li>
+                        <li class="agenda-mini">
+                            <label>{% trans "Last 30 days" %}</label>
+                            <span class="numeric">{{ object|recent_coalition_discipline }}</span>
+                        </li>
+                        <li>
+                            <label>
+                                {% trans "Votes against own bills" %}
+                                {% if votes_against_own_bills %}
+                                    <a class="btn btn-mini btn-question" href="#votesagains-modal" role="button"
+                                       data-toggle="modal">?</a>
+                                    <div id="votesagains-modal" class="modal hide fade" tabindex="-1" role="dialog"
+                                         aria-labelledby="votesagainsModalLabel" aria-hidden="true">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                x
+                                            </button>
+                                            <h3 id="votesagainsModalLabel">{% trans "Votes against own bills" %}</h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            {% for voteaction in votes_against_own_bills %}
+                                                <p>
+                                                    {{ object.is_female|yesno:_("Voted (Female),Voted (Male)") }}
+                                                    <b>{{ voteaction.get_type_display }}</b>:
+                                                    <a href="{{ voteaction.vote.get_absolute_url }}">{{ voteaction.vote.title }}</a>
+                                                </p>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn" data-dismiss="modal"
+                                                    aria-hidden="true">{% trans "Close" %}</button>
+                                        </div>
                                     </div>
-                                    <div class="modal-body">
-                                    {% for voteaction in votes_against_own_bills %}
-                                        <p>
-                                            {{ object.is_female|yesno:_("Voted (Female),Voted (Male)") }}
-                                            <b>{{ voteaction.get_type_display }}</b>:
-                                            <a href="{{ voteaction.vote.get_absolute_url }}">{{voteaction.vote.title}}</a>
-                                        </p>
-                                    {% endfor %}
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        </label>
+                                {% endif %}
+                            </label>
                         <span class="numeric">
                         {% if votes_against_own_bills %}
                             {{ votes_against_own_bills|length }}
@@ -504,64 +571,68 @@
                             {% trans 'None' %}
                         {% endif %}
                         </span>
-                    </li>
-                </ul>
-            </aside> <!-- votes stats -->
+                        </li>
+                    </ul>
+                </aside> <!-- votes stats -->
 
-            <aside class="sidebar sidebar-stats">
-                <h2>{% trans "Attendance" %}</h2>
-                <ul>
-                    <li class="agenda-mini">
-                        <div>{% trans "Knesset presence" %}</div>
-                        <span class="numeric">{{ presence.average_weekly_presence_hours }}</span>
-                        {% trans 'Average weekly hours' %}
-                        {% if presence.average_weekly_presence_hours %}
-                        {% bar presence.average_weekly_presence_hours_percentile 0 100 %}
-                        {% endif %}
-                    </li>
-                    <li>
-                        <div>{% trans "Committee presence" %}</div>
-                        <span class="numeric">{{ object.committee_meetings_per_month }}</span>
-                        {% trans "Average number of committee meetings per month" %}
-                        {% bar presence.average_monthly_committee_presence_percentile  0 100 %}
-                    </li>
-                </ul>
-            </aside> <!-- Attendance -->
+                <aside class="sidebar sidebar-stats">
+                    <h2>{% trans "Attendance" %}</h2>
+                    <ul>
+                        <li class="agenda-mini">
+                            <div>{% trans "Knesset presence" %}</div>
+                            <span class="numeric">{{ presence.average_weekly_presence_hours }}</span>
+                            {% trans 'Average weekly hours' %}
+                            {% if presence.average_weekly_presence_hours %}
+                                {% bar presence.average_weekly_presence_hours_percentile 0 100 %}
+                            {% endif %}
+                        </li>
+                        <li>
+                            <div>{% trans "Committee presence" %}</div>
+                            <span class="numeric">{{ object.committee_meetings_per_month }}</span>
+                            {% trans "Average number of committee meetings per month" %}
+                            {% bar presence.average_monthly_committee_presence_percentile 0 100 %}
+                        </li>
+                    </ul>
+                </aside> <!-- Attendance -->
 
-            <!--aside class="sidebar sidebar-stats">
+                <!--aside class="sidebar sidebar-stats">
                 <h2>{% trans "Bills" %}</h2>
                 <ul>
                     <li></li>
                 </ul>
             </aside--> <!-- Bills -->
 
-            <aside class="sidebar sidebar-agendas">
-                <h2>{% trans "Notable agendas" %}</h2>
-                <!--a class="btn btn-mini btn-question" href="#">?</a-->
-                <ul>
-                {% include "mks/agenda_partials.html" with object_list=agendas %}
-                </ul>
-                <a href="#" class="btn btn-more">{% trans "More" %}</a>
-            </aside>
+                <aside class="sidebar sidebar-agendas">
+                    <h2>{% trans "Notable agendas" %}</h2>
+                    <!--a class="btn btn-mini btn-question" href="#">?</a-->
+                    <ul>
+                        {% include "mks/agenda_partials.html" with object_list=agendas %}
+                    </ul>
+                    <a href="#" class="btn btn-more">{% trans "More" %}</a>
+                </aside>
+            </div>
         </div>
-    </div>
-    <div id="embed-information-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="embedModalLabel" aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-            <h3 id="embedModalLabel">קחו את החוק לידיים!</h3>
+        <div id="embed-information-modal" class="modal hide fade" tabindex="-1" role="dialog"
+             aria-labelledby="embedModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h3 id="embedModalLabel">קחו את החוק לידיים!</h3>
+            </div>
+            <div class="modal-body">
+                בדיוק כמו שסרטוני יוטוב יכולים להיות מוטמעים באתרים אחרים, גם כרטיס ח&quot;כ זה יכול להופיע בבלוגים,
+                כתבות, פייסבוק וכן הלאה...<br>
+                <b>העתיקו את קוד ההטמעה (html):</b><br>
+                <input type="text" readonly="readonly" class="tobecopied"
+                       value='&lt;iframe width="400" height="186" scrolling="no" style="border:0" src="https://oknesset.org/member/{{ object.id }}/embed/"&gt;&lt;/iframe&gt;'></br>
+                <b>העתיקו את הלינק (להטמעה בפייסבוק):</b><br>
+                <input type="text" readonly="readonly" class="tobecopied"
+                       value='https://oknesset.org/member/{{ object.id }}'/>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
+            </div>
         </div>
-        <div class="modal-body">
-            בדיוק כמו שסרטוני יוטוב יכולים להיות מוטמעים באתרים אחרים, גם כרטיס ח&quot;כ זה יכול להופיע בבלוגים, כתבות, פייסבוק וכן הלאה...<br>
-            <b>העתיקו את קוד ההטמעה (html):</b><br>
-            <input type="text" readonly="readonly" class="tobecopied" value='&lt;iframe width="400" height="186" scrolling="no" style="border:0" src="https://oknesset.org/member/{{object.id}}/embed/"&gt;&lt;/iframe&gt;'></br>
-            <b>העתיקו את הלינק (להטמעה בפייסבוק):</b><br>
-            <input type="text" readonly="readonly" class="tobecopied" value='https://oknesset.org/member/{{object.id}}'/>
-        </div>
-        <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
-        </div>
-    </div>
-{% comment %}
+        {% comment %}
     <ul class="actions">
         <li>
         <li><a href="{% url 'member-activity-feed' object.id %}"><img src="{% static "icons/rss.png" %}" style="height:2em;"></a></li>
@@ -783,7 +854,7 @@
     <br />
     <div style="clear:both;"></div>
 {% endcomment %}
-{% endcache %}
+    {% endcache %}
 
 {% endblock %}
 
