@@ -67,12 +67,14 @@
                         <input type="hidden" name="user_input_type" value="mk">
                         <label for="id_mk_name">{% trans "Suggest an MK" %}</label>
                         <input type="text" name="mk_name" id="id_mk_name">
+                        <input type="hidden" name="mk_id">
                         <input type="submit" value="{% trans "Submit" %}" class="btn">
                     </form>
                     <form method="post" action="." class="form-inline">{% csrf_token %}
                         <input type="hidden" name="user_input_type" value="remove-mk">
-                        <label for="id_mk_name">{% trans "Remove an MK" %}</label>
-                        <input type="text" name="mk_name" id="id_mk_name">
+                        <label for="id_mk_name_to_remove">{% trans "Remove an MK" %}</label>
+                        <input type="text" name="mk_name_to_remove" id="id_mk_name_to_remove">
+                        <input type="hidden" name="mk_id">
                         <input type="submit" value="{% trans "Submit" %}" class="btn">
                     </form>
                     <form method="post" action="." class="form-inline">{% csrf_token %}
