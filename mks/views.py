@@ -790,9 +790,14 @@ def member_auto_complete(request):
     if not 'query' in request.GET:
         raise Http404
 
-    members = Member.objects.filter(name__icontains=request.GET['query'], is_current=True)[:30]
+    _suggestions = list(Member.objects.values('name', 'id', 'img_url', 'gender', 'is_current').filter(name__icontains=request.GET['query'], is_current=True)[:30])
 
-    result = {'query': request.GET['query'], 'suggestions': [member.name for member in members]}
+    def _add_value(serialized_member):
+        result = {'value': serialized_member['name'], 'data': serialized_member}
+        return result
+
+    suggestions = map(lambda x:_add_value(x), _suggestions)
+    result = {'query': request.GET['query'], 'suggestions': suggestions}
 
     return HttpResponse(json.dumps(result), mimetype='application/json')
 
