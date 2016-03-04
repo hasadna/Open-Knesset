@@ -6,7 +6,7 @@ from tastypie.api import Api
 from mks.api import MemberResource, PartyResource, MemberBillsResource, MemberAgendasResource
 from video.api import VideoResource
 from links.api import LinkResource
-from laws.api import BillResource, LawResource, VoteResource, VoteActionResource
+from laws.api import BillResource, LawResource, VoteResource, VoteActionResource, ProvateProposalResource
 from agendas.api import AgendaResource, AgendaTodoResource
 from committees.api import CommitteeResource, CommitteeMeetingResource, ProtocolPartResource
 from auxiliary.api import PostResource, TagResource
@@ -27,6 +27,7 @@ v2_api.register(BillResource())
 v2_api.register(VoteResource())
 v2_api.register(VoteActionResource())
 v2_api.register(LawResource())
+v2_api.register(ProvateProposalResource())
 v2_api.register(AgendaResource())
 v2_api.register(AgendaTodoResource())
 v2_api.register(CommitteeResource())

@@ -5,7 +5,6 @@ import logging
 from django.core.urlresolvers import reverse
 from tastypie.constants import ALL
 import tastypie.fields as fields
-
 from agendas.templatetags.agendas_tags import agendas_for
 
 from apis.resources.base import BaseResource
@@ -29,6 +28,36 @@ class LawResource(BaseResource):
     class Meta(BaseResource.Meta):
         queryset = Law.objects.all()
         allowed_methods = ['get']
+class TagResource(BaseResource):pass
+class ProvateProposalResource(BaseResource):
+    class Meta(BaseResource.Meta):
+        queryset = PrivateProposal.objects.all()
+        allowed_methods = ['get']
+
+        filtering = dict(from_date=ALL,
+                         to_date=ALL)
+                         
+
+    tags = fields.ToManyField(TagResource,
+                              'tags',
+                              
+                              null=True,
+                              full=False)
+
+    def dehydrate_tags(self, bundle):
+		return [tag.name for tag in bundle.obj.bill.tags]
+		
+    def build_filters(self, filters={}):
+        orm_filters = super(ProvateProposalResource, self).build_filters(filters)
+        if 'from_date' in filters:
+            orm_filters["date__gte"] = filters['from_date']
+        if 'to_date' in filters:
+            # the to_date needs to be incremented by a day since when humans say to_date=2014-07-30 they
+            # actually mean midnight between 30 to 31. python on the other hand interperts this as midnight between
+            # 29 and 30
+            to_date = datetime.strptime(filters["to_date"], "%Y-%M-%d")+timedelta(days=1)
+            orm_filters["date__lte"] = to_date.strftime("%Y-%M-%d")
+        return orm_filters
 
 
 class VoteActionResource(BaseResource):

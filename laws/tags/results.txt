@@ -1,0 +1,40 @@
+original tags
+features		classifier		score
+NN_JJ_VB_NNT_BN_NNP_TTL	OneVsRest_LinearSVC	0.65 +- 0.06
+NN_JJ_VB_NNT_BN_NNP_TTL	OneVsRest_LinearSVC	0.65 +- 0.06
+NN_JJ_VB_NNT_BN		OneVsRest_InfoGainFilter_TfidfTransformer_LinearSVC	0.58 +- 0.02
+NN_JJ_VB_NNT_BN		InfoGainFilter_OneVsRest_TfidfTransformer_LinearSVC	0.64 +- 0.04
+NN_JJ_VB_NNT_BN		InfoGainFilter_OneVsRest_StandardScaler_LinearSVC	0.50 +- 0.06
+NN_JJ_VB_NNT_BN		InfoGainFilter_StandardScaler_MLPClassifier_10_levels_100_each	0.48 +- 0.04
+NN_JJ_VB_NNT_BN		StandardScaler_MLPClassifier_10_levels_100_each	0.52 +- 0.05
+NN_JJ_VB_NNT_BN_NNP_TTL	OneVsRest_GausianNB	0.51 +- 0.06
+NN_JJ_VB_NNT_BN_NNP_TTL	OneVsRest_MultinomialNB	0.44 +- 0.20
+NN_JJ_VB_NNT_BN_NNP_TTL	OneVsRest_BernoulliNB	0.08 +- 0.00
+NN_JJ_VB_NNT_BN_NNP_TTL	KNeighborsClassifier	0.35 +- 0.02
+NN_JJ_VB_NNT_BN_NNP_TTL	OneVsRest_TfidfTransformer_LinearSVC_10folds	0.74 +- 0.34
+NN_JJ_VB_NNT_BN_NNP_TTL	OneVsRest_TfidfTransformer_LinearSVC	0.64 +- 0.05
+NN_JJ_VB_NNT_BN		OneVsRest_TfidfTransformer_LinearSVC	0.64 +- 0.05
+NN_JJ_VB_NNT_BN_NNP_TTL	TfidfTransformer_KNeighborsClassifier	0.47 +- 0.01 very fast
+
+NN_JJ_VB_NNT_BN_NNP_TTL	TfidfTransformer_GausianNB	
+NN_JJ_VB_NNT_BN_NNP_TTL	TfidfTransformer_MultinomialNB	
+NN_JJ_VB_NNT_BN_NNP_TTL	TfidfTransformer_BernoulliNB	
+
+
+NN_JJ_VB_NNT_BN_NNP_TTL	OneVsRest_TfidfTransformer_GausianNB	0.00 +- 0.00
+NN_JJ_VB_NNT_BN_NNP_TTL	OneVsRest_TfidfTransformer_MultinomialNB	0.00 +- 0.00
+NN_JJ_VB_NNT_BN_NNP_TTL	OneVsRest_TfidfTransformer_BernoulliNB	0.08 +- 0.00
+
+
+
+
+
+
+reduced tags 300
+features		        classifier		score
+NN_JJ_VB_NNT_BN_NNP_TTL StandardScaler_OneVsRest_LinearSVC_3folds 0.03 +- 0.04
+NN_JJ_VB_NNT_BN_NNP_TTL OneVsRest_LinearSVC_3folds 0.59 +- 0.31
+NN_JJ_VB_NNT_BN_NNP_TTL OneVsRest_LinearSVC_10folds 0.73 +- 0.32
+
+
+
