@@ -1,0 +1,7 @@
+knesset:
+  image: doodyparizada/open-knesset
+  ports:
+    - "8000:8000"
+  volumes:
+    - .:/opt/knesset
+  working_dir: /opt/knesset

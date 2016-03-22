@@ -32,6 +32,18 @@ GitHub
 .. _repository: https://github.com/hasadna/Open-Knesset
 
 
+Docker
+-----------
+
+- install docker_ and docker-compose_
+- run ``docker-compose up``
+- this pulls the right image from docker hub, runs the development django server
+  using the local code and makes the site available at port 8000 on the host
+- logs will be printed to stdout and can also be viewed via ``docker logs`` command
+
+.. _docker: https://docs.docker.com/engine/installation/
+.. _docker-compose: https://docs.docker.com/compose/install/
+
 Linux
 -----------
 
