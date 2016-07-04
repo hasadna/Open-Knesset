@@ -62,6 +62,8 @@ class Command(NoArgsDbLogCommand):
                     help="write votes to tsv files (mainly for debug, or for research team)."),
         make_option('--laws', action='store_true', dest='laws',
                     help="download and parse laws"),
+        make_option('--presence', action='store_true', dest='presence',
+                    help="download and parse presence"),
         make_option('--update', action='store_true', dest='update',
                     help="online update of data."),
         make_option('--committees', action='store_true', dest='committees',
@@ -1130,19 +1132,20 @@ class Command(NoArgsDbLogCommand):
         c.sort()
         min_timestamp = c[0]
         c = None
-
-        for m in Member.objects.filter(current_party__isnull=False):
-            if m.id not in presence:
-                logger.error('member %s (id=%d) not found in presence data', m.name, m.id)
+        # TODO: should we also parse of current knesset parties not serving members?
+        # currently we still do but this check is better the previous
+        for member in Member.current_knesset.all():
+            if member.id not in presence:
+                logger.error('member %s (id=%d) not found in presence data', member.name, member.id)
                 continue
-            member_presence = dict(zip([b[0] for b in presence[m.id]], [b[1] for b in presence[m.id]]))
+            member_presence = dict(zip([b[0] for b in presence[member.id]], [b[1] for b in presence[member.id]]))
 
-            if m.end_date:
-                end_timestamp = m.end_date.isocalendar()[:2]
+            if member.end_date:
+                end_timestamp = member.end_date.isocalendar()[:2]
             else:
                 end_timestamp = todays_timestamp
 
-            start_date = m.start_date or datetime.datetime.utcnow()
+            start_date = member.start_date or datetime.datetime.utcnow()
             current_timestamp = (start_date + datetime.timedelta(7)).isocalendar()[
                                 :2]  # start searching on the monday after member joined the knesset
             if current_timestamp < min_timestamp:  # we don't have info in the current file that goes back so far
@@ -1155,7 +1158,7 @@ class Command(NoArgsDbLogCommand):
                     else:
                         hours = 0.0  # not present at all this week = 0 hours
                     date = iso_to_gregorian(*current_timestamp, iso_day=0)  # get real date of the week's monday
-                    (wp, created) = WeeklyPresence.objects.get_or_create(member=m, date=date,
+                    (wp, created) = WeeklyPresence.objects.get_or_create(member=member, date=date,
                                                                          defaults={'hours': hours})
                     wp.save()
                 else:
@@ -1575,8 +1578,8 @@ class Command(NoArgsDbLogCommand):
             year = t.year
         try:
             parser = ParseGLC(year - 2000, month)
-        except urllib2.URLError, e:
-            logger.error(e)
+        except urllib2.URLError as e:
+            logger.exception('Error update gov law decisions')
             return
         for d in parser.scraped_data:
             logger.debug("parsed url: %s, subtitle: %s" % (d['url'], d['subtitle']))
@@ -1629,6 +1632,7 @@ class Command(NoArgsDbLogCommand):
         dump_to_file = options.get('dump-to-file', False)
         update = options.get('update', False)
         laws = options.get('laws', False)
+        presence = options.get('presence', False)
         committees = options.get('committees', False)
 
         if all_options:
@@ -1667,13 +1671,16 @@ class Command(NoArgsDbLogCommand):
             logger.info("writing votes to tsv file")
             self.dump_to_file()
 
+        if presence:
+            self.update_presence()
+
         if update:
             update_run_only = options.get('update-run-only', '')
             if update_run_only:
                 try:
                     update_run_only = update_run_only.split(',')
-                except AttributeError, e:
-                    logger.error("Error in syncdata update:" + e)
+                except AttributeError as e:
+                    logger.exception("Error in syncdata update:")
             else:
                 update_run_only = None
             for func in ['update_votes',
