@@ -1,5 +1,5 @@
-#encoding: utf-8
-import urllib,urllib2
+# encoding: utf-8
+import urllib, urllib2
 from urlparse import urlparse
 import datetime
 import re
@@ -22,7 +22,7 @@ from knesset.utils import send_chat_notification
 logger = logging.getLogger("open-knesset.parse_laws")
 
 # don't parse laws from an older knesset
-CUTOFF_DATE = datetime.date(2009, 02, 24)
+CUTOFF_DATE = datetime.date(2009, 2, 24)
 
 
 class ParseLaws(object):
@@ -32,7 +32,7 @@ class ParseLaws(object):
 
     url = None
 
-    def get_page_with_param(self,params):
+    def get_page_with_param(self, params):
         logger.debug('get_page_with_param: self.url=%s, params=%s' % (self.url, params))
         if params == None:
             try:
@@ -43,14 +43,14 @@ class ParseLaws(object):
                 return None
             try:
                 soup = BeautifulSoup(html_page)
-            except HTMLParseError, e:
+            except HTMLParseError as e:
                 logger.debug("parsing URL: %s - %s. will try harder." % (self.url, e))
-                html_page = re.sub("(?s)<!--.*?-->"," ", html_page) # cut anything that looks suspicious
-                html_page = re.sub("(?s)<script>.*?</script>"," ", html_page)
-                html_page = re.sub("(?s)<!.*?>"," ", html_page)
+                html_page = re.sub("(?s)<!--.*?-->", " ", html_page)  # cut anything that looks suspicious
+                html_page = re.sub("(?s)<script>.*?</script>", " ", html_page)
+                html_page = re.sub("(?s)<!.*?>", " ", html_page)
                 try:
                     soup = BeautifulSoup(html_page)
-                except HTMLParseError, e:
+                except HTMLParseError as e:
                     logger.debug("error parsing URL: %s - %s" % (self.url, e))
                     send_chat_notification(__name__, 'failed to parse url', {'url': self.url, 'params': None})
                     return None
@@ -58,7 +58,7 @@ class ParseLaws(object):
         else:
             data = urllib.urlencode(params)
             try:
-                url_data = urllib2.urlopen(self.url,data)
+                url_data = urllib2.urlopen(self.url, data)
             except urllib2.URLError:
                 logger.error("can't open URL: %s" % self.url)
                 send_chat_notification(__name__, 'failed to open url', {'url': self.url, 'params': data})
@@ -66,41 +66,43 @@ class ParseLaws(object):
             html_page = url_data.read().decode('windows-1255').encode('utf-8')
             try:
                 soup = BeautifulSoup(html_page)
-            except HTMLParseError, e:
+            except HTMLParseError as e:
                 logger.debug("error parsing URL: %s - %s" % (self.url, e))
                 send_chat_notification(__name__, 'failed to parse url', {'url': self.url, 'params': data})
                 return None
             return soup
 
+
 def fix_dash(s):
     """returns s with normalized spaces before and after the dash"""
     if not s:
         return None
-    m = re.match(r'(תיקון)( ?)(-)( ?)(.*)'.decode('utf8'),s)
+    m = re.match(r'(תיקון)( ?)(-)( ?)(.*)'.decode('utf8'), s)
     if not m:
         return s
     return ' '.join(m.groups()[0:5:2])
+
 
 class ParsePrivateLaws(ParseLaws):
     """a class that parses private laws proposed
     """
 
-    #the constructor parses the laws data from the required pages
-    def __init__(self,days_back):
-        self.url =r"http://www.knesset.gov.il/privatelaw/Plaw_display.asp?lawtp=1"
-        self.rtf_url=r"http://www.knesset.gov.il/privatelaw"
-        self.laws_data=[]
+    # the constructor parses the laws data from the required pages
+    def __init__(self, days_back):
+        self.url = r"http://www.knesset.gov.il/privatelaw/Plaw_display.asp?lawtp=1"
+        self.rtf_url = r"http://www.knesset.gov.il/privatelaw"
+        self.laws_data = []
         self.parse_pages_days_back(days_back)
 
-    #parses the required pages data
-    def parse_pages_days_back(self,days_back):
+    # parses the required pages data
+    def parse_pages_days_back(self, days_back):
         today = datetime.date.today()
         last_required_date = today + datetime.timedelta(days=-days_back)
         last_law_checked_date = today
         index = None
         while last_law_checked_date > last_required_date:
             if index:
-                params = {'RowStart':index}
+                params = {'RowStart': index}
             else:
                 params = None
             soup_current_page = self.get_page_with_param(params)
@@ -110,47 +112,50 @@ class ParsePrivateLaws(ParseLaws):
             self.parse_private_laws_page(soup_current_page)
             last_law_checked_date = self.update_last_date()
 
-    def get_param(self,soup):
-        name_tag = soup.findAll(lambda tag: tag.name == 'a' and tag.has_key('href') and re.match("javascript:SndSelf\((\d+)\);",tag['href']))
-        m=re.match("javascript:SndSelf\((\d+)\);",name_tag[0]['href'])
+    def get_param(self, soup):
+        name_tag = soup.findAll(
+            lambda tag: tag.name == 'a' and tag.has_key('href') and re.match("javascript:SndSelf\((\d+)\);",
+                                                                             tag['href']))
+        m = re.match("javascript:SndSelf\((\d+)\);", name_tag[0]['href'])
         return m.groups(1)[0]
 
-    def parse_private_laws_page(self,soup):
-        name_tag = soup.findAll(lambda tag: tag.name == 'tr' and tag.has_key('valign') and tag['valign']=='Top')
+    def parse_private_laws_page(self, soup):
+        name_tag = soup.findAll(lambda tag: tag.name == 'tr' and tag.has_key('valign') and tag['valign'] == 'Top')
         for tag in name_tag:
             tds = tag.findAll(lambda td: td.name == 'td')
-            x={}
+            x = {}
             x['knesset_id'] = int(tds[0].string.strip())
             x['law_id'] = int(tds[1].string.strip())
             if tds[2].findAll('a')[0].has_key('href'):
                 x['text_link'] = self.rtf_url + r"/" + tds[2].findAll('a')[0]['href']
             x['law_full_title'] = tds[3].string.strip()
-            m = re.match(u'הצעת ([^\(,]*)(.*?\((.*?)\))?(.*?\((.*?)\))?(.*?,(.*))?',x['law_full_title'])
+            m = re.match(u'הצעת ([^\(,]*)(.*?\((.*?)\))?(.*?\((.*?)\))?(.*?,(.*))?', x['law_full_title'])
             if not m:
                 logger.warn("can't parse proposal title: %s" % x['law_full_title'])
                 continue
-            x['law_name'] = m.group(1).strip().replace('\n','').replace('&nbsp;',' ')
+            x['law_name'] = m.group(1).strip().replace('\n', '').replace('&nbsp;', ' ')
             comment1 = m.group(3)
             comment2 = m.group(5)
             if comment2:
-                x['correction'] = comment2.strip().replace('\n','').replace('&nbsp;',' ')
+                x['correction'] = comment2.strip().replace('\n', '').replace('&nbsp;', ' ')
                 x['comment'] = comment1
             else:
                 x['comment'] = None
                 if comment1:
-                    x['correction'] = comment1.strip().replace('\n','').replace('&nbsp;',' ')
+                    x['correction'] = comment1.strip().replace('\n', '').replace('&nbsp;', ' ')
                 else:
                     x['correction'] = None
             x['correction'] = fix_dash(x['correction'])
             x['law_year'] = m.group(7)
             x['proposal_date'] = datetime.datetime.strptime(tds[4].string.strip(), '%d/%m/%Y').date()
             names_string = ''.join([unicode(y) for y in tds[5].findAll('font')[0].contents])
-            names_string = names_string.replace('\n','').replace('&nbsp;',' ')
+            names_string = names_string.replace('\n', '').replace('&nbsp;', ' ')
             proposers = []
             joiners = []
-            if re.search('ONMOUSEOUT',names_string)>0:
-                splitted_names= names_string.split('ONMOUSEOUT')
-                joiners = [ name for name in re.match('(.*?)\',\'',splitted_names[0]).group(1).split('<br />') if len(name)>0 ]
+            if re.search('ONMOUSEOUT', names_string) > 0:
+                splitted_names = names_string.split('ONMOUSEOUT')
+                joiners = [name for name in re.match('(.*?)\',\'', splitted_names[0]).group(1).split('<br />') if
+                           len(name) > 0]
                 proposers = splitted_names[1][10:].split('<br />')
             else:
                 proposers = names_string.split('<br />')
@@ -161,14 +166,16 @@ class ParsePrivateLaws(ParseLaws):
     def update_last_date(self):
         return self.laws_data[-1]['proposal_date']
 
+
 class ParseKnessetLaws(ParseLaws):
     """A class that parses Knesset Laws (laws after committees)
 	   the constructor parses the laws data from the required pages
     """
-    def __init__(self,min_booklet):
-        self.url =r"http://www.knesset.gov.il/laws/heb/template.asp?Type=3"
-        self.pdf_url=r"http://www.knesset.gov.il"
-        self.laws_data=[]
+
+    def __init__(self, min_booklet):
+        self.url = r"http://www.knesset.gov.il/laws/heb/template.asp?Type=3"
+        self.pdf_url = r"http://www.knesset.gov.il"
+        self.laws_data = []
         self.min_booklet = min_booklet
         self.parse_pages_booklet()
 
@@ -177,53 +184,55 @@ class ParseKnessetLaws(ParseLaws):
         index = None
         while full_page_parsed:
             if index:
-                params = {'First':index[0],'Start':index[1]}
+                params = {'First': index[0], 'Start': index[1]}
             else:
                 params = None
             soup_current_page = self.get_page_with_param(params)
             index = self.get_param(soup_current_page)
             full_page_parsed = self.parse_laws_page(soup_current_page)
 
-    def get_param(self,soup):
-        name_tag = soup.findAll(lambda tag: tag.name == 'a' and tag.has_key('href') and re.match("javascript:SndSelf\((\d+),(\d+)\);",tag['href']))
+    def get_param(self, soup):
+        name_tag = soup.findAll(
+            lambda tag: tag.name == 'a' and tag.has_key('href') and re.match("javascript:SndSelf\((\d+),(\d+)\);",
+                                                                             tag['href']))
         if name_tag:
-            m = re.match("javascript:SndSelf\((\d+),(\d+)\);",name_tag[0]['href'])
+            m = re.match("javascript:SndSelf\((\d+),(\d+)\);", name_tag[0]['href'])
             return m.groups()
         else:
             return None
 
-    def parse_pdf(self,pdf_url):
+    def parse_pdf(self, pdf_url):
         return parse_knesset_bill_pdf.parse(pdf_url)
 
-    def parse_laws_page(self,soup):
-        name_tag = soup.findAll(lambda tag: tag.name == 'a' and tag.has_key('href') and tag['href'].find(".pdf")>=0)
-        for tag in name_tag:
+    def parse_laws_page(self, soup):
+        name_tags = soup.findAll(lambda tag: tag.name == 'a' and tag.has_key('href') and tag['href'].find(".pdf") >= 0)
+        for tag in name_tags:
             pdf_link = self.pdf_url + tag['href']
-            booklet = re.search(r"/(\d+)/",tag['href']).groups(1)[0]
+            booklet = re.search(r"/(\d+)/", tag['href']).groups(1)[0]
             if int(booklet) <= self.min_booklet:
                 return False
             pdf_data = self.parse_pdf(pdf_link) or []
-            for j in range(len(pdf_data)): # sometime there is more than 1 law in a pdf
+            for j in range(len(pdf_data)):  # sometime there is more than 1 law in a pdf
                 title = pdf_data[j]['title']
-                m = re.findall('[^\(\)]*\((.*?)\)[^\(\)]',title)
+                m = re.findall('[^\(\)]*\((.*?)\)[^\(\)]', title)
                 try:
-                    comment = m[-1].strip().replace('\n','').replace('&nbsp;',' ')
-                    law = title[:title.find(comment)-1]
+                    comment = m[-1].strip().replace('\n', '').replace('&nbsp;', ' ')
+                    law = title[:title.find(comment) - 1]
                 except:
                     comment = None
-                    law = title.replace(',','')
+                    law = title.replace(',', '')
                 try:
-                    correction = m[-2].strip().replace('\n','').replace('&nbsp;',' ')
-                    law = title[:title.find(correction)-1]
+                    correction = m[-2].strip().replace('\n', '').replace('&nbsp;', ' ')
+                    law = title[:title.find(correction) - 1]
                 except:
                     correction = None
                 correction = fix_dash(correction)
-                law = law.strip().replace('\n','').replace('&nbsp;',' ')
-                if law.find("הצעת ".decode("utf8"))==0:
+                law = law.strip().replace('\n', '').replace('&nbsp;', ' ')
+                if law.find("הצעת ".decode("utf8")) == 0:
                     law = law[5:]
 
-                law_data = {'booklet':booklet,'link':pdf_link, 'law':law, 'correction':correction,
-                                       'comment':comment, 'date':pdf_data[j]['date']}
+                law_data = {'booklet': booklet, 'link': pdf_link, 'law': law, 'correction': correction,
+                            'comment': comment, 'date': pdf_data[j]['date']}
                 if 'original_ids' in pdf_data[j]:
                     law_data['original_ids'] = pdf_data[j]['original_ids']
                 if 'bill' in pdf_data[j]:
@@ -234,12 +243,12 @@ class ParseKnessetLaws(ParseLaws):
     def update_booklet(self):
         return int(self.laws_data[-1]['booklet'])
 
-class ParseGovLaws(ParseKnessetLaws):
 
-    def __init__(self,min_booklet):
-        self.url =r"http://www.knesset.gov.il/laws/heb/template.asp?Type=4"
-        self.pdf_url=r"http://www.knesset.gov.il"
-        self.laws_data=[]
+class ParseGovLaws(ParseKnessetLaws):
+    def __init__(self, min_booklet):
+        self.url = r"http://www.knesset.gov.il/laws/heb/template.asp?Type=4"
+        self.pdf_url = r"http://www.knesset.gov.il"
+        self.laws_data = []
         self.min_booklet = min_booklet
 
     def parse_gov_laws(self):
@@ -275,13 +284,13 @@ class ParseGovLaws(ParseKnessetLaws):
             filename = link_file.link_file.path
         try:
             prop = GovProposalParser(filename)
-        except Exception, e:
-            logger.info(e)
+        except Exception:
+            logger.exception('Gov proposal exception %s'.format(pdf_url))
             return None
         # TODO: check if parsing handles more than 1 prop in a booklet
         x = {'title': prop.get_title(),
-              'date': prop.get_date(),
-              #'bill':prop,
+             'date': prop.get_date(),
+             # 'bill':prop,
              'link_file': link_file}
         return [x]
 
@@ -300,11 +309,11 @@ class ParseGovLaws(ParseKnessetLaws):
         if pdf_data is None:
             return
         for j in range(len(pdf_data)):  # sometime there is more than 1 gov
-                                        # billl in a pdf
+            # bill in a pdf
             if alt_title:  # just use the given title
                 title = alt_title
             else:  # get the title from the PDF file itself.
-                   # doesn't work so well
+                # doesn't work so well
                 title = pdf_data[j]['title']
             m = re.findall('[^\(\)]*\((.*?)\)[^\(\)]', title)
             try:
@@ -347,7 +356,7 @@ class ParseGovLaws(ParseKnessetLaws):
         gp - an existing GovProposal objects. if this is given, it will be
             updated, instead of creating a new object
         """
-        if not(data['date']) or CUTOFF_DATE and data['date'] < CUTOFF_DATE:
+        if not (data['date']) or CUTOFF_DATE and data['date'] < CUTOFF_DATE:
             return
         law_name = data['law']
         (law, created) = Law.objects.get_or_create(title=law_name)
@@ -362,8 +371,9 @@ class ParseGovLaws(ParseKnessetLaws):
             title += ' ' + data['comment']
         if len(title) <= 1:
             title = u'חוק חדש'
-        if data['date'] > Knesset.objects.current_knesset().start_date:
-            k_id = 19
+        current_knesset = Knesset.objects.current_knesset()
+        if data['date'] > current_knesset.start_date:
+            k_id = current_knesset.pk
         else:
             k_id = 18
 
@@ -380,7 +390,7 @@ class ParseGovLaws(ParseKnessetLaws):
 
             # look for similar bills
             bill_params = dict(law=law, title=title, stage='3',
-                            stage_date=data['date'])
+                               stage_date=data['date'])
             similar_bills = Bill.objects.filter(**bill_params).order_by('id')
             if len(similar_bills) >= 1:
                 b = similar_bills[0]
@@ -407,8 +417,9 @@ class ParseGovLaws(ParseKnessetLaws):
                 gp.save()
             else:
                 logger.debug("processing gp %d - matching bill (%d) already has gp"
-                            " (%d)" % (gp.id, b.id, b.gov_proposal.id))
+                             " (%d)" % (gp.id, b.id, b.gov_proposal.id))
         else:  # update a given GovProposal
+            # TODO: move to a classmethod
             gp.booklet_number = data['booklet']
             gp.knesset_id = k_id
             gp.source_url = data['link']
@@ -438,10 +449,15 @@ class ParseGovLaws(ParseKnessetLaws):
         pairs = []
         curr_href = None
         for line in u.split('\n'):
+            # This builds upon always having the pdf in one line and then the actual title, else would cause errors
+            curr_title = None
             if '.pdf' in line:
                 curr_href = re.search('href="(.*?)"', line).group(1)
             if 'LawText1">' in line:
-                curr_title = re.search('LawText1">(.*?)</', line).group(1)
+                try:
+                    curr_title = re.search('LawText1">(.*?)</', line).group(1)
+                except AttributeError:
+                    curr_title = re.search('LawText1">(.*?)\r', line).group(1)
                 pairs.append((curr_title, curr_href))
         if not pairs:
             return False
@@ -460,5 +476,3 @@ class ParseGovLaws(ParseKnessetLaws):
 
 if __name__ == '__main__':
     m = ParsePrivateLaws(15)
-
-
