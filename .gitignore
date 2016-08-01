@@ -23,3 +23,5 @@ data/committee_mms_videos
 notebooks/
 npm-debug.log
 *.egg-info
+presence/presence.txt
+presence/presence_log.txt
