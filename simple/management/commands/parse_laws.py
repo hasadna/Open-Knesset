@@ -359,7 +359,14 @@ class ParseGovLaws(ParseKnessetLaws):
         if not (data['date']) or CUTOFF_DATE and data['date'] < CUTOFF_DATE:
             return
         law_name = data['law']
-        (law, created) = Law.objects.get_or_create(title=law_name)
+        try:
+            law, created = Law.objects.get_or_create(title=law_name)
+        except Law.MultipleObjectsReturned:
+            created = False
+            try:
+                law = Law.objects.filter(title=law_name, merged_into=None).last()
+            except Law.MultipleObjectsReturned: #How is this possible? probably another bug somewhere
+                law = Law.objects.filter(title=law_name).last()
         if created:
             law.save()
         if law.merged_into:
