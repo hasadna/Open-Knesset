@@ -235,7 +235,7 @@ class BillResource(BaseResource):
             return result
 
         except:
-            logging.error('Got exception dehydrating agendas')
+            logging.exception('Got exception dehydrating agendas')
 
         return None
 
@@ -243,8 +243,9 @@ class BillResource(BaseResource):
         result = None
         try:
             result = self.get_src_parts(bundle)[1]
+            return result # Looks like this is missing :)
         except:
-            logging.error('Got exception dehydrating explanation')
+            logging.exception('Got exception dehydrating explanation')
             return ""
             # TODO: do we need this here????
             # return result
