@@ -83,7 +83,8 @@ class CurrentKnessetMembersManager(models.Manager):
         from mks.models import Knesset
         qs = super(CurrentKnessetMembersManager, self).get_queryset()
         # TODO: Strange? why should we filter by knesset and not other options?
-        qs = qs.filter(current_party__knesset=Knesset.objects.current_knesset())
+        current_knesset = Knesset.objects.current_knesset()
+        qs = qs.filter(current_party__knesset=current_knesset)
         return qs
 
 
