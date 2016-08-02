@@ -365,7 +365,7 @@ class ParseGovLaws(ParseKnessetLaws):
             created = False
             try:
                 law = Law.objects.filter(title=law_name, merged_into=None).last()
-            except Law.MultipleObjectsReturned: #How is this possible? probably another bug somewhere
+            except Law.MultipleObjectsReturned:  # How is this possible? probably another bug somewhere
                 law = Law.objects.filter(title=law_name).last()
         if created:
             law.save()
@@ -469,11 +469,14 @@ class ParseGovLaws(ParseKnessetLaws):
         if not pairs:
             return False
         for title, href in pairs:
-            pdf_link = self.pdf_url + href
-            booklet = re.search(r"/(\d+)/", href).groups(1)[0]
-            if int(booklet) <= self.min_booklet:
-                return False
-            self.update_single_bill(pdf_link, booklet=booklet, alt_title=title)
+            try:
+                pdf_link = self.pdf_url + href
+                booklet = re.search(r"/(\d+)/", href).groups(1)[0]
+                if int(booklet) <= self.min_booklet:
+                    return False
+                self.update_single_bill(pdf_link, booklet=booklet, alt_title=title)
+            except TypeError:
+                logger.exception('law scraping exception pdf_url: %s href %s' % (self.pdf_url, href))
         return True
 
 
