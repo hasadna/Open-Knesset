@@ -1,0 +1,867 @@
+
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1255">
+<script>
+function checkLegalFieldLength(legalLength, length, FieldName)
+{
+	if(legalLength < length)
+	{
+		alert("האורך בשדה \"" +FieldName+ "\" גדול ב- " +(length-legalLength)+ " תו/ים מהמותר");
+		return false;
+	}
+	return true;
+}
+
+function SetCharValue(sChar)
+{
+	document.frmSelf.ChVal.value = sChar;
+	document.frmSelf.submit();
+}
+
+function SetKnstNumVal(nKnstNum)
+{
+	document.frmSelf.KnstID.value = nKnstNum;
+	document.frmSelf.submit();
+}
+function SndSelfFrm(sCurFileNm)
+{
+	if(document.frmDetail.bAllMk.checked == true)
+		document.frmDetail.bAllMk.value = 1;
+	document.frmDetail.action = sCurFileNm;
+	document.frmDetail.submit();
+}
+</script>
+
+<HTML dir="rtl">
+<HEAD>
+<TITLE>חקיקה-הצגת חוקים פרטיים</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1255">
+<SCRIPT language=JavaScript src="/main/load_functions.js" type="text/javascript"></SCRIPT>
+<link rel="stylesheet" href="/main/sidebar.css">
+<link rel="stylesheet" href="/laws/heb/LawStyle.css">
+<style>
+ BODY {OVERFLOW:scroll;OVERFLOW-X:hidden}
+.DEK {POSITION:absolute;VISIBILITY:hidden;Z-INDEX:200;}
+.bord {border-width: 1px;	border-style: solid;}
+</Style>
+<script>
+<!--
+var arrResume = new Array;
+function OverLawLink1(el)
+	{		
+		el.className ="LawLink1Over"		
+	}
+	function OutLawLink1(el)
+	{
+		el.className ="LawLink1"		
+	}
+	
+function OverLawLink2(el)
+	{		
+		el.className ="LawLink2Over"		
+	}
+	function OutLawLink2(el)
+	{
+		el.className ="LawLink2"		
+	}
+
+function OverLawLink3(el)
+	{		
+		el.className ="LawLink3Over"		
+	}
+function OutLawLink3(el)
+{
+	el.className ="LawLink3"		
+}
+function ShowResume(nID)
+{
+	var sBuf;
+
+	if(eval("document.all.Resume"+ nID +".innerHTML ") == "")
+	{
+		sBuf = "<table dir=rtl width=100% border=0 class=bord><tr><td class=LawText1>" + arrResume[nID] + "</td></tr></table>";
+//		sBuf = "123";
+		eval("document.all.Resume"+ nID +".innerHTML = sBuf");
+		sBuf = "<a href=javascript:ShowResume("+nID+");";
+		sBuf += "><img border=0 src=\"/laws/images/Law_SummaryOpen_Icon.gif\"></a>";
+		eval("document.all.ImgR"+ nID +".innerHTML = sBuf");
+	}
+	else
+	{
+		eval("document.all.Resume"+ nID +".innerHTML = \"\"");
+		sBuf = "<a href=javascript:ShowResume("+nID+");";
+		sBuf += "><img border=0 src=\"/laws/images/Law_SummaryIcon.gif\"></a>";
+		eval("document.all.ImgR"+ nID +".innerHTML = sBuf");
+	}
+}
+
+function Validation(nTp, nStart , bNewSrch)
+{
+	if(bNewSrch == true)
+	{
+		document.frmSndSelf.ckLawNo.checked = false;
+		document.frmSndSelf.LawN.value = "";
+		
+		document.frmSndSelf.ckWord.checked = false;
+		document.frmSndSelf.FndWord.value = "";
+		
+		document.frmSndSelf.ckDate.checked = false;
+		
+//		document.frmSndSelf.  .checked = false;
+	}
+
+	if(isNaN(document.frmSndSelf.LawN.value) == true)
+	{
+		alert("מספר חוק יכיל מספרים בלבד");
+		return;
+	}
+	
+	document.frmSndSelf.LawTp.value= nTp;
+	document.frmSndSelf.RowStart.value= nStart;
+
+ 	document.frmSndSelf1.innerHTML = "<Input type=Hidden name=oo value=kjkj>";
+	//MirrorForm (document.frmSndSelf, oForm);
+	//document.all.frmSndSelf1.submit(); 
+
+	document.frmSndSelf.submit();
+}
+
+function SndSelf(nStart)
+{
+	document.frmSndSelf.RowStart.value= nStart;
+	document.frmSndSelf.submit();
+}
+
+function SetCkDates()
+{
+	if(document.frmSndSelf.ckDates.checked == false)
+		document.frmSndSelf.ckDates.checked = true;	
+}
+
+function Clear()
+{
+	document.frmSndSelf.RowStart.value=0;
+	document.frmSndSelf.LawN.value = "";
+	document.frmSndSelf.FndWord.value = "";
+	document.frmSndSelf.find_mk.selectedIndex = 0;
+	document.frmSndSelf.dtFmYY.selectedIndex = 0;
+	document.frmSndSelf.dtFmMM.selectedIndex = 0;
+	document.frmSndSelf.dtFmDD.selectedIndex = 0;
+	document.frmSndSelf.dtToYY.selectedIndex = 0;
+	document.frmSndSelf.dtToMM.selectedIndex = 0;
+	document.frmSndSelf.dtToDD.selectedIndex = 0;
+	document.frmSndSelf.ckDates.checked = false;
+}
+
+
+
+-->
+</script>
+</HEAD>
+
+<BODY BGCOLOR=#ECEBE8 TEXT="#000000" LINK="#2962B9" VLINK="#303490" ALINK="#483428" topmargin="0" leftmargin="1" onLoad="MM_preloadImages('/main/images/ban-heb-but-down.jpg','/main/images/ban-heb-but-over.jpg','/main/images/ban-arabic-but-down.jpg','/main/images/ban-arabic-but-over.jpg','/main/images/ban-eng-but-down.jpg','/main/images/ban-eng-but-over.jpg')">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1255">
+<font face="arial">
+<SCRIPT language=JavaScript src="/main/utils.js" type="text/javascript"></SCRIPT>
+<SCRIPT language=JavaScript src="/main/heb/newmenu_array_heb.js" type="text/javascript"></SCRIPT>
+<SCRIPT language=JavaScript src="/main/mmenu.js" type="text/javascript"></SCRIPT>
+<DIV ID="dek" CLASS="dek" ></DIV><table WIDTH=100% border=0 CELLPADDING=0 CELLSPACING=0 dir="ltr">
+<script>
+/*
+Pop up information box II (Mike McGrath (mike_mcgrath@lineone.net,  http://website.lineone.net/~mike_mcgrath))
+Permission granted to Dynamicdrive.com to include script in archive
+For this and 100's more DHTML scripts, visit http://dynamicdrive.com
+*/
+
+Xoffset=-60;    // modify these values to ...
+Yoffset= 20;    // change the popup position.
+
+var nav,old,iex=(document.all),yyy=-1000;
+if(navigator.appName=="Netscape"){(document.layers)?nav=true:old=true;}
+
+if(!old){
+var skn=(nav)?document.dek:dek.style;
+if(nav)document.captureEvents(Event.MOUSEMOVE);
+document.onmousemove=get_mouse;
+}
+
+function popup(msg,bak){
+if(bak=='#87ceeb')
+{
+var content="<TABLE  WIDTH=150 BORDER=0 BORDERCOLOR=white CELLPADDING=2 CELLSPACING=0 "+
+"BGCOLOR="+bak+"><TD ALIGN=center><FONT COLOR=black SIZE=2>"+msg+"</FONT></TD></TABLE>";
+}
+else
+{
+
+var content="<TABLE  WIDTH=150 B ORDER=1 dir=rtl BORDERCOLOR='000000' CELLPADDING=0 CELLSPACING=0 "+
+"BGCOLOR=#FFFFE1 class=bord><TD ALIGN=center><FONT COLOR=black SIZE=2>"+msg+"</FONT></TD></TABLE>";
+}
+if(old){alert(msg);return;} 
+else{yyy=Yoffset;
+ if(nav){skn.document.write(content);skn.document.close();skn.visibility="visible"}
+ if(iex){document.all("dek").innerHTML=content;skn.visibility="visible"}
+ }
+}
+
+function get_mouse(e){
+var x=(nav)?e.pageX:event.x+document.body.scrollLeft;skn.left=x+Xoffset;
+var y=(nav)?e.pageY:event.y+document.body.scrollTop;skn.top=y+yyy;
+}
+
+function kill(){
+if(!old){yyy=-1000;skn.visibility="hidden";}
+}
+</script>
+<tr><td align="right">
+<!-- top banner table -->
+<TABLE WIDTH=100% border=0 CELLPADDING=0 CELLSPACING=0 align="right">
+<TR><TD align="left" height="20" bgcolor="#251B85" colspan="3"></TD></TR>
+
+<!-- Header or Title of page -->
+<TR><TD align="right" height="18" bgcolor="#FFFFFF" dir="rtl" 
+style="font-size:12pt; font-family:Arial; color:#000000">
+<b> &nbsp; &nbsp; חקיקה
+	חוקים בקריאה שניה ושלישית (נוסח לא רשמי)
+</b></TD>
+
+<!-- top banner images -->
+<TD COLSPAN=2 ROWSPAN=2> 
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<table border="0" CELLPADDING="0" CELLSPACING="0">
+<tr><td><img SRC="/main/images/ban-top-left.jpg" width="31" height="17"></td>
+<td><a href="/main/eng/home.asp" onClick="MM_nbGroup('down','group1','hebbanengknesbut','/main/images/ban-eng-but-down.jpg',1)" onMouseOut="MM_nbGroup('out')" onMouseOver="MM_nbGroup('over','hebbanengknesbut','/main/images/ban-eng-but-over.jpg','/main/images/ban-eng-but-over.jpg',1)"><img SRC="/main/images/ban-eng-but.jpg" width="69" height="17" border="0" name="hebbanengknesbut"></a></td>
+<td><a href="/main/arb/home.asp" onClick="MM_nbGroup('down','group1','hebbanarabicknesbut','/main/images/ban-arabic-but-down.jpg',1)" onMouseOut="MM_nbGroup('out')" onMouseOver="MM_nbGroup('over','hebbanarabicknesbut','/main/images/ban-arabic-but-over.jpg','/main/images/ban-arabic-but-over.jpg',1)"><img SRC="/main/images/ban-arabic-but.jpg" width="49" height="17" border="0" name="hebbanarabicknesbut"></a></td>
+<td ROWSPAN="2"><a href="/main/heb/home.asp" onClick="MM_nbGroup('down','group1','hebbanhebknesbut','/main/images/ban-heb-but-down.jpg',1)" onMouseOut="MM_nbGroup('out')" onMouseOver="MM_nbGroup('over','hebbanhebknesbut','/main/images/ban-heb-but-over.jpg','/main/images/ban-heb-but-over.jpg',1)"><img SRC="/main/images/ban-heb-but.jpg" width="74" height="63" border="0" name="hebbanhebknesbut"></a></td></tr>
+<tr><td COLSPAN="3"><img SRC="/main/images/ban-main-bottom-img.jpg" width="149" height="46"></td></tr>
+</table>
+</td></tr></table>
+</TD></TR>
+<TR><TD background="/main/images/ban-bgimage-bottom.jpg" width="100%" dir="rtl">
+&nbsp;</TD></TR>
+</TABLE>
+</td></tr></table><table width="100%" cellspacing=0 cellpadding=0 border="0" dir="ltr">
+<tr><td valign="top">
+<!-- put the text in here -->
+<Div dir=rtl>
+<CENTER>
+<H3>
+	חוקים בקריאה שניה ושלישית (נוסח לא רשמי)
+</H3>                  
+<table width="100%" border="0" cellpadding="0" cellspacing="0" dir=rtl>
+  <tr align="left">
+    <td colspan="5">
+
+<!--			<div align="center">
+<table border="1" cellpadding=2 cellspacing=2 bgcolor="#FEEDDF" width="70%">
+<tr>
+<td>
+<B>בעקבות שידרוג מערכות ברשת הכנסת, יחולו בזמן הקרוב, עיכובים בעדכון הצעות חוק פרטיות.
+אנו מתנצלים בפני הגולשים.</B>
+</td>
+</tr>
+</table>
+</div>-->
+
+<BR>
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+         
+        <td align="left" valign="bottom">
+					<table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+               
+                <td><img src="/laws/images/Law_InsideBullet.jpg"></td>
+                <td><a class="LawLink3" onMouseOver="OverLawLink3(this)" onMouseOut="OutLawLink3(this)"
+									href="http://main.knesset.gov.il/Activity/Legislation/Pages/LegislationExplanation.aspx">דברי הסבר -  שלבי החקיקה</a></td>
+                <td width="10"></td>
+                <td><img src="/laws/images/Law_InsideBullet.jpg"></td>
+                <td><a class="LawLink3" onMouseOver="OverLawLink3(this)" onMouseOut="OutLawLink3(this)" 
+                href="http://main.knesset.gov.il/Activity/Legislation/Pages/default.aspx">תפריט החקיקה</a></td>
+              </tr>
+            </table>
+        </td>
+      </tr>
+    </table></td>
+    </tr>
+  <tr>
+    <td height="1" colspan="5" bgcolor="#BA7B45"></td>
+    </tr>
+   
+  <tr>
+    <td colspan="5" bgcolor="#E5CEB9"><div id="TableWithSearch">
+			<table border="0" align="center" cellpadding="0" cellspacing="0" class="LawText2">
+        <tr>
+          <td height="31"  align="right">מספר חוברת
+          </td>
+          <td width="10"></td>
+          <td align="center"><Form name=frmSndSelf1 id=oForm Method=Post></Form><Form 
+          Name=frmSndSelf Method=Post>מילה מכותר  החוק</td>
+          </td>
+        </tr>
+        <tr>
+          <td><Input Type=Hidden Name="RowStart" value="">
+					<Input Type=Hidden Name="LawTp" value="2">
+          <!Input Name=First Type=Hidden value="">
+          <Input Name=LawN class="FormSmall" value="" maxlength=12>
+          </td>
+          <td></td>
+          <td align=left><Input Name=FndWord class="FormSmall" value="" maxlength=12></td>
+          
+				</tr>
+				<tr>
+          <!--td width="10" colspan=5><!/td-->
+          <td colspan=5 class="LawText2">טווח תאריכים<table border=0 width=100% cellpadding=0 cellspacing=0>
+						<tr>
+							<td class="LawText2"><input type=checkbox name=ckDates >
+							מ:<Select Name=dtFmYY class=Form OnChange="SetCkDates()"><Option value=1999>1999</Option>
+<Option value=2000>2000</Option>
+<Option value=2001>2001</Option>
+<Option value=2002>2002</Option>
+<Option value=2003>2003</Option>
+<Option value=2004>2004</Option>
+<Option value=2005>2005</Option>
+<Option value=2006>2006</Option>
+<Option value=2007>2007</Option>
+<Option value=2008>2008</Option>
+<Option value=2009>2009</Option>
+<Option value=2010>2010</Option>
+<Option value=2011>2011</Option>
+<Option value=2012>2012</Option>
+<Option value=2013>2013</Option>
+<Option value=2014>2014</Option>
+<Option value=2015>2015</Option>
+<Option value=2016>2016</Option>
+</Select></td>
+							<td><Select Name=dtFmMM class=Form OnChange="SetCkDates()"><Option value=1>01</Option>
+<Option value=2>02</Option>
+<Option value=3>03</Option>
+<Option value=4>04</Option>
+<Option value=5>05</Option>
+<Option value=6>06</Option>
+<Option value=7>07</Option>
+<Option value=8>08</Option>
+<Option value=9>09</Option>
+<Option value=10>10</Option>
+<Option value=11>11</Option>
+<Option value=12>12</Option>
+</Select></td>
+							<td><Select Name=dtFmDD class=Form OnChange="SetCkDates()"><Option value=1>01</Option>
+<Option value=2>02</Option>
+<Option value=3>03</Option>
+<Option value=4>04</Option>
+<Option value=5>05</Option>
+<Option value=6>06</Option>
+<Option value=7>07</Option>
+<Option value=8>08</Option>
+<Option value=9>09</Option>
+<Option value=10>10</Option>
+<Option value=11>11</Option>
+<Option value=12>12</Option>
+<Option value=13>13</Option>
+<Option value=14>14</Option>
+<Option value=15>15</Option>
+<Option value=16>16</Option>
+<Option value=17>17</Option>
+<Option value=18>18</Option>
+<Option value=19>19</Option>
+<Option value=20>20</Option>
+<Option value=21>21</Option>
+<Option value=22>22</Option>
+<Option value=23>23</Option>
+<Option value=24>24</Option>
+<Option value=25>25</Option>
+<Option value=26>26</Option>
+<Option value=27>27</Option>
+<Option value=28>28</Option>
+<Option value=29>29</Option>
+<Option value=30>30</Option>
+<Option value=31>31</Option>
+</Select></td>
+							<td class="LawText2">&nbsp;עד:<Select Name=dtToYY class=Form OnChange="SetCkDates()"><Option value=1999>1999</Option>
+<Option value=2000>2000</Option>
+<Option value=2001>2001</Option>
+<Option value=2002>2002</Option>
+<Option value=2003>2003</Option>
+<Option value=2004>2004</Option>
+<Option value=2005>2005</Option>
+<Option value=2006>2006</Option>
+<Option value=2007>2007</Option>
+<Option value=2008>2008</Option>
+<Option value=2009>2009</Option>
+<Option value=2010>2010</Option>
+<Option value=2011>2011</Option>
+<Option value=2012>2012</Option>
+<Option value=2013>2013</Option>
+<Option value=2014>2014</Option>
+<Option value=2015>2015</Option>
+<Option value=2016>2016</Option>
+</Select></td>
+							<td><Select Name=dtToMM class=Form OnChange="SetCkDates()"><Option value=1>01</Option>
+<Option value=2>02</Option>
+<Option value=3>03</Option>
+<Option value=4>04</Option>
+<Option value=5>05</Option>
+<Option value=6>06</Option>
+<Option value=7>07</Option>
+<Option value=8>08</Option>
+<Option value=9>09</Option>
+<Option value=10>10</Option>
+<Option value=11>11</Option>
+<Option value=12>12</Option>
+</Select></td>
+							<td align=left><Select Name=dtToDD class=Form OnChange="SetCkDates()"><Option value=1>01</Option>
+<Option value=2>02</Option>
+<Option value=3>03</Option>
+<Option value=4>04</Option>
+<Option value=5>05</Option>
+<Option value=6>06</Option>
+<Option value=7>07</Option>
+<Option value=8>08</Option>
+<Option value=9>09</Option>
+<Option value=10>10</Option>
+<Option value=11>11</Option>
+<Option value=12>12</Option>
+<Option value=13>13</Option>
+<Option value=14>14</Option>
+<Option value=15>15</Option>
+<Option value=16>16</Option>
+<Option value=17>17</Option>
+<Option value=18>18</Option>
+<Option value=19>19</Option>
+<Option value=20>20</Option>
+<Option value=21>21</Option>
+<Option value=22>22</Option>
+<Option value=23>23</Option>
+<Option value=24>24</Option>
+<Option value=25>25</Option>
+<Option value=26>26</Option>
+<Option value=27>27</Option>
+<Option value=28>28</Option>
+<Option value=29>29</Option>
+<Option value=30>30</Option>
+<Option value=31>31</Option>
+</Select>&nbsp;</td>
+						</tr>
+					</table></td>
+          <td width="10"></td>
+          <td><a href="javascript:Validation(2,0,false);"><img 
+						src="/laws/images/Law_Search.gif" name="Image21" hspace="10" border="0" 
+							id="Image21" onMouseOver="MM_swapImage('Image21','','/laws/images/Law_Search_Over.gif',1)" onMouseOut="MM_swapImgRestore()"></a>
+							
+						<a href="javascript:Clear();"><img 
+						src="/laws/images/Law_Clear.gif" name="Image210" hspace="10" border="0" 
+							id="Image210" onMouseOver="MM_swapImage('Image210','','/laws/images/Law_Clear_Over.gif',1)" onMouseOut="MM_swapImgRestore()"></a>							
+							</td>
+        </tr></form>
+      </table></div></td>
+    </tr>
+   
+  <tr><td height="1" colspan="5" bgcolor="#7B3D07"></td></tr>
+  
+  <tr><td colspan=5>
+  <table border=0 cellpadding=0 cellspacing=0 width=100%><tr>
+		<!--td bgcolor="#B6A08B" class="LawTitle1" nowrap style=text-align:center>&nbsp;גירסת הורדה</td-->
+		<td bgcolor="#B6A08B" class="LawTitle1" nowrap style=text-align:center>|&nbsp;מס' כנסת</td>
+		<td bgcolor="#B6A08B" class="LawTitle1" nowrap style=text-align:center>|&nbsp;מס' חוברת</td>
+		<td bgcolor="#B6A08B" class="LawTitle1" colspan=2	>|&nbsp;שם  החוק</td>
+		<td bgcolor="#B6A08B" class="LawTitle1" nowrap style=text-align:center
+		>|&nbsp;מועד קבלת החוק</td>
+		<td bgcolor="#B6A08B" class="LawTitle1">|&nbsp;תקציר
+        <td bgcolor="#B6A08B" class="LawTitle1">|&nbsp;&nbsp;
+		<!--td bgcolor="#B6A08B" class="LawTitle1" nowrap style=text-align:center></td-->
+  </tr>
+  <tr><td height="1" colspan="7" bgcolor="#7B3D07"></td></tr>
+
+
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=632_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">632</td>
+	<td><a Href="data/20/3/632_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק יום העלייה, התשע”ו–2016</td>
+	<td class="LawTextC">21/06/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=1036_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">1036</td>
+	<td><a Href="data/20/3/1036_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק מיסוי מקרקעין (שבח ורכישה) (תיקון מס` 87), התשע”ו–2016</td>
+	<td class="LawTextC">21/06/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=1025_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">1025</td>
+	<td><a Href="data/20/3/1025_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק טיפול בחולי נפש (תיקון מס` 9), התשע”ו–2016</td>
+	<td class="LawTextC">20/06/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=839_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">839</td>
+	<td><a Href="data/20/3/839_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק הגבלת שימוש במקום לשם מניעת ביצוע עבירות (תיקון מס` 2), התשע”ו–2016</td>
+	<td class="LawTextC">20/06/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=949_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">949</td>
+	<td><a Href="data/20/3/949_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק המאבק בטרור, התשע”ו–2016</td>
+	<td class="LawTextC">15/06/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=601_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">601</td>
+	<td><a Href="data/20/3/601_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק הגנת הצרכן (תיקון מס` 46), התשע”ו–2016</td>
+	<td class="LawTextC">13/06/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=1033_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">1033</td>
+	<td><a Href="data/20/3/1033_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק הפיקוח על שירותים פיננסיים (קופות גמל) (תיקון מס` 16), התשע”ו–2016</td>
+	<td class="LawTextC">13/06/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=627_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">627</td>
+	<td><a Href="data/20/3/627_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק ההנדסאים והטכנאים המוסמכים (תיקון), התשע”ו–2016</td>
+	<td class="LawTextC">06/06/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=1044_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">1044</td>
+	<td><a Href="data/20/3/1044_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק להגנת הספרות והסופרים בישראל (הוראת שעה) (תיקון), התשע”ו–2016</td>
+	<td class="LawTextC">30/05/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=1029_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">1029</td>
+	<td><a Href="data/20/3/1029_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק הפיקוח על שירותים פיננסיים (קופות גמל) (תיקון מס` 15), התשע”ו–2016</td>
+	<td class="LawTextC">30/05/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=964_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">964</td>
+	<td><a Href="data/20/3/964_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק בתי המשפט (תיקון מס` 83), התשע”ו–2016</td>
+	<td class="LawTextC">30/05/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=1039_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">1039</td>
+	<td><a Href="data/20/3/1039_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק איסור התערבות גנטית (שיבוט אדם ושינוי גנטי בתאי רבייה) (תיקון מס` 3), התשע”ו–2016</td>
+	<td class="LawTextC">23/05/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=628_3_4&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">628</td>
+	<td><a Href="data/20/3/628_3_4.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק העונשין (תיקון מס` 122), התשע”ו–2016</td>
+	<td class="LawTextC">30/03/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=603_3_3&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">603</td>
+	<td><a Href="data/20/3/603_3_3.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק למניעת הטרדות של מוקדי חירום, התשע”ו–2016</td>
+	<td class="LawTextC">30/03/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=628_3_3&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">628</td>
+	<td><a Href="data/20/3/628_3_3.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק ההוצאה לפועל (תיקון מס` 50), התשע”ו–2016</td>
+	<td class="LawTextC">30/03/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=990_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">990</td>
+	<td><a Href="data/20/3/990_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק פיצויים לנפגעי תאונות דרכים (תיקון מס` 25), התשע”ו–2016</td>
+	<td class="LawTextC">30/03/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=1003_3_3&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">1003</td>
+	<td><a Href="data/20/3/1003_3_3.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק לתיקון פקודת מס הכנסה (מס` 223), התשע”ו–2016</td>
+	<td class="LawTextC">30/03/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=1004_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">1004</td>
+	<td><a Href="data/20/3/1004_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק שירות המדינה (גמלאות) (תיקון מס` 58), התשע”ו–2016</td>
+	<td class="LawTextC">30/03/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=584_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">584</td>
+	<td><a Href="data/20/3/584_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק זכויות הדייר בדיור הציבורי (תיקון מס` 6), התשע”ו–2016</td>
+	<td class="LawTextC">30/03/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=1000_3_2&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">1000</td>
+	<td><a Href="data/20/3/1000_3_2.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק לתיקון פקודת מס הכנסה (מס` 222), התשע”ו–2016</td>
+	<td class="LawTextC">29/03/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=841_3_2&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">841</td>
+	<td><a Href="data/20/3/841_3_2.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק לקידום הבנייה במתחמים מועדפים לדיור (הוראת שעה) (תיקון מס` 3), התשע”ו–2016</td>
+	<td class="LawTextC">29/03/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=1019_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">1019</td>
+	<td><a Href="data/20/3/1019_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק נכי רדיפות הנאצים (תיקון מס` 22), התשע”ו–2016</td>
+	<td class="LawTextC">29/03/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=593_3_3&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">593</td>
+	<td><a Href="data/20/3/593_3_3.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק זכויות החולה (תיקון מס` 9), התשע”ו–2016</td>
+	<td class="LawTextC">29/03/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=901_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">901</td>
+	<td><a Href="data/20/3/901_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק עבודת הנוער (תיקון מס` 18 והוראת שעה), התשע”ו–2016</td>
+	<td class="LawTextC">29/03/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=953_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">953</td>
+	<td><a Href="data/20/3/953_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק איסור הלבנת הון (תיקון מס` 14), התשע”ו–2016</td>
+	<td class="LawTextC">29/03/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>
+<tr vAlign=Top>
+	<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=883_3_1&t=3"><img 
+		border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+	<td class="LawTextC">20</td>
+	<td class="LawTextC">883</td>
+	<td><a Href="data/20/3/883_3_1.rtf"><img border=0 src="/laws/images/icon_page_WORD.gif"></a></td>
+	<td class="LawText1">חוק תגמול לנושאי משרה בתאגידים פיננסיים (אישור מיוחד ואי-התרת הוצאה לצורכי מס בשל תגמול חריג), התשע”ו–2016</td>
+	<td class="LawTextC">29/03/2016</td>
+	<td class="LawText1"></td>
+        <td class="LawText1"></td>
+</tr>
+<tr><td colspan=7 height=2 bgcolor="#E9E0D7"></td></tr>	
+	</table></td></tr><tr>
+    <td colspan="5">&nbsp;
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+
+	
+		<Td><IMG SRC="/laws/images/BackButtonDissable.gif"></Td>
+	
+		<Td Align=Left><A Href="javascript:SndSelf(26);"><IMG SRC=../images/next.gif BORDER=0></A></Td>
+	
+        </tr>
+      </table></td>
+    </tr>
+</table>
+
+</CENTER>
+<BR>
+<table style="border:solid 1 black;font-size:8pt;color:black;" width="90%" align="center"><tr><td>
+נוסח המסמכים שבאתר הינו נוסח בלתי רשמי; מובהר, כי מדובר בנוסח הכפוף לשינויי
+עריכה ואשר עשויים ליפול בו שגיאות ושיבושים. הכנסת אינה אחראית לאיכות, לדיוק
+ולשלמות המסמך ולא תוטל עליה כל אחראיות בשל פרסום המסמך, הפצתו, שיבושים
+במסמך, טעויות, שינויים שנעשו על-ידי כל צד ג' וכיו"ב. עם השימוש במסמך הנך
+נוטל על עצמך את כל האחריות בעניינים אלה. במידה ותתגלה סתירה או אי התאמה בין
+חומר המתפרסם באתר לבין חומר המופיע בפרסומים הרשמיים בכתב של מדינת ישראל, רק
+החומר בפרסומים הרשמיים ייחשב כנכון. 
+</td></tr></table><BR>
+<BR>
+<center>
+	<table dir="rtl"><tr><td align="center">
+   <img border="0"  src ="/images/semel.gif" alt="סמל המדינה - מנורה ועלי זית"><br>
+   <font size="-2">
+   <a href="/about_site/heb/copyright.htm">© 2016 כל הזכויות שמורות, מדינת ישראל-הכנסת או לצדדים שלישיים כמפורט בקישור</a><br>
+   
+   נשמח לקבל את הערותיכם והצעותיכם לכתובת: <a href="/feedback/feedback_knesset.asp">feedback@knesset.gov.il</a>
+   
+
+   </td></tr></table>
+</center>
+
+</TD>
+<!-- Side-Strip in blue -->
+<TD width="124" valign="top" align="center" background="/main/images/content_sidestrip.gif">
+<table style="height:100%" border="0" height="100%" width="100%" background="/main/images/content_sidestrip.gif" cellspacing="0" cellpadding="0" dir="rtl">
+	  <tr>
+          <td valign="top" width="100%" class="tdlink" align="right" height="4"><BR>
+	<A HREF="http://main.knesset.gov.il/Activity/Legislation/Laws/Pages/lawhome.aspx" class="sslink" target="_blank">חוקי מדינת ישראל</A><P>
+	  </td>
+      </tr>
+      
+      <tr>
+          <td valign="top" width="100%" class="tdlink" align="right" height="4"><BR>
+	<A HREF="/privatelaw/MKsRetract20.pdf" class="sslink" target="_blank">חברי הכנסת שחזרו בהם מהצעות חוק פרטיות – הכנסת ה-20</A><P>
+	  </td>
+      </tr>
+      
+      <tr>
+          <td valign="top" width="100%" class="tdlink" align="right" height="4"><BR>
+	<A HREF="/privatelaw/MKsRetract19.pdf" class="sslink" target="_blank">חברי הכנסת שחזרו בהם מהצעות חוק פרטיות – הכנסת ה-19</A><P>
+	  </td>
+      </tr>
+  
+   <tr>
+          <td valign="top" width="100%" class="tdlink" align="right" height="4"><BR>
+	<A HREF="/privatelaw/MKsRetract18.pdf" class="sslink" target="_blank">חברי הכנסת שחזרו בהם מהצעות חוק פרטיות – הכנסת ה-18</A><P>
+	  </td>
+      </tr>
+	
+	<tr>
+		<td valign="bottom" width="100%" class="tdlink" align="right"><BR></td>
+  </tr>
+</table>
+</td></tr></table>
+ 
+</script>
+<br>
+</font>
+</BODY>
+</HTML>

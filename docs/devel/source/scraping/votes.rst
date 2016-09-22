@@ -9,3 +9,5 @@ This functions interates based on vote id corresponding to knesset's vote page, 
 For the above URL, the vote id is 23556.
 
 We then scrape all the relevant data from that html page, and connect to related objects.
+
+See also the Bills documentation - it updates some data in votes.

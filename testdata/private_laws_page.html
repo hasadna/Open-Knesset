@@ -1,0 +1,862 @@
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script>
+function checkLegalFieldLength(legalLength, length, FieldName)
+{
+	if(legalLength &lt; length)
+	{
+		alert("האורך בשדה \"" +FieldName+ "\" גדול ב- " +(length-legalLength)+ " תו/ים מהמותר");
+		return false;
+	}
+	return true;
+}
+
+function SetCharValue(sChar)
+{
+	document.frmSelf.ChVal.value = sChar;
+	document.frmSelf.submit();
+}
+
+function SetKnstNumVal(nKnstNum)
+{
+	document.frmSelf.KnstID.value = nKnstNum;
+	document.frmSelf.submit();
+}
+function SndSelfFrm(sCurFileNm)
+{
+	if(document.frmDetail.bAllMk.checked == true)
+		document.frmDetail.bAllMk.value = 1;
+	document.frmDetail.action = sCurFileNm;
+	document.frmDetail.submit();
+}
+</script>
+<html dir="rtl">
+<head>
+<title>חקיקה-הצגת חוקים פרטיים</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script language="JavaScript" src="/main/load_functions.js" type="text/javascript"></script>
+<link rel="stylesheet" href="/main/sidebar.css" />
+<link rel="stylesheet" href="/laws/heb/LawStyle.css" />
+<style>
+ BODY {OVERFLOW:scroll;OVERFLOW-X:hidden}
+.DEK {POSITION:absolute;VISIBILITY:hidden;Z-INDEX:200;}
+.bord {border-width: 1px;	border-style: solid;}
+</style>
+<script>
+&lt;!--
+var arrResume = new Array;
+function OverLawLink1(el)
+	{		
+		el.className ="LawLink1Over"		
+	}
+	function OutLawLink1(el)
+	{
+		el.className ="LawLink1"		
+	}
+	
+function OverLawLink2(el)
+	{		
+		el.className ="LawLink2Over"		
+	}
+	function OutLawLink2(el)
+	{
+		el.className ="LawLink2"		
+	}
+
+function OverLawLink3(el)
+	{		
+		el.className ="LawLink3Over"		
+	}
+function OutLawLink3(el)
+{
+	el.className ="LawLink3"		
+}
+function ShowResume(nID)
+{
+	var sBuf;
+
+	if(eval("document.all.Resume"+ nID +".innerHTML ") == "")
+	{
+		sBuf = "&lt;table dir=rtl width=100% border=0 class=bord&gt;&lt;tr&gt;&lt;td class=LawText1&gt;" + arrResume[nID] + "&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;";
+//		sBuf = "123";
+		eval("document.all.Resume"+ nID +".innerHTML = sBuf");
+		sBuf = "&lt;a href="javascript:ShowResume("+nID+");";" sbuf="sBuf"&gt;&lt;img border="0" src=""&gt;&lt;/a&gt;";
+		eval("document.all.ImgR"+ nID +".innerHTML = sBuf");
+	}
+	else
+	{
+		eval("document.all.Resume"+ nID +".innerHTML = \"\"");
+		sBuf = "&lt;a href="javascript:ShowResume("+nID+");";" sbuf="sBuf"&gt;&lt;img border="0" src=""&gt;&lt;/a&gt;";
+		eval("document.all.ImgR"+ nID +".innerHTML = sBuf");
+	}
+}
+
+function Validation(nTp, nStart , bNewSrch)
+{
+	if(bNewSrch == true)
+	{
+		document.frmSndSelf.ckLawNo.checked = false;
+		document.frmSndSelf.LawN.value = "";
+		
+		document.frmSndSelf.ckWord.checked = false;
+		document.frmSndSelf.FndWord.value = "";
+		
+		document.frmSndSelf.ckDate.checked = false;
+		
+//		document.frmSndSelf.  .checked = false;
+	}
+
+	if(isNaN(document.frmSndSelf.LawN.value) == true)
+	{
+		alert("מספר חוק יכיל מספרים בלבד");
+		return;
+	}
+	
+	document.frmSndSelf.LawTp.value= nTp;
+	document.frmSndSelf.RowStart.value= nStart;
+
+ 	document.frmSndSelf1.innerHTML = "&lt;input type="Hidden" name="oo" value="kjkj"&gt;";
+	//MirrorForm (document.frmSndSelf, oForm);
+	//document.all.frmSndSelf1.submit(); 
+
+	document.frmSndSelf.submit();
+}
+
+function SndSelf(nStart)
+{
+	document.frmSndSelf.RowStart.value= nStart;
+	document.frmSndSelf.submit();
+}
+
+function SetCkDates()
+{
+	if(document.frmSndSelf.ckDates.checked == false)
+		document.frmSndSelf.ckDates.checked = true;	
+}
+
+function Clear()
+{
+	document.frmSndSelf.RowStart.value=0;
+	document.frmSndSelf.LawN.value = "";
+	document.frmSndSelf.FndWord.value = "";
+	document.frmSndSelf.find_mk.selectedIndex = 0;
+	document.frmSndSelf.dtFmYY.selectedIndex = 0;
+	document.frmSndSelf.dtFmMM.selectedIndex = 0;
+	document.frmSndSelf.dtFmDD.selectedIndex = 0;
+	document.frmSndSelf.dtToYY.selectedIndex = 0;
+	document.frmSndSelf.dtToMM.selectedIndex = 0;
+	document.frmSndSelf.dtToDD.selectedIndex = 0;
+	document.frmSndSelf.ckDates.checked = false;
+}
+
+
+
+--&gt;
+</script>
+</head>
+<body bgcolor="#ECEBE8" text="#000000" link="#2962B9" vlink="#303490" alink="#483428" topmargin="0" leftmargin="1" onload="MM_preloadImages('/main/images/ban-heb-but-down.jpg','/main/images/ban-heb-but-over.jpg','/main/images/ban-arabic-but-down.jpg','/main/images/ban-arabic-but-over.jpg','/main/images/ban-eng-but-down.jpg','/main/images/ban-eng-but-over.jpg')">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<font face="arial">
+<script language="JavaScript" src="/main/utils.js" type="text/javascript"></script>
+<script language="JavaScript" src="/main/heb/newmenu_array_heb.js" type="text/javascript"></script>
+<script language="JavaScript" src="/main/mmenu.js" type="text/javascript"></script>
+<div id="dek" class="dek"></div><table width="100%" border="0" cellpadding="0" cellspacing="0" dir="ltr">
+<script>
+/*
+Pop up information box II (Mike McGrath (mike_mcgrath@lineone.net,  http://website.lineone.net/~mike_mcgrath))
+Permission granted to Dynamicdrive.com to include script in archive
+For this and 100's more DHTML scripts, visit http://dynamicdrive.com
+*/
+
+Xoffset=-60;    // modify these values to ...
+Yoffset= 20;    // change the popup position.
+
+var nav,old,iex=(document.all),yyy=-1000;
+if(navigator.appName=="Netscape"){(document.layers)?nav=true:old=true;}
+
+if(!old){
+var skn=(nav)?document.dek:dek.style;
+if(nav)document.captureEvents(Event.MOUSEMOVE);
+document.onmousemove=get_mouse;
+}
+
+function popup(msg,bak){
+if(bak=='#87ceeb')
+{
+var content="&lt;TABLE  WIDTH=150 BORDER=0 BORDERCOLOR=white CELLPADDING=2 CELLSPACING=0 "+
+"BGCOLOR="+bak+"&gt;&lt;TD ALIGN=center&gt;&lt;FONT COLOR=black SIZE=2&gt;"+msg+"&lt;/font&gt;&lt;/td&gt;&lt;/table&gt;";
+}
+else
+{
+
+var content="&lt;table width="150" b="B" order="1" dir="rtl" bordercolor="000000" cellpadding="0" cellspacing="0"&gt;&lt;td align="center"&gt;&lt;font color="black" size="2"&gt;"+msg+"&lt;/font&gt;&lt;/td&gt;&lt;/table&gt;";
+}
+if(old){alert(msg);return;} 
+else{yyy=Yoffset;
+ if(nav){skn.document.write(content);skn.document.close();skn.visibility="visible"}
+ if(iex){document.all("dek").innerHTML=content;skn.visibility="visible"}
+ }
+}
+
+function get_mouse(e){
+var x=(nav)?e.pageX:event.x+document.body.scrollLeft;skn.left=x+Xoffset;
+var y=(nav)?e.pageY:event.y+document.body.scrollTop;skn.top=y+yyy;
+}
+
+function kill(){
+if(!old){yyy=-1000;skn.visibility="hidden";}
+}
+</script>
+<tr><td align="right">
+<!-- top banner table -->
+<table width="100%" border="0" cellpadding="0" cellspacing="0" align="right">
+<tr><td align="left" height="20" bgcolor="#251B85" colspan="3"></td></tr>
+<!-- Header or Title of page -->
+<tr><td align="right" height="18" bgcolor="#FFFFFF" dir="rtl" style="font-size:12pt; font-family:Arial; color:#000000">
+<b> &nbsp; &nbsp; חקיקה
+	הצעות חוק פרטיות לדיון מוקדם
+</b></td>
+<!-- top banner images -->
+<td colspan="2" rowspan="2">
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td><img src="/main/images/ban-top-left.jpg" width="31" height="17" /></td>
+<td><a href="/main/eng/home.asp" onclick="MM_nbGroup('down','group1','hebbanengknesbut','/main/images/ban-eng-but-down.jpg',1)" onmouseout="MM_nbGroup('out')" onmouseover="MM_nbGroup('over','hebbanengknesbut','/main/images/ban-eng-but-over.jpg','/main/images/ban-eng-but-over.jpg',1)"><img src="/main/images/ban-eng-but.jpg" width="69" height="17" border="0" name="hebbanengknesbut" /></a></td>
+<td><a href="/main/arb/home.asp" onclick="MM_nbGroup('down','group1','hebbanarabicknesbut','/main/images/ban-arabic-but-down.jpg',1)" onmouseout="MM_nbGroup('out')" onmouseover="MM_nbGroup('over','hebbanarabicknesbut','/main/images/ban-arabic-but-over.jpg','/main/images/ban-arabic-but-over.jpg',1)"><img src="/main/images/ban-arabic-but.jpg" width="49" height="17" border="0" name="hebbanarabicknesbut" /></a></td>
+<td rowspan="2"><a href="/main/heb/home.asp" onclick="MM_nbGroup('down','group1','hebbanhebknesbut','/main/images/ban-heb-but-down.jpg',1)" onmouseout="MM_nbGroup('out')" onmouseover="MM_nbGroup('over','hebbanhebknesbut','/main/images/ban-heb-but-over.jpg','/main/images/ban-heb-but-over.jpg',1)"><img src="/main/images/ban-heb-but.jpg" width="74" height="63" border="0" name="hebbanhebknesbut" /></a></td></tr>
+<tr><td colspan="3"><img src="/main/images/ban-main-bottom-img.jpg" width="149" height="46" /></td></tr>
+</table>
+</td></tr></table>
+</td></tr>
+<tr><td background="/main/images/ban-bgimage-bottom.jpg" width="100%" dir="rtl">
+&nbsp;</td></tr>
+</table>
+</td></tr></table><table width="100%" cellspacing="0" cellpadding="0" border="0" dir="ltr">
+<tr><td valign="top">
+<!-- put the text in here -->
+<div dir="rtl">
+<center>
+<h3>
+	הצעות חוק פרטיות לדיון מוקדם
+</h3>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" dir="rtl">
+<tr align="left">
+<td colspan="5">
+<!--			&lt;div align="center"&gt;
+&lt;table border="1" cellpadding=2 cellspacing=2 bgcolor="#FEEDDF" width="70%"&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;B&gt;בעקבות שידרוג מערכות ברשת הכנסת, יחולו בזמן הקרוב, עיכובים בעדכון הצעות חוק פרטיות.
+אנו מתנצלים בפני הגולשים.&lt;/B&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;-->
+<br />
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="left" valign="bottom">
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td><img src="/laws/images/Law_InsideBullet.jpg" /></td>
+<td><a class="LawLink3" onmouseover="OverLawLink3(this)" onmouseout="OutLawLink3(this)" href="http://main.knesset.gov.il/Activity/Legislation/Pages/LegislationExplanation.aspx">דברי הסבר -  שלבי החקיקה</a></td>
+<td width="10"></td>
+<td><img src="/laws/images/Law_InsideBullet.jpg" /></td>
+<td><a class="LawLink3" onmouseover="OverLawLink3(this)" onmouseout="OutLawLink3(this)" href="http://main.knesset.gov.il/Activity/Legislation/Pages/default.aspx">תפריט החקיקה</a></td>
+</tr>
+</table>
+</td>
+</tr>
+</table></td>
+</tr>
+<tr>
+<td height="1" colspan="5" bgcolor="#BA7B45"></td>
+</tr>
+<tr>
+<td colspan="5" bgcolor="#E5CEB9"><div id="TableWithSearch">
+<table border="0" align="center" cellpadding="0" cellspacing="0" class="LawText2">
+<tr>
+<td height="31" align="right">מספר הצעת  חוק 
+          
+          </td>
+<td width="10"></td>
+<td align="center"><form name="frmSndSelf1" id="oForm" method="Post"></form><form name="frmSndSelf" method="Post">מילה מכותר הצעת  החוק</form></td>
+<td width="10"></td>
+<td align="right">שם מגיש/ה הצעת  החוק</td>
+<td width="10"></td>
+<td rowspan="2">
+<input type="Radio" name="rAllMk" value="F" checked="checked" onclick="SndSelf(0)" />ח"כים מכנסת נוכחית.<br />
+<input type="Radio" name="rAllMk" value="T" onclick="SndSelf(0)" />ח"כים מכנסות קודמות.</td>
+</tr>
+<tr>
+<td><input type="Hidden" name="RowStart" value="" />
+<input type="Hidden" name="LawTp" value="1" />
+<input name="LawN" class="FormSmall" value="" maxlength="12" />
+</td>
+<td></td>
+<td align="left"><input name="FndWord" class="FormSmall" value="" maxlength="12" /></td>
+<td></td>
+<td><select name="find_mk" class="FormSmall" dir="rtl"><option value=""></option><option value="909">אבו מערוף&nbsp;עבדאללה</option><option value="857">אבו עראר&nbsp;טלב</option><option value="1">אדלשטיין&nbsp;יולי יואל</option><option value="953">אוחנה&nbsp;אמיר</option><option value="910">אורן&nbsp;מיכאל</option><option value="7">אזולאי&nbsp;דוד</option><option value="754">אייכלר&nbsp;ישראל</option><option value="793">אילטוב&nbsp;רוברט</option><option value="911">אלאלוף&nbsp;אלי</option><option value="860">אלהרר&nbsp;קארין</option><option value="768">אלקין&nbsp;זאב</option><option value="912">אמסלם&nbsp;דוד</option><option value="830">אקוניס&nbsp;אופיר</option><option value="734">ארדן&nbsp;גלעד</option><option value="713">אריאל&nbsp;אורי יהודה</option><option value="861">אשר&nbsp;יעקב</option><option value="14">בגין&nbsp;זאב בנימין </option><option value="913">בהלול&nbsp;זוהיר</option><option value="943">בוקר&nbsp;נאוה</option><option value="914">ביטן&nbsp;דוד</option><option value="862">בירן&nbsp;מיכל</option><option value="915">בן-ארי&nbsp;מירב </option><option value="863">בן-דהן&nbsp;אלי</option><option value="906">בן-צור&nbsp;יואב</option><option value="916">בן-ראובן&nbsp;איל</option><option value="864">בנט&nbsp;נפתלי</option><option value="866">בר-לב&nbsp;עמר</option><option value="865">בר&nbsp;יחיאל חיליק</option><option value="917">ברושי&nbsp;איתן</option><option value="918">ברקו&nbsp;ענת</option><option value="919">ג`בארין&nbsp;יוסף</option><option value="954">גואטה&nbsp;יגאל </option><option value="867">גטאס&nbsp;באסל</option><option value="200">גילאון&nbsp;אילן</option><option value="920">גל&nbsp;שרון</option><option value="201">גלאון&nbsp;זהבה</option><option value="955">גליק&nbsp;יהודה יהושע</option><option value="921">גלנט&nbsp;יואב</option><option value="723">גמליאל&nbsp;גילה</option><option value="844">גנאים&nbsp;מסעוד</option><option value="35">גפני&nbsp;משה</option><option value="868">גרמן&nbsp;יעל</option><option value="771">דיכטר&nbsp;אבי (משה)</option><option value="828">דנון&nbsp;דני</option><option value="41">דרעי&nbsp;אריה מכלוף</option><option value="45">הנגבי&nbsp;צחי</option><option value="740">הרצוג&nbsp;יצחק</option><option value="950">השכל&nbsp;שרן</option><option value="870">וורצמן&nbsp;אבי</option><option value="50">וקנין&nbsp;יצחק</option><option value="922">זוהר&nbsp;מכלוף מיקי</option><option value="846">זועבי&nbsp;חנין</option><option value="756">זחאלקה&nbsp;ג`מאל</option><option value="871">זנדברג&nbsp;תמר</option><option value="923">חאג` יחיא &nbsp;עבד אלחכים</option><option value="825">חוטובלי&nbsp;ציפי</option><option value="924">חזן&nbsp;אורן אסף</option><option value="780">חנין&nbsp;דב</option><option value="854">חסון&nbsp;אכרם </option><option value="772">חסון&nbsp;יואל</option><option value="208">טיבי&nbsp;אחמד</option><option value="925">טרכטנברג&nbsp;מנואל</option><option value="873">יוגב&nbsp;מרדכי</option><option value="926">יונה&nbsp;יוסי</option><option value="782">יחימוביץ`&nbsp;שלי</option><option value="927">ילין&nbsp;חיים</option><option value="823">יעלון&nbsp;משה</option><option value="64">כבל&nbsp;איתן</option><option value="928">כהן&nbsp;אלי</option><option value="65">כהן&nbsp;יצחק</option><option value="874">כהן&nbsp;מאיר</option><option value="952">כהן פארן&nbsp;יעל</option><option value="731">כחלון&nbsp;משה</option><option value="212">כץ&nbsp;חיים</option><option value="69">כץ&nbsp;ישראל</option><option value="875">לביא&nbsp;עליזה</option><option value="213">לבני&nbsp;ציפי</option><option value="832">לוי-אבקסיס&nbsp;אורלי</option><option value="929">לוי&nbsp;ז`קי</option><option value="876">לוי&nbsp;מיקי</option><option value="826">לוין&nbsp;יריב</option><option value="214">ליברמן&nbsp;אביגדור</option><option value="216">ליצמן&nbsp;יעקב</option><option value="78">לנדבר&nbsp;סופה</option><option value="878">לפיד&nbsp;יאיר</option><option value="930">מגל&nbsp;ינון</option><option value="839">מוזס&nbsp;מנחם אליעזר</option><option value="879">מועלם-רפאלי&nbsp;שולי</option><option value="931">מזוז&nbsp;ירון</option><option value="881">מיכאלי&nbsp;מרב</option><option value="956">מלינובסקי&nbsp;יוליה</option><option value="814">מקלב&nbsp;אורי</option><option value="751">מרגי&nbsp;יעקב</option><option value="882">מרגלית&nbsp;אראל</option><option value="932">נגוסה&nbsp;אברהם</option><option value="222">נהרי&nbsp;משולם</option><option value="933">נחמיאס ורבין&nbsp;איילת</option><option value="90">נתניהו&nbsp;בנימין</option><option value="934">סבטלובה&nbsp;קסניה</option><option value="935">סויד&nbsp;רויטל</option><option value="92">סלומינסקי&nbsp;ניסן</option><option value="936">סמוטריץ&nbsp;בצלאל</option><option value="937">סעדי&nbsp;אוסאמה</option><option value="938">עודה&nbsp;איימן</option><option value="939">עזריה&nbsp;רחל</option><option value="940">עטר&nbsp;דניאל</option><option value="837">עמאר&nbsp;חמד</option><option value="941">פולקמן&nbsp;רועי</option><option value="951">פורר&nbsp;עודד</option><option value="886">פירון&nbsp;שי</option><option value="942">פלוסקוב&nbsp;טלי</option><option value="103">פרוש&nbsp;מאיר</option><option value="887">פרי&nbsp;יעקב</option><option value="888">פריג`&nbsp;עיסאוי</option><option value="105">פרץ&nbsp;עמיר</option><option value="944">קורן&nbsp;נורית</option><option value="945">קיש&nbsp;יואב</option><option value="230">קרא&nbsp;איוב</option><option value="831">רגב&nbsp;מירי</option><option value="895">רוזין&nbsp;מיכל</option><option value="896">רוזנטל&nbsp;מיקי</option><option value="897">רזבוזוב&nbsp;יואל</option><option value="946">שאשא ביטון&nbsp;יפעת</option><option value="695">שטייניץ&nbsp;יובל</option><option value="899">שטרן&nbsp;אלעזר</option><option value="818">שי&nbsp;נחמן</option><option value="122">שלום&nbsp;סילבן</option><option value="900">שלח&nbsp;עפר</option><option value="901">שמולי&nbsp;איציק</option><option value="903">שפיר&nbsp;סתיו</option><option value="904">שקד&nbsp;איילת</option><option value="948">תומא סלימאן&nbsp;עאידה</option></select>
+</td>
+<td></td>
+</tr>
+<tr>
+<!--td width="10" colspan=5&gt;&lt;!/td-->
+<td colspan="5" class="LawText2">טווח תאריכים<table border="0" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td class="LawText2"><input type="checkbox" name="ckDates" />
+							מ:<select name="dtFmYY" class="Form" onchange="SetCkDates()"><option value="1999">1999</option>
+<option value="2000">2000</option>
+<option value="2001">2001</option>
+<option value="2002">2002</option>
+<option value="2003">2003</option>
+<option value="2004">2004</option>
+<option value="2005">2005</option>
+<option value="2006">2006</option>
+<option value="2007">2007</option>
+<option value="2008">2008</option>
+<option value="2009">2009</option>
+<option value="2010">2010</option>
+<option value="2011">2011</option>
+<option value="2012">2012</option>
+<option value="2013">2013</option>
+<option value="2014">2014</option>
+<option value="2015">2015</option>
+<option value="2016">2016</option>
+</select></td>
+<td><select name="dtFmMM" class="Form" onchange="SetCkDates()"><option value="1">01</option>
+<option value="2">02</option>
+<option value="3">03</option>
+<option value="4">04</option>
+<option value="5">05</option>
+<option value="6">06</option>
+<option value="7">07</option>
+<option value="8">08</option>
+<option value="9">09</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+</select></td>
+<td><select name="dtFmDD" class="Form" onchange="SetCkDates()"><option value="1">01</option>
+<option value="2">02</option>
+<option value="3">03</option>
+<option value="4">04</option>
+<option value="5">05</option>
+<option value="6">06</option>
+<option value="7">07</option>
+<option value="8">08</option>
+<option value="9">09</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option value="29">29</option>
+<option value="30">30</option>
+<option value="31">31</option>
+</select></td>
+<td class="LawText2">&nbsp;עד:<select name="dtToYY" class="Form" onchange="SetCkDates()"><option value="1999">1999</option>
+<option value="2000">2000</option>
+<option value="2001">2001</option>
+<option value="2002">2002</option>
+<option value="2003">2003</option>
+<option value="2004">2004</option>
+<option value="2005">2005</option>
+<option value="2006">2006</option>
+<option value="2007">2007</option>
+<option value="2008">2008</option>
+<option value="2009">2009</option>
+<option value="2010">2010</option>
+<option value="2011">2011</option>
+<option value="2012">2012</option>
+<option value="2013">2013</option>
+<option value="2014">2014</option>
+<option value="2015">2015</option>
+<option value="2016">2016</option>
+</select></td>
+<td><select name="dtToMM" class="Form" onchange="SetCkDates()"><option value="1">01</option>
+<option value="2">02</option>
+<option value="3">03</option>
+<option value="4">04</option>
+<option value="5">05</option>
+<option value="6">06</option>
+<option value="7">07</option>
+<option value="8">08</option>
+<option value="9">09</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+</select></td>
+<td align="left"><select name="dtToDD" class="Form" onchange="SetCkDates()"><option value="1">01</option>
+<option value="2">02</option>
+<option value="3">03</option>
+<option value="4">04</option>
+<option value="5">05</option>
+<option value="6">06</option>
+<option value="7">07</option>
+<option value="8">08</option>
+<option value="9">09</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option value="29">29</option>
+<option value="30">30</option>
+<option value="31">31</option>
+</select>&nbsp;</td>
+</tr>
+</table></td>
+<td width="10"></td>
+<td><a href="javascript:Validation(1,0,false);"><img src="/laws/images/Law_Search.gif" name="Image21" hspace="10" border="0" id="Image21" onmouseover="MM_swapImage('Image21','','/laws/images/Law_Search_Over.gif',1)" onmouseout="MM_swapImgRestore()" /></a>
+<a href="javascript:Clear();"><img src="/laws/images/Law_Clear.gif" name="Image210" hspace="10" border="0" id="Image210" onmouseover="MM_swapImage('Image210','','/laws/images/Law_Clear_Over.gif',1)" onmouseout="MM_swapImgRestore()" /></a>
+</td>
+</tr>
+</table></div></td>
+</tr>
+<tr><td height="1" colspan="5" bgcolor="#7B3D07"></td></tr>
+<tr><td colspan="5">
+<table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
+<!--td bgcolor="#B6A08B" class="LawTitle1" nowrap style=text-align:center&gt;&nbsp;גירסת הורדה&lt;/td-->
+<td bgcolor="#B6A08B" class="LawTitle1" nowrap="nowrap" style="text-align:center">|&nbsp;מס' כנסת</td>
+<td bgcolor="#B6A08B" class="LawTitle1" nowrap="nowrap" style="text-align:center">|&nbsp;מס' הצ"ח</td>
+<td bgcolor="#B6A08B" class="LawTitle1" colspan="2">|&nbsp;שם  הצעת החוק</td>
+<td bgcolor="#B6A08B" class="LawTitle1" nowrap="nowrap" style="text-align:center">|&nbsp;<font onmouseover="popup('תאריך הנחה על שולחן הכנסת','CCFFFF')" onmouseout="kill()">תאריך הנחה</font></td>
+<td bgcolor="#B6A08B" class="LawTitle1">|&nbsp;היוזם
+        </td><td bgcolor="#B6A08B" class="LawTitle1">|&nbsp;מצטרפים לחוק
+		<!--td bgcolor="#B6A08B" class="LawTitle1" nowrap style=text-align:center&gt;&lt;/td-->
+</td></tr>
+<tr><td height="1" colspan="7" bgcolor="#7B3D07"></td></tr>
+
+<tr valign="Top">
+<!--td class=LawTextC><a Href="plaw_zip.asp?k=20&l=2785"><img
+	border=0 src="/laws/images/icon_download_RTF.gif"></a></td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">2785</td>
+<td><a href="data/20/2785.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif"></a></td>
+<td class="LawText1">הצעת חוק מימון מפלגות (תיקון - הגדרת גוף פעיל בבחירות), התשע"ו-2016</td>
+<td class="LawTextC">14/03/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')"
+		ONMOUSEOUT="kill()"-->דוד&nbsp;ביטן<br>נאוה&nbsp;בוקר<br>יואב&nbsp;קיש<br>אמיר&nbsp;אוחנה</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3083"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3083</td>
+<td><a href="data/20/3083.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק-יסוד: הכנסת (תיקון - קבלת סעיף בחוק-יסוד שדרוש לביטולו או לשינויו רוב מיוחס)</td>
+<td class="LawTextC">20/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->יואל&nbsp;חסון<br />מנואל&nbsp;טרכטנברג</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3082"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3082</td>
+<td><a href="data/20/3082.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק-יסוד: הכנסת (תיקון - אישור הוראת חוק הדורשת רוב מיוחד)</td>
+<td class="LawTextC">20/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->נחמן&nbsp;שי<br />איילת&nbsp;נחמיאס ורבין<br />חיים&nbsp;ילין<br />יעל&nbsp;גרמן<br />איתן&nbsp;כבל<br />אורי&nbsp;מקלב<br />דוד&nbsp;ביטן<br />יצחק&nbsp;וקנין<br />איציק&nbsp;שמולי<br />איתן&nbsp;ברושי<br />עמר&nbsp;בר-לב</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3081"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3081</td>
+<td><a href="data/20/3081.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק הביטוח הלאומי (תיקון - ביטול ההוראה בעניין חתימת הורים כתנאי לשחרור כספי חיסכון), התשע"ו-2016</td>
+<td class="LawTextC">20/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->יעקב&nbsp;מרגי<br />יצחק&nbsp;וקנין<br />מכלוף מיקי&nbsp;זוהר<br />יואל&nbsp;חסון<br />מירב &nbsp;בן-ארי<br />עאידה&nbsp;תומא סלימאן</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3080"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3080</td>
+<td><a href="data/20/3080.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק הבחירות לכנסת (תיקון - הצבעת צוות אוויר), התשע"ו-2016</td>
+<td class="LawTextC">20/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->ניסן&nbsp;סלומינסקי</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3079"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3079</td>
+<td><a href="data/20/3079.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק זכויות הדייר בדיור הציבורי (תיקון - הגמשת אמות המידה לזכאות לדיור ציבורי), התשע"ו-2016</td>
+<td class="LawTextC">20/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->אורלי&nbsp;לוי-אבקסיס<br />יצחק&nbsp;וקנין<br />איציק&nbsp;שמולי<br />אורי&nbsp;מקלב<br />דב&nbsp;חנין<br />דוד&nbsp;אמסלם<br />אילן&nbsp;גילאון</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3078"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3078</td>
+<td><a href="data/20/3078.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק העברת דירות שנבנו על קרקע ששווקה במסגרת תכנית מחיר למשתכן לבעלות המדינה לצורך השכרתן לחסרי דיור או במסגרת דיור ציבורי, התשע"ו-2016</td>
+<td class="LawTextC">20/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->אלי&nbsp;כהן</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3077"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3077</td>
+<td><a href="data/20/3077.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק הביטוח הלאומי (תיקון - מענק פטירה לילד של הורה עצמאי), התשע"ו-2016</td>
+<td class="LawTextC">20/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->אילן&nbsp;גילאון<br />עאידה&nbsp;תומא סלימאן<br />אלי&nbsp;אלאלוף<br />יצחק&nbsp;וקנין<br />מירב &nbsp;בן-ארי<br />אחמד&nbsp;טיבי<br />מאיר&nbsp;כהן</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3076"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3076</td>
+<td><a href="data/20/3076.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק נכסים של נספי השואה (השבה ליורשים והקדשה למטרות סיוע והנצחה) (תיקון - סיוע לניצולי שואה הזקוקים לכך), התשע"ו-2016</td>
+<td class="LawTextC">20/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->דוד&nbsp;ביטן<br />משה&nbsp;גפני<br />מרב&nbsp;מיכאלי</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3075"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3075</td>
+<td><a href="data/20/3075.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק הכשרות המשפטית והאפוטרופסות (תיקון - החלפת סעיף 25), התשע"ו-2016</td>
+<td class="LawTextC">20/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->יואב&nbsp;קיש<br />יואב&nbsp;בן-צור<br />יפעת&nbsp;שאשא ביטון<br />בצלאל&nbsp;סמוטריץ<br />טלי&nbsp;פלוסקוב<br />יוליה&nbsp;מלינובסקי</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3074"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3074</td>
+<td><a href="data/20/3074.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק בתי המשפט (תיקון - נציגי הכנסת בוועדה לבחירת שופטים), התשע"ו-2016</td>
+<td class="LawTextC">20/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->עיסאוי&nbsp;פריג`<br />מיכל&nbsp;רוזין<br />אוסאמה&nbsp;סעדי<br />זהבה&nbsp;גלאון<br />אראל&nbsp;מרגלית</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3073"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3073</td>
+<td><a href="data/20/3073.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק ממשל זמין, התשע"ו-2016</td>
+<td class="LawTextC">20/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->מרב&nbsp;מיכאלי<br />רועי&nbsp;פולקמן<br />דוד&nbsp;ביטן<br />אורי&nbsp;מקלב<br />שולי&nbsp;מועלם-רפאלי</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3072"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3072</td>
+<td><a href="data/20/3072.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק זכויות הסטודנט (תיקון - הוספת נטייה מינית וזהות מגדרית כאיסור הפליה), התשע"ו-2016</td>
+<td class="LawTextC">20/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->אמיר&nbsp;אוחנה</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3071"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3071</td>
+<td><a href="data/20/3071.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק הספורט (תיקון - פטור ספורטאים מבוטחים), התשע"ו-2016</td>
+<td class="LawTextC">20/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->אמיר&nbsp;אוחנה<br />רועי&nbsp;פולקמן<br />יואב&nbsp;קיש<br />מכלוף מיקי&nbsp;זוהר<br />מירב &nbsp;בן-ארי<br />בצלאל&nbsp;סמוטריץ<br />אחמד&nbsp;טיבי<br />דוד&nbsp;ביטן<br />עיסאוי&nbsp;פריג`<br />מיקי&nbsp;רוזנטל<br />מיכל&nbsp;בירן</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3070"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3070</td>
+<td><a href="data/20/3070.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק זכויות החולה (תיקון - נגישות מוסד רפואי לדוברי שפות זרות), התשע"ו-2016</td>
+<td class="LawTextC">20/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->איימן&nbsp;עודה<br />יואל&nbsp;חסון<br />קארין&nbsp;אלהרר<br />אלי&nbsp;אלאלוף</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3069"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3069</td>
+<td><a href="data/20/3069.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק איסוף ופינוי פסולת למיחזור (תיקון - חובת מיחזור במוסד חינוך), התשע"ו-2016</td>
+<td class="LawTextC">13/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->עליזה&nbsp;לביא<br />ענת&nbsp;ברקו<br />נחמן&nbsp;שי<br />אורן אסף&nbsp;חזן<br />יעל&nbsp;גרמן<br />נורית&nbsp;קורן<br />דב&nbsp;חנין<br />מרדכי&nbsp;יוגב<br />איל&nbsp;בן-ראובן<br />יצחק&nbsp;וקנין<br />שרן&nbsp;השכל<br />יעל&nbsp;כהן פארן<br />יעקב&nbsp;מרגי<br />קסניה&nbsp;סבטלובה</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3068"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3068</td>
+<td><a href="data/20/3068.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק אומנה לילדים (תיקון - הגנה מפני עיקולים בחשבון הבנק), התשע"ו-2016</td>
+<td class="LawTextC">13/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->קארין&nbsp;אלהרר<br />אלי&nbsp;אלאלוף</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3067"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3067</td>
+<td><a href="data/20/3067.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק הגנת הצרכן (תיקון - ביטול עסקה באמצעי ההתקשרות), התשע"ו-2016</td>
+<td class="LawTextC">13/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->איתן&nbsp;כבל<br />דוד&nbsp;ביטן<br />יואל&nbsp;חסון</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3066"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3066</td>
+<td><a href="data/20/3066.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק הגנת הפרטיות (תיקון - הזכות להישכח), התשע"ו-2016</td>
+<td class="LawTextC">13/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->אורי&nbsp;מקלב<br />עפר&nbsp;שלח</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3065"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3065</td>
+<td><a href="data/20/3065.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק שדה התעופה דב הוז (הוראות מיוחדות), התשע"ו-2016</td>
+<td class="LawTextC">13/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->עמר&nbsp;בר-לב<br />קסניה&nbsp;סבטלובה<br />מיכל&nbsp;בירן<br />מיקי&nbsp;רוזנטל<br />זוהיר&nbsp;בהלול<br />עמיר&nbsp;פרץ<br />איציק&nbsp;שמולי<br />יצחק&nbsp;וקנין<br />יחיאל חיליק&nbsp;בר<br />איל&nbsp;בן-ראובן<br />יעל&nbsp;כהן פארן<br />רויטל&nbsp;סויד<br />בצלאל&nbsp;סמוטריץ<br />מכלוף מיקי&nbsp;זוהר<br />שולי&nbsp;מועלם-רפאלי<br />איתן&nbsp;כבל<br />אלי&nbsp;אלאלוף<br />מיקי&nbsp;לוי<br />יצחק&nbsp;הרצוג<br />מנואל&nbsp;טרכטנברג<br />יוסי&nbsp;יונה<br />נחמן&nbsp;שי<br />איילת&nbsp;נחמיאס ורבין</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3064"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3064</td>
+<td><a href="data/20/3064.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק חובת הודעה על אי-הגעת ילד לגן ילדים או למעון יום, התשע"ו-2016</td>
+<td class="LawTextC">13/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->איילת&nbsp;נחמיאס ורבין<br />יפעת&nbsp;שאשא ביטון<br />יגאל &nbsp;גואטה<br />אורי&nbsp;מקלב<br />מרדכי&nbsp;יוגב<br />טלי&nbsp;פלוסקוב</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3063"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3063</td>
+<td><a href="data/20/3063.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק הביטוח הלאומי (תיקון - בדיקת תלות בידי רופא מומחה למבוטח מגיל 75), התשע"ו-2016</td>
+<td class="LawTextC">13/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->איציק&nbsp;שמולי</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3062"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3062</td>
+<td><a href="data/20/3062.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק הביטוח הלאומי (תיקון - הכרה בפגיעה מינית בעבודה כתאונת עבודה), התשע"ו-2016</td>
+<td class="LawTextC">13/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->רויטל&nbsp;סויד<br />זהבה&nbsp;גלאון<br />תמר&nbsp;זנדברג<br />דב&nbsp;חנין<br />מירב &nbsp;בן-ארי<br />נורית&nbsp;קורן<br />מיכל&nbsp;רוזין<br />קסניה&nbsp;סבטלובה<br />עליזה&nbsp;לביא<br />שלי&nbsp;יחימוביץ`<br />יעל&nbsp;גרמן</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3061"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3061</td>
+<td><a href="data/20/3061.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק להגנת חיית הבר (תיקון - החמרת ענישה), התשע"ו-2016</td>
+<td class="LawTextC">13/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->יעל&nbsp;גרמן<br />אורן אסף&nbsp;חזן<br />ענת&nbsp;ברקו<br />נחמן&nbsp;שי<br />עליזה&nbsp;לביא<br />קסניה&nbsp;סבטלובה<br />נורית&nbsp;קורן<br />דב&nbsp;חנין<br />מרדכי&nbsp;יוגב<br />איל&nbsp;בן-ראובן<br />יצחק&nbsp;וקנין<br />שרן&nbsp;השכל<br />יעל&nbsp;כהן פארן</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3060"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3060</td>
+<td><a href="data/20/3060.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק הסדרים במשק המדינה (תיקוני חקיקה להשגת יעדי התקציב) (תיקון - הנחה בארנונה לניצולי שואה), התשע""ו-2016</td>
+<td class="LawTextC">13/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->משה&nbsp;גפני<br />אורי&nbsp;מקלב<br />דב&nbsp;חנין<br />מיכל&nbsp;בירן<br />טלי&nbsp;פלוסקוב<br />מיקי&nbsp;לוי<br />יעקב&nbsp;אשר</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+<tr valign="Top">
+<!--td class=LawTextC&gt;&lt;a Href="plaw_zip.asp?k=20&amp;l=3059"&gt;&lt;img 
+		border=0 src="/laws/images/icon_download_RTF.gif"&gt;&lt;/a&gt;&lt;/td-->
+<td class="LawTextC">20</td>
+<td class="LawTextC">3059</td>
+<td><a href="data/20/3059.rtf"><img border="0" src="/laws/images/icon_page_WORD.gif" /></a></td>
+<td class="LawText1">הצעת חוק הטבות לניצולי שואה (תיקון - ביטול ניכוי קצבה חודשית לפי הסכם עם גרמניה), התשע"ו-2016</td>
+<td class="LawTextC">13/06/2016</td>
+<td class="LawText1"><font color="#666666" size="-1"> <!--ONMOUSEOVER="popup('','CCFFFF')" 
+			ONMOUSEOUT="kill()"-->יואל&nbsp;רזבוזוב</font></td>
+<td class="LawText1">אין מצטרפים לחוק</td>
+</tr>
+<tr><td colspan="7" height="2" bgcolor="#E9E0D7"></td></tr>
+</table></td></tr><tr>
+<td colspan="5">&nbsp;
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td><img src="/laws/images/BackButtonDissable.gif" /></td>
+<td align="Left"><a href="javascript:SndSelf(154);"><img src="../images/next.gif" border="0" /></a></td>
+</tr>
+</table></td>
+</tr>
+</table>
+</center>
+<br />
+<table style="border:solid 1 black;font-size:8pt;color:black;" width="90%" align="center"><tr><td>
+נוסח המסמכים שבאתר הינו נוסח בלתי רשמי; מובהר, כי מדובר בנוסח הכפוף לשינויי
+עריכה ואשר עשויים ליפול בו שגיאות ושיבושים. הכנסת אינה אחראית לאיכות, לדיוק
+ולשלמות המסמך ולא תוטל עליה כל אחראיות בשל פרסום המסמך, הפצתו, שיבושים
+במסמך, טעויות, שינויים שנעשו על-ידי כל צד ג' וכיו"ב. עם השימוש במסמך הנך
+נוטל על עצמך את כל האחריות בעניינים אלה. במידה ותתגלה סתירה או אי התאמה בין
+חומר המתפרסם באתר לבין חומר המופיע בפרסומים הרשמיים בכתב של מדינת ישראל, רק
+החומר בפרסומים הרשמיים ייחשב כנכון. 
+</td></tr></table><br />
+<br />
+<center>
+<table dir="rtl"><tr><td align="center">
+<img border="0" src="/images/semel.gif" alt="סמל המדינה - מנורה ועלי זית" /><br />
+<font size="-2">
+<a href="/about_site/heb/copyright.htm">© 2016 כל הזכויות שמורות, מדינת ישראל-הכנסת או לצדדים שלישיים כמפורט בקישור</a><br />
+   
+   נשמח לקבל את הערותיכם והצעותיכם לכתובת: <a href="/feedback/feedback_knesset.asp">feedback@knesset.gov.il</a>
+</font></td></tr></table>
+</center>
+</div></td>
+<!-- Side-Strip in blue -->
+<td width="124" valign="top" align="center" background="/main/images/content_sidestrip.gif">
+<table style="height:100%" border="0" height="100%" width="100%" background="/main/images/content_sidestrip.gif" cellspacing="0" cellpadding="0" dir="rtl">
+<tr>
+<td valign="top" width="100%" class="tdlink" align="right" height="4"><br />
+<a href="http://main.knesset.gov.il/Activity/Legislation/Laws/Pages/lawhome.aspx" class="sslink" target="_blank">חוקי מדינת ישראל</a><p>
+</p></td>
+</tr>
+<tr>
+<td valign="top" width="100%" class="tdlink" align="right" height="4"><br />
+<a href="/privatelaw/MKsRetract20.pdf" class="sslink" target="_blank">חברי הכנסת שחזרו בהם מהצעות חוק פרטיות – הכנסת ה-20</a><p>
+</p></td>
+</tr>
+<tr>
+<td valign="top" width="100%" class="tdlink" align="right" height="4"><br />
+<a href="/privatelaw/MKsRetract19.pdf" class="sslink" target="_blank">חברי הכנסת שחזרו בהם מהצעות חוק פרטיות – הכנסת ה-19</a><p>
+</p></td>
+</tr>
+<tr>
+<td valign="top" width="100%" class="tdlink" align="right" height="4"><br />
+<a href="/privatelaw/MKsRetract18.pdf" class="sslink" target="_blank">חברי הכנסת שחזרו בהם מהצעות חוק פרטיות – הכנסת ה-18</a><p>
+</p></td>
+</tr>
+<tr>
+<td valign="bottom" width="100%" class="tdlink" align="right"><br /></td>
+</tr>
+</table>
+</td></tr></table>
+
+<br />
+</font>
+</body>
+</html>
