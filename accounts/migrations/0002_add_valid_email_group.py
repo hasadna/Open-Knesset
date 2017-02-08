@@ -25,7 +25,7 @@ class Migration(DataMigration):
             g.permissions.add(qs.first())
 
         for u in User.objects.all():
-            if p in u.user_permissions.all():
+            for p in u.user_permissions.all():
                 u.groups.add(g)
                 u.user_permissions.remove(p)
                 print "user %s: permission->group" % u.username
