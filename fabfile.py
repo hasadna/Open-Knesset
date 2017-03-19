@@ -30,7 +30,7 @@ def _activate():
 
 def virtualenv(command):
     with cd(_project_root()):
-        sudo(_activate() + ' && ' + command, user=env.ok_user)
+        sudo("export HOME=/home/" + env.ok_user + " && " + _activate() + ' && ' + command, user=env.ok_user)
 
 
 # web server stuff
@@ -120,7 +120,6 @@ def _install_requirements():
     virtualenv(
         'cd .. && pip install -r ' +
         env.project_dir + '/requirements.txt && cd ' + _project_root())
-
 
 @roles('all')
 def all_upgrade_system():
