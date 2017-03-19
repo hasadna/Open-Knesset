@@ -14,8 +14,8 @@
             // init agenda-pie charts
             $('.agenda-pie').each(function () {
                 var data = $(this).data(),
-                        pie_order = ['for', 'noVote', 'abstain', 'against'],
-                        pie_data = [], k;
+                    pie_order = ['for', 'noVote', 'abstain', 'against'],
+                    pie_data = [], k;
 
                 for (k in data) {
                     pie_data.push({type: k, votes: data[k]});
@@ -37,27 +37,57 @@
     {% video_init %}
 {% endblock %}
 {% block extrahead %}
-    <meta property="og:image" content="{{ object.img_url }}"/>
     <meta name="thumbnail" content="{{ object.img_url }}"/>
-    {% if object.backlinks_enabled %}{% url 'pingback-server' as pingback_url %}
+    {% if object.backlinks_enabled %}
+        {% url 'pingback-server' as pingback_url %}
         {% pingback_link pingback_url %}{% endif %}
     {% if object.backlinks_enabled %}
         {% url 'member-trackback' object_id=object.id as trackback_url %}
         {% trackback_rdf object.get_absolute_url object.title trackback_url True %}
     {% endif %}
-    <link rel="alternate" type="application/rss+xml" title="RSS" href="{% url 'member-activity-feed' object.id %}">
+    <link rel="alternate" type="application/rss+xml" title="RSS"
+          href="{% url 'member-activity-feed' object.id %}">
 {% endblock %}
-{% block description %} {% with object.name as name %} {% blocktrans %} Up to date information about {{ name }} in the
-    knesset: votes, bills, committees, attendance and more.   Information about {{ name }} for journalists, researchers,
-    students and citizens by Open Knesset - Opening the Knesset to the public. {% endblocktrans %}
+{% with OKNESSET_IMAGE_URL="https://oknesset.org/static/img/300px-Oknesset.jpg" %}
+
+    {% block facebook_social_share_page_specific %}
+        <meta property="og:description"
+              content='{% trans 'Information on' %} {% trans 'MK' %} {{ object.name }} {% trans 'on Open Knesset' %}.  {% trans 'Bill proposals, Voting, Committee attendance, Facebook activity and more!' %}'>
+        <meta property="og:title"
+              content='{% trans 'MK' %} {{ object.name }} {% trans 'on Open Knesset' %}'>
+        <meta property="og:image"
+              content="{{ OKNESSET_IMAGE_URL }}"/>
+        <meta property="og:image:secure_url"
+              content="{{ OKNESSET_IMAGE_URL }}">
+    {% endblock facebook_social_share_page_specific %}
+    {% block twitter_social_share_page_specific %}
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:title"
+              content='{% trans 'MK' %} {{ object.name }} {% trans 'on Open Knesset' %}'/>
+        <meta name="twitter:description"
+              content='{% trans 'Information on' %} {% trans 'MK' %} {{ object.name }} {% trans 'on Open Knesset' %}. {% trans 'Bill proposals, Voting, Committee attendance, Facebook activity and more!' %}'/>
+        <meta name="twitter:image"
+              content="{{ OKNESSET_IMAGE_URL }}"/>
+    {% endblock twitter_social_share_page_specific %}
+{% endwith %}
+{% block description %} {% with object.name as name %} {% blocktrans %} Up to
+    date information about {{ name }} in the
+    knesset: votes, bills, committees, attendance and more.   Information about
+    {{ name }} for journalists, researchers,
+    students and citizens by Open Knesset - Opening the Knesset to the public.
+{% endblocktrans %}
 {% endwith %} {% endblock %}
 {% block nav-parties %}class="active"{% endblock %}
 
 {% block breadcrumbs %}
     {% with object.current_party as party %}
-        <li><a href="{{ party.knesset.get_absolute_url }}">{{ party.knesset }}</a> <span class="divider">/</span></li>
-        <li><a href="{% url 'party-detail' object.current_party.id %}">{{ object.current_party }}</a> <span
-                class="divider">/</span></li>
+        <li>
+            <a href="{{ party.knesset.get_absolute_url }}">{{ party.knesset }}</a>
+            <span class="divider">/</span></li>
+        <li>
+            <a href="{% url 'party-detail' object.current_party.id %}">{{ object.current_party }}</a>
+            <span
+                    class="divider">/</span></li>
         <li class="active">{{ object.name }}</li>
     {% endwith %}
 {% endblock %}
@@ -69,7 +99,8 @@
         <section class="card card-main with-min-height">
             <div class="row">
                 <div class="span2">
-                    <div class="spacer"><img src="{{ object.highres_img_url }}" alt="{{ object.name }}"/></div>
+                    <div class="spacer"><img src="{{ object.highres_img_url }}"
+                                             alt="{{ object.name }}"/></div>
                     {% if object.current_party.logo %}
                         <div class="spacer">
                             <img src="{{ object.current_party.logo.url }}">
@@ -86,27 +117,37 @@
                             <a href="{% url 'party-detail' object.current_party.id %}">{{ object.current_party }}</a>
                             <strong>({{ object.coalition_status|yesno:_("IN_COALITION,IN_OPPOSITION,PAST_MEMBER") }})</strong>
                             {% if previous_parties %}
-                                <span id="member-previous-parties" style="display:none">
+                                <span id="member-previous-parties"
+                                      style="display:none">
                     {% for p in previous_parties %}
                         | <a href="{% url 'party-detail' p.id %}">{{ p }}</a>
-                        ({{ p.coalition_status|yesno:_("IN_COALITION,IN_OPPOSITION,PAST_MEMBER") }})
+                        (
+                        {{ p.coalition_status|yesno:_("IN_COALITION,IN_OPPOSITION,PAST_MEMBER") }}
+                        )
                     {% endfor %}
                 </span>
-                                |<a href="#" data-target="#member-previous-parties" data-toggle="oktoggle"
+                                |<a href="#"
+                                    data-target="#member-previous-parties"
+                                    data-toggle="oktoggle"
                                     data-text="{% trans "Previous Parties" %} +|{% trans "Less" %} -">{% trans "Previous Parties" %}
                                 +</a>
                             {% endif %}
                         </p>
                         <p>
                             {% for role in object.roles|slice:":2" %}
-                                {% if not forloop.first %} | {% endif %} {{ role }}
+                                {% if not forloop.first %} | {% endif %}
+                                {{ role }}
                             {% endfor %}
                             {% if object.roles|length > 2 %}
-                                <span id="member-extra-roles" style="display:none">
-                    {% for role in object.roles|slice:"2:" %} | {{ role }} {% endfor %}
+                                <span id="member-extra-roles"
+                                      style="display:none">
+                    {% for role in object.roles|slice:"2:" %} |
+                        {{ role }} {% endfor %}
                 </span>
-                                |<a href="#" data-target="#member-extra-roles" data-toggle="oktoggle"
-                                    data-text="{% trans "More" %} +|{% trans "Less" %} -">{% trans "More" %} +</a>
+                                |<a href="#" data-target="#member-extra-roles"
+                                    data-toggle="oktoggle"
+                                    data-text="{% trans "More" %} +|{% trans "Less" %} -">{% trans "More" %}
+                                +</a>
                             {% endif %}
                         </p>
                         <p>
@@ -118,13 +159,15 @@
                                         {{ committee_presence.committee }}
                                         ({% trans 'Presence:' %} {{ committee_presence.presence }}%)
                                     </a>
-                                    {% if committee_presence.committee.protocol_not_published %}*{% endif %}
+                                    {% if committee_presence.committee.protocol_not_published %}
+                                        *{% endif %}
                                 {% endfor %}
                             {% endif %}
                         </p>
 
                         {% if has_protocols_not_published %}
-                            <p>* {% trans "Warning: presence data is not provided for this committee" %}</p> {% endif %}
+                            <p>
+                                * {% trans "Warning: presence data is not provided for this committee" %}</p> {% endif %}
                         <p>
                             {% if object.awards|length > 0 %}
                                 <strong>{% trans "Awards" %}:</strong>
@@ -134,13 +177,18 @@
                                         ({{ award.date_given }})</a>
                                 {% endfor %}
                                 {% if object.awards|length > 2 %}
-                                    <span id="member-extra-awards" style="display:none">
+                                    <span id="member-extra-awards"
+                                          style="display:none">
                     {% for award in object.awards|slice:"2:" %}
-                        | <a href="{{ award.reference }}">{{ award.award_type.name }} ({{ award.date_given }})</a>
+                        |
+                        <a href="{{ award.reference }}">{{ award.award_type.name }} ({{ award.date_given }})</a>
                     {% endfor %}
                 </span>
-                                    |<a href="#" data-target="#member-extra-awards" data-toggle="oktoggle"
-                                        data-text="{% trans "More" %} +|{% trans "Less" %} -">{% trans "More" %} +</a>
+                                    |<a href="#"
+                                        data-target="#member-extra-awards"
+                                        data-toggle="oktoggle"
+                                        data-text="{% trans "More" %} +|{% trans "Less" %} -">{% trans "More" %}
+                                    +</a>
                                 {% endif %} {% endif %}
                         </p>
                         <p>
@@ -152,28 +200,39 @@
                                         ({{ award.date_given }})</a>
                                 {% endfor %}
                                 {% if object.convictions|length > 2 %}
-                                    <span id="member-extra-convictions" style="display:none">
+                                    <span id="member-extra-convictions"
+                                          style="display:none">
                     {% for award in object.convictions|slice:"2:" %}
-                        | <a href="{{ award.reference }}">{{ award.award_type.name }} ({{ award.date_given }})</a>
+                        |
+                        <a href="{{ award.reference }}">{{ award.award_type.name }} ({{ award.date_given }})</a>
                     {% endfor %}
                 </span>
-                                    |<a href="#" data-target="#member-extra-convictions" data-toggle="oktoggle"
-                                        data-text="{% trans "More" %} +|{% trans "Less" %} -">{% trans "More" %} +</a>
+                                    |<a href="#"
+                                        data-target="#member-extra-convictions"
+                                        data-toggle="oktoggle"
+                                        data-text="{% trans "More" %} +|{% trans "Less" %} -">{% trans "More" %}
+                                    +</a>
                                 {% endif %} {% endif %}
                         </p>
                         <div id="member-details" style="display:none">
                             {% if object.date_of_death %}
-                                <div>{% trans "date of death" %} - {{ object.date_of_death }}</div>
+                                <div>{% trans "date of death" %}
+                                    - {{ object.date_of_death }}</div>
                             {% else %}
-                                <div>{% trans "age" %} - {{ object.age.years }}</div>
+                                <div>{% trans "age" %}
+                                    - {{ object.age.years }}</div>
                             {% endif %}
-                            <div>{% trans "place of birth" %} - {{ object.place_of_birth }}</div>
+                            <div>{% trans "place of birth" %}
+                                - {{ object.place_of_birth }}</div>
                             {% if object.year_of_aliyah %}
-                                <div>{% trans "year of aliyah" %} - {{ object.year_of_aliyah }}</div>
+                                <div>{% trans "year of aliyah" %}
+                                    - {{ object.year_of_aliyah }}</div>
                             {% endif %}
                             {% if not object.date_of_death %}
-                                <div>{% trans "family status" %} - {{ object.family_status }}</div>
-                                <div>{% trans "place of residence" %} - {{ object.place_of_residence }}</div>
+                                <div>{% trans "family status" %}
+                                    - {{ object.family_status }}</div>
+                                <div>{% trans "place of residence" %}
+                                    - {{ object.place_of_residence }}</div>
                             {% endif %}
                             {% if about_video_embed_link != '' and about_video_image_link != '' %}
                                 <div>
@@ -183,7 +242,8 @@
                             {% endif %}
                         </div>
                         <div class="social-links">
-                            <h5>{% blocktrans with name=member.firstname %}{{ name }} around the
+                            <h5>{% blocktrans with name=member.firstname %}
+                                {{ name }} around the
                                 net{% endblocktrans %}:</h5>
                             <ul class="text-center">
                                 {% object_icon_links member %}
@@ -195,16 +255,19 @@
                 <div class="span3 social-details">
                     <div class="spacer actions-panel">
                         {% include "auxiliary/_watch.html" with watched_id=object.id watched_type="member" %}
-                        <a href="#embed-information-modal" class="btn btn-big" role="button"
+                        <a href="#embed-information-modal" class="btn btn-big"
+                           role="button"
                            data-toggle="modal">{% trans "embed" %}</a>
                         {% if object.is_current %}
-                            <a href="#contact-information-modal" class="btn btn-big btn-contact" role="button"
+                            <a href="#contact-information-modal"
+                               class="btn btn-big btn-contact" role="button"
                                data-toggle="modal">{% trans "Contact Information" %}</a>
                         {% endif %}
                     </div>
                 </div>
             </div>
-            <a href="#" class="btn btn-mini btn-expand" data-target="#member-details"
+            <a href="#" class="btn btn-mini btn-expand"
+               data-target="#member-details"
                data-toggle="oktoggle"
                data-text="{% trans "Personal Information" %} +|{% trans "Collapse" %} -">{% trans "Personal Information" %}
                 +</a>
@@ -212,10 +275,13 @@
 
         {% if object.is_current %}
             <!-- Contact information modal -->
-            <div id="contact-information-modal" class="modal hide fade" tabindex="-1" role="dialog"
+            <div id="contact-information-modal" class="modal hide fade"
+                 tabindex="-1" role="dialog"
                  aria-labelledby="contactModalLabel" aria-hidden="true">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">x
+                    </button>
                     <h3 id="contactModalLabel">{% trans "Contact Information" %}</h3>
                 </div>
                 <div class="modal-body">
@@ -223,25 +289,32 @@
                     {% if object.fax %}
                         <p>{% trans "fax" %} - {{ object.fax }}</p>
                     {% endif %}
-                    <p>{% trans "e-mail address" %} - {{ object.email|urlize }}</p>
+                    <p>{% trans "e-mail address" %}
+                        - {{ object.email|urlize }}</p>
                     <div class="alert alert-info">
                         <p>טיפים ליצירת קשר
                         <ul>
-                            <li>מי שמטפל בפניות הציבור הם העוזרים הפרלמנטריים של הח"כים, ולא הח"כים עצמם.</li>
-                            <li>שיחות טלפון מומלץ לבצע בימים ב'-ד', בין השעות 8:00 בבוקר ועד 17:00. אלו השעות שבהן
+                            <li>מי שמטפל בפניות הציבור הם העוזרים הפרלמנטריים
+                                של הח"כים, ולא הח"כים עצמם.
+                            </li>
+                            <li>שיחות טלפון מומלץ לבצע בימים ב'-ד', בין השעות
+                                8:00 בבוקר ועד 17:00. אלו השעות שבהן
                                 העוזרים נמצאים יותר בלשכה.
                             </li>
                             <li>אימיילים עדיף לשלוח בימים א' ו-ה'.</li>
-                            <li>הנחיות נוספות לכתיבת פנייה אפקטיבית לנבחרי ציבור ניתן למצוא ב<a
-                                    href="http://www.shelly.org.il/node/1678" target="_blank">פוסט הזה של שלי
-                                יחימוביץ'</a>.
+                            <li>הנחיות נוספות לכתיבת פנייה אפקטיבית לנבחרי
+                                ציבור ניתן למצוא ב<a
+                                        href="http://www.shelly.org.il/node/1678"
+                                        target="_blank">פוסט הזה של שלי
+                                    יחימוביץ'</a>.
                             </li>
                         </ul>
                         </p>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
+                    <button class="btn" data-dismiss="modal"
+                            aria-hidden="true">{% trans "Close" %}</button>
                 </div>
             </div>
         {% endif %}
@@ -256,15 +329,19 @@
                         <!--a class="btn btn-mini btn-question" href="#">?</a-->
                     </header>
                     <ul id="recent-actions">
-                        {% for action in actions %}{% display_action action %}{% endfor %}
+                        {% for action in actions %}
+                            {% display_action action %}{% endfor %}
                     </ul>
                     <footer>
                         {% if actions_more %}
-                            <button class="btn btn-mini btn-expand" data-provide="okmore"
+                            <button class="btn btn-mini btn-expand"
+                                    data-provide="okmore"
                                     data-loading-text="{% trans "Loading" %} ..."
-                                    autocomplete="off" data-target="#recent-actions"
+                                    autocomplete="off"
+                                    data-target="#recent-actions"
                                     data-url="{% url 'member-more-actions' object.pk %}"
-                                    data-initial="{{ INITIAL_DATA }}">{% trans "More" %} +
+                                    data-initial="{{ INITIAL_DATA }}">{% trans "More" %}
+                                +
                             </button>
                         {% endif %}
                     </footer>
@@ -279,15 +356,19 @@
                             <!--a class="btn btn-mini btn-question" href="#">?</a-->
                         </header>
                         <ul id="recent-legislation">
-                            {% for action in legislation_actions %}{% display_action action %}{% endfor %}
+                            {% for action in legislation_actions %}
+                                {% display_action action %}{% endfor %}
                         </ul>
                         <footer>
                             {% if legislation_actions_more %}
-                                <button class="btn btn-mini btn-expand" data-provide="okmore"
+                                <button class="btn btn-mini btn-expand"
+                                        data-provide="okmore"
                                         data-loading-text="{% trans "Loading" %} ..."
-                                        autocomplete="off" data-target="#recent-legislation"
+                                        autocomplete="off"
+                                        data-target="#recent-legislation"
                                         data-url="{% url 'member-more-legislation' object.pk %}"
-                                        data-initial="{{ INITIAL_DATA }}">{% trans "More" %} +
+                                        data-initial="{{ INITIAL_DATA }}">{% trans "More" %}
+                                    +
                                 </button>
                             {% endif %}
                         </footer>
@@ -309,11 +390,14 @@
                         </ul>
                         <footer>
                             {% if committee_actions_more %}
-                                <button class="btn btn-mini btn-expand" data-provide="okmore"
+                                <button class="btn btn-mini btn-expand"
+                                        data-provide="okmore"
                                         data-loading-text="{% trans "Loading" %} ..."
-                                        autocomplete="off" data-target="#recent-committees"
+                                        autocomplete="off"
+                                        data-target="#recent-committees"
                                         data-url="{% url 'member-more-committees' object.pk %}"
-                                        data-initial="{{ INITIAL_DATA }}">{% trans "More" %} +
+                                        data-initial="{{ INITIAL_DATA }}">{% trans "More" %}
+                                    +
                                 </button>
                             {% endif %}
                         </footer>
@@ -335,11 +419,14 @@
                         </ul>
                         <footer>
                             {% if plenum_actions_more %}
-                                <button class="btn btn-mini btn-expand" data-provide="okmore"
+                                <button class="btn btn-mini btn-expand"
+                                        data-provide="okmore"
                                         data-loading-text="{% trans "Loading" %} ..."
-                                        autocomplete="off" data-target="#recent-plenums"
+                                        autocomplete="off"
+                                        data-target="#recent-plenums"
                                         data-url="{% url 'member-more-plenums' object.pk %}"
-                                        data-initial="{{ INITIAL_DATA }}">{% trans "More" %} +
+                                        data-initial="{{ INITIAL_DATA }}">{% trans "More" %}
+                                    +
                                 </button>
                             {% endif %}
                         </footer>
@@ -359,11 +446,14 @@
                         </ul>
                         <footer>
                             {% if mmm_documents_more %}
-                                <button class="btn btn-mini btn-expand" data-provide="okmore"
+                                <button class="btn btn-mini btn-expand"
+                                        data-provide="okmore"
                                         data-loading-text="{% trans "Loading" %} ..."
-                                        autocomplete="off" data-target="#recent-mmm"
+                                        autocomplete="off"
+                                        data-target="#recent-mmm"
                                         data-url="{% url 'member-more-mmm' object.pk %}"
-                                        data-initial="{{ INITIAL_DATA }}">{% trans "More" %} +
+                                        data-initial="{{ INITIAL_DATA }}">{% trans "More" %}
+                                    +
                                 </button>
                             {% endif %}
                         </footer>
@@ -372,8 +462,10 @@
 
                 {% endif %}
 
-                <section class="card card-list card-list-latest" id="kikar-statuses-section" style="display: none"
-                         data-type="member" data-id="{{ object.id }}" data-test-name="{{ object.name }}">
+                <section class="card card-list card-list-latest"
+                         id="kikar-statuses-section" style="display: none"
+                         data-type="member" data-id="{{ object.id }}"
+                         data-test-name="{{ object.name }}">
                     {% include 'kikar/_facebook_status_section_update_elem.html' %}
                     <header>
                         <h2>
@@ -382,13 +474,17 @@
                         </h2>
                         <!--a class="btn btn-mini btn-question" href="#">?</a-->
                     </header>
-                    <ul id="kikar-facebook-updates-ul" data-filter="feed__persona__object_id={{ object.id }}">
+                    <ul id="kikar-facebook-updates-ul"
+                        data-filter="feed__persona__object_id={{ object.id }}">
                     </ul>
                     <footer style="text-align: center">
-                        <span id="loading-statuses-symbol"><i class="fa fa-2x fa-spinner fa-spin"></i> </span>
-                        <button id="statuses-more" class="btn btn-mini btn-expand-fb"
+                        <span id="loading-statuses-symbol"><i
+                                class="fa fa-2x fa-spinner fa-spin"></i> </span>
+                        <button id="statuses-more"
+                                class="btn btn-mini btn-expand-fb"
                                 data-target="#kikar-facebook-updates-ul"
-                                data-offset='0'>{% trans "More Facebook Statuses" %} +
+                                data-offset='0'>{% trans "More Facebook Statuses" %}
+                            +
                         </button>
                     </footer>
                 </section>
@@ -410,7 +506,9 @@
 
                 {% if protocol_part_annotation_actions %}
                     <section class="card card-list card-list-latest">
-                        <header><h2><i class="fa fa-file-text"></i>{% trans "Protocol Parts With Annotations" %}</h2>
+                        <header><h2><i
+                                class="fa fa-file-text"></i>{% trans "Protocol Parts With Annotations" %}
+                        </h2>
                         </header>
                         <ul>
                             {% for action in protocol_part_annotation_actions %}
@@ -444,12 +542,18 @@
                             <label>
                                 {% trans "Factional discipline" %}
                                 {% if factional_discipline %}
-                                    <a class="btn btn-mini btn-question" href="#factdiscp-modal" role="button"
+                                    <a class="btn btn-mini btn-question"
+                                       href="#factdiscp-modal" role="button"
                                        data-toggle="modal">?</a>
-                                    <div id="factdiscp-modal" class="modal hide fade" tabindex="-1" role="dialog"
-                                         aria-labelledby="factdiscpModalLabel" aria-hidden="true">
+                                    <div id="factdiscp-modal"
+                                         class="modal hide fade" tabindex="-1"
+                                         role="dialog"
+                                         aria-labelledby="factdiscpModalLabel"
+                                         aria-hidden="true">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            <button type="button" class="close"
+                                                    data-dismiss="modal"
+                                                    aria-hidden="true">
                                                 x
                                             </button>
                                             <h3 id="factdiscpModalLabel">{% trans "factional discipline explained" %}</h3>
@@ -464,13 +568,14 @@
                                             {% endfor %}
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="btn" data-dismiss="modal"
+                                            <button class="btn"
+                                                    data-dismiss="modal"
                                                     aria-hidden="true">{% trans "Close" %}</button>
                                         </div>
                                     </div>
                                 {% endif %}
                             </label>
-                        <span class="numeric">
+                            <span class="numeric">
                             {% if object.voting_statistics.discipline %}
                                 {{ object.voting_statistics.discipline }}%
                             {% else %}
@@ -490,12 +595,18 @@
                                     {% trans 'Opposition discipline' %}
                                 {% endif %}
                                 {% if general_discipline %}
-                                    <a class="btn btn-mini btn-question" href="#generaldiscp-modal" role="button"
+                                    <a class="btn btn-mini btn-question"
+                                       href="#generaldiscp-modal" role="button"
                                        data-toggle="modal">?</a>
-                                    <div id="generaldiscp-modal" class="modal hide fade" tabindex="-1" role="dialog"
-                                         aria-labelledby="generaldiscpModalLabel" aria-hidden="true">
+                                    <div id="generaldiscp-modal"
+                                         class="modal hide fade" tabindex="-1"
+                                         role="dialog"
+                                         aria-labelledby="generaldiscpModalLabel"
+                                         aria-hidden="true">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            <button type="button" class="close"
+                                                    data-dismiss="modal"
+                                                    aria-hidden="true">
                                                 x
                                             </button>
                                             <h3 id="generaldiscpModalLabel">
@@ -516,15 +627,17 @@
                                             {% endfor %}
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="btn" data-dismiss="modal"
+                                            <button class="btn"
+                                                    data-dismiss="modal"
                                                     aria-hidden="true">{% trans "Close" %}</button>
                                         </div>
                                     </div>
                                 {% endif %}
                             </label>
-                        <span class="numeric">
+                            <span class="numeric">
                             {% if object.voting_statistics.coalition_discipline %}
-                                {{ object.voting_statistics.coalition_discipline }}%
+                                {{ object.voting_statistics.coalition_discipline }}
+                                %
                             {% else %}
                                 {% trans 'Not enough data' %}
                             {% endif %}
@@ -538,12 +651,18 @@
                             <label>
                                 {% trans "Votes against own bills" %}
                                 {% if votes_against_own_bills %}
-                                    <a class="btn btn-mini btn-question" href="#votesagains-modal" role="button"
+                                    <a class="btn btn-mini btn-question"
+                                       href="#votesagains-modal" role="button"
                                        data-toggle="modal">?</a>
-                                    <div id="votesagains-modal" class="modal hide fade" tabindex="-1" role="dialog"
-                                         aria-labelledby="votesagainsModalLabel" aria-hidden="true">
+                                    <div id="votesagains-modal"
+                                         class="modal hide fade" tabindex="-1"
+                                         role="dialog"
+                                         aria-labelledby="votesagainsModalLabel"
+                                         aria-hidden="true">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            <button type="button" class="close"
+                                                    data-dismiss="modal"
+                                                    aria-hidden="true">
                                                 x
                                             </button>
                                             <h3 id="votesagainsModalLabel">{% trans "Votes against own bills" %}</h3>
@@ -558,13 +677,14 @@
                                             {% endfor %}
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="btn" data-dismiss="modal"
+                                            <button class="btn"
+                                                    data-dismiss="modal"
                                                     aria-hidden="true">{% trans "Close" %}</button>
                                         </div>
                                     </div>
                                 {% endif %}
                             </label>
-                        <span class="numeric">
+                            <span class="numeric">
                         {% if votes_against_own_bills %}
                             {{ votes_against_own_bills|length }}
                         {% else %}
@@ -612,14 +732,18 @@
                 </aside>
             </div>
         </div>
-        <div id="embed-information-modal" class="modal hide fade" tabindex="-1" role="dialog"
+        <div id="embed-information-modal" class="modal hide fade" tabindex="-1"
+             role="dialog"
              aria-labelledby="embedModalLabel" aria-hidden="true">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">x
+                </button>
                 <h3 id="embedModalLabel">קחו את החוק לידיים!</h3>
             </div>
             <div class="modal-body">
-                בדיוק כמו שסרטוני יוטוב יכולים להיות מוטמעים באתרים אחרים, גם כרטיס ח&quot;כ זה יכול להופיע בבלוגים,
+                בדיוק כמו שסרטוני יוטוב יכולים להיות מוטמעים באתרים אחרים, גם
+                כרטיס ח&quot;כ זה יכול להופיע בבלוגים,
                 כתבות, פייסבוק וכן הלאה...<br>
                 <b>העתיקו את קוד ההטמעה (html):</b><br>
                 <input type="text" readonly="readonly" class="tobecopied"
@@ -629,7 +753,8 @@
                        value='https://oknesset.org/member/{{ object.id }}'/>
             </div>
             <div class="modal-footer">
-                <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
+                <button class="btn" data-dismiss="modal"
+                        aria-hidden="true">{% trans "Close" %}</button>
             </div>
         </div>
 

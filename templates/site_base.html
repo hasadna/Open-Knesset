@@ -1,48 +1,96 @@
-<!DOCTYPE html>{% load i18n search avatar_tags feedback waffle_tags %}{% load static from staticfiles %}
-<html lang="{{ LANGUAGE_CODE }}" dir="{{ LANGUAGE_BIDI|yesno:"rtl,ltr" }}" class="{{ LANGUAGE_BIDI|yesno:"rtl,ltr" }}">
+<!DOCTYPE html>
+{% load i18n search avatar_tags feedback waffle_tags %}{% load static from staticfiles %}
+<html lang="{{ LANGUAGE_CODE }}" dir="{{ LANGUAGE_BIDI|yesno:"rtl,ltr" }}"
+      class="{{ LANGUAGE_BIDI|yesno:"rtl,ltr" }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Language" content="{{ LANGUAGE_CODE }}">
-    <title>{% block extratitle %}{% endblock %} | {% trans 'Open Knesset' %}</title>
-    <meta NAME="ROBOTS" content="{% if debug %}NOINDEX, NOFOLLOW{% else %}ALL{% endif %}">
+    <title>{% block extratitle %}{% endblock %}
+        | {% trans 'Open Knesset' %}</title>
+    <meta NAME="ROBOTS"
+          content="{% if debug %}NOINDEX, NOFOLLOW{% else %}ALL{% endif %}">
     <meta http-equiv="imagetoolbar" content="no"/>
     <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE"/>
     <meta name="MSSmartTagsPreventParsing" content="true">
     <meta name="Authors" content="OpenKnesset">
-    <meta name="License" content="CC-by-sa-3.0 Attribution-NonCommercial-ShareAlike 3.0">
-    <meta name="keywords" content="{% trans 'Open Knesset' %} {% block keywords %}{% endblock %}">
+    <meta name="License"
+          content="CC-by-sa-3.0 Attribution-NonCommercial-ShareAlike 3.0">
+    <meta name="keywords" content="{% trans 'Open Knesset' %}
+            {% block keywords %}{% endblock %}">
     <meta name="description"
-          content="{% block description %}{% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}">
-    <meta name="google-site-verification" content="TAmHbnTgm9dvrNMB41Ke-lZesXPgTd5xSW5lBTzq020"/>
+          content="
+
+
+
+
+
+
+
+
+                  {% block description %}{% trans 'Open Knesset - Opening the Knesset to the public' %}{% endblock %}">
+    <meta name="google-site-verification"
+          content="TAmHbnTgm9dvrNMB41Ke-lZesXPgTd5xSW5lBTzq020"/>
     {% block social_share %}
-        <meta property="og:image" content="https://oknesset.org/static/img/300px-Oknesset.jpg"/>
-        <meta property="fb:app_id" content="156662232223"/>
-        <meta property="og:title" content="{% trans 'Open Knesset' %}">
-        <meta property="og:description" content="{% trans 'Open Knesset - Opening the Knesset to the public' %}">
-        <meta property="og:url" content="https://oknesset.org/">
-        <meta property="og:site_name" content="{% trans 'Open Knesset' %}">
-        <meta property="og:image:secure_url" content="https://oknesset.org/static/img/300px-Oknesset.jpg">
+        {% with OKNESSET_IMAGE_URL="https://oknesset.org/static/img/300px-Oknesset.jpg" %}
+            {% block facebook_social_share %}
+                {% block facebook_social_share_base %}
+                    <meta property="fb:app_id" content="156662232223"/>
+                    <meta property="og:site_name"
+                          content="{% trans 'Open Knesset' %}">
+                    <meta property="og:url"
+                          content="{{ request.build_absolute_uri }}">
+                    <meta property="og:type" content="website"/>
+                    <meta property="og:locale" content="{{ LANGUAGE_CODE }}"/>
+                {% endblock facebook_social_share_base %}
+                {% block facebook_social_share_page_specific %}
+                    <meta property="og:image"
+                          content="{{ OKNESSET_IMAGE_URL }}"/>
+                    <meta property="og:title"
+                          content="{% trans 'Open Knesset' %}">
+                    <meta property="og:description"
+                          content="{% trans 'Open Knesset - Opening the Knesset to the public' %}">
 
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="{% trans 'Open Knesset' %}" />
-        <meta name="twitter:description" content="{% trans 'Open Knesset - Opening the Knesset to the public' %}" />
-        <meta name="twitter:image" content="https://oknesset.org/static/img/300px-Oknesset.jpg" />
+                    <meta property="og:image:secure_url"
+                          content="{{ OKNESSET_IMAGE_URL }}">
+                {% endblock facebook_social_share_page_specific %}
+            {% endblock facebook_social_share %}
 
-        <!-- For some other bots-->
-        <link rel="image_src" href="https://oknesset.org/static/img/300px-Oknesset.jpg"/>
+            {% block twitter_social_share %}
+                {% block twitter_social_share_base %}
+                    <meta name="twitter:creator" content="@hasadna">
+                    <meta name="twitter:site"
+                          content="{{ request.build_absolute_uri }}">
+                {% endblock twitter_social_share_base %}
 
+                {% block twitter_social_share_page_specific %}
+                    <meta name="twitter:card" content="summary_large_image"/>
+                    <meta name="twitter:title"
+                          content="{% trans 'Open Knesset' %}"/>
+                    <meta name="twitter:description"
+                          content="{% trans 'Open Knesset - Opening the Knesset to the public' %}"/>
+                    <meta name="twitter:image"
+                          content="https://oknesset.org/static/img/300px-Oknesset.jpg"/>
+                {% endblock twitter_social_share_page_specific %}
+            {% endblock twitter_social_share %}
+            <!-- For some other bots-->
+            <link rel="image_src"
+                  href="https://oknesset.org/static/img/300px-Oknesset.jpg"/>
 
-    {% endblock %}
+        {% endwith %}
+    {% endblock social_share %}
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <link rel="stylesheet" type="text/css" href="{% static "css/app.css" %}?v=26"/>
-    <link rel="stylesheet" type="text/css" href="{% static "css/responsive.css" %}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{% static "css/app.css" %}?v=26"/>
+    <link rel="stylesheet" type="text/css"
+          href="{% static "css/responsive.css" %}"/>
 
     <!--
     <link href="{% static "css/common.css" %}?v=22" rel="stylesheet" type="text/css" media="screen" />
 -->
-    <link href="{% static "css/jquery.jgrowl.css" %}" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="{% static "css/jquery.jgrowl.css" %}" rel="stylesheet"
+          type="text/css" media="screen"/>
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -57,7 +105,8 @@
         <div class="row">
             <div class="span12">
                 <div class="alert alert-error">{% trans 'This is a development server, all data in it should be considered fictional.  users are kindly requested to go to ' %}<a
-                        href="http://oknesset.org/">http://oknesset.org/</a></div>
+                        href="http://oknesset.org/">http://oknesset.org/</a>
+                </div>
             </div>
         </div>
     {% endif %}
@@ -65,7 +114,8 @@
         <div id="logo" class="span4 clearfix">
             {% if is_index %}<h1>{% endif %}
             <a href="/">
-                <img src="{% static "img/oknesset-logo.png" %}" alt="oknesset-logo"/>
+                <img src="{% static "img/oknesset-logo.png" %}"
+                     alt="oknesset-logo"/>
                 <span>כנסת פתוחה</span>
             </a>
             {% if is_index %}</h1>{% endif %}
@@ -78,33 +128,42 @@
             {% if user.is_authenticated %}
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <b class="caret"></b>
-            <span class="user-pic">
+                    <span class="user-pic">
                 {% avatar user 36 %}
             </span>
                 </a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                     <li><a href="{% url 'edit-profile' %}"><i
-                            class="fa fa-edit fa-flip-horizontal"></i> {% trans 'Edit Profile' %}</a></li>
-                    <li><a href="{% url 'logout' %}?next={{ request.get_full_path }}"><i
-                            class="fa fa-sign-out fa-flip-horizontal"></i> {% trans 'Logout' %}</a></li>
+                            class="fa fa-edit fa-flip-horizontal"></i> {% trans 'Edit Profile' %}
+                    </a></li>
+                    <li>
+                        <a href="{% url 'logout' %}?next={{ request.get_full_path }}"><i
+                                class="fa fa-sign-out fa-flip-horizontal"></i> {% trans 'Logout' %}
+                        </a></li>
                 </ul>
             {% else %}
                 <a href='{% url 'login' %}?next={{ request.get_full_path }}'><i
-                        class="fa fa-sign-in fa-flip-horizontal"></i> {% trans 'login' %}</a>
+                        class="fa fa-sign-in fa-flip-horizontal"></i> {% trans 'login' %}
+                </a>
             {% endif %}
         </div>
     </div>
 
     <ul class="nav nav-pills">
         <li id="nav-parties" {% block nav-parties %} {% endblock %} ><a
-                href="{% url 'parties-members-index' %}">{% trans "Members and Parties" %}</a></li>
-        <li id="laws" {% block nav-laws %} {% endblock %} ><a href="{% url 'bill-list' %}">{% trans "Legislation" %}</a>
+                href="{% url 'parties-members-index' %}">{% trans "Members and Parties" %}</a>
         </li>
-        <li id="votes" {% block nav-votes %} {% endblock %} ><a href="{% url 'vote-list' %}">{% trans "Votes" %}</a>
+        <li id="laws" {% block nav-laws %} {% endblock %} ><a
+                href="{% url 'bill-list' %}">{% trans "Legislation" %}</a>
+        </li>
+        <li id="votes" {% block nav-votes %} {% endblock %} ><a
+                href="{% url 'vote-list' %}">{% trans "Votes" %}</a>
         </li>
         <li id="nav-committees" {% block nav-committees %} {% endblock %} ><a
-                href="{% url 'committee-list' %}">{% trans 'Committees' %}</a></li>
-        <li id="nav-plenum" {% block nav-plenum %} {% endblock %} ><a href="{% url 'plenum' %}">מליאה</a></li>
+                href="{% url 'committee-list' %}">{% trans 'Committees' %}</a>
+        </li>
+        <li id="nav-plenum" {% block nav-plenum %} {% endblock %} ><a
+                href="{% url 'plenum' %}">מליאה</a></li>
         <li id="nav-agendas" {% block nav-agendas %} {% endblock %} ><a
                 href="{% url 'agenda-list' %}">{% trans 'Agendas' %}</a></li>
         <li id="nav-lobbyists" {% block nav-lobbyists %} {% endblock %} ><a
@@ -114,15 +173,19 @@
 <div id="helptextcontainer"></div>
 <section class="container">
     {% if not hide_crumbs %}
-        <ul class="breadcrumb">
-            {% switch "help_as_home_page" %}
-            <li><a class="home-icon" href="{% url 'help' %}">{% trans "Homepage" %}</a> <span class="divider">/</span>
+    <ul class="breadcrumb">
+        {% switch "help_as_home_page" %}
+        <li><a class="home-icon"
+               href="{% url 'help' %}">{% trans "Homepage" %}</a> <span
+                class="divider">/</span>
             {% else %}
-            <li><a class="home-icon" href="{% url 'main' %}">{% trans "Homepage" %}</a> <span class="divider">/</span>
+        <li><a class="home-icon"
+               href="{% url 'main' %}">{% trans "Homepage" %}</a> <span
+                class="divider">/</span>
             {% endswitch %}
-            </li>
-            {% block breadcrumbs %}{% endblock %}
-        </ul>
+        </li>
+        {% block breadcrumbs %}{% endblock %}
+    </ul>
     {% endif %}
     <div id="cse" class="main" style="display:none;"></div>
     <div id="content-main" class="main">
@@ -139,7 +202,8 @@
                     {% include "flatpages/default_block.html" %}
                 {% endif %}
             {% endif %}{% endblock %}
-            {% block divcontent %} {% block content %}ahm.. my child should replace this block
+            {% block divcontent %} {% block content %}ahm.. my child should
+                replace this block
             {% endblock %}{% endblock %}
         </div>
         <div class="clear"></div>
@@ -161,7 +225,8 @@
                         var a2a_config = a2a_config || {};
                         a2a_config.locale = "he";
                     </script>
-                    <script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+                    <script type="text/javascript"
+                            src="//static.addtoany.com/menu/page.js"></script>
                     <!-- AddToAny END -->
                 {% endif %}
             </div>
@@ -176,17 +241,31 @@
             <nav class="span8">
                 <ul class="nav nav-pills">
                     {% switch "help_as_home_page" %}
-                    <li><a class="home-icon" href="{% url 'help' %}">{% trans "Homepage" %}</a></li>
-                    {% else %}
-                    <li><a class="home-icon" href="{% url 'main' %}">{% trans "Homepage" %}</a></li>
+                        <li><a class="home-icon"
+                               href="{% url 'help' %}">{% trans "Homepage" %}</a>
+                        </li>
+                        {% else %}
+                        <li><a class="home-icon"
+                               href="{% url 'main' %}">{% trans "Homepage" %}</a>
+                        </li>
                     {% endswitch %}
-                    <li><a href="{% url 'party-list' %}">{% trans "Members and Parties" %}</a></li>
-                    <li><a href="{% url 'bill-list' %}">{% trans "Legislation" %}</a></li>
-                    <li><a href="{% url 'committee-list' %}">{% trans 'Committees' %}</a></li>
+                    <li>
+                        <a href="{% url 'party-list' %}">{% trans "Members and Parties" %}</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'bill-list' %}">{% trans "Legislation" %}</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'committee-list' %}">{% trans 'Committees' %}</a>
+                    </li>
                     <li><a href="{% url 'plenum' %}">מליאה</a></li>
-                    <li><a href="{% url 'agenda-list' %}">{% trans 'Agendas' %}</a></li>
-                    <li><a href="{% url 'tags-list' %}">{% trans 'Tags' %}</a></li>
-                    <li><a href="{% url 'about' %}">{% trans 'About' %}</a></li>
+                    <li>
+                        <a href="{% url 'agenda-list' %}">{% trans 'Agendas' %}</a>
+                    </li>
+                    <li><a href="{% url 'tags-list' %}">{% trans 'Tags' %}</a>
+                    </li>
+                    <li><a href="{% url 'about' %}">{% trans 'About' %}</a>
+                    </li>
                 </ul>
             </nav>
             <div id="search-bottom" class="span4">
@@ -200,8 +279,10 @@
                 </div>
                 <div class="follow-oknesset">
                     <h3>{% trans "Follow Open Knesset" %}:</h3>
-                    <a href="https://www.facebook.com/open.knesset" target="_blank"><img
-                            src="{% static "img/oknesset-facebook.png" %}" alt="{% trans "Open Knesset at Facebook" %}"></a>
+                    <a href="https://www.facebook.com/open.knesset"
+                       target="_blank"><img
+                            src="{% static "img/oknesset-facebook.png" %}"
+                            alt="{% trans "Open Knesset at Facebook" %}"></a>
                     <a href="https://twitter.com/OKnesset" target="_blank"><img
                             src="{% static "img/oknesset-twitter.png" %}"
                             alt="{% trans "Open Knesset at Twitter" %}"></a>
@@ -209,29 +290,39 @@
             </div>
             <div class="span4 offset4 hasadna">
                 <h3>
-                    <img src="{% static "img/sadna30x30.png" %}" alt="{% trans "The Public Knowledge Workshop" %}">
+                    <img src="{% static "img/sadna30x30.png" %}"
+                         alt="{% trans "The Public Knowledge Workshop" %}">
                     <span>{% trans "Project of" %}</span><a
                         href="http://www.hasadna.org.il">{% trans "The Public Knowledge Workshop" %}</a>
                 </h3>
                 <ul>
-                    <li><a href="http://www.obudget.org/" target="_blank">{% trans "Open Budget" %}</a></li>
-                    <li><a href="http://kikar.org/" target="_blank">{% trans "Kikar" %}</a></li>
-                    <li><a href="http://www.anyway.co.il/" target="_blank">ANYWAY</a></li>
-                    <li><a href="http://www.openpension.org.il/" target="_blank">{% trans "Open pension" %}</a></li>
+                    <li><a href="http://www.obudget.org/"
+                           target="_blank">{% trans "Open Budget" %}</a></li>
+                    <li><a href="http://kikar.org/"
+                           target="_blank">{% trans "Kikar" %}</a></li>
+                    <li><a href="http://www.anyway.co.il/" target="_blank">ANYWAY</a>
+                    </li>
+                    <li><a href="http://www.openpension.org.il/"
+                           target="_blank">{% trans "Open pension" %}</a></li>
                 </ul>
-                <form method="post" action="https://www.paypal.com/cgi-bin/webscr">
+                <form method="post"
+                      action="https://www.paypal.com/cgi-bin/webscr">
                     <input type="hidden" value="_s-xclick" name="cmd">
-                    <input type="hidden" value="K7X4FWYPBR7H4" name="hosted_button_id">
-                    <input type="submit" name="submit" value="{% trans "Donate to Hasadna" %}"
+                    <input type="hidden" value="K7X4FWYPBR7H4"
+                           name="hosted_button_id">
+                    <input type="submit" name="submit"
+                           value="{% trans "Donate to Hasadna" %}"
                            class="btn  btn-big btn-large btn-primary">
                     <img width="1" height="1" border="0"
-                         src="https://www.paypalobjects.com/WEBSCR-640-20110306-1/he_IL/i/scr/pixel.gif" alt="">
+                         src="https://www.paypalobjects.com/WEBSCR-640-20110306-1/he_IL/i/scr/pixel.gif"
+                         alt="">
                 </form>
             </div>
         </div>
         <div class="row">
             <div class="span12">
-                {% trans "Some rights reserved. Using data from the site requires credit" %} -
+                {% trans "Some rights reserved. Using data from the site requires credit" %}
+                -
                 <a href="/terms-of-use/">{% trans "Details in the link" %}</a><br>
                 <a href="/datasources/">{% trans "Data sources" %}</a>
             </div>
@@ -251,7 +342,8 @@
 </div>
 
 {% comment %} Suggestion forms {% endcomment %}
-{% if suggestion_forms %}{% include "auxiliary/_suggestion_forms.html" %}{% endif %}
+{% if suggestion_forms %}
+    {% include "auxiliary/_suggestion_forms.html" %}{% endif %}
 <!-- JS Placed at the end of the document so the pages load faster -->
 <script src="{% static "js/jquery-1.8.3.min.js" %}"></script>
 <script src="{% static "js/bootstrap-transition.js" %}"></script>
@@ -312,8 +404,8 @@
         // lazy load mkimages
         $('.party-member-photo').hover(function () {
             var card_info = $(this).find('.party-member-info'),
-                    card_info_display = card_info.css('display'),
-                    photo = card_info.find('.party-member-info-photo img');
+                card_info_display = card_info.css('display'),
+                photo = card_info.find('.party-member-info-photo img');
 
             // should work only for large screens, disply will be none for
             // by media queries

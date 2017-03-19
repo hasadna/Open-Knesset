@@ -3711,6 +3711,37 @@ msgstr "ישיבות וועדות בחודש"
 msgid "Notable agendas"
 msgstr "אג'נדות בולטות"
 
+
+#: templates/mks/member_detail.html:8
+msgid "Information on"
+msgstr "מידע אודות"
+
+#: templates/mks/member_detail.html:8 templates/mks/member_detail.html.py:9
+msgid "MK"
+msgstr "ח\"כ"
+#: templates/mks/member_detail.html:8
+msgid "on Open Knesset"
+msgstr "בכנסת פתוחה"
+
+#: templates/mks/member_detail.html:8
+msgid "Bill proposals, Voting, Committee attendance, Facebook activity and more!"
+msgstr "הצעות חוק, נתוני הצבעות, נוכחות בוועדות, פעילות בפייסבוק, ועוד!"
+
+#: templates/mks/member_detail.html:61
+#, fuzzy, python-format
+msgid ""
+" Up to\n"
+"    date information about %(name)s in the\n"
+"    knesset: votes, bills, committees, attendance and more.   Information "
+"about\n"
+"    %(name)s for journalists, researchers,\n"
+"    students and citizens by Open Knesset - Opening the Knesset to the "
+"public.\n"
+msgstr ""
+"מידע עדכני אודות %(name)s בכנסת: הצבעות, הצעות חוק, השתתפות בוועדות, נוכחות "
+"ועוד. מידע על %(name)s לעיתונאים, חוקרים, סטודנטים ואזרחים באתר כנסת פתוחה - "
+"\nפותחים את הכנסת לציבור"
+
 #: templates/mks/member_list.html:36 templates/mks/party_list.html:40
 msgid "Display by"
 msgstr "הצג לפי"
