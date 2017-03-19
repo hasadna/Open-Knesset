@@ -4,6 +4,12 @@ Scraping
 
 One of the most important tasks in Open Knesset are the scraping processes, this document will try to describe all those processes (but pay attention that as the code changes, this documentation might not..)
 
+We are currently moving towards having knesset-data-django project handle all the scraping jobs.
+
+See the project documentation for more details: https://github.com/hasadna/knesset-data-django/blob/master/README.md
+
+Knesset-data-django is integrated in Open Knesset, so you can run the management commands detailed there in Open Knesset.
+
 Scraping Tasks
 ==============
 
@@ -12,11 +18,12 @@ Scraping Tasks
 
     votes
     committees
+    presence
 
 Where and how the tasks are run
 ===============================
 
-The scraping tasks are all run from the db server using cron, these are the cron jobs:
+The scraping tasks are all run from the db server using cron, these are the cron jobs (last updated: ~2015):
 
 .. code-block:: sh
 
