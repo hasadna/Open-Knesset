@@ -62,6 +62,9 @@ unicodecsv==0.14.1
 django-fastsitemaps==0.2
 subprocess32==3.2.7
 
+functools32==3.2.3-2
+datapackage==0.8.7
+
 -e git://github.com/hasadna/knesset-data-python.git@c39ad5b1cfdace3321292cf37e146ad099dc58b3#egg=knesset-data
 -e git://github.com/hasadna/knesset-data-datapackage.git@v1.1.0#egg=knesset-datapackage
--e git://github.com/hasadna/knesset-data-django.git@v1.0.0#egg=knesset-data-django
+-e git://github.com/hasadna/knesset-data-django.git@54d3f73a793c6fbb60331971e2702b03dd032acd#egg=knesset-data-django

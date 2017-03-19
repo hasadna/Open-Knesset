@@ -86,6 +86,9 @@ def deploy_backend(migration=False, requirements=False):
         if migration:
             db_migrate_syncdb()
 
+@roles('db_master')
+def datapackage_notification(url):
+    run("./oknesset_datapackage_notification.sh \"{}\"".format(url))
 
 @roles('db_master')
 def show_cron(as_user=env.ok_user):
