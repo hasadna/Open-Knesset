@@ -11,7 +11,7 @@ def get_statuses(request):
     request_params = request.GET.dict()
     request_path = request_params.get('request_path')
     if not request_path:
-        return HttpResponseBadRequest()
+        return HttpResponseBadRequest("Bad request: missing request_path param")
 
     url = KIKAR_URL_BASE + request_params.pop('request_path')
     if 'filter' in request_params:
