@@ -78,10 +78,11 @@ class PersonsEventsScraper(BaseScraper):
                 colorId = item['colorId'] if 'colorId' in item else None
                 data = unicode(item)
                 kwargs = {
-                    'when': start_date, 'when_over': end_date, 'link': link, 'what': summary, 'why': description,
+                    'when': start_date, 'when_over': end_date, 'link': link,
+                    'what': summary if summary else "",  # what field in DB doesn't allow null value
+                    'why': description,  # why field allows null
                     'update_date': update_date,
                 }
-                res = Event.objects.filter(icaluid=icaluid)
                 event, created = Event.objects.get_or_create(icaluid=icaluid, defaults=kwargs)
                 event.who.add(person)
                 if created:
