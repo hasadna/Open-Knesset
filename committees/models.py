@@ -456,8 +456,6 @@ class TopicManager(models.Manager):
             'rank': '((100/%s*rating_score/(1+rating_votes+%s))+100)/2' % (
                 Topic.rating.range, Topic.rating.weight)
         }).order_by(order)
-        # TODO: rinse it so this will work
-        return self.get_public().by_rank()
 
 
 class Topic(models.Model):
@@ -510,7 +508,7 @@ class Topic(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('topic-detail', [str(self.id)])
+        return 'topic-detail', [str(self.id)]
 
     def __unicode__(self):
         return "%s" % self.title
