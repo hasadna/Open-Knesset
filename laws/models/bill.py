@@ -303,8 +303,14 @@ class Bill(models.Model):
         if pps:
             for pp in pps:
                 for this_v in pp.votes.all():
-                    if this_v.id not in used_votes:
-                        self.pre_votes.add(this_v)
+                    if this_v.title.find('אישור'.decode('utf8')) == 0:
+                        self.approval_vote = this_v
+                        used_votes.append(this_v.id)
+                    if this_v.title.find('להעביר את'.decode('utf8')) == 0:
+                        if this_v.time.date() > pp.date:
+                            self.first_vote = this_v
+                        else:
+                            self.pre_votes.add(this_v)
         self.update_stage()
 
     def update_stage(self, force_update=False):
