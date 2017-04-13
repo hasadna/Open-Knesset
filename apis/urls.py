@@ -12,5 +12,9 @@ urlpatterns = patterns(
             "tastypie_api_module": "apis.resources.v2_api",
             "namespace": "tastypie_swagger", "version": "2.0"
         }
+    ),
+    url(
+        r'knesset-data/',
+        include('knesset_data_django.api.urls', namespace='knesset_data_django')
     )
 )
