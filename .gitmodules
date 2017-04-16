@@ -1,3 +1,6 @@
 [submodule "less/bootstrap"]
 	path = less/bootstrap
 	url = git://github.com/zohararad/bootstrap.git
+[submodule "simple/pyth"]
+	path = simple/pyth
+	url = https://github.com/yairchu/pyth.git
