@@ -87,11 +87,7 @@ class CommitteeMeetingAdmin(ImportExportModelAdmin):
         return obj.committee.type
 
     def protocol_parts(self, obj):
-        return obj.num_parts
-
-    def get_queryset(self, request):
-        qs = super(CommitteeMeetingAdmin, self).get_queryset(request)
-        return qs.annotate(num_parts=Count('parts'))
+        return obj.parts.all().count()
 
     def redownload_and_reparse_protocol(self, request, qs):
         mks, mk_names = get_all_mk_names()
