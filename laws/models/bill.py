@@ -308,10 +308,11 @@ class Bill(models.Model):
                         self.approval_vote = this_v
                         used_votes.append(this_v.id)
                     if this_v.title.find('להעביר את'.decode('utf8')) == 0 and this_v.id not in used_votes:
-                        if this_v.time.date() > pp.date:
-                            self.first_vote = this_v
-                        else:
+                        if self.stage == BillStages.PROPOSED:
                             self.pre_votes.add(this_v)
+                        elif self.stage == BillStages.PRE_APPROVED:
+                            self.first_vote = this_v
+
                         used_votes.append(this_v.id)
         self.update_stage()
 
