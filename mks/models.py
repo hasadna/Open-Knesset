@@ -351,7 +351,7 @@ class Member(models.Model):
     def average_weekly_presence(self):
         d = Knesset.objects.current_knesset().start_date
         hours = WeeklyPresence.objects.filter(
-            date__gt=d,
+            date__gte=d,
             member=self).values_list('hours', flat=True)
         if len(hours):
             return round(sum(hours) / len(hours), 1)
