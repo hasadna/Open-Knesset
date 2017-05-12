@@ -456,10 +456,7 @@ class Command(NoArgsDbLogCommand):
                 continue
             member_presence = dict(zip([b[0] for b in presence[member.id]], [b[1] for b in presence[member.id]]))
 
-            if member.end_date:
-                end_timestamp = member.end_date.isocalendar()[:2]
-            else:
-                end_timestamp = todays_timestamp
+            end_timestamp = todays_timestamp
 
             start_date = member.start_date or datetime.datetime.utcnow()
             current_timestamp = (start_date + datetime.timedelta(7)).isocalendar()[
