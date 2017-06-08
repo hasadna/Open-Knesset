@@ -66,7 +66,7 @@ class Command(NoArgsDbLogCommand):
 
         make_option('--laws', action='store_true', dest='laws',
                     help="download and parse laws"),
-        make_option('--presence', action='store_true', dest='presence',
+        make_option(' ', action='store_true', dest='presence',
                     help="download and parse presence"),
         make_option('--update', action='store_true', dest='update',
                     help="online update of data."),
@@ -97,7 +97,7 @@ class Command(NoArgsDbLogCommand):
         if all_options:
             process = True
 
-        selected_options = [all_options, process, update, laws]
+        selected_options = [all_options, process, update, laws, presence]
         if not any(selected_options):
             logger.error(
                 "no arguments found. doing nothing. \ntry -h for help.\n--all to run the full syncdata flow.\n--update for an online dynamic update.")
@@ -437,7 +437,7 @@ class Command(NoArgsDbLogCommand):
             logger.exception(u'Exception with approved bill text for vote %s title=%s' % (vote.id, vote.title))
 
     def update_presence(self):
-        logger.debug("update presence")
+        logger.info("Starting to update presence")
         try:
             (presence, valid_weeks) = parse_presence.parse_presence(filename=os.path.join(DATA_ROOT, 'presence.txt.gz'))
 
@@ -451,6 +451,7 @@ class Command(NoArgsDbLogCommand):
         c = None
 
         for member in Member.current_members.all():
+            logger.info("Trying to update presence for %s" % member.pk)
             if member.id not in presence:
                 logger.error('member %s (id=%d) not found in presence data', member.name, member.id)
                 continue
@@ -477,6 +478,8 @@ class Command(NoArgsDbLogCommand):
                 else:
                     date = iso_to_gregorian(*current_timestamp, iso_day=0)
                 current_timestamp = (date + datetime.timedelta(8)).isocalendar()[:2]
+        logger.info('Finished updating presence')
+
 
     def update_private_proposal_content_html(self, pp):
         html = parse_remote.rtf(pp.source_url)
