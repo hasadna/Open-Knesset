@@ -299,32 +299,17 @@ class Member(models.Model):
         from knesset_data_django.mks.utils import party_at
         return party_at(self, date)
 
-    def TotalVotesCount(self):
-        return self.votes.exclude(voteaction__type='no-vote').count()
-
     def for_votes(self):
         return self.votes.filter(voteaction__type='for')
-
-    def ForVotesCount(self):
-        return self.for_votes().count()
 
     def against_votes(self):
         return self.votes.filter(voteaction__type='against')
 
-    def AgainstVotesCount(self):
-        return self.against_votes().count()
-
     def abstain_votes(self):
         return self.votes.filter(voteaction__type='abstain')
 
-    def AbstainVotesCount(self):
-        return self.abstain_votes().count()
-
     def no_votes(self):
         return self.votes.filter(voteaction__type='no-vote')
-
-    def NoVotesCount(self):
-        return self.no_votes().count()
 
     def LowestCorrelations(self):
         return Correlation.objects.filter(m1=self.id).order_by('normalized_score')[0:4]
@@ -366,7 +351,7 @@ class Member(models.Model):
     def average_weekly_presence(self):
         d = Knesset.objects.current_knesset().start_date
         hours = WeeklyPresence.objects.filter(
-            date__gt=d,
+            date__gte=d,
             member=self).values_list('hours', flat=True)
         if len(hours):
             return round(sum(hours) / len(hours), 1)

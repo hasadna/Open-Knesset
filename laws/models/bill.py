@@ -284,16 +284,17 @@ class Bill(models.Model):
                 if this_v.title.find('אישור'.decode('utf8')) == 0:
                     self.approval_vote = this_v
                     used_votes.append(this_v.id)
-                if this_v.title.find('להעביר את'.decode('utf8')) == 0:
+                if this_v.title.find('להעביר את'.decode('utf8')) == 0 and this_v.id not in used_votes:
                     self.first_vote = this_v
+                    used_votes.append(this_v.id)
 
         kp = KnessetProposal.objects.filter(bill=self)
         if kp:
             for this_v in kp[0].votes.all():
-                if this_v.title.find('אישור'.decode('utf8')) == 0:
+                if this_v.title.find('אישור'.decode('utf8')) == 0 and this_v.id not in used_votes:
                     self.approval_vote = this_v
                     used_votes.append(this_v.id)
-                if this_v.title.find('להעביר את'.decode('utf8')) == 0:
+                if this_v.title.find('להעביר את'.decode('utf8')) == 0 and this_v.id not in used_votes:
                     if this_v.time.date() > kp[0].date:
                         self.first_vote = this_v
                     else:
@@ -303,8 +304,16 @@ class Bill(models.Model):
         if pps:
             for pp in pps:
                 for this_v in pp.votes.all():
-                    if this_v.id not in used_votes:
-                        self.pre_votes.add(this_v)
+                    if this_v.title.find('אישור'.decode('utf8')) == 0 and this_v.id not in used_votes:
+                        self.approval_vote = this_v
+                        used_votes.append(this_v.id)
+                    if this_v.title.find('להעביר את'.decode('utf8')) == 0 and this_v.id not in used_votes:
+                        if self.stage == BillStages.PROPOSED:
+                            self.pre_votes.add(this_v)
+                        elif self.stage == BillStages.PRE_APPROVED:
+                            self.first_vote = this_v
+
+                        used_votes.append(this_v.id)
         self.update_stage()
 
     def update_stage(self, force_update=False):

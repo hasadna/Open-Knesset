@@ -12,6 +12,7 @@ from .managers import PersonManager
 
 from django.contrib.auth.models import User
 
+
 class Title(models.Model):
     name = models.CharField(max_length=64)
 
@@ -25,6 +26,7 @@ class PersonAlias(models.Model):
 
     def __unicode__(self):
         return "%s -> %s" % (self.name, self.person.name)
+
 
 GENDER_CHOICES = (
     (u'M', _('Male')),
@@ -41,14 +43,16 @@ class Person(models.Model):
     phone = models.CharField(blank=True, null=True, max_length=20)
     fax = models.CharField(blank=True, null=True, max_length=20)
     email = models.EmailField(blank=True, null=True)
-    family_status = models.CharField(blank=True, null=True,max_length=10)
+    family_status = models.CharField(blank=True, null=True, max_length=10)
     number_of_children = models.IntegerField(blank=True, null=True)
-    date_of_birth  = models.DateField(blank=True, null=True)
+    date_of_birth = models.DateField(blank=True, null=True)
     place_of_birth = models.CharField(blank=True, null=True, max_length=100)
-    date_of_death  = models.DateField(blank=True, null=True)
+    date_of_death = models.DateField(blank=True, null=True)
     year_of_aliyah = models.IntegerField(blank=True, null=True)
-    place_of_residence = models.CharField(blank=True, null=True, max_length=100, help_text=_('an accurate place of residence (for example, an address'))
-    area_of_residence = models.CharField(blank=True, null=True, max_length=100, help_text = _('a general area of residence (for example, "the negev"'))
+    place_of_residence = models.CharField(blank=True, null=True, max_length=100,
+                                          help_text=_('an accurate place of residence (for example, an address'))
+    area_of_residence = models.CharField(blank=True, null=True, max_length=100,
+                                         help_text=_('a general area of residence (for example, "the negev"'))
     place_of_residence_lat = models.CharField(blank=True, null=True, max_length=16)
     place_of_residence_lon = models.CharField(blank=True, null=True, max_length=16)
     residence_centrality = models.IntegerField(blank=True, null=True)
@@ -80,7 +84,7 @@ class Person(models.Model):
     def number_of_committees(self):
         return self.protocol_parts.values('meeting__committee').distinct().count()
 
-    def copy(self, mk = mk):
+    def copy(self, mk=mk):
         """ copy relelvant mk's data to self """
         roles = other.mk.all()
         for role in roles:
@@ -144,7 +148,7 @@ class Person(models.Model):
             if val and not getattr(self, field_name):
                 setattr(self, field_name, val)
         if self.name != other.name:
-             (pa,created) = PersonAlias.objects.get_or_create(name=other.name,person=self)
+            (pa, created) = PersonAlias.objects.get_or_create(name=other.name, person=self)
         other.delete()
         self.save()
 
@@ -170,6 +174,7 @@ class Person(models.Model):
     def del_alias(self, alias):
         PersonAlias.objects.filter(name=alias, person=self).delete()
 
+
 @receiver(post_save, sender=Member)
 def member_post_save(sender, **kwargs):
     instance = kwargs['instance']
@@ -182,16 +187,17 @@ def member_post_save(sender, **kwargs):
 
 
 class Role(models.Model):
-    start_date  = models.DateField(null=True)
-    end_date  = models.DateField(blank=True, null=True)
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(blank=True, null=True)
     text = models.CharField(blank=True, null=True, max_length=1024)
     org = models.TextField(blank=True, null=True)
     person = models.ForeignKey(Person, related_name='roles')
 
     def __unicode__(self):
         return _('{person} serverd as {text} in {org} from {start_date} to {end_date}').format(
-                person=self.person, text=self.text, org=self.org,
-                start_date=self.start_date, end_date=self.end_date)
+            person=self.person, text=self.text, org=self.org,
+            start_date=self.start_date, end_date=self.end_date)
+
 
 class ProcessedProtocolPart(models.Model):
     """This model is used to keep track of protocol parts already searched for creating persons.
@@ -208,6 +214,7 @@ class ExternalData(models.Model):
     class Meta:
         abstract = True
 
+
 class ExternalInfo(ExternalData):
     ''' a model for a text key and its value tied to a person '''
     person = models.ForeignKey(Person, related_name='external_info')
@@ -217,6 +224,7 @@ class ExternalInfo(ExternalData):
     def __unicode__(self):
         return u"{} - {}: {}".format(self.person, self.key, self.value)
 
+
 class ExternalRelation(ExternalData):
     ''' a relationship between two persons '''
     person = models.ForeignKey(Person, related_name='external_relation')
@@ -225,5 +233,4 @@ class ExternalRelation(ExternalData):
 
     def __unicode__(self):
         return u"{} - {}: {}".format(self.person, self.relationship,
-                self.with_person)
-
+                                     self.with_person)

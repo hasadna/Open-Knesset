@@ -141,7 +141,6 @@ class CommitteeDetailView(DetailView):
             cached_context['topics'] = cm.topic_set.summary()[:5]
 
 
-
 class MeetingDetailView(DetailView):
     model = CommitteeMeeting
 
@@ -484,7 +483,7 @@ def edit_topic(request, committee_id, topic_id=None):
                                                               {
                                                                   'edit_form': edit_form,
                                                                   'links_formset': links_formset,
-                                                                  }))
+                                                              }))
 
 
 @login_required
