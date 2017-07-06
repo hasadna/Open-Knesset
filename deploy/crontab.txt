@@ -4,8 +4,11 @@
 45 03 * * * /oknesset_data/oknesset/Open-Knesset/manage.py parse_plenum_protocols --download --parse 2>&1 | /usr/bin/logger -t open_knesset
 00 04 * * * /oknesset_data/oknesset/Open-Knesset/manage.py parse_future_plenum_meetings 2>&1 | /usr/bin/logger -t open_knesset
 15 04 * * * /oknesset_data/oknesset/Open-Knesset/manage.py syncdata --update 2>&1 | /usr/bin/logger -t open_knesset
-34 04 * * * /oknesset_data/oknesset/Open-Knesset/manage.py scrape_committee_meetings --from_days=100 2>&1 | /usr/bin/logger -t open_knesset
-12 04 * * * /oknesset_data/oknesset/Open-Knesset/manage.py scrape_committees 2>&1 | /usr/bin/logger -t open_knesset
+
+# the committee scrapers are handled as part of download_knesset_datapackage management command
+
+# 34 04 * * * /oknesset_data/oknesset/Open-Knesset/manage.py scrape_committee_meetings --from_days=100 2>&1 | /usr/bin/logger -t open_knesset
+# 12 04 * * * /oknesset_data/oknesset/Open-Knesset/manage.py scrape_committees 2>&1 | /usr/bin/logger -t open_knesset
 59 04 * * * /oknesset_data/oknesset/Open-Knesset/manage.py send_email_to_editors 2>&1 | /usr/bin/logger -t open_knesset
 00 05 * * * /oknesset_data/oknesset/Open-Knesset/manage.py notify --daily 2>&1 | /usr/bin/logger -t open_knesset
 01 05 * * 5 /oknesset_data/oknesset/Open-Knesset/manage.py notify --weekly 2>&1 | /usr/bin/logger -t open_knesset
