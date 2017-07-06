@@ -15,7 +15,6 @@ from optparse import make_option
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Max
 from okscraper_django.management.base_commands import NoArgsDbLogCommand
 
 from pyth.plugins.rtf15.reader import Rtf15Reader
@@ -23,10 +22,10 @@ from pyth.plugins.rtf15.reader import Rtf15Reader
 from committees.models import Committee, CommitteeMeeting
 from knesset.utils import cannonize
 from knesset.utils import send_chat_notification
-from laws.models import (Vote, VoteAction, Bill, Law, PrivateProposal,
+from laws.models import (Vote, Bill, Law, PrivateProposal,
                          KnessetProposal, GovProposal, GovLegislationCommitteeDecision)
 from links.models import Link
-from mks.models import Member, Party, Membership, WeeklyPresence, Knesset
+from mks.models import Member, WeeklyPresence, Knesset
 
 from persons.models import Person, PersonAlias
 
@@ -37,7 +36,7 @@ from simple.parsers import mk_roles_parser
 from simple.parsers import parse_laws
 from simple.parsers import parse_remote
 from simple.parsers.parse_gov_legislation_comm import ParseGLC
-from simple.parsers import mk_info_html_parser as mk_parser
+
 from simple.parsers import parse_presence
 from syncdata_globals import p_explanation, strong_explanation, explanation
 
