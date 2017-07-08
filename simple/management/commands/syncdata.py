@@ -65,7 +65,7 @@ class Command(NoArgsDbLogCommand):
 
         make_option('--laws', action='store_true', dest='laws',
                     help="download and parse laws"),
-        make_option(' ', action='store_true', dest='presence',
+        make_option('--presence', action='store_true', dest='presence',
                     help="download and parse presence"),
         make_option('--update', action='store_true', dest='update',
                     help="online update of data."),
