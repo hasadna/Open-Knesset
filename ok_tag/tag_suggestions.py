@@ -39,8 +39,8 @@ _all_tags_names = []
 
 def all_tags_names():
     '''Lazy intialization of tags list'''
-
-    if (_all_tags_names == []):
+    global _all_tags_names
+    if _all_tags_names == []:
         # Extract only used tags, to avoid irrelevant tags
         vote_tags = Tag.objects.usage_for_model(Vote)
         bill_tags = Tag.objects.usage_for_model(Bill)
@@ -48,7 +48,7 @@ def all_tags_names():
         all_tags = list(set(vote_tags).union(bill_tags).union(cm_tags))
 
         # A list of tags that have been tagged over 10 times in the website
-        global _all_tags_names
+
         _all_tags_names = [tag.name for tag in all_tags]
 
     return _all_tags_names

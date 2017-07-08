@@ -13,6 +13,8 @@ import urllib2
 import json
 import dateutil.parser
 
+GOOGLE_CALENDAR_API_KEY = settings.GOOGLE_CALENDAR_API_KEY
+
 
 class PersonsEventsScraper(BaseScraper):
     """
@@ -24,14 +26,14 @@ class PersonsEventsScraper(BaseScraper):
         self.source = BaseSource()
         self.storage = BaseStorage()
 
-    def _get_google_cal_page(self, calendar_id, sync_token, page_token=None):
-        api_key = settings.GOOGLE_CALENDAR_API_KEY
+    def _get_google_cal_page(self, calendar_id, sync_token, page_token=None, is_retry=False):
+
         if page_token is not None:
             param = '&pageToken=%s' % quote(page_token)
         else:
             param = '&syncToken=%s' % quote(sync_token) if sync_token is not None else ''
         calendar_url = 'https://content.googleapis.com/calendar/v3/calendars/%s/events?showDeleted=true&singleEvents=true%s&key=%s' % (
-            quote(calendar_id), param, quote(api_key))
+            quote(calendar_id), param, quote(GOOGLE_CALENDAR_API_KEY))
         try:
             response = urllib2.urlopen(calendar_url)
             data = json.load(response)
@@ -42,6 +44,11 @@ class PersonsEventsScraper(BaseScraper):
             res['items'] = data['items'] if 'items' in data else []
             return res
         except urllib2.HTTPError as e:
+            if e.code == 410 and not is_retry:
+                # Retry without sync token according to docs
+                self._getLogger().info(u'retrying calendar with sync token invalidated %s' % calendar_id)
+                return self._get_google_cal_page(calendar_id=calendar_id, sync_token=None, page_token=page_token,
+                                                 is_retry=True)
             self._getLogger().exception(
                 u'Exception in trying to fetch google calendar id %s with url %s' % (calendar_id, calendar_url))
             return None

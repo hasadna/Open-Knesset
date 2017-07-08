@@ -15,7 +15,6 @@ from optparse import make_option
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Max
 from okscraper_django.management.base_commands import NoArgsDbLogCommand
 
 from pyth.plugins.rtf15.reader import Rtf15Reader
@@ -23,10 +22,10 @@ from pyth.plugins.rtf15.reader import Rtf15Reader
 from committees.models import Committee, CommitteeMeeting
 from knesset.utils import cannonize
 from knesset.utils import send_chat_notification
-from laws.models import (Vote, VoteAction, Bill, Law, PrivateProposal,
+from laws.models import (Vote, Bill, Law, PrivateProposal,
                          KnessetProposal, GovProposal, GovLegislationCommitteeDecision)
 from links.models import Link
-from mks.models import Member, Party, Membership, WeeklyPresence, Knesset
+from mks.models import Member, WeeklyPresence, Knesset
 
 from persons.models import Person, PersonAlias
 
@@ -37,7 +36,7 @@ from simple.parsers import mk_roles_parser
 from simple.parsers import parse_laws
 from simple.parsers import parse_remote
 from simple.parsers.parse_gov_legislation_comm import ParseGLC
-from simple.parsers import mk_info_html_parser as mk_parser
+
 from simple.parsers import parse_presence
 from syncdata_globals import p_explanation, strong_explanation, explanation
 
@@ -97,7 +96,7 @@ class Command(NoArgsDbLogCommand):
         if all_options:
             process = True
 
-        selected_options = [all_options, process, update, laws]
+        selected_options = [all_options, process, update, laws, presence]
         if not any(selected_options):
             logger.error(
                 "no arguments found. doing nothing. \ntry -h for help.\n--all to run the full syncdata flow.\n--update for an online dynamic update.")
@@ -437,7 +436,7 @@ class Command(NoArgsDbLogCommand):
             logger.exception(u'Exception with approved bill text for vote %s title=%s' % (vote.id, vote.title))
 
     def update_presence(self):
-        logger.debug("update presence")
+        logger.info("Starting to update presence")
         try:
             (presence, valid_weeks) = parse_presence.parse_presence(filename=os.path.join(DATA_ROOT, 'presence.txt.gz'))
 
@@ -451,6 +450,7 @@ class Command(NoArgsDbLogCommand):
         c = None
 
         for member in Member.current_members.all():
+            logger.info("Trying to update presence for %s" % member.pk)
             if member.id not in presence:
                 logger.error('member %s (id=%d) not found in presence data', member.name, member.id)
                 continue
@@ -477,6 +477,8 @@ class Command(NoArgsDbLogCommand):
                 else:
                     date = iso_to_gregorian(*current_timestamp, iso_day=0)
                 current_timestamp = (date + datetime.timedelta(8)).isocalendar()[:2]
+        logger.info('Finished updating presence')
+
 
     def update_private_proposal_content_html(self, pp):
         html = parse_remote.rtf(pp.source_url)
