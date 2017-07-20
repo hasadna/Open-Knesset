@@ -66,4 +66,4 @@ functools32==3.2.3-2
 datapackage==0.8.7
 
 -e git://github.com/hasadna/knesset-data-python.git@v1.8.2#egg=knesset-data
--e git://github.com/hasadna/knesset-data-django.git@v1.0.4#egg=knesset-data-django
+-e git://github.com/hasadna/knesset-data-django.git@master#egg=knesset-data-django
