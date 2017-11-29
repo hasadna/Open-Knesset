@@ -6,6 +6,8 @@ import itertools
 import json
 import logging
 import re
+import os
+import csv
 
 import waffle
 
@@ -19,7 +21,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import (HttpResponse, HttpResponseRedirect, Http404,
-                         HttpResponseForbidden)
+                         HttpResponseForbidden, HttpResponsePermanentRedirect)
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.utils.decorators import method_decorator
@@ -760,3 +762,50 @@ class CommitteeMMMDocuments(ListView):
         context['committee_id'] = self.c_id
         context['committee_url'] = committee.get_absolute_url()
         return context
+
+
+def static_committee_redirect(distpath):
+    def view(*args, **kwargs):
+        return HttpResponsePermanentRedirect("https://committees-next.oknesset.org/" + distpath)
+    return view
+
+
+def static_committee_detail_redirect():
+    def view(*args, **kwargs):
+        if os.path.exists("/oknesset_web/kns_committee.csv"):
+            try:
+                committee = Committee.objects.get(pk=kwargs["pk"])
+            except ObjectDoesNotExist:
+                committee = None
+            if committee:
+                latest_committee_knesset_num, latest_committee_kns_id = -1, None
+                for i, line in enumerate(csv.reader(open("/oknesset_web/kns_committee.csv"))):
+                    if i == 0: continue
+                    kns_id = int(line[0])
+                    category_id = int(line[2]) if line[2] else None
+                    knesset_num = int(line[4])
+                    if category_id and committee.knesset_id \
+                            and category_id == committee.knesset_id \
+                            and knesset_num and knesset_num > latest_committee_knesset_num:
+                        latest_committee_knesset_num = knesset_num
+                        latest_committee_kns_id = kns_id
+                if latest_committee_kns_id:
+                    return HttpResponsePermanentRedirect("https://committees-next.oknesset.org/committees/{}.html".format(latest_committee_kns_id))
+        return HttpResponseRedirect("https://committees-next.oknesset.org/committees/index.html")
+    return view
+
+
+def static_committee_meeting_redirect():
+    def view(*args, **kwargs):
+        try:
+            meeting = CommitteeMeeting.objects.get(pk=kwargs["pk"])
+        except ObjectDoesNotExist:
+            meeting = None
+        if meeting and meeting.knesset_id:
+            knesset_id = str(meeting.knesset_id)
+            return HttpResponsePermanentRedirect(
+                "https://committees-next.oknesset.org/meetings/{}/{}/{}.html".format(knesset_id[0],
+                                                                                     knesset_id[1],
+                                                                                     knesset_id))
+        return HttpResponseRedirect("https://committees-next.oknesset.org/committees/index.html")
+    return view
