@@ -1,0 +1,56 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[dev-packages]
+
+[packages]
+django = "==1.6.11"
+pillow = "==2.4.0"
+south = "==1.0"
+django-extensions = "==1.2.5"
+django-pagination = "==1.0.7"
+django-tagging = "==0.3.1"
+django-tastypie-swagger = "==0.1.2"
+beautifulsoup = "*"
+vobject = "*"
+feedparser = "*"
+gdata = "*"
+gunicorn = "==19.6.0"
+python-social-auth = "==0.2.1"
+oauth = "==1.0.1"
+python-dateutil = "==1.5"
+python-memcached = "==1.48"
+python-openid = {git = "git://github.com/openid/python-openid.git", editable = true}
+django-tastypie = "==0.9.15"
+django-ratings = "*"
+django-activity-stream = {ref = "c56a07921b8c796fce35bda6feab4610fdf64e5d", git = "git://github.com/hasadna/django-activity-stream.git", editable = true}
+django-planet = {ref = "903de33db55bfb8d965ae4e2319fa348075351fd", git = "git://github.com/hasadna/django-planet.git", editable = true}
+django-annotatetext = {ref = "72e1e69459b1efe3efad85eec1dd162f5ab03250", git = "git://github.com/hasadna/django-annotatetext.git", editable = true}
+django-mailer = "==1.1.0"
+django-avatar = "==2.0"
+django-backlinks = {ref = "df00163eee41cc2c090e6a703c03610cc7979f66", git = "git://github.com/hasadna/django-backlinks.git", editable = true}
+"django-voting2" = {git = "git://github.com/spreeker/django-voting2.git", editable = true}
+django-debug-toolbar = "<1.4"
+nose = "*"
+django-nose = "==1.4.3"
+django-devserver = "==0.8.0"
+ipython = "*"
+django-tinymce = "==1.5.2"
+django-crispy-forms = "==1.2.3"
+django-storages = "==1.1.8"
+boto = "==2.20.1"
+"beautifulsoup4" = "*"
+okscraper-django = "==0.0.12"
+ujson = "==1.35"
+selenium = "*"
+sauceclient = "*"
+django-sslify = ">=0.2.0"
+django-cors-headers = "==1.1.0"
+pyjwt = "*"
+django-sslserver = "*"
+python-hebrew-numbers = "==0.1.0"
+
+[requires]
+python_version = "2.7"
