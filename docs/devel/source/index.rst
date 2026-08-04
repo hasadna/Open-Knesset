@@ -3,63 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Open-Knesset Developers documentation!
-===================================================
+Deprecated
+==========
 
-Open Knesset's aim is making the israeli Knesset more transparent. The project
-is Python_ and Django_ based.
-
-.. note::
-    This guide is for developers working on Open Knesset's code.
-
-    For 3rd party applications and services developers, please see the 
-    `API documentation`_.
-
-.. _API documentation: http://oknesset-api.readthedocs.org/
-
-    Some useful project links:
-
-    * `Our code repository`_
-    * `The issue tracker`_ (bugs, tasks etc.)
-    * The production `Open Knesset`_ site
-    * The `Hasadna`_ site (our parent organization)
-
-
-.. important::
-
-    If not done already, please subscribe to the
-    `Open Knesset Developers group`_.
-
-
-.. _Python: http://www.python.org/
-.. _Django: https://www.djangoproject.com/
-.. _Open Knesset Developers group: https://groups.google.com/forum/#!forum/oknesset-dev
-.. _Our code repository: https://github.com/hasadna/Open-Knesset/
-.. _The issue tracker: https://huboard.com/hasadna/Open-Knesset
-.. _Open Knesset: http://oknesset.org/
-.. _Hasadna: http://www.hasadna.org.il/
-
-
-Contents:
-
-.. toctree::
-    :maxdepth: 2
-
-    github
-    environment/index
-    workflow
-    css_docs
-    tips
-    browsertests
-    scraping/index
-    devops
-    feature_toggle
-    project_management
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+This repo is not used any more, the main development effort moved here: https://github.com/hasadna/knesset-data-pipelines
