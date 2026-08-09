@@ -3,7 +3,7 @@ import re
 import logging
 from datetime import datetime, timedelta, date
 from django.db import models
-from django.db.models.query_utils import Q
+
 from django.utils.translation import ugettext_lazy as _, ugettext
 from django.utils.text import Truncator
 from django.contrib.contenttypes import generic
@@ -17,7 +17,7 @@ from djangoratings.fields import RatingField
 from committees.enums import CommitteeTypes
 from events.models import Event
 from links.models import Link
-from mks.models import Knesset
+
 from lobbyists.models import LobbyistCorporation
 from itertools import groupby
 from hebrew_numbers import gematria_to_int

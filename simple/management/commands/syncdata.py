@@ -140,11 +140,14 @@ class Command(NoArgsDbLogCommand):
                         self.__getattribute__(func).__call__()
                     except Exception as e:
 
+                        logger.exception("Caught Exception in syncdata update phase %s", func)
                         send_chat_notification(__name__,
                                                "caught exception in one of the sync data update commands",
                                                {'exception': traceback.format_exc(), 'func': func})
-                        # No need for manual exception formatting, logger exception takes care of that
-                        logger.exception("Caught Exception in syncdata update phase %s", func)
+
+
+                else:
+                    logger.info('Not running %s because of update_run_only setting' % func)
             logger.info('finished update')
 
     def read_laws_page(self, index):
@@ -225,7 +228,7 @@ class Command(NoArgsDbLogCommand):
 
             if not vote.full_text:
                 self.get_approved_bill_text_for_vote(vote)
-        logger.debug("finished updating laws data")
+        logger.info("finished updating laws data")
 
     def update_mks_is_current(self):
         """
@@ -478,7 +481,6 @@ class Command(NoArgsDbLogCommand):
                     date = iso_to_gregorian(*current_timestamp, iso_day=0)
                 current_timestamp = (date + datetime.timedelta(8)).isocalendar()[:2]
         logger.info('Finished updating presence')
-
 
     def update_private_proposal_content_html(self, pp):
         html = parse_remote.rtf(pp.source_url)
