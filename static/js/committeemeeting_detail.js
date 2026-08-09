@@ -53,6 +53,10 @@ $(function () {
     });
     $("input[name$='mk_name']").autocomplete(options_mk);
     $("input[name$='mk_name_to_remove']").autocomplete(options_mk);
+    $("input[name$='mk_name'], input[name$='mk_name_to_remove']").keydown(function () {
+        $(this).siblings("input[name$='mk_id']").val('');
+        $(this).siblings("input[type$='submit']").attr('disabled', 'disabled');
+    });
 
 
     var options_lobbyists = {
@@ -61,8 +65,17 @@ $(function () {
         maxHeight: 400,
         width: 150,
         deferRequestBy: 100, //miliseconds
+        onSelect: function (value, data, me) {
+            me.siblings("input[name$='lobbyist_id']").val(data);
+            me.siblings("input[type$='submit']").removeAttr('disabled');
+        },
     };
     $("input[name$='lobbyist_name']").autocomplete(options_lobbyists);
+    $("input[name$='lobbyist_name_to_remove']").autocomplete(options_lobbyists);
+    $("input[name$='lobbyist_name'], input[name$='lobbyist_name_to_remove']").keydown(function () {
+        $(this).siblings("input[name$='lobbyist_id']").val('');
+        $(this).siblings("input[type$='submit']").attr('disabled', 'disabled');
+    });
 
     $(".annotation-content").each(function () {
         var annoid = $(this).attr("id").split("-")[1];

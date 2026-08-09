@@ -63,26 +63,28 @@
                         <label for="id_mk_name">{% trans "Suggest an MK" %}</label>
                         <input type="text" name="mk_name" id="id_mk_name">
                         <input type="hidden" name="mk_id">
-                        <input type="submit" value="{% trans "Submit" %}" class="btn">
+                        <input type="submit" value="{% trans "Submit" %}" class="btn" disabled="disabled">
                     </form>
                     <form method="post" action="." class="form-inline">{% csrf_token %}
                         <input type="hidden" name="user_input_type" value="remove-mk">
                         <label for="id_mk_name_to_remove">{% trans "Remove an MK" %}</label>
                         <input type="text" name="mk_name_to_remove" id="id_mk_name_to_remove">
                         <input type="hidden" name="mk_id">
-                        <input type="submit" value="{% trans "Submit" %}" class="btn">
+                        <input type="submit" value="{% trans "Submit" %}" class="btn" disabled="disabled">
                     </form>
                     <form method="post" action="." class="form-inline">{% csrf_token %}
                         <input type="hidden" name="user_input_type" value="add-lobbyist">
                         <label for="id_lobbyist_name">{% trans "Add a lobbyist" %}</label>
                         <input type="text" name="lobbyist_name" id="id_lobbyist_name">
-                        <input type="submit" value="{% trans "Submit" %}" class="btn">
+                        <input type="hidden" name="lobbyist_id">
+                        <input type="submit" value="{% trans "Submit" %}" class="btn" disabled="disabled">
                     </form>
                     <form method="post" action="." class="form-inline">{% csrf_token %}
                         <input type="hidden" name="user_input_type" value="remove-lobbyist">
                         <label for="id_lobbyist_name">{% trans "remove a lobbyist" %}</label>
-                        <input type="text" name="lobbyist_name" id="id_lobbyist_name">
-                        <input type="submit" value="{% trans "Submit" %}" class="btn">
+                        <input type="text" name="lobbyist_name_to_remove" id="id_lobbyist_name_to_remove">
+                        <input type="hidden" name="lobbyist_id">
+                        <input type="submit" value="{% trans "Submit" %}" class="btn" disabled="disabled">
                     </form>
                     {% endif %}
                 </div>
